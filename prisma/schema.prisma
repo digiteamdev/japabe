@@ -1,0 +1,524 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model Role {
+  id        String     @id @default(cuid())
+  role_name String     @db.VarChar(100)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  userRole  userRole[]
+
+  @@index([role_name])
+  @@map("role")
+}
+
+model Employee {
+  id                   String                 @id @default(cuid())
+  user                 User[]
+  NIP                  String?                @db.VarChar(200)
+  NIK                  String?                @db.VarChar(200)
+  NPWP                 String?                @db.VarChar(200)
+  id_card              String?                @unique
+  employee_name        String?                @db.VarChar(200)
+  nick_name            String?                @unique @db.VarChar(50)
+  email                String?                @unique @db.VarChar(100)
+  birth_place          String?                @db.VarChar(100)
+  birth_date           DateTime?
+  address              String?                @db.Text
+  province             String?                @db.VarChar(100)
+  city                 String?                @db.VarChar(100)
+  districts            String?                @db.VarChar(100)
+  sub_districts        String?                @db.VarChar(100)
+  ec_postalcode        Int?                   @default(0)
+  phone_number         String?                @db.VarChar(50)
+  start_join           DateTime?
+  remaining_days_of    Int?                   @default(0)
+  gender               Gender?
+  marital_status       Maritial?
+  departement          Departement            @relation(fields: [departId], references: [id])
+  departId             String
+  employee_status      Employee_Status?
+  spouse_name          String?                @db.VarChar(200)
+  gender_spouse        Spouse_Gender?
+  spouse_birth_place   String?                @db.VarChar(100)
+  spouse_birth_date    DateTime?
+  status_user          Boolean?               @default(false)
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  deleted              DateTime?
+  Educational_Employee Educational_Employee[] @relation("education")
+  Certificate_Employee Certificate_Employee[] @relation("certificate")
+  Employee_Child       Employee_Child[]       @relation("child")
+  wor                  wor[]
+
+  @@index([id, nick_name, NIK, id_card, NIP, employee_name])
+}
+
+model User {
+  id              String     @id @default(cuid())
+  username        String     @unique @db.VarChar(50)
+  hashed_password String     @db.VarChar(100)
+  session         Session?
+  employee        Employee?  @relation(fields: [employeeId], references: [id])
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  employeeId      String?
+  userRole        userRole[]
+
+  @@index([id])
+  @@map("user")
+}
+
+model userRole {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  role      Role     @relation(fields: [roleId], references: [id])
+  roleId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Session {
+  id            String   @id @default(cuid())
+  user          User     @relation(fields: [username], references: [username])
+  username      String   @unique
+  acces_token   String?
+  refresh_token String?
+  clint_ip      String?  @db.VarChar(100)
+  is_bloked     Boolean? @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([username])
+  @@map("session")
+}
+
+model Customer {
+  id         String            @id @default(cuid())
+  id_custom  String?           @db.VarChar(100)
+  name       String?           @db.VarChar(200)
+  email      String?           @unique @db.VarChar(100)
+  contact    CustomerContact[] @relation("contact")
+  address    CustomerAddress[] @relation("address")
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  deleted    DateTime?
+  Quotations Quotations[]
+
+  @@index([id_custom, name])
+  @@map("customer")
+}
+
+model CustomerContact {
+  id             String       @id @default(cuid())
+  contact_person String?      @db.VarChar(100)
+  email_person   String?      @unique @db.VarChar(100)
+  phone          String?      @db.VarChar(50)
+  customer       Customer     @relation("contact", fields: [customerId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  customerId     String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  deleted        DateTime?
+  Quotations     Quotations[]
+
+  @@index([id, contact_person])
+}
+
+model CustomerAddress {
+  id                String    @id @default(cuid())
+  address_person    String?   @db.Text
+  address_workshop  String?   @db.Text
+  recipient_address String?   @db.Text
+  provinces         String?   @db.VarChar(100)
+  cities            String?   @db.VarChar(100)
+  districts         String?   @db.VarChar(100)
+  sub_districts     String?   @db.VarChar(100)
+  ec_postalcode     Int?      @default(0)
+  customer          Customer  @relation("address", fields: [customerId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  customerId        String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deleted           DateTime?
+
+  @@index([id, address_person])
+}
+
+model Departement {
+  id        String     @id @default(cuid())
+  name      String     @db.VarChar(200)
+  Employee  Employee[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  deleted   DateTime?
+
+  @@index([id, name])
+}
+
+enum Gender {
+  Male
+  Female
+}
+
+enum Spouse_Gender {
+  Male
+  Female
+}
+
+enum Child_Gender {
+  Male
+  Female
+}
+
+enum Maritial {
+  Single
+  Married
+  Divorce
+}
+
+enum Employee_Status {
+  Permanent
+  Contract
+}
+
+model Educational_Employee {
+  id          String    @id @default(cuid())
+  employee    Employee  @relation("education", fields: [employeeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  employeeId  String
+  school_name String?   @db.VarChar(200)
+  last_edu    Last_Edu?
+  graduation  String?   @db.VarChar(10)
+  ijazah      String?   @db.Text
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deleted     DateTime?
+
+  @@index([id, school_name])
+}
+
+enum Last_Edu {
+  Elementary_School  @map("Elementary School")
+  Junior_High_School @map("Junior High School")
+  Senior_High_School @map("Senior High School")
+  Bachelor_Degree    @map("Bachelor Degree")
+  Magister
+  Postgraduate
+}
+
+model Certificate_Employee {
+  id               String    @id @default(cuid())
+  employee         Employee  @relation("certificate", fields: [employeeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  employeeId       String
+  certificate_name String?   @db.VarChar(200)
+  certificate_img  String?   @db.Text
+  end_date         DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  deleted          DateTime?
+
+  @@index([id, certificate_name])
+}
+
+model Employee_Child {
+  id                String        @id @default(cuid())
+  name              String?       @db.VarChar(200)
+  gender_child      Child_Gender?
+  child_birth_place String?       @db.VarChar(100)
+  child_birth_date  DateTime?
+  employee          Employee      @relation("child", fields: [employeeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  employeeId        String
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  deleted           DateTime?
+}
+
+model Equipment {
+  id            String      @id @default(cuid())
+  id_equipment  String?     @db.VarChar(200)
+  nama          String?     @db.VarChar(200)
+  keterangan_eq String?     @db.Text
+  eq_image      String?     @db.Text
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  deleted       DateTime?
+  eq_part       eq_part[]
+  eqandpart     eqandpart[]
+
+  @@index([id, nama, id_equipment])
+}
+
+model eq_part {
+  id              String           @id @default(cuid())
+  equipment       Equipment        @relation(fields: [id_equipment], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  id_equipment    String
+  id_part         String?          @db.VarChar(200)
+  nama_part       String?          @db.VarChar(200)
+  keterangan_part Keterangan_Part?
+  part_img        String?          @db.Text
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  deleted         DateTime?
+  eqandpart       eqandpart[]
+
+  @@index([id, nama_part])
+}
+
+model eqandpart {
+  id           String     @id @default(cuid())
+  equipment    Equipment  @relation(fields: [id_equipment], references: [id])
+  id_equipment String
+  eq_part      eq_part    @relation(fields: [id_part], references: [id])
+  id_part      String
+  quotations   Quotations @relation(fields: [id_quotation], references: [id])
+  id_quotation String
+  qty          Int        @default(0)
+  keterangan   String     @db.Text
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  deleted      DateTime?
+}
+
+enum Keterangan_Part {
+  Rotating   @map("Rotating Part")
+  Static     @map("Static Part")
+  Consumable @map("Consumable Part")
+}
+
+model Type_Mr {
+  id            String          @id @default(cuid())
+  nama_jenis    String?         @db.VarChar(200)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  deleted       DateTime?
+  Material_Name Material_Name[]
+
+  @@index([id, nama_jenis])
+}
+
+model Material_Name {
+  id            String    @id @default(cuid())
+  type_mr       Type_Mr   @relation(fields: [typeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  typeId        String
+  material_name String?   @db.VarChar(200)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deleted       DateTime?
+
+  @@index([id, material_name])
+}
+
+model Supplier {
+  id              String            @id @default(cuid())
+  type_supplier   type_sup
+  id_sup          String?           @db.VarChar(200)
+  supplier_name   String?           @db.VarChar(200)
+  addresses_sup   String?           @db.Text
+  provinces       String?           @db.VarChar(100)
+  cities          String?           @db.VarChar(100)
+  districts       String?           @db.VarChar(100)
+  sub_districts   String?           @db.VarChar(100)
+  ec_postalcode   Int?              @default(0)
+  office_email    String?           @unique
+  NPWP            String?           @db.VarChar(200)
+  ppn             Int?              @default(0)
+  pph             Int?              @default(0)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deleted         DateTime?
+  SupplierContact SupplierContact[] @relation("suppliercontact")
+  SupplierBank    SupplierBank[]    @relation("supplierbank")
+
+  @@index([id, id_sup, supplier_name])
+}
+
+model SupplierContact {
+  id             String    @id @default(cuid())
+  contact_person String?   @db.VarChar(100)
+  email_person   String?   @unique @db.VarChar(100)
+  phone          String?   @db.VarChar(50)
+  supplier       Supplier  @relation("suppliercontact", fields: [supplierId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  supplierId     String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deleted        DateTime?
+
+  @@index([id, contact_person])
+}
+
+model SupplierBank {
+  id           String    @id @default(cuid())
+  account_name String?   @db.VarChar(100)
+  bank_name    String?   @db.VarChar(100)
+  rekening     String?   @db.VarChar(100)
+  supplier     Supplier  @relation("supplierbank", fields: [supplierId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  supplierId   String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deleted      DateTime?
+
+  @@index([id, account_name, bank_name])
+}
+
+enum type_sup {
+  Material_Supplier @map("Material Supplier")
+  Service_Vendor    @map("Service Vendor")
+}
+
+model Quotations {
+  id                String              @id @default(cuid())
+  quo_num           String?             @db.VarChar(200)
+  quo_auto          String?             @db.VarChar(200)
+  customerId        String
+  date              DateTime
+  deskription       String?             @db.Text
+  quo_img           String?             @db.Text
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  deleted           DateTime?
+  Quotations_Detail Quotations_Detail[]
+  wor               wor[]
+  CustomerPo        CustomerPo?
+  Customer          Customer            @relation(fields: [customerId], references: [id])
+  CustomerContact   CustomerContact?    @relation(fields: [customerContactId], references: [id])
+  customerContactId String
+  eqandpart         eqandpart[]
+
+  @@index([id, quo_num])
+}
+
+model Quotations_Detail {
+  id           String     @id @default(cuid())
+  item_of_work String?    @db.VarChar(200)
+  volume       Int?       @default(0)
+  unit         String?    @db.VarChar(20)
+  quotations   Quotations @relation(fields: [quo_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  quo_id       String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  deleted      DateTime?
+
+  @@index([id, item_of_work])
+}
+
+model CustomerPo {
+  id                String              @id @default(cuid())
+  id_po             String?             @db.VarChar(100)
+  po_num_auto       String?             @db.VarChar(200)
+  quotations        Quotations          @relation(fields: [quo_id], references: [id])
+  quo_id            String              @unique
+  tax               Tax?
+  noted             String?             @db.Text
+  date_of_po        DateTime
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  deleted           DateTime?
+  Deskription_CusPo Deskription_CusPo[]
+  term_of_pay       term_of_pay[]
+  wor               wor[]
+
+  @@index([id, id_po])
+}
+
+enum Tax {
+  ppn
+  pph
+  ppn_and_pph @map("ppn and pph")
+}
+
+model Deskription_CusPo {
+  id          String     @id @default(cuid())
+  customerPo  CustomerPo @relation(fields: [cuspoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  cuspoId     String
+  qty         Int?       @default(0)
+  unit        String?    @db.VarChar(50)
+  price       String?
+  discount    String?
+  total       String?
+  description String?    @db.Text
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deleted     DateTime?
+
+  @@index([id, cuspoId])
+}
+
+model term_of_pay {
+  id         String     @id @default(cuid())
+  customerPo CustomerPo @relation(fields: [cuspoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  cuspoId    String
+  limitpay   Limit_Pay?
+  percent    Int?       @default(0)
+  price      String?
+  date_limit DateTime
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  deleted    DateTime?
+}
+
+enum Limit_Pay {
+  Normal
+  Down_Payment
+  Termin_I
+  Termin_II
+  Termin_III
+  Termin_IV
+  Termin_V
+  Repayment
+}
+
+model wor {
+  id                String           @id @default(cuid())
+  job_no            String?          @db.VarChar(200)
+  date_wor          DateTime?
+  customerPo        CustomerPo       @relation(fields: [cuspoId], references: [id])
+  cuspoId           String
+  subject           String?          @db.VarChar(200)
+  job_desk          String?          @db.Text
+  contract_no_spk   String?          @db.VarChar(100)
+  employee          Employee         @relation(fields: [employeeId], references: [id])
+  employeeId        String
+  value_contract    String?
+  priority_status   Priority_Status?
+  qty               Int?             @default(0)
+  unit              String?          @db.VarChar(20)
+  date_of_order     DateTime?
+  delivery_date     DateTime?
+  shipping_address  String?          @db.Text
+  estimated_man_our Int?             @default(0)
+  eq_model          String?          @db.VarChar(100)
+  eq_mfg            String?          @db.VarChar(100)
+  eq_rotation       String?          @db.VarChar(200)
+  eq_power          String?          @db.VarChar(200)
+  scope_of_work     String?          @db.Text
+  file_list         String?          @db.Text
+  noted             String?          @db.VarChar(200)
+  status            String?          @db.VarChar(20)
+  refivision        String?          @db.VarChar(20)
+  refevision_desc   String?          @db.VarChar(225)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  deleted           DateTime?
+  Quotations        Quotations?      @relation(fields: [quotationsId], references: [id])
+  quotationsId      String?
+
+  @@index([id, job_no])
+}
+
+enum Priority_Status {
+  ST
+  XT
+  XXT
+  XTASREQ  @map("XT As Req")
+  XXTASREQ @map("XXT As Req")
+}
