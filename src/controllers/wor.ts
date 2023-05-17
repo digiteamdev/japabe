@@ -85,104 +85,6 @@ const getWor = async (request: Request, response: Response) => {
   }
 };
 
-const getWorStatus = async (request: Request, response: Response) => {
-  try {
-    const pencarian: any = request.query.search || "";
-    const hostname: any = request.headers.host;
-    const pathname = url.parse(request.url).pathname;
-    const page: any = request.query.page;
-    const perPage: any = request.query.perPage;
-    const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const worCount = await prisma.wor.count({
-      where: {
-        deleted: null,
-        status: pencarian,
-      },
-    });
-
-    let statusPenc: any = [];
-    statusPenc = await prisma.wor.findMany({
-      where: {
-        status: pencarian,
-      },
-    });
-    statusPenc.forEach((e: any) => {
-      statusPenc = e;
-    });
-
-    let result: any = [];
-    if (statusPenc.status === "valid") {
-      result = await prisma.wor.findMany({
-        where: {
-          status: "valid",
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: parseInt(pagination.perPage),
-        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
-      });
-    } else if (statusPenc.status === "unvalid") {
-      result = await prisma.wor.findMany({
-        where: {
-          status: "unvalid",
-        },
-        include: {
-          customerPo: {
-            include: {
-              quotations: {
-                include: {
-                  CustomerContact: true,
-                  Customer: {
-                    include: {
-                      address: true,
-                    },
-                  },
-                  eqandpart: {
-                    include: {
-                      equipment: true,
-                      eq_part: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: parseInt(pagination.perPage),
-        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
-      });
-    }
-    result.forEach((e: any) => {
-      result = e;
-    });
-    if (result.status === "valid" || result.status === "unvalid") {
-      return response.status(200).json({
-        success: true,
-        massage: "Get All Wor",
-        result: result,
-        page: pagination.page,
-        limit: pagination.perPage,
-        totalData: worCount,
-        currentPage: pagination.currentPage,
-        nextPage: pagination.next(),
-        previouspage: pagination.prev(),
-      });
-    } else if (result.status === undefined) {
-      return response.status(200).json({
-        success: false,
-        massage: "No data",
-        result: [],
-      });
-    }
-  } catch (error) {
-    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
-  }
-};
-
 const createWor = async (request: any, response: Response) => {
   try {
     if (!request.file) {
@@ -361,7 +263,6 @@ const deleteWor = async (request: Request, response: Response) => {
 
 export default {
   getWor,
-  getWorStatus,
   createWor,
   updateWor,
   updateWorStatus,

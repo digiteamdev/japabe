@@ -392,11 +392,6 @@ router.get(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   wor.getWor
 );
-router.get(
-  "/worStatus",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
-  wor.getWorStatus
-);
 router.post(
   "/wor",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
