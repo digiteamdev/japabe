@@ -239,12 +239,12 @@ const updateWorStatus = async (request: Request, response: Response) => {
 const deleteWor = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
-    const deleteWorr = await prisma.wor.delete({
+    const deleteWor = await prisma.wor.delete({
       where: {
         id: id,
       },
     });
-    if (deleteWorr) {
+    if (deleteWor) {
       response.status(201).json({
         success: true,
         massage: "Success Delete Data",
