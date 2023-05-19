@@ -208,7 +208,7 @@ const updateWorStatus = async (request: Request, response: Response) => {
         where: { id: id },
         data: {
           status: "valid",
-          job_no: statusPenc.status === "" ? genarate : statusPenc.status
+          job_no: statusPenc.status === "" ? genarate : statusPenc.job_no
         },
       });
     } else {
