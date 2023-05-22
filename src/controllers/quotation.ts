@@ -23,8 +23,10 @@ const getQuotation = async (request: Request, response: Response) => {
           quo_num: {
             contains: "",
           },
+          CustomerPo: null,
         },
         include: {
+          CustomerPo: true,
           Customer: {
             include: {
               address: true,

@@ -44,6 +44,9 @@ const getcusPo = async (request: Request, response: Response) => {
           Deskription_CusPo: true,
           term_of_pay: true,
         },
+        orderBy: {
+          createdAt: "desc",
+        },
       });
     } else {
       results = await prisma.customerPo.findMany({
@@ -237,7 +240,7 @@ const updatePoDetail = async (request: Request, response: Response) => {
         massage: "Unsuccess Update Data",
       });
     }
-  } catch (error) {    
+  } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
 };
@@ -262,7 +265,7 @@ const updatePoTermOfPay = async (request: Request, response: Response) => {
           id: updateByveri.id,
         };
       }
-    );    
+    );
     let result: any = [];
     for (let i = 0; i < updateVerify.length; i++) {
       const updatePoTermOfPay = await prisma.term_of_pay.upsert({

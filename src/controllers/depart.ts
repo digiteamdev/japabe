@@ -66,7 +66,13 @@ const getDepart = async (request: Request, response: Response) => {
 const createDepart = async (request: Request, response: Response) => {
   try {
     const results = await prisma.departement.create({
-      data: request.body.departement,
+      data: {
+        name: request.body.name,
+        sub_depart: request.body.sub_depart
+      },
+      include: {
+        sub_depart: true,
+      }
     });
     if (results) {
       response.status(201).json({

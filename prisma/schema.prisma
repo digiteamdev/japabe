@@ -156,14 +156,25 @@ model CustomerAddress {
 }
 
 model Departement {
-  id        String     @id @default(cuid())
-  name      String     @db.VarChar(200)
-  Employee  Employee[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  deleted   DateTime?
+  id         String       @id @default(cuid())
+  name       String       @db.VarChar(200)
+  Employee   Employee[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  deleted    DateTime?
+  sub_depart sub_depart[]
 
   @@index([id, name])
+}
+
+model sub_depart {
+  id          String       @id @default(cuid())
+  departement Departement? @relation(fields: [deptId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  deptId      String?
+  name        String       @db.VarChar(200)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  deleted     DateTime?
 }
 
 enum Gender {
@@ -190,6 +201,7 @@ enum Maritial {
 enum Employee_Status {
   Permanent
   Contract
+  OJT
 }
 
 model Educational_Employee {

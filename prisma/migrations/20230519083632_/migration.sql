@@ -11,7 +11,7 @@ CREATE TYPE "Child_Gender" AS ENUM ('Male', 'Female');
 CREATE TYPE "Maritial" AS ENUM ('Single', 'Married', 'Divorce');
 
 -- CreateEnum
-CREATE TYPE "Employee_Status" AS ENUM ('Permanent', 'Contract');
+CREATE TYPE "Employee_Status" AS ENUM ('Permanent', 'Contract', 'OJT');
 
 -- CreateEnum
 CREATE TYPE "Last_Edu" AS ENUM ('Elementary School', 'Junior High School', 'Senior High School', 'Bachelor Degree', 'Magister', 'Postgraduate');
@@ -170,6 +170,18 @@ CREATE TABLE "Departement" (
     "deleted" TIMESTAMP(3),
 
     CONSTRAINT "Departement_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "sub_depart" (
+    "id" TEXT NOT NULL,
+    "deptId" TEXT,
+    "name" VARCHAR(200) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "sub_depart_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -565,6 +577,9 @@ ALTER TABLE "CustomerContact" ADD CONSTRAINT "CustomerContact_customerId_fkey" F
 
 -- AddForeignKey
 ALTER TABLE "CustomerAddress" ADD CONSTRAINT "CustomerAddress_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "sub_depart" ADD CONSTRAINT "sub_depart_deptId_fkey" FOREIGN KEY ("deptId") REFERENCES "Departement"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Educational_Employee" ADD CONSTRAINT "Educational_Employee_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "Employee"("id") ON DELETE CASCADE ON UPDATE CASCADE;
