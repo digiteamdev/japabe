@@ -198,7 +198,7 @@ const createDepartMany = async (request: Request, response: Response) => {
 
 const updateDepart = async (request: Request, response: Response) => {
   try {
-    const updateVerify = request.body.map(
+    const updateVerify = request.body.sub_depart.map(
       (updateByveri: { name: any; deptId: any; id: any }) => {
         return {
           name: updateByveri.name,
@@ -209,19 +209,25 @@ const updateDepart = async (request: Request, response: Response) => {
     );
     let result: any = [];
     for (let i = 0; i < updateVerify.length; i++) {
-      const updateDepart = await prisma.departement.upsert({
+      const dept = await prisma.departement.update({
+        where: { id: request.body.id },
+        data: {
+          name: request.body.name,
+        },
+      });
+      const updateDepart = await prisma.sub_depart.upsert({
         where: {
           id: updateVerify[i].id,
         },
         create: {
           name: updateVerify[i].name,
-          sub_depart: { connect: { id: updateVerify[i].deptId } },
+          departement: { connect: { id: updateVerify[i].deptId } },
         },
         update: {
           name: updateVerify[i].name,
         },
       });
-      result = [...result, updateDepart];
+      result = [...result, updateDepart, dept];
       if (result) {
         response.status(201).json({
           success: true,
