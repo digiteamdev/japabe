@@ -37,6 +37,7 @@ const getWor = async (request: Request, response: Response) => {
             include: {
               quotations: {
                 include: {
+                  Quotations_Detail: true,
                   CustomerContact: true,
                   Customer: {
                     include: {
@@ -53,6 +54,7 @@ const getWor = async (request: Request, response: Response) => {
               },
             },
           },
+          employee: true,
         },
         orderBy: {
           createdAt: "desc",
@@ -202,13 +204,13 @@ const updateWorStatus = async (request: Request, response: Response) => {
     });
 
     let result;
-    if (statusPenc?.status === "" || statusPenc?.status === "unvalid") {
+    if (statusPenc?.status === null || statusPenc?.status === "unvalid") {
       const id = request.params.id;
       result = await prisma.wor.update({
         where: { id: id },
         data: {
           status: "valid",
-          job_no: statusPenc.status === "" ? genarate : statusPenc.job_no
+          job_no: statusPenc.status === null ? genarate : statusPenc.job_no
         },
       });
     } else {

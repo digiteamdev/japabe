@@ -145,19 +145,33 @@ const loginUser = async (request: Request, response: Response) => {
           .status(400)
           .json({ msg: "Login Not Succes", status: false });
       }
-    } else {
+    } else if (token !== cekUserSession.acces_token) {
+      const updateToken = await prisma.session.update({
+        where: {
+          username: cekUserSession.username,
+        },
+        data: {
+          acces_token: token,
+        },
+      });
       const resResult = {
         id: userExist.id,
         username: userExist.username,
-        session: cekUserSession,
+        session: updateToken,
         role: userExist.userRole,
+        updateToken: updateToken,
       };
-      return response
-        .status(201)
-        .json({ msg: "Login Succes", status: true, result: resResult });
+      if (updateToken) {
+        return response
+          .status(201)
+          .json({ msg: "Login Succes", status: true, result: resResult });
+      } else {
+        return response
+          .status(400)
+          .json({ msg: "Login Not Succes", status: false });
+      }
     }
   } catch (error) {
-    console.log(error);
     return response.status(500).json({ message: error.message });
   }
 };
@@ -175,7 +189,7 @@ const logoutUser = async (request: any, response: Response) => {
       });
     }
     console.log(username);
-    
+
     const sessionDel = await prisma.session.delete({
       where: {
         username: username,
@@ -195,7 +209,7 @@ const logoutUser = async (request: any, response: Response) => {
     }
   } catch (error) {
     console.log(error);
-    
+
     return response.status(500).json({ msg: error.masagge });
   }
 };

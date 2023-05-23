@@ -81,7 +81,7 @@ router.post(
   depart.createDepartMany
 );
 router.put(
-  "/depart/:id",
+  "/depart",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   depart.updateDepart
 );

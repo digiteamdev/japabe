@@ -32,6 +32,9 @@ const getDepart = async (request: Request, response: Response) => {
             contains: pencarian,
           },
         },
+        include: {
+          sub_depart: true,
+        },
         orderBy: {
           createdAt: "desc",
         },
@@ -68,11 +71,13 @@ const createDepart = async (request: Request, response: Response) => {
     const results = await prisma.departement.create({
       data: {
         name: request.body.name,
-        sub_depart: request.body.sub_depart
+        sub_depart: {
+          create: request.body.sub_depart,
+        },
       },
       include: {
         sub_depart: true,
-      }
+      },
     });
     if (results) {
       response.status(201).json({
@@ -193,24 +198,42 @@ const createDepartMany = async (request: Request, response: Response) => {
 
 const updateDepart = async (request: Request, response: Response) => {
   try {
-    const id: string = request.params.id;
-    const updateDepart = await prisma.departement.update({
-      where: {
-        id: id,
-      },
-      data: request.body,
-    });
-    if (updateDepart) {
-      response.status(201).json({
-        success: true,
-        massage: "Success Update Data",
-        results: updateDepart,
+    const updateVerify = request.body.map(
+      (updateByveri: { name: any; deptId: any; id: any }) => {
+        return {
+          name: updateByveri.name,
+          deptId: updateByveri.deptId,
+          id: updateByveri.id,
+        };
+      }
+    );
+    let result: any = [];
+    for (let i = 0; i < updateVerify.length; i++) {
+      const updateDepart = await prisma.departement.upsert({
+        where: {
+          id: updateVerify[i].id,
+        },
+        create: {
+          name: updateVerify[i].name,
+          sub_depart: { connect: { id: updateVerify[i].deptId } },
+        },
+        update: {
+          name: updateVerify[i].name,
+        },
       });
-    } else {
-      response.status(400).json({
-        success: false,
-        massage: "Unsuccess Update Data",
-      });
+      result = [...result, updateDepart];
+      if (result) {
+        response.status(201).json({
+          success: true,
+          massage: "Success Update Data",
+          result: result,
+        });
+      } else {
+        response.status(400).json({
+          success: false,
+          massage: "Unsuccess Update Data",
+        });
+      }
     }
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
@@ -247,5 +270,5 @@ export default {
   createDepart,
   updateDepart,
   deleteDepart,
-  createDepartMany
+  createDepartMany,
 };
