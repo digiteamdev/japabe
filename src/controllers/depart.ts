@@ -209,12 +209,6 @@ const updateDepart = async (request: Request, response: Response) => {
     );
     let result: any = [];
     for (let i = 0; i < updateVerify.length; i++) {
-      const dept = await prisma.departement.update({
-        where: { id: request.body.id },
-        data: {
-          name: request.body.name,
-        },
-      });
       const updateDepart = await prisma.sub_depart.upsert({
         where: {
           id: updateVerify[i].id,
@@ -227,19 +221,25 @@ const updateDepart = async (request: Request, response: Response) => {
           name: updateVerify[i].name,
         },
       });
-      result = [...result, updateDepart, dept];
-      if (result) {
-        response.status(201).json({
-          success: true,
-          massage: "Success Update Data",
-          result: result,
-        });
-      } else {
-        response.status(400).json({
-          success: false,
-          massage: "Unsuccess Update Data",
-        });
-      }
+      result = [...result, updateDepart];
+    }
+    const dept = await prisma.departement.update({
+      where: { id: request.body.id },
+      data: {
+        name: request.body.name,
+      },
+    });
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        result: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
     }
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
@@ -271,10 +271,36 @@ const deleteDepart = async (request: Request, response: Response) => {
   }
 };
 
+const deleteSubDepart = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const deleteDepart = await prisma.sub_depart.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (deleteDepart) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Delete Data",
+        results: deleteDepart,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Delete Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getDepart,
   createDepart,
   updateDepart,
   deleteDepart,
   createDepartMany,
+  deleteSubDepart
 };

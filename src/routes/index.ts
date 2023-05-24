@@ -90,6 +90,11 @@ router.delete(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   depart.deleteDepart
 );
+router.delete(
+  "/subdepart/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  depart.deleteSubDepart
+);
 
 /***************************DEPART********************************* */
 
