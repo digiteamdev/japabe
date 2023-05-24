@@ -63,6 +63,7 @@ const getSupplier = async (request: Request, response: Response) => {
       return response.status(200).json({
         success: false,
         massage: "No data",
+        totaldata: 0,
         result: [],
       });
     }

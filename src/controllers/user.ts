@@ -27,6 +27,7 @@ const getUser = async (req: Request, res: Response) => {
       return res.status(404).json({
         success: false,
         massage: "No data",
+        totaldata: 0,
       });
     }
   } catch (error) {
