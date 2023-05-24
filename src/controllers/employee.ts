@@ -155,7 +155,7 @@ const getEmployee = async (request: Request, response: Response) => {
       return response.status(200).json({
         success: false,
         massage: "No data",
-        totaldata: 0,
+        totalData: 0,
         result: [],
       });
     }
@@ -186,9 +186,11 @@ const getEmployeeSales = async (request: Request, response: Response) => {
         result: results,
       });
     } else {
-      return response.status(204).json({
+      return response.status(200).json({
         success: false,
         massage: "No data",
+        totalData: 0,
+        result:[]
       });
     }
   } catch (error) {
