@@ -57,7 +57,9 @@ function authToken(roles: any) {
               }
             });
         } else {
-          return res.status(401).json({ msg: "anda belum login" });
+          return res
+            .status(401)
+            .json({ login: false, msg: "akun ini telah di logout oleh seseorang😔, silahkan login kembali" });
         }
       });
     } else {
