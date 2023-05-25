@@ -48,17 +48,21 @@ const upload: any = multer({
     fileSize: 1024 * 1024 * 5,
   },
   fileFilter: function (req, file, cb) {
+    let ext = path.extname(file.originalname);
+
     if (
       file.mimetype === "image/png" ||
       file.mimetype === "image/jpg" ||
       file.mimetype === "image/jpeg" ||
-      file.mimetype === "application/pdf"
+      file.mimetype === "application/pdf" ||
+      ext === ".xlsx" ||
+      ext === ".csv"
     ) {
       cb(null, true);
     } else {
       //prevent the upload
       let newError: any = new Error(
-        "File type is incorrect mush png or jpg and jpeg, pdf"
+        "File type is incorrect mush png or jpg and jpeg, pdf, csv, xlsx"
       );
       // newError.name = "MulterError";
       cb(newError, false);

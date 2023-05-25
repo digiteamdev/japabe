@@ -108,6 +108,20 @@ const createCustomer = async (request: Request, response: Response) => {
   }
 };
 
+const createCsvNxlsx = async (request: any, response: Response) => {
+  try {
+    console.log(request.convData);
+    const createManyCus = await prisma.customer.createMany({
+      data: request.convData,
+    });
+    if (createManyCus) {
+      response.send({ msg: "succes" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const updateCustomer = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
@@ -295,6 +309,7 @@ const deleteCustomer = async (request: Request, response: Response) => {
 export default {
   getCustomer,
   createCustomer,
+  createCsvNxlsx,
   updateCustomer,
   updateCustomerContact,
   updateCustomerAddress,

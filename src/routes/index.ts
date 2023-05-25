@@ -3,6 +3,7 @@ const router = express.Router();
 
 import upload from "../utils/cloudinary";
 import jwt from "../middleware/jwt";
+import middle from "../middleware/csv";
 
 import auth from "../controllers/auth";
 import depart from "../controllers/depart";
@@ -185,6 +186,12 @@ router.post(
   "/customer",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   customer.createCustomer
+);
+router.post(
+  "/customerCsvXlsx",
+  middle.importData,
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  customer.createCsvNxlsx
 );
 router.put(
   "/customer/:id",

@@ -188,8 +188,6 @@ const logoutUser = async (request: any, response: Response) => {
         msg: "not loggin ",
       });
     }
-    console.log(username);
-
     const sessionDel = await prisma.session.delete({
       where: {
         username: username,
