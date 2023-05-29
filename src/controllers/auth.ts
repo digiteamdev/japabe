@@ -51,9 +51,14 @@ const registerUser = async (req: Request, res: Response) => {
       where: { id: id },
       select: {
         email: true,
-        departement: {
+        sub_depart: {
           select: {
             name: true,
+            departement: {
+              select: {
+                name: true,
+              },
+            },
           },
         },
       },

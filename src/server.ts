@@ -42,14 +42,15 @@ app.use(
 //Cross origin middleware
 app.use("*", cors());
 
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, API-Key"
-  );
-  next();
-});
+// app.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept, API-Key, Authorization, Set-Cookie, Cooki, Bearer"
+//   );
+//   next();
+// });
 
 // PROTECT ALL ROUTES THAT FOLLOW
 // app.use((req, res, next) => {

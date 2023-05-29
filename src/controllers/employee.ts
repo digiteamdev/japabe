@@ -23,7 +23,11 @@ const getEmployee = async (request: Request, response: Response) => {
           status_user: false,
         },
         include: {
-          departement: true,
+          sub_depart: {
+            include: {
+              departement: true,
+            },
+          },
         },
       });
     } else {
@@ -46,7 +50,7 @@ const getEmployee = async (request: Request, response: Response) => {
               },
             },
             {
-              departement: {
+              sub_depart: {
                 name: {
                   contains: pencarian,
                 },
@@ -102,13 +106,22 @@ const getEmployee = async (request: Request, response: Response) => {
               createdAt: "desc",
             },
           },
-          departement: {
+          sub_depart: {
             select: {
               id: true,
               name: true,
               createdAt: true,
               updatedAt: true,
               deleted: true,
+              departement: {
+                select: {
+                  id: true,
+                  name: true,
+                  createdAt: true,
+                  updatedAt: true,
+                  deleted: true,
+                },
+              },
             },
           },
           Educational_Employee: {
@@ -169,14 +182,23 @@ const getEmployeeSales = async (request: Request, response: Response) => {
     const pencarian: any = request.query.search || "";
     const results = await prisma.employee.findMany({
       where: {
-        departement: {
+        sub_depart: {
           name: {
             contains: pencarian,
+          },
+          departement: {
+            name: {
+              contains: pencarian,
+            },
           },
         },
       },
       include: {
-        departement: true,
+        sub_depart: {
+          include: {
+            departement: true,
+          },
+        },
       },
     });
     if (results.length > 0) {
@@ -190,7 +212,7 @@ const getEmployeeSales = async (request: Request, response: Response) => {
         success: false,
         massage: "No data",
         totalData: 0,
-        result:[]
+        result: [],
       });
     }
   } catch (error) {
@@ -222,7 +244,7 @@ const createEmployee = async (request: Request, response: Response) => {
         remaining_days_of: request.body.remaining_days_of,
         gender: request.body.gender,
         marital_status: request.body.marital_status,
-        departement: { connect: { id: request.body.departId } },
+        sub_depart: { connect: { id: request.body.subdepartId } },
         employee_status: request.body.employee_status,
         spouse_name: request.body.spouse_name,
         gender_spouse: request.body.gender_spouse,
@@ -642,12 +664,11 @@ const deleteEmployeeCertificate = async (
 ) => {
   try {
     const id: string = request.params.id;
-    const deleteEmployeeCertificate =
-      await prisma.certificate_Employee.delete({
-        where: {
-          id: id,
-        },
-      });
+    const deleteEmployeeCertificate = await prisma.certificate_Employee.delete({
+      where: {
+        id: id,
+      },
+    });
     if (deleteEmployeeCertificate) {
       response.status(201).json({
         success: true,

@@ -292,5 +292,5 @@ export default {
   deleteEquipment,
   createPart,
   updatePart,
-  deleteDPart
+  deleteDPart,
 };

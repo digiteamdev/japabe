@@ -46,8 +46,8 @@ model Employee {
   remaining_days_of    Int?                   @default(0)
   gender               Gender?
   marital_status       Maritial?
-  departement          Departement            @relation(fields: [departId], references: [id])
-  departId             String
+  sub_depart           sub_depart             @relation(fields: [subdepartId], references: [id])
+  subdepartId          String
   employee_status      Employee_Status?
   spouse_name          String?                @db.VarChar(200)
   gender_spouse        Spouse_Gender?
@@ -158,7 +158,6 @@ model CustomerAddress {
 model Departement {
   id         String       @id @default(cuid())
   name       String       @db.VarChar(200)
-  Employee   Employee[]
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
   deleted    DateTime?
@@ -175,6 +174,7 @@ model sub_depart {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   deleted     DateTime?
+  Employee    Employee[]
 }
 
 enum Gender {

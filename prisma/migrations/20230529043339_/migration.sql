@@ -64,7 +64,7 @@ CREATE TABLE "Employee" (
     "remaining_days_of" INTEGER DEFAULT 0,
     "gender" "Gender",
     "marital_status" "Maritial",
-    "departId" TEXT NOT NULL,
+    "subdepartId" TEXT NOT NULL,
     "employee_status" "Employee_Status",
     "spouse_name" VARCHAR(200),
     "gender_spouse" "Spouse_Gender",
@@ -558,7 +558,7 @@ CREATE INDEX "Deskription_CusPo_id_cuspoId_idx" ON "Deskription_CusPo"("id", "cu
 CREATE INDEX "wor_id_job_no_idx" ON "wor"("id", "job_no");
 
 -- AddForeignKey
-ALTER TABLE "Employee" ADD CONSTRAINT "Employee_departId_fkey" FOREIGN KEY ("departId") REFERENCES "Departement"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Employee" ADD CONSTRAINT "Employee_subdepartId_fkey" FOREIGN KEY ("subdepartId") REFERENCES "sub_depart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "user" ADD CONSTRAINT "user_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "Employee"("id") ON DELETE SET NULL ON UPDATE CASCADE;

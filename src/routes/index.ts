@@ -81,6 +81,11 @@ router.post(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   depart.createDepartMany
 );
+router.post(
+  "/subMany",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  depart.createSubMany
+);
 router.put(
   "/depart",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
@@ -113,7 +118,7 @@ router.get(
 );
 router.post(
   "/employe",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  // jwt.authToken({ administrator: "ADMINISTRATOR" }),
   employee.createEmployee
 );
 router.post(

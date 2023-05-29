@@ -7,7 +7,11 @@ const getUser = async (req: Request, res: Response) => {
       include: {
         employee: {
           include: {
-            departement: true,
+            sub_depart: {
+              include: {
+                departement: true,
+              },
+            },
           },
         },
         userRole: {
