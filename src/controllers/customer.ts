@@ -79,6 +79,8 @@ const createCustomer = async (request: Request, response: Response) => {
         id_custom: request.body.id_custom,
         name: request.body.name,
         email: request.body.email,
+        ppn: request.body.ppn,
+        pph: request.body.pph,
         contact: {
           create: request.body.contact,
         },

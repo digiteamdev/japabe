@@ -97,6 +97,62 @@ const createEquipment = async (request: any, response: Response) => {
   }
 };
 
+const createEquipmenMany = async (request: any, response: Response) => {
+  try {
+    const results = await prisma.equipment.createMany({
+      data: [
+        {
+          id: "cli2x4t2x0008czg5u5bypmr8",
+          id_equipment: null,
+          nama: "Vertical Pump",
+          keterangan_eq: "Vertical Pump",
+          eq_image:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1685006111/workshop/weh4cahxitmhekhv3khj.jpg",
+          createdAt: "2023-05-25T09:15:12.056Z",
+          updatedAt: "2023-05-25T09:15:12.056Z",
+          deleted: null,
+        },
+        {
+          id: "clhuc2kgt000cczyawjnx66m2",
+          id_equipment: null,
+          nama: "Bearing  ( Sleeve Bearing / Journal Bearing )",
+          keterangan_eq: "Rebabbit Sleeve Bearing / Journal\tBearing",
+          eq_image:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1684487005/workshop/skwh4aelm1azw3e9iya2.png",
+          createdAt: "2023-05-19T09:03:26.236Z",
+          updatedAt: "2023-05-19T09:03:26.236Z",
+          deleted: null,
+        },
+        {
+          id: "clhubtvvm0004czya7gjx0p5g",
+          id_equipment: null,
+          nama: "Pump Vertical ( General )",
+          keterangan_eq: "Recondition of Vertical Pump",
+          eq_image:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1684486600/workshop/imcmswzo4nwngpwvuckk.png",
+          createdAt: "2023-05-19T08:56:41.121Z",
+          updatedAt: "2023-05-19T08:56:41.121Z",
+          deleted: null,
+        },
+      ],
+    });
+    if (results) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Add Data",
+        results: results,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Add Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const updateEquipment = async (request: any, response: Response) => {
   try {
     const id: string = request.params.id;
@@ -172,6 +228,185 @@ const createPart = async (request: any, response: Response) => {
     }
     const results = await prisma.eq_part.createMany({
       data: newArrPart,
+    });
+    if (results) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Add Data",
+        results: results,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Add Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const createPartMany = async (request: Request, response: Response) => {
+  try {
+    const results = await prisma.eq_part.createMany({
+      data: [
+        {
+          id: "cli2x5r2r000aczg5xxq9jrha",
+          id_equipment: "cli2x4t2x0008czg5u5bypmr8",
+          id_part: null,
+          nama_part: "Shaft",
+          keterangan_part: "Rotating",
+          part_img:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1685006155/workshop/xepebeir4dfnwut8o1m2.jpg",
+          createdAt: "2023-05-25T09:15:56.113Z",
+          updatedAt: "2023-05-25T09:15:56.113Z",
+          deleted: null,
+        },
+        {
+          id: "cli2x5r2r000bczg593vaa8hx",
+          id_equipment: "cli2x4t2x0008czg5u5bypmr8",
+          id_part: null,
+          nama_part: "Bearing DE`",
+          keterangan_part: "Static",
+          part_img:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1685006155/workshop/sckd0ztfq6helrh9iztd.png",
+          createdAt: "2023-05-25T09:15:56.113Z",
+          updatedAt: "2023-05-25T09:15:56.113Z",
+          deleted: null,
+        },
+        {
+          id: "clhuc4s8k000eczyaixdjbbu1",
+          id_equipment: "clhuc2kgt000cczyawjnx66m2",
+          id_part: null,
+          nama_part: "Sleeve-Bearing-DE",
+          keterangan_part: "Static",
+          part_img:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1684487107/workshop/qg3xwnn9lmtyrnnthkwn.png",
+          createdAt: "2023-05-19T09:05:09.620Z",
+          updatedAt: "2023-05-19T09:05:09.620Z",
+          deleted: null,
+        },
+        {
+          id: "clhuc4s8l000fczyaggzr719f",
+          id_equipment: "clhuc2kgt000cczyawjnx66m2",
+          id_part: null,
+          nama_part: "Sleeve-Bearing-NDE",
+          keterangan_part: "Static",
+          part_img:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1684487108/workshop/extoqpe4clnm9qfad3xo.png",
+          createdAt: "2023-05-19T09:05:09.620Z",
+          updatedAt: "2023-05-19T09:05:09.620Z",
+          deleted: null,
+        },
+        {
+          id: "clhuc4s8l000gczyav5kqdm31",
+          id_equipment: "clhuc2kgt000cczyawjnx66m2",
+          id_part: null,
+          nama_part: "Dowel-Pin",
+          keterangan_part: "Static",
+          part_img:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1684487108/workshop/kecugpdgwhwtupzjhzcv.png",
+          createdAt: "2023-05-19T09:05:09.620Z",
+          updatedAt: "2023-05-19T09:05:09.620Z",
+          deleted: null,
+        },
+        {
+          id: "clhuc4s8l000hczyao3mg5e98",
+          id_equipment: "clhuc2kgt000cczyawjnx66m2",
+          id_part: null,
+          nama_part: "L-Bolt",
+          keterangan_part: "Static",
+          part_img:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1684487109/workshop/fobrzkbpeznbchlc12d9.png",
+          createdAt: "2023-05-19T09:05:09.620Z",
+          updatedAt: "2023-05-19T09:05:09.620Z",
+          deleted: null,
+        },
+        {
+          id: "clhuc4s8l000iczyapbgaxlrh",
+          id_equipment: "clhuc2kgt000cczyawjnx66m2",
+          id_part: null,
+          nama_part: "Hexa-Bolt",
+          keterangan_part: "Static",
+          part_img:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1684487108/workshop/mucnj6lybbxudooif1v8.png",
+          createdAt: "2023-05-19T09:05:09.620Z",
+          updatedAt: "2023-05-19T09:05:09.620Z",
+          deleted: null,
+        },
+        {
+          id: "clhubxqt10006czya33h8mfws",
+          id_equipment: "clhubtvvm0004czya7gjx0p5g",
+          id_part: null,
+          nama_part: "Impeller",
+          keterangan_part: "Rotating",
+          part_img:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1684486780/workshop/wv8hhkdxqoctmyvkakii.png",
+          createdAt: "2023-05-19T08:59:41.173Z",
+          updatedAt: "2023-05-19T08:59:41.173Z",
+          deleted: null,
+        },
+        {
+          id: "clhubxqt10007czya0vx3n619",
+          id_equipment: "clhubtvvm0004czya7gjx0p5g",
+          id_part: null,
+          nama_part: "Impeller-Wearring",
+          keterangan_part: "Rotating",
+          part_img:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1684486780/workshop/lp30hzv3tdkqxqpjdbyc.png",
+          createdAt: "2023-05-19T08:59:41.173Z",
+          updatedAt: "2023-05-19T08:59:41.173Z",
+          deleted: null,
+        },
+        {
+          id: "clhubxqt10008czya5jum1szh",
+          id_equipment: "clhubtvvm0004czya7gjx0p5g",
+          id_part: null,
+          nama_part: "Shaft-Sleeve",
+          keterangan_part: "Rotating",
+          part_img:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1684486780/workshop/ydhn4fvet517hsjb9mbw.png",
+          createdAt: "2023-05-19T08:59:41.173Z",
+          updatedAt: "2023-05-19T08:59:41.173Z",
+          deleted: null,
+        },
+        {
+          id: "clhubxqt10009czya29j2dmmp",
+          id_equipment: "clhubtvvm0004czya7gjx0p5g",
+          id_part: null,
+          nama_part: "Shaft-Sleeve-Collar",
+          keterangan_part: "Rotating",
+          part_img:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1684486780/workshop/emuqr3vswarxnre8cihz.png",
+          createdAt: "2023-05-19T08:59:41.173Z",
+          updatedAt: "2023-05-19T08:59:41.173Z",
+          deleted: null,
+        },
+        {
+          id: "clhubxqt1000aczya5vqwyk7i",
+          id_equipment: "clhubtvvm0004czya7gjx0p5g",
+          id_part: null,
+          nama_part: "Joint-Coupling-Sleeve",
+          keterangan_part: "Rotating",
+          part_img:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1684486780/workshop/ek72hpzkxsvcepisfawh.png",
+          createdAt: "2023-05-19T08:59:41.173Z",
+          updatedAt: "2023-05-19T08:59:41.173Z",
+          deleted: null,
+        },
+        {
+          id: "clhubxqt1000bczyagdda8au6",
+          id_equipment: "clhubtvvm0004czya7gjx0p5g",
+          id_part: null,
+          nama_part: "Split-Ring-Joint-Shaft",
+          keterangan_part: "Rotating",
+          part_img:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1684486780/workshop/sjfavssbq6noogqtbipa.png",
+          createdAt: "2023-05-19T08:59:41.173Z",
+          updatedAt: "2023-05-19T08:59:41.173Z",
+          deleted: null,
+        },
+      ],
     });
     if (results) {
       response.status(201).json({
@@ -287,7 +522,9 @@ const deleteDPart = async (request: Request, response: Response) => {
 
 export default {
   getEquipment,
+  createPartMany,
   createEquipment,
+  createEquipmenMany,
   updateEquipment,
   deleteEquipment,
   createPart,

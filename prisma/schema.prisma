@@ -112,6 +112,8 @@ model Customer {
   email      String?           @unique @db.VarChar(100)
   contact    CustomerContact[] @relation("contact")
   address    CustomerAddress[] @relation("address")
+  ppn        Int?              @default(0)
+  pph        Int?              @default(0)
   createdAt  DateTime          @default(now())
   updatedAt  DateTime          @updatedAt
   deleted    DateTime?
@@ -431,6 +433,9 @@ model CustomerPo {
   quo_id            String              @unique
   tax               Tax?
   noted             String?             @db.Text
+  vat               String
+  grand_tot         String
+  total             String
   date_of_po        DateTime
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt

@@ -117,6 +117,9 @@ const createcusPo = async (request: Request, response: Response) => {
         tax: request.body.tax,
         noted: request.body.noted,
         date_of_po: new Date(request.body.date_of_po),
+        vat: request.body.vat,
+        grand_tot: request.body.grand_tot,
+        total: request.body.total,
         Deskription_CusPo: {
           create: request.body.Deskription_CusPo,
         },

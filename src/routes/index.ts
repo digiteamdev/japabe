@@ -118,7 +118,7 @@ router.get(
 );
 router.post(
   "/employe",
-  // jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
   employee.createEmployee
 );
 router.post(
@@ -269,6 +269,12 @@ router.post(
   upload.single("eq_image", 1000),
   equipment.createEquipment
 );
+router.post(
+  "/equipmentMany",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  equipment.createEquipmenMany
+);
+router.post("/partMany", equipment.createPartMany);
 router.put(
   "/equipment/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
