@@ -27,10 +27,12 @@ const getEquipment = async (request: Request, response: Response) => {
         include: {
           eq_part: {
             select: {
+              id: true,
               nama_part: true,
               part_img: true,
               equipment: {
                 select: {
+                  id: true,
                   nama: true,
                   eq_image: true,
                 },
