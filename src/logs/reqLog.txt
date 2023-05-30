@@ -419,3 +419,5 @@
 20230529	13:18:05	cli8gkgfy0015grrscsgwg3rt	GET	http://localhost:8080	192.168.100.22:4000	/api/v1/role
 20230529	13:18:06	cli8gkh1t0016grrs9lys256a	GET	http://localhost:8080	192.168.100.22:4000	/api/v1/employe
 20230529	13:18:06	cli8gkh450017grrsfpw3a0pk	GET	http://localhost:8080	192.168.100.22:4000	/api/v1/role
+20230530	14:55:28	cli9zhjm10000s9rs3fmgcn86	GET	undefined	192.168.100.22:4000	/api/v1/equipment
+20230530	14:59:13	cli9zmcn80000tkrsgzg51iol	GET	undefined	192.168.100.22:4000	/api/v1/equipment

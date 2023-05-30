@@ -25,7 +25,18 @@ const getEquipment = async (request: Request, response: Response) => {
           },
         },
         include: {
-          eq_part: true,
+          eq_part: {
+            select: {
+              nama_part: true,
+              part_img: true,
+              equipment: {
+                select: {
+                  nama: true,
+                  eq_image: true,
+                },
+              },
+            },
+          },
         },
       });
     } else {
