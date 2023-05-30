@@ -409,9 +409,6 @@ const deleteEmployeeChild = async (request: Request, response: Response) => {
 const createEmployeEdu = async (request: any, response: Response) => {
   try {
     const newArrEdu = [];
-    if (request.files === undefined)
-      return response.status(403).json("img not found");
-
     if (request.body.Educational_Employee) {
       const arr = JSON.parse(request.body.Educational_Employee);
       for (let i = 0; i < arr.length; i++) {
@@ -447,10 +444,6 @@ const createEmployeEdu = async (request: any, response: Response) => {
 const createEmployeCertificate = async (request: any, response: Response) => {
   try {
     const newArrCertificate = [];
-    if (!request.files) {
-      response.status(204).json({ msg: "img not found" });
-    }
-
     if (request.body.Certificate_Employee) {
       const arr = JSON.parse(request.body.Certificate_Employee);
       for (let i = 0; i < arr.length; i++) {

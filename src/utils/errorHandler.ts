@@ -1,7 +1,7 @@
 import { logEvents } from "./logEvent";
-import { PrismaClient, Prisma } from '@prisma/client'
+import { PrismaClient, Prisma } from "@prisma/client";
 
-const client = new PrismaClient()
+const client = new PrismaClient();
 
 const errorHandler = (err: any, req: any, res: any, next: any) => {
   logEvents(`${err.name}: ${err.message}`, "errLog.txt");
@@ -14,10 +14,12 @@ const errorHandler = (err: any, req: any, res: any, next: any) => {
     return res.status(401).send({ msg: err });
   } else if (typeof err === "undefined") {
     return res.status(400).send({ msg: err });
-  } else if (err === "Unknown arg"){
+  } else if (err === "Unknown arg") {
     return res.status(400).send({ msg: err });
+  } else if (err === req.file) {
+    return res.status(200).send({ msg: err });
   }
-  
+
   return res.status(500).send({ msg: err });
 };
 

@@ -90,9 +90,6 @@ const getWor = async (request: Request, response: Response) => {
 
 const createWor = async (request: any, response: Response) => {
   try {
-    if (!request.file) {
-      response.status(204).json({ msg: "img not found" });
-    }
     const results = await prisma.wor.create({
       data: {
         job_no: request.body.job_no,
@@ -115,7 +112,7 @@ const createWor = async (request: any, response: Response) => {
         eq_rotation: request.body.eq_rotation,
         eq_power: request.body.eq_power,
         scope_of_work: request.body.scope_of_work,
-        file_list: request.file.path,
+        file_list: !request.file ? request.body.file_list : request.file.path,
         noted: request.body.noted,
         status: request.body.status,
       },
@@ -196,7 +193,7 @@ const updateWorStatus = async (request: Request, response: Response) => {
     const d = new Date();
     let year = d.getUTCFullYear().toString().substring(2);
 
-    const genarate = year + '.' + r
+    const genarate = year + "." + r;
     const id = request.params.id;
     const statusPenc = await prisma.wor.findFirst({
       where: {
@@ -211,7 +208,7 @@ const updateWorStatus = async (request: Request, response: Response) => {
         where: { id: id },
         data: {
           status: "valid",
-          job_no: statusPenc.status === null ? genarate : statusPenc.job_no
+          job_no: statusPenc.status === null ? genarate : statusPenc.job_no,
         },
       });
     } else {

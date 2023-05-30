@@ -96,12 +96,57 @@ const getQuotation = async (request: Request, response: Response) => {
   }
 };
 
+const getEditPoQuotation = async (request: Request, response: Response) => {
+  try {
+    const results = await prisma.quotations.findMany({
+      where: {
+        OR: [
+          {
+            CustomerPo: null,
+          },
+          { id: request.params.id },
+        ],
+      },
+      include: {
+        CustomerPo: true,
+        Customer: {
+          include: {
+            address: true,
+          },
+        },
+        CustomerContact: true,
+        Quotations_Detail: true,
+        eqandpart: {
+          include: {
+            equipment: true,
+            eq_part: true,
+          },
+        },
+      },
+    });
+    if (results.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All Quotation",
+        result: results,
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const createQuotation = async (request: any, response: Response) => {
   try {
-    if (!request.file) {
-      response.status(204).json({ msg: "img not found" });
-    }
-    const results = await prisma.quotations.create({
+    let results;
+    results = await prisma.quotations.create({
       data: {
         quo_num: request.body.quo_num,
         quo_auto: request.body.quo_auto,
@@ -109,7 +154,7 @@ const createQuotation = async (request: any, response: Response) => {
         CustomerContact: { connect: { id: request.body.customercontactId } },
         deskription: request.body.deskription,
         date: new Date(request.body.date),
-        quo_img: request.file.path,
+        quo_img: !request.file ? request.body.quo_img : request.file.path,
         Quotations_Detail: {
           create: JSON.parse(request.body.Quotations_Detail),
         },
@@ -123,15 +168,15 @@ const createQuotation = async (request: any, response: Response) => {
       },
     });
     if (results) {
-      response.status(201).json({
+      return response.status(204).json({
         success: true,
         massage: "Success Add Data",
-        results: results,
+        result: results,
       });
     } else {
-      response.status(400).json({
+      return response.status(200).json({
         success: false,
-        massage: "Unsuccess Add Data",
+        result: "Not Succes",
       });
     }
   } catch (error) {
@@ -374,4 +419,5 @@ export default {
   updateQuotationEqPart,
   deleteQuotationDetail,
   deleteQuotationEqPart,
+  getEditPoQuotation,
 };

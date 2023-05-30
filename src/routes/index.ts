@@ -323,6 +323,11 @@ router.get(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   quotation.getQuotation
 );
+router.get(
+  "/quotation/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  quotation.getEditPoQuotation
+);
 router.post(
   "/quotation",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
