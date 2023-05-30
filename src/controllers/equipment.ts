@@ -28,13 +28,12 @@ const getEquipment = async (request: Request, response: Response) => {
           eq_part: {
             select: {
               id: true,
+              id_equipment: true,
               nama_part: true,
               part_img: true,
               equipment: {
                 select: {
-                  id: true,
                   nama: true,
-                  eq_image: true,
                 },
               },
             },

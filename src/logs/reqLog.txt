@@ -421,3 +421,4 @@
 20230529	13:18:06	cli8gkh450017grrsfpw3a0pk	GET	http://localhost:8080	192.168.100.22:4000	/api/v1/role
 20230530	14:55:28	cli9zhjm10000s9rs3fmgcn86	GET	undefined	192.168.100.22:4000	/api/v1/equipment
 20230530	14:59:13	cli9zmcn80000tkrsgzg51iol	GET	undefined	192.168.100.22:4000	/api/v1/equipment
+20230530	15:29:06	clia0os7r00006crsagej01u1	POST	undefined	localhost:4000	/api/v1/quotation
