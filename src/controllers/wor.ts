@@ -112,7 +112,7 @@ const createWor = async (request: any, response: Response) => {
         eq_rotation: request.body.eq_rotation,
         eq_power: request.body.eq_power,
         scope_of_work: request.body.scope_of_work,
-        file_list: !request.file ? request.body.file_list : request.file.path,
+        file_list: !request.file ? "" : request.file.path,
         noted: request.body.noted,
         status: request.body.status,
       },
