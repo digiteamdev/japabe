@@ -417,7 +417,7 @@ const createEmployeEdu = async (request: any, response: Response) => {
           school_name: arr[i].school_name,
           last_edu: arr[i].last_edu,
           graduation: arr[i].graduation,
-          ijazah: !request.file[i] ? "" : request.files[i].path,
+          ijazah: !request.file ? "" : request.files[i].path,
         });
       }
     }
@@ -450,7 +450,7 @@ const createEmployeCertificate = async (request: any, response: Response) => {
         newArrCertificate.push({
           employeeId: arr[i].employeeId,
           certificate_name: arr[i].certificate_name,
-          certificate_img: !request.file[i] ? "" : request.files[i].path,
+          certificate_img: !request.file ? "" : request.files[i].path,
           end_date: arr[i].end_date,
         });
       }
