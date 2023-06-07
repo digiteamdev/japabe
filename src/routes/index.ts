@@ -16,6 +16,7 @@ import equipment from "../controllers/equipment";
 import quotation from "../controllers/quotation";
 import customerPo from "../controllers/customerPo";
 import wor from "../controllers/wor";
+import typeMr from "../controllers/mrType";
 
 /***************************AUTH********************************* */
 
@@ -444,5 +445,20 @@ router.delete(
 );
 
 /***************************WOR********************************* */
+
+/***************************TYPEMR********************************* */
+
+router.get(
+  "/typemr",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  typeMr.getTypeMr
+);
+router.post(
+  "/typemr",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  typeMr.createTypeMr
+);
+
+/***************************TYPEMR********************************* */
 
 export default router;

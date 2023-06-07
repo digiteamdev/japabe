@@ -309,27 +309,30 @@ enum Keterangan_Part {
   Consumable @map("Consumable Part")
 }
 
-model Type_Mr {
+model Material {
   id            String          @id @default(cuid())
-  nama_jenis    String?         @db.VarChar(200)
+  nama_type     String?         @db.VarChar(200)
+  material_name String?         @db.VarChar(200)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   deleted       DateTime?
-  Material_Name Material_Name[]
+  Material_Spek Material_Spek[]
 
-  @@index([id, nama_jenis])
+  @@index([id, nama_type, material_name])
 }
 
-model Material_Name {
-  id            String    @id @default(cuid())
-  type_mr       Type_Mr   @relation(fields: [typeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  typeId        String
-  material_name String?   @db.VarChar(200)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  deleted       DateTime?
+model Material_Spek {
+  id         String    @id @default(cuid())
+  material   Material? @relation(fields: [materialId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  materialId String?
+  jumlah     String?   @db.VarChar(200)
+  unit       String?   @db.VarChar(200)
+  detail     String?   @db.Text
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deleted    DateTime?
 
-  @@index([id, material_name])
+  @@index([id, detail, materialId])
 }
 
 model Supplier {

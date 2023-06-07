@@ -275,26 +275,29 @@ CREATE TABLE "eqandpart" (
 );
 
 -- CreateTable
-CREATE TABLE "Type_Mr" (
+CREATE TABLE "Material" (
     "id" TEXT NOT NULL,
-    "nama_jenis" VARCHAR(200),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "deleted" TIMESTAMP(3),
-
-    CONSTRAINT "Type_Mr_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Material_Name" (
-    "id" TEXT NOT NULL,
-    "typeId" TEXT NOT NULL,
+    "nama_type" VARCHAR(200),
     "material_name" VARCHAR(200),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deleted" TIMESTAMP(3),
 
-    CONSTRAINT "Material_Name_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Material_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Material_Spek" (
+    "id" TEXT NOT NULL,
+    "materialId" TEXT,
+    "jumlah" VARCHAR(200),
+    "unit" VARCHAR(200),
+    "detail" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "Material_Spek_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -524,10 +527,10 @@ CREATE INDEX "Equipment_id_nama_id_equipment_idx" ON "Equipment"("id", "nama", "
 CREATE INDEX "eq_part_id_nama_part_idx" ON "eq_part"("id", "nama_part");
 
 -- CreateIndex
-CREATE INDEX "Type_Mr_id_nama_jenis_idx" ON "Type_Mr"("id", "nama_jenis");
+CREATE INDEX "Material_id_nama_type_material_name_idx" ON "Material"("id", "nama_type", "material_name");
 
 -- CreateIndex
-CREATE INDEX "Material_Name_id_material_name_idx" ON "Material_Name"("id", "material_name");
+CREATE INDEX "Material_Spek_id_detail_materialId_idx" ON "Material_Spek"("id", "detail", "materialId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Supplier_office_email_key" ON "Supplier"("office_email");
@@ -608,7 +611,7 @@ ALTER TABLE "eqandpart" ADD CONSTRAINT "eqandpart_id_part_fkey" FOREIGN KEY ("id
 ALTER TABLE "eqandpart" ADD CONSTRAINT "eqandpart_id_quotation_fkey" FOREIGN KEY ("id_quotation") REFERENCES "Quotations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Material_Name" ADD CONSTRAINT "Material_Name_typeId_fkey" FOREIGN KEY ("typeId") REFERENCES "Type_Mr"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Material_Spek" ADD CONSTRAINT "Material_Spek_materialId_fkey" FOREIGN KEY ("materialId") REFERENCES "Material"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "SupplierContact" ADD CONSTRAINT "SupplierContact_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "Supplier"("id") ON DELETE CASCADE ON UPDATE CASCADE;
