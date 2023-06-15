@@ -17,6 +17,7 @@ import quotation from "../controllers/quotation";
 import customerPo from "../controllers/customerPo";
 import wor from "../controllers/wor";
 import typeMr from "../controllers/mrType";
+import srimg from "../controllers//srimg";
 
 /***************************AUTH********************************* */
 
@@ -267,7 +268,7 @@ router.get(
 router.post(
   "/equipment",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
-  upload.single("eq_image", 1000),
+  upload.single("eq_image", 1),
   equipment.createEquipment
 );
 router.post(
@@ -275,11 +276,15 @@ router.post(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   equipment.createEquipmenMany
 );
-router.post("/partMany", equipment.createPartMany);
+router.post(
+  "/partMany",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  equipment.createPartMany
+);
 router.put(
   "/equipment/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
-  upload.single("eq_image", 1000),
+  upload.single("eq_image", 1),
   equipment.updateEquipment
 );
 router.delete(
@@ -332,13 +337,13 @@ router.get(
 router.post(
   "/quotation",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
-  upload.single("quo_img", 1000),
+  upload.single("quo_img", 1),
   quotation.createQuotation
 );
 router.put(
   "/quotation/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
-  upload.single("quo_img", 1000),
+  upload.single("quo_img", 1),
   quotation.updateQuotation
 );
 router.put(
@@ -424,13 +429,13 @@ router.get(
 router.post(
   "/wor",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
-  upload.single("file_list", 1000),
+  upload.single("file_list", 1),
   wor.createWor
 );
 router.put(
   "/wor/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
-  upload.single("file_list", 1000),
+  upload.single("file_list", 1),
   wor.updateWor
 );
 router.put(
@@ -458,7 +463,59 @@ router.post(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   typeMr.createTypeMr
 );
+router.put(
+  "/typemr/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  typeMr.updateMaterial
+);
+router.put(
+  "/typemr",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  typeMr.updateMaterialSpek
+);
+router.delete(
+  "/typemr/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  typeMr.deleteMaterial
+);
+router.delete(
+  "/typemrspek/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  typeMr.deleteMaterialSpek
+);
 
 /***************************TYPEMR********************************* */
+
+/***************************SRIMG********************************* */
+
+router.get(
+  "/summary",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  srimg.getSrimg
+);
+router.post(
+  "/summary",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  upload.single("inimg", 1),
+  srimg.createSrimg
+);
+router.post(
+  "/summaryImg",
+  upload.array("img", 1000),
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  srimg.createImgMany
+);
+router.put(
+  "/summary/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  srimg.updateSrimg
+);
+router.delete(
+  "/summary/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  srimg.deleteSrimg
+);
+
+/***************************SRIMG********************************* */
 
 export default router;

@@ -28,12 +28,6 @@ const createRole = async (request: Request, response: Response) => {
     const results = await prisma.role.createMany({
       data: [
         {
-          id: "clh7i29ko0000rsi9tlprlcv5",
-          role_name: "admin",
-          createdAt: "2023-05-02T06:56:46.837Z",
-          updatedAt: "2023-05-02T06:56:46.837Z",
-        },
-        {
           id: "clh788dd40000rsqbrwg7yolx",
           role_name: "HR & GA",
           createdAt: "2023-05-03T04:57:16.457Z",

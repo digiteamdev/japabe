@@ -484,6 +484,8 @@ model term_of_pay {
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
   deleted    DateTime?
+
+  @@index([id, cuspoId])
 }
 
 enum Limit_Pay {
@@ -522,15 +524,16 @@ model wor {
   eq_power          String?          @db.VarChar(200)
   scope_of_work     String?          @db.Text
   file_list         String?          @db.Text
-  noted             String?          @db.VarChar(200)
+  noted             String?          @db.Text
   status            String?          @db.VarChar(20)
   refivision        String?          @db.VarChar(20)
-  refevision_desc   String?          @db.VarChar(225)
+  refevision_desc   String?          @db.Text
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
   deleted           DateTime?
   Quotations        Quotations?      @relation(fields: [quotationsId], references: [id])
   quotationsId      String?
+  srimg             srimg[]
 
   @@index([id, job_no])
 }
@@ -541,4 +544,59 @@ enum Priority_Status {
   XXT
   XTASREQ  @map("XT As Req")
   XXTASREQ @map("XXT As Req")
+}
+
+model srimg {
+  id              String        @id @default(cuid())
+  id_summary      String?       @db.VarChar(200)
+  date_of_summary DateTime?
+  wor             wor?          @relation(fields: [worId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  worId           String?
+  quantity        Int
+  ioem            String?       @db.VarChar(100)
+  isr             String?       @db.VarChar(100)
+  itn             String?       @db.VarChar(100)
+  introduction    String?       @db.Text
+  inimg           String?       @db.VarChar(100)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deleted         DateTime?
+  srimgdetail     srimgdetail[]
+
+  @@index([id, worId])
+}
+
+model srimgdetail {
+  id            String       @id @default(cuid())
+  name_part     String?      @db.VarChar(100)
+  srimg         srimg?       @relation(fields: [srId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  srId          String?
+  qty           Int
+  input_finding String?      @db.Text
+  choice        choice?
+  noted         String?      @db.Text
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  deleted       DateTime?
+  imgSummary    imgSummary[]
+
+  @@index([id, name_part])
+}
+
+enum choice {
+  Manufacture_New @map("Manufacture New")
+  Supply_New      @map("Supply New")
+  Repair
+}
+
+model imgSummary {
+  id            String       @id @default(cuid())
+  srimgdetail   srimgdetail? @relation(fields: [srimgdetailId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  srimgdetailId String?
+  img           String?      @db.Text
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  deleted       DateTime?
+
+  @@index([id])
 }

@@ -6,6 +6,7 @@ import url from "url";
 const getWor = async (request: Request, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
+    const status: any = request.query.status || undefined;
     const hostname: any = request.headers.host;
     const pathname = url.parse(request.url).pathname;
     const page: any = request.query.page;
@@ -17,12 +18,34 @@ const getWor = async (request: Request, response: Response) => {
       },
     });
     let results;
-    if (request.query.page === undefined) {
+    if (request.query.page === undefined && status != undefined) {
       results = await prisma.wor.findMany({
         where: {
-          job_no: {
-            contains: "",
+          status: status,
+        },
+        include: {
+          customerPo: {
+            include: {
+              quotations: {
+                include: {
+                  Quotations_Detail: true,
+                  CustomerContact: true,
+                  Customer: {
+                    include: {
+                      address: true,
+                    },
+                  },
+                  eqandpart: {
+                    include: {
+                      equipment: true,
+                      eq_part: true,
+                    },
+                  },
+                },
+              },
+            },
           },
+          employee: true,
         },
       });
     } else {

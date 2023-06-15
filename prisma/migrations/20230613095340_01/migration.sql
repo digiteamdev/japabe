@@ -31,6 +31,9 @@ CREATE TYPE "Limit_Pay" AS ENUM ('Normal', 'Down_Payment', 'Termin_I', 'Termin_I
 -- CreateEnum
 CREATE TYPE "Priority_Status" AS ENUM ('ST', 'XT', 'XXT', 'XT As Req', 'XXT As Req');
 
+-- CreateEnum
+CREATE TYPE "choice" AS ENUM ('Manufacture New', 'Supply New', 'Repair');
+
 -- CreateTable
 CREATE TABLE "role" (
     "id" TEXT NOT NULL,
@@ -457,16 +460,63 @@ CREATE TABLE "wor" (
     "eq_power" VARCHAR(200),
     "scope_of_work" TEXT,
     "file_list" TEXT,
-    "noted" VARCHAR(200),
+    "noted" TEXT,
     "status" VARCHAR(20),
     "refivision" VARCHAR(20),
-    "refevision_desc" VARCHAR(225),
+    "refevision_desc" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deleted" TIMESTAMP(3),
     "quotationsId" TEXT,
 
     CONSTRAINT "wor_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "srimg" (
+    "id" TEXT NOT NULL,
+    "id_summary" VARCHAR(200),
+    "date_of_summary" TIMESTAMP(3),
+    "worId" TEXT,
+    "quantity" INTEGER NOT NULL,
+    "ioem" VARCHAR(100),
+    "isr" VARCHAR(100),
+    "itn" VARCHAR(100),
+    "introduction" TEXT,
+    "inimg" VARCHAR(100),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "srimg_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "srimgdetail" (
+    "id" TEXT NOT NULL,
+    "name_part" VARCHAR(100),
+    "srId" TEXT,
+    "qty" INTEGER NOT NULL,
+    "input_finding" TEXT,
+    "choice" "choice",
+    "noted" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "srimgdetail_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "imgSummary" (
+    "id" TEXT NOT NULL,
+    "srimgdetailId" TEXT,
+    "img" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "imgSummary_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -563,7 +613,19 @@ CREATE INDEX "CustomerPo_id_id_po_idx" ON "CustomerPo"("id", "id_po");
 CREATE INDEX "Deskription_CusPo_id_cuspoId_idx" ON "Deskription_CusPo"("id", "cuspoId");
 
 -- CreateIndex
+CREATE INDEX "term_of_pay_id_cuspoId_idx" ON "term_of_pay"("id", "cuspoId");
+
+-- CreateIndex
 CREATE INDEX "wor_id_job_no_idx" ON "wor"("id", "job_no");
+
+-- CreateIndex
+CREATE INDEX "srimg_id_worId_idx" ON "srimg"("id", "worId");
+
+-- CreateIndex
+CREATE INDEX "srimgdetail_id_name_part_idx" ON "srimgdetail"("id", "name_part");
+
+-- CreateIndex
+CREATE INDEX "imgSummary_id_idx" ON "imgSummary"("id");
 
 -- AddForeignKey
 ALTER TABLE "Employee" ADD CONSTRAINT "Employee_subdepartId_fkey" FOREIGN KEY ("subdepartId") REFERENCES "sub_depart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -645,3 +707,12 @@ ALTER TABLE "wor" ADD CONSTRAINT "wor_employeeId_fkey" FOREIGN KEY ("employeeId"
 
 -- AddForeignKey
 ALTER TABLE "wor" ADD CONSTRAINT "wor_quotationsId_fkey" FOREIGN KEY ("quotationsId") REFERENCES "Quotations"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "srimg" ADD CONSTRAINT "srimg_worId_fkey" FOREIGN KEY ("worId") REFERENCES "wor"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "srimgdetail" ADD CONSTRAINT "srimgdetail_srId_fkey" FOREIGN KEY ("srId") REFERENCES "srimg"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "imgSummary" ADD CONSTRAINT "imgSummary_srimgdetailId_fkey" FOREIGN KEY ("srimgdetailId") REFERENCES "srimgdetail"("id") ON DELETE CASCADE ON UPDATE CASCADE;
