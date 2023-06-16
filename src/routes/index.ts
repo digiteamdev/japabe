@@ -510,6 +510,11 @@ router.put(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   srimg.updateSrimg
 );
+router.put(
+  "/summaryDetail",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  srimg.updateSrimgDetail
+);
 router.delete(
   "/summary/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),

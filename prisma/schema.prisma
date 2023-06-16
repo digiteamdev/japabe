@@ -533,7 +533,7 @@ model wor {
   deleted           DateTime?
   Quotations        Quotations?      @relation(fields: [quotationsId], references: [id])
   quotationsId      String?
-  srimg             srimg[]
+  srimg             srimg?
 
   @@index([id, job_no])
 }
@@ -551,8 +551,7 @@ model srimg {
   id_summary      String?       @db.VarChar(200)
   date_of_summary DateTime?
   wor             wor?          @relation(fields: [worId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  worId           String?
-  quantity        Int
+  worId           String?       @unique
   ioem            String?       @db.VarChar(100)
   isr             String?       @db.VarChar(100)
   itn             String?       @db.VarChar(100)

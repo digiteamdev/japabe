@@ -103,7 +103,6 @@ const createSrimg = async (request: any, response: Response) => {
     for (let i = 0; i < detailSum.length; i++) {
       newArrDetail.push({
         name_part: detailSum[i].name_part,
-        imgSummary: detailSum[i].imgSummary,
         qty: detailSum[i].qty,
         input_finding: detailSum[i].input_finding,
         choice: detailSum[i].choice,
@@ -114,7 +113,6 @@ const createSrimg = async (request: any, response: Response) => {
       data: {
         date_of_summary: new Date(request.body.date_of_summary),
         wor: { connect: { id: request.body.worId } },
-        quantity: parseInt(request.body.quantity),
         ioem: request.body.ioem,
         isr: request.body.isr,
         itn: request.body.itn,
@@ -197,7 +195,6 @@ const updateSrimg = async (request: any, response: Response) => {
       data: {
         date_of_summary: new Date(request.body.date_of_summary),
         wor: { connect: { id: request.body.worId } },
-        quantity: parseInt(request.body.quantity),
         ioem: request.body.ioem,
         isr: request.body.isr,
         itn: request.body.itn,
@@ -210,6 +207,73 @@ const updateSrimg = async (request: any, response: Response) => {
         success: true,
         massage: "Success Update Data",
         results: updateSrimg,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updateSrimgDetail = async (request: any, response: Response) => {
+  try {
+    const newArr = JSON.parse(request.body.srimgdetail);
+    const updateVerify = newArr.map(
+      (updateByveri: {
+        name_part: any;
+        srId: any;
+        qty: any;
+        input_finding: any;
+        choice: any;
+        noted: any;
+        id: any;
+      }) => {
+        return {
+          name_part: updateByveri.name_part,
+          srId: updateByveri.srId,
+          qty: updateByveri.qty,
+          input_finding: updateByveri.input_finding,
+          choice: updateByveri.choice,
+          noted: updateByveri.choice,
+          id: updateByveri.choice,
+        };
+      }
+    );
+    console.log(updateVerify);
+    
+    let result: any = [];
+    for (let i = 0; i < updateVerify.length; i++) {
+      const updateSrimgDetail = await prisma.srimgdetail.upsert({
+        where: {
+          id: updateVerify[i].id,
+        },
+        create: {
+          name_part: updateVerify[i].name_part,
+          srimg: { connect: { id: updateVerify[i].srId } },
+          qty: parseInt(updateVerify[i].qty),
+          input_finding: updateVerify[i].input_finding,
+          choice: updateVerify[i].choice,
+          noted: updateVerify[i].choice,
+        },
+        update: {
+          name_part: updateVerify[i].name_part,
+          qty: parseInt(updateVerify[i].qty),
+          input_finding: updateVerify[i].input_finding,
+          choice: updateVerify[i].choice,
+          noted: updateVerify[i].choice,
+        },
+      });
+      result = [...result, updateSrimgDetail];
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: result,
       });
     } else {
       response.status(400).json({
@@ -252,5 +316,6 @@ export default {
   createSrimg,
   createImgMany,
   updateSrimg,
-  deleteSrimg
+  deleteSrimg,
+  updateSrimgDetail,
 };

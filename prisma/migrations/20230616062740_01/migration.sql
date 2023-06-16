@@ -478,7 +478,6 @@ CREATE TABLE "srimg" (
     "id_summary" VARCHAR(200),
     "date_of_summary" TIMESTAMP(3),
     "worId" TEXT,
-    "quantity" INTEGER NOT NULL,
     "ioem" VARCHAR(100),
     "isr" VARCHAR(100),
     "itn" VARCHAR(100),
@@ -617,6 +616,9 @@ CREATE INDEX "term_of_pay_id_cuspoId_idx" ON "term_of_pay"("id", "cuspoId");
 
 -- CreateIndex
 CREATE INDEX "wor_id_job_no_idx" ON "wor"("id", "job_no");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "srimg_worId_key" ON "srimg"("worId");
 
 -- CreateIndex
 CREATE INDEX "srimg_id_worId_idx" ON "srimg"("id", "worId");
