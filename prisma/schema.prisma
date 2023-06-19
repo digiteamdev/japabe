@@ -169,14 +169,15 @@ model Departement {
 }
 
 model sub_depart {
-  id          String       @id @default(cuid())
-  departement Departement? @relation(fields: [deptId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  deptId      String?
-  name        String       @db.VarChar(200)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  deleted     DateTime?
-  Employee    Employee[]
+  id             String           @id @default(cuid())
+  departement    Departement?     @relation(fields: [deptId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  deptId         String?
+  name           String           @db.VarChar(200)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  deleted        DateTime?
+  Employee       Employee[]
+  dispatchDetail dispatchDetail[]
 }
 
 enum Gender {
@@ -561,6 +562,7 @@ model srimg {
   updatedAt       DateTime      @updatedAt
   deleted         DateTime?
   srimgdetail     srimgdetail[]
+  dispacth        dispacth?
 
   @@index([id, worId])
 }
@@ -597,5 +599,50 @@ model imgSummary {
   updatedAt     DateTime     @updatedAt
   deleted       DateTime?
 
-  @@index([id])
+  @@index([id, img])
+}
+
+model workCenter {
+  id             String           @id @default(cuid())
+  name           String?          @db.VarChar(20)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  deleted        DateTime?
+  dispatchDetail dispatchDetail[]
+
+  @@index([id, name])
+}
+
+model dispacth {
+  id             String           @id @default(cuid())
+  srimg          srimg            @relation(fields: [srId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  srId           String           @unique
+  id_dispatch    String?          @db.VarChar(20)
+  dispacth_date  DateTime
+  remark         String?          @db.Text
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  deleted        DateTime?
+  dispatchDetail dispatchDetail[]
+
+  @@index([id, id_dispatch])
+}
+
+model dispatchDetail {
+  id          String     @id @default(cuid())
+  dispacth    dispacth   @relation(fields: [dispacthID], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  dispacthID  String
+  workCenter  workCenter @relation(fields: [workId], references: [id])
+  workId      String
+  sub_depart  sub_depart @relation(fields: [subdepId], references: [id])
+  subdepId    String
+  work_center String?    @db.VarChar(100)
+  start       DateTime?
+  finish      DateTime?
+  operator    String?    @db.VarChar(100)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deleted     DateTime?
+
+  @@index([id, work_center])
 }

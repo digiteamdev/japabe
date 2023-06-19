@@ -518,6 +518,48 @@ CREATE TABLE "imgSummary" (
     CONSTRAINT "imgSummary_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "workCenter" (
+    "id" TEXT NOT NULL,
+    "name" VARCHAR(20),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "workCenter_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "dispacth" (
+    "id" TEXT NOT NULL,
+    "srId" TEXT NOT NULL,
+    "id_dispatch" VARCHAR(20),
+    "dispacth_date" TIMESTAMP(3) NOT NULL,
+    "remark" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "dispacth_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "dispatchDetail" (
+    "id" TEXT NOT NULL,
+    "dispacthID" TEXT NOT NULL,
+    "workId" TEXT NOT NULL,
+    "subdepId" TEXT NOT NULL,
+    "work_center" VARCHAR(100),
+    "start" TIMESTAMP(3),
+    "finish" TIMESTAMP(3),
+    "operator" VARCHAR(100),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "dispatchDetail_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE INDEX "role_role_name_idx" ON "role"("role_name");
 
@@ -627,7 +669,19 @@ CREATE INDEX "srimg_id_worId_idx" ON "srimg"("id", "worId");
 CREATE INDEX "srimgdetail_id_name_part_idx" ON "srimgdetail"("id", "name_part");
 
 -- CreateIndex
-CREATE INDEX "imgSummary_id_idx" ON "imgSummary"("id");
+CREATE INDEX "imgSummary_id_img_idx" ON "imgSummary"("id", "img");
+
+-- CreateIndex
+CREATE INDEX "workCenter_id_name_idx" ON "workCenter"("id", "name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "dispacth_srId_key" ON "dispacth"("srId");
+
+-- CreateIndex
+CREATE INDEX "dispacth_id_id_dispatch_idx" ON "dispacth"("id", "id_dispatch");
+
+-- CreateIndex
+CREATE INDEX "dispatchDetail_id_work_center_idx" ON "dispatchDetail"("id", "work_center");
 
 -- AddForeignKey
 ALTER TABLE "Employee" ADD CONSTRAINT "Employee_subdepartId_fkey" FOREIGN KEY ("subdepartId") REFERENCES "sub_depart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -718,3 +772,15 @@ ALTER TABLE "srimgdetail" ADD CONSTRAINT "srimgdetail_srId_fkey" FOREIGN KEY ("s
 
 -- AddForeignKey
 ALTER TABLE "imgSummary" ADD CONSTRAINT "imgSummary_srimgdetailId_fkey" FOREIGN KEY ("srimgdetailId") REFERENCES "srimgdetail"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "dispacth" ADD CONSTRAINT "dispacth_srId_fkey" FOREIGN KEY ("srId") REFERENCES "srimg"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_dispacthID_fkey" FOREIGN KEY ("dispacthID") REFERENCES "dispacth"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_workId_fkey" FOREIGN KEY ("workId") REFERENCES "workCenter"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_subdepId_fkey" FOREIGN KEY ("subdepId") REFERENCES "sub_depart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

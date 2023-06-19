@@ -515,10 +515,26 @@ router.put(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   srimg.updateSrimgDetail
 );
+router.put(
+  "/summaryImgH",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  upload.array("img", 1000),
+  srimg.updateImgSr
+);
 router.delete(
   "/summary/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   srimg.deleteSrimg
+);
+router.delete(
+  "/summaryDetail/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  srimg.deleteSrimgDetail
+);
+router.delete(
+  "/summaryImgH/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  srimg.deleteSrimgImg
 );
 
 /***************************SRIMG********************************* */

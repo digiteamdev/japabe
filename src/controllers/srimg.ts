@@ -112,6 +112,7 @@ const createSrimg = async (request: any, response: Response) => {
     const summary = await prisma.srimg.create({
       data: {
         date_of_summary: new Date(request.body.date_of_summary),
+        id_summary: request.body.id_summary,
         wor: { connect: { id: request.body.worId } },
         ioem: request.body.ioem,
         isr: request.body.isr,
@@ -162,7 +163,7 @@ const createImgMany = async (request: any, response: Response) => {
       const files = request.files;
       for (const file of files) {
         const newArr = {
-          img: file.path,
+          img: !files ? "" : file.path,
         };
 
         imgArr.push(newArr);
@@ -238,13 +239,12 @@ const updateSrimgDetail = async (request: any, response: Response) => {
           qty: updateByveri.qty,
           input_finding: updateByveri.input_finding,
           choice: updateByveri.choice,
-          noted: updateByveri.choice,
-          id: updateByveri.choice,
+          noted: updateByveri.noted,
+          id: updateByveri.id,
         };
       }
     );
-    console.log(updateVerify);
-    
+
     let result: any = [];
     for (let i = 0; i < updateVerify.length; i++) {
       const updateSrimgDetail = await prisma.srimgdetail.upsert({
@@ -257,14 +257,14 @@ const updateSrimgDetail = async (request: any, response: Response) => {
           qty: parseInt(updateVerify[i].qty),
           input_finding: updateVerify[i].input_finding,
           choice: updateVerify[i].choice,
-          noted: updateVerify[i].choice,
+          noted: updateVerify[i].noted,
         },
         update: {
           name_part: updateVerify[i].name_part,
           qty: parseInt(updateVerify[i].qty),
           input_finding: updateVerify[i].input_finding,
           choice: updateVerify[i].choice,
-          noted: updateVerify[i].choice,
+          noted: updateVerify[i].noted,
         },
       });
       result = [...result, updateSrimgDetail];
@@ -279,6 +279,57 @@ const updateSrimgDetail = async (request: any, response: Response) => {
       response.status(400).json({
         success: false,
         massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updateImgSr = async (request: any, response: Response) => {
+  try {
+    const imgArr: any = [];
+    if (request.files) {
+      const files = request.files;
+      for (const file of files) {
+        const newArr = {
+          img: file.path,
+        };
+
+        imgArr.push(newArr);
+      }
+    }
+    const arrBody = request.body;
+    let arr: any = [
+      {
+        id: arrBody.id,
+        srimgdetailId: arrBody.srimgdetailId,
+        img: imgArr,
+      },
+    ];
+    arr[0].img.map(async (e: any, i: number) => {
+      await prisma.imgSummary.upsert({
+        where: {
+          id: arr[0].id,
+        },
+        create: {
+          srimgdetail: { connect: { id: arr[0].srimgdetailId } },
+          img: e.img,
+        },
+        update: {
+          img: e.img,
+        },
+      });
+    });
+    if (imgArr.length === arr[0].img.length) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Add Data",
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Add Data",
       });
     }
   } catch (error) {
@@ -311,6 +362,56 @@ const deleteSrimg = async (request: any, response: Response) => {
   }
 };
 
+const deleteSrimgDetail = async (request: any, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const deleteSrimgDetail = await prisma.srimgdetail.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (deleteSrimgDetail) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: deleteSrimgDetail,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const deleteSrimgImg = async (request: any, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const deleteSrimgImg = await prisma.imgSummary.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (deleteSrimgImg) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: deleteSrimgImg,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getSrimg,
   createSrimg,
@@ -318,4 +419,7 @@ export default {
   updateSrimg,
   deleteSrimg,
   updateSrimgDetail,
+  updateImgSr,
+  deleteSrimgDetail,
+  deleteSrimgImg,
 };
