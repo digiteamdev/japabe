@@ -18,6 +18,7 @@ import customerPo from "../controllers/customerPo";
 import wor from "../controllers/wor";
 import typeMr from "../controllers/mrType";
 import srimg from "../controllers//srimg";
+import workcenter from "../controllers/workcenter";
 
 /***************************AUTH********************************* */
 
@@ -538,5 +539,30 @@ router.delete(
 );
 
 /***************************SRIMG********************************* */
+
+/***************************WORKCENTER********************************* */
+
+router.get(
+  "/workcenter",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  workcenter.getWorkCenter
+);
+router.post(
+  "/workcenter",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  workcenter.createWorkCenter
+);
+router.put(
+  "/workcenter/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  workcenter.updatecreateWorkCenter
+);
+router.delete(
+  "/workcenter/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  workcenter.deleteworkCenter
+);
+
+/***************************WORKCENTER********************************* */
 
 export default router;
