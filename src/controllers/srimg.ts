@@ -222,8 +222,7 @@ const updateSrimg = async (request: any, response: Response) => {
 
 const updateSrimgDetail = async (request: any, response: Response) => {
   try {
-    const newArr = JSON.parse(request.body.srimgdetail);
-    const updateVerify = newArr.map(
+    const updateVerify = request.body.map(
       (updateByveri: {
         name_part: any;
         srId: any;
@@ -236,7 +235,7 @@ const updateSrimgDetail = async (request: any, response: Response) => {
         return {
           name_part: updateByveri.name_part,
           srId: updateByveri.srId,
-          qty: updateByveri.qty,
+          qty: parseInt(updateByveri.qty),
           input_finding: updateByveri.input_finding,
           choice: updateByveri.choice,
           noted: updateByveri.noted,
