@@ -61,6 +61,8 @@ model Employee {
   Certificate_Employee Certificate_Employee[] @relation("certificate")
   Employee_Child       Employee_Child[]       @relation("child")
   wor                  wor[]
+  dispatchDetail       dispatchDetail[]
+  approve              dispatchDetail[]       @relation(name: "approves")
 
   @@index([id, nick_name, NIK, id_card, NIP, employee_name])
 }
@@ -639,7 +641,11 @@ model dispatchDetail {
   work_center String?    @db.VarChar(100)
   start       DateTime?
   finish      DateTime?
-  operator    String?    @db.VarChar(100)
+  actual      DateTime?
+  Employee    Employee   @relation(fields: [operatorID], references: [id])
+  approve     Employee   @relation(fields: [approvebyID], references: [id], name: "approves")
+  operatorID  String
+  approvebyID String
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   deleted     DateTime?

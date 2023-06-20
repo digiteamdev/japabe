@@ -121,8 +121,7 @@ const createSrimg = async (request: any, response: Response) => {
         inimg: !request.file ? "" : request.file.path,
       },
     });
-
-    newArrDetail.map(async (e: any, i: number) => {
+    newArrDetail.map(async(e: any, i: number) => {
       await prisma.srimgdetail.create({
         data: {
           srId: summary.id,
@@ -139,18 +138,18 @@ const createSrimg = async (request: any, response: Response) => {
           imgSummary: true,
         },
       });
-      if (i + 1 === newArrDetail.length) {
-        response.status(201).json({
-          success: true,
-          massage: "Success Add Data",
-        });
-      } else {
-        response.status(400).json({
-          success: false,
-          massage: "Unsuccess Add Data",
-        });
-      }
     });
+    if (summary) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Add Data",
+      });
+    } else {
+      response.status(200).json({
+        success: false,
+        massage: "Unsuccess Add Data",
+      });
+    }
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
@@ -195,12 +194,11 @@ const updateSrimg = async (request: any, response: Response) => {
       },
       data: {
         date_of_summary: new Date(request.body.date_of_summary),
-        wor: { connect: { id: request.body.worId } },
         ioem: request.body.ioem,
         isr: request.body.isr,
         itn: request.body.itn,
         introduction: request.body.introduction,
-        inimg: !request.file ? "" : request.file.path,
+        inimg: !request.file ? request.body.inimg : request.file.path,
       },
     });
     if (updateSrimg) {

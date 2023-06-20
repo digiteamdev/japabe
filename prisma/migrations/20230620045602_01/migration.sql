@@ -552,7 +552,9 @@ CREATE TABLE "dispatchDetail" (
     "work_center" VARCHAR(100),
     "start" TIMESTAMP(3),
     "finish" TIMESTAMP(3),
-    "operator" VARCHAR(100),
+    "actual" TIMESTAMP(3),
+    "operatorID" TEXT NOT NULL,
+    "approvebyID" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deleted" TIMESTAMP(3),
@@ -784,3 +786,9 @@ ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_workId_fkey" FOREIGN
 
 -- AddForeignKey
 ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_subdepId_fkey" FOREIGN KEY ("subdepId") REFERENCES "sub_depart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_operatorID_fkey" FOREIGN KEY ("operatorID") REFERENCES "Employee"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_approvebyID_fkey" FOREIGN KEY ("approvebyID") REFERENCES "Employee"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

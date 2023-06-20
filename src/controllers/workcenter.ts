@@ -99,7 +99,8 @@ const createWorkCenterMany = async (request: Request, response: Response) => {
 const updatecreateWorkCenter = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
-    const updatecreateWorkCenter = await prisma.workCenter.delete({
+    const updatecreateWorkCenter = await prisma.workCenter.update({
+      data: request.body,
       where: {
         id: id,
       },

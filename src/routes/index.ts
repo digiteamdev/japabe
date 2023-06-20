@@ -74,6 +74,11 @@ router.get(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   depart.getDepart
 );
+router.get(
+  "/subdepart",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  depart.getsubDepart
+);
 router.post(
   "/depart",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
@@ -509,6 +514,7 @@ router.post(
 router.put(
   "/summary/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  upload.single("inimg", 1),
   srimg.updateSrimg
 );
 router.put(
@@ -549,7 +555,7 @@ router.get(
 );
 router.post(
   "/workcenter",
-  // jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
   workcenter.createWorkCenter
 );
 router.put(
