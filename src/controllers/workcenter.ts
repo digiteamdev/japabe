@@ -70,7 +70,7 @@ const getWorkCenter = async (request: Request, response: Response) => {
 const createWorkCenter = async (request: Request, response: Response) => {
   try {
     const results = await prisma.workCenter.create({
-      data: request.body.workCenter,
+      data: request.body,
     });
     if (results) {
       response.status(201).json({

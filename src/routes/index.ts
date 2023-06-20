@@ -549,7 +549,7 @@ router.get(
 );
 router.post(
   "/workcenter",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  // jwt.authToken({ administrator: "ADMINISTRATOR" }),
   workcenter.createWorkCenter
 );
 router.put(
