@@ -638,7 +638,7 @@ model dispatchDetail {
   workId      String
   sub_depart  sub_depart @relation(fields: [subdepId], references: [id])
   subdepId    String
-  work_center String?    @db.VarChar(100)
+  part        String?    @db.VarChar(100)
   start       DateTime?
   finish      DateTime?
   actual      DateTime?
@@ -650,5 +650,5 @@ model dispatchDetail {
   updatedAt   DateTime   @updatedAt
   deleted     DateTime?
 
-  @@index([id, work_center])
+  @@index([id, part])
 }

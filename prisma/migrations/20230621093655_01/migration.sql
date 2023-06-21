@@ -549,7 +549,7 @@ CREATE TABLE "dispatchDetail" (
     "dispacthID" TEXT NOT NULL,
     "workId" TEXT NOT NULL,
     "subdepId" TEXT NOT NULL,
-    "work_center" VARCHAR(100),
+    "part" VARCHAR(100),
     "start" TIMESTAMP(3),
     "finish" TIMESTAMP(3),
     "actual" TIMESTAMP(3),
@@ -683,7 +683,7 @@ CREATE UNIQUE INDEX "dispacth_srId_key" ON "dispacth"("srId");
 CREATE INDEX "dispacth_id_id_dispatch_idx" ON "dispacth"("id", "id_dispatch");
 
 -- CreateIndex
-CREATE INDEX "dispatchDetail_id_work_center_idx" ON "dispatchDetail"("id", "work_center");
+CREATE INDEX "dispatchDetail_id_part_idx" ON "dispatchDetail"("id", "part");
 
 -- AddForeignKey
 ALTER TABLE "Employee" ADD CONSTRAINT "Employee_subdepartId_fkey" FOREIGN KEY ("subdepartId") REFERENCES "sub_depart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

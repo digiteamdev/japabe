@@ -27,6 +27,9 @@ const getDepart = async (request: Request, response: Response) => {
         orderBy: {
           name: "asc",
         },
+        include: {
+          departement: true,
+        }
       });
     } else {
       results = await prisma.departement.findMany({

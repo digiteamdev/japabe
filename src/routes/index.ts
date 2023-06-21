@@ -19,6 +19,7 @@ import wor from "../controllers/wor";
 import typeMr from "../controllers/mrType";
 import srimg from "../controllers//srimg";
 import workcenter from "../controllers/workcenter";
+import dispacth from "../controllers/dispacth";
 
 /***************************AUTH********************************* */
 
@@ -120,7 +121,7 @@ router.get(
   employee.getEmployee
 );
 router.get(
-  "/employeSales",
+  "/employeDepart",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   employee.getEmployeeSales
 );
@@ -570,5 +571,40 @@ router.delete(
 );
 
 /***************************WORKCENTER********************************* */
+
+/***************************DISPACTH********************************* */
+
+router.get(
+  "/dispacth",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  dispacth.getDispatch
+);
+router.post(
+  "/dispacth",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  dispacth.createDispacth
+);
+router.put(
+  "/dispacth/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  dispacth.updateDispacth
+);
+router.put(
+  "/dispacthDetail",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  dispacth.updateDetailDispacth
+);
+router.delete(
+  "/dispacth/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  dispacth.deleteDispacth
+);
+router.delete(
+  "/dispacthDetail/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  dispacth.deleteDetailDispacth
+);
+
+/***************************DISPACTH********************************* */
 
 export default router;

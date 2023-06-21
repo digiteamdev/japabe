@@ -19,8 +19,44 @@ const getSrimg = async (request: Request, response: Response) => {
     let results;
     if (request.query.page === undefined) {
       results = await prisma.srimg.findMany({
+        where: {
+          OR: [
+            {
+              dispacth: {
+                deleted: { not: null },
+              },
+            },
+            {
+              dispacth: null,
+            }
+          ],
+        },
         include: {
-          wor: true,
+          wor: {
+            include: {
+              customerPo: {
+                include: {
+                  quotations: {
+                    include: {
+                      Quotations_Detail: true,
+                      CustomerContact: true,
+                      Customer: {
+                        include: {
+                          address: true,
+                        },
+                      },
+                      eqandpart: {
+                        include: {
+                          equipment: true,
+                          eq_part: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
           srimgdetail: {
             include: {
               imgSummary: true,

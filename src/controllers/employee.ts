@@ -179,12 +179,14 @@ const getEmployee = async (request: Request, response: Response) => {
 
 const getEmployeeSales = async (request: Request, response: Response) => {
   try {
+    const sub: any = request.query.sub || "";
+    const dep: any = request.query.dep || "";
     const results = await prisma.employee.findMany({
       where: {
         sub_depart: {
-          name: "SALES & MKT",
+          name: sub,
           departement: {
-            name: "Sales Marketing",
+            name: dep,
           },
         },
       },

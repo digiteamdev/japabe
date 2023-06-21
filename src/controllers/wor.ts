@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import prisma from "../middleware/wor";
 import pagging from "../utils/paggination";
 import url from "url";
-import srimg from "./srimg";
 
 const getWor = async (request: Request, response: Response) => {
   try {
