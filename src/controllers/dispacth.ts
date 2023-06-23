@@ -43,7 +43,12 @@ const getDispatch = async (request: Request, response: Response) => {
               },
             },
           },
-          dispatchDetail: true,
+          dispatchDetail: {
+            include: {
+              Employee: true,
+              sub_depart: true,
+            },
+          },
         },
       });
     } else {
@@ -77,7 +82,12 @@ const getDispatch = async (request: Request, response: Response) => {
               },
             },
           },
-          dispatchDetail: true,
+          dispatchDetail: {
+            include: {
+              Employee: true,
+              sub_depart: true,
+            },
+          },
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
