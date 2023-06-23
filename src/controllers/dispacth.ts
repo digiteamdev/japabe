@@ -18,7 +18,33 @@ const getDispatch = async (request: Request, response: Response) => {
     });
     let results;
     if (request.query.page === undefined) {
-      results = await prisma.dispacth.findMany({});
+      results = await prisma.dispacth.findMany({
+        include: {
+          srimg: {
+            include: {
+              wor: {
+                include: {
+                  customerPo: {
+                    include: {
+                      quotations: {
+                        include: {
+                          Customer: true,
+                          eqandpart: {
+                            include: {
+                              equipment: true,
+                              eq_part: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
     } else {
       results = await prisma.dispacth.findMany({
         where: {
@@ -35,6 +61,7 @@ const getDispatch = async (request: Request, response: Response) => {
                     include: {
                       quotations: {
                         include: {
+                          Customer: true,
                           eqandpart: {
                             include: {
                               equipment: true,
