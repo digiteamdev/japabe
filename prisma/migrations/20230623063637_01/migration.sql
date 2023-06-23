@@ -555,6 +555,7 @@ CREATE TABLE "dispatchDetail" (
     "actual" TIMESTAMP(3),
     "operatorID" TEXT NOT NULL,
     "approvebyID" TEXT,
+    "remark" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deleted" TIMESTAMP(3),

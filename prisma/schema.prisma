@@ -646,6 +646,7 @@ model dispatchDetail {
   approve     Employee?  @relation(fields: [approvebyID], references: [id], name: "approves")
   operatorID  String
   approvebyID String?
+  remark      String?    @db.Text
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   deleted     DateTime?

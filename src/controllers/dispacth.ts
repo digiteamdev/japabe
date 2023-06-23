@@ -43,6 +43,7 @@ const getDispatch = async (request: Request, response: Response) => {
               },
             },
           },
+          dispatchDetail: true,
         },
       });
     } else {
@@ -76,6 +77,7 @@ const getDispatch = async (request: Request, response: Response) => {
               },
             },
           },
+          dispatchDetail: true,
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
