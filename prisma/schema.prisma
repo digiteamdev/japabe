@@ -643,9 +643,9 @@ model dispatchDetail {
   finish      DateTime?
   actual      DateTime?
   Employee    Employee   @relation(fields: [operatorID], references: [id])
-  approve     Employee   @relation(fields: [approvebyID], references: [id], name: "approves")
+  approve     Employee?  @relation(fields: [approvebyID], references: [id], name: "approves")
   operatorID  String
-  approvebyID String
+  approvebyID String?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   deleted     DateTime?

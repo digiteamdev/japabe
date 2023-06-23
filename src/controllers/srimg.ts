@@ -141,10 +141,11 @@ const createSrimg = async (request: any, response: Response) => {
         name_part: detailSum[i].name_part,
         qty: detailSum[i].qty,
         input_finding: detailSum[i].input_finding,
+        imgSummary: detailSum[i].imgSummary,
         choice: detailSum[i].choice,
         noted: detailSum[i].noted,
       });
-    }
+    }    
     const summary = await prisma.srimg.create({
       data: {
         date_of_summary: new Date(request.body.date_of_summary),
