@@ -47,6 +47,7 @@ const getDispatch = async (request: Request, response: Response) => {
             include: {
               Employee: true,
               sub_depart: true,
+              workCenter: true
             },
           },
         },
@@ -86,6 +87,7 @@ const getDispatch = async (request: Request, response: Response) => {
             include: {
               Employee: true,
               sub_depart: true,
+              workCenter: true
             },
           },
         },
