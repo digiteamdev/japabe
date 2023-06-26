@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 prisma.$use(async (params, next) => {
   if (params.model === "dispacth" && params.action === "delete") {
-    return prisma.wor.update({
+    return prisma.dispacth.update({
       where: { id: String(params.args.where.id) },
       data: { deleted: new Date() },
     });
