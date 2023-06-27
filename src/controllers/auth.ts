@@ -81,8 +81,6 @@ const registerUser = async (req: Request, res: Response) => {
         .json({ msg: "Register Not Succes", status: false });
     }
   } catch (error) {
-    console.log(error);
-
     return res.status(500).json({ message: error.message });
   }
 };
@@ -211,8 +209,40 @@ const logoutUser = async (request: any, response: Response) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    return response.status(500).json({ msg: error.masagge });
+  }
+};
 
+const updatePassword = async (request: any, response: Response) => {
+  try {
+    const { id } = request.body;
+    const userExist: any = await prisma.user.findUnique({
+      where: { id },
+    });
+    const passwordIsValid = await argon2.verify(
+      userExist.hashed_password,
+      request.body.hashed_password
+    );
+    if (passwordIsValid === false)
+      return response.status(400).json({
+        success: false,
+        msg: "Password lama anda tidak sama",
+      });
+
+    const newPass = await argon2.hash(request.body.passwordnew);
+    const changePass = await prisma.user.update({
+      where: { id: userExist.id },
+      data: {
+        hashed_password: newPass,
+      },
+    });
+    if (changePass) {
+      return response.status(201).json({
+        success: true,
+        msg: "Pass change successfully",
+      });
+    }
+  } catch (error) {
     return response.status(500).json({ msg: error.masagge });
   }
 };
@@ -221,4 +251,5 @@ export default {
   registerUser,
   loginUser,
   logoutUser,
+  updatePassword,
 };

@@ -224,9 +224,6 @@ const deleteEquipment = async (request: Request, response: Response) => {
 const createPart = async (request: any, response: Response) => {
   try {
     const newArrPart = [];
-    if (!request.files) {
-      response.status(204).json({ msg: "img not found" });
-    }
     if (request.body.eq_part) {
       const arr = JSON.parse(request.body.eq_part);
       for (let i = 0; i < arr.length; i++) {

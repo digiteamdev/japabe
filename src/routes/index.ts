@@ -25,6 +25,7 @@ import dispacth from "../controllers/dispacth";
 
 router.post("/signup", auth.registerUser);
 router.post("/signin", auth.loginUser);
+router.post("/changepass", auth.updatePassword);
 router.delete(
   "/signout",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
