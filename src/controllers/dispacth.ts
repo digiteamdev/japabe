@@ -48,7 +48,7 @@ const getDispatch = async (request: Request, response: Response) => {
             include: {
               Employee: true,
               sub_depart: true,
-              workCenter: true
+              workCenter: true,
             },
           },
         },
@@ -89,7 +89,7 @@ const getDispatch = async (request: Request, response: Response) => {
             include: {
               Employee: true,
               sub_depart: true,
-              workCenter: true
+              workCenter: true,
             },
           },
         },
@@ -257,6 +257,63 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
   }
 };
 
+const updateStart = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const updateStart = await prisma.dispatchDetail.update({
+      where: {
+        id: id,
+      },
+      data: {
+        start: new Date(request.body.start),
+      },
+    });
+    if (updateStart) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: updateDispacth,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updateFinish = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const updateFinish = await prisma.dispatchDetail.update({
+      where: {
+        id: id,
+      },
+      data: {
+        finish: new Date(request.body.finish),
+        approve: { connect: { id: request.body.approvebyID } },
+      },
+    });
+    if (updateFinish) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: updateDispacth,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const deleteDispacth = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
@@ -314,4 +371,6 @@ export default {
   updateDetailDispacth,
   deleteDispacth,
   deleteDetailDispacth,
+  updateFinish,
+  updateStart
 };

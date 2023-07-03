@@ -591,6 +591,16 @@ router.put(
   dispacth.updateDispacth
 );
 router.put(
+  "/dispacthStart/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  dispacth.updateStart
+);
+router.put(
+  "/dispacthfinish/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  dispacth.updateFinish
+);
+router.put(
   "/dispacthDetail",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   dispacth.updateDetailDispacth
