@@ -22,6 +22,7 @@ const getDispatch = async (request: Request, response: Response) => {
         include: {
           srimg: {
             include: {
+              srimgdetail: true,
               wor: {
                 include: {
                   customerPo: {
@@ -62,6 +63,7 @@ const getDispatch = async (request: Request, response: Response) => {
         include: {
           srimg: {
             include: {
+              srimgdetail: true,
               wor: {
                 include: {
                   customerPo: {
