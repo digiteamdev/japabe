@@ -264,7 +264,7 @@ const updateStart = async (request: Request, response: Response) => {
         id: id,
       },
       data: {
-        start: new Date(request.body.start),
+        actual: new Date(request.body.actual),
       },
     });
     if (updateStart) {
