@@ -95,6 +95,12 @@ const loginUser = async (request: Request, response: Response) => {
         id: true,
         username: true,
         hashed_password: true,
+        employee: {
+          select: {
+            id: true,
+            employee_name: true,
+          },
+        },
         userRole: {
           select: {
             roleId: true,
@@ -107,7 +113,6 @@ const loginUser = async (request: Request, response: Response) => {
         },
       },
     });
-
     if (!userExist) {
       return response.status(403).json("username tidak ada / belum daftar");
     }
@@ -138,6 +143,7 @@ const loginUser = async (request: Request, response: Response) => {
         username: userExist.username,
         session: userSession,
         role: userExist.userRole,
+        employee: userExist.employee,
       };
       if (userSession) {
         return response
@@ -163,6 +169,7 @@ const loginUser = async (request: Request, response: Response) => {
         session: updateToken,
         role: userExist.userRole,
         updateToken: updateToken,
+        employee: userExist.employee,
       };
       if (updateToken) {
         return response
