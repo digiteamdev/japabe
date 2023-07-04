@@ -87,7 +87,12 @@ const getDispatch = async (request: Request, response: Response) => {
           },
           dispatchDetail: {
             include: {
-              Employee: true,
+              Employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                },
+              },
               sub_depart: true,
               workCenter: true,
             },
@@ -222,20 +227,14 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
           sub_depart: { connect: { id: updateVerify[i].subdepId } },
           part: updateVerify[i].part,
           start: updateVerify[i].start,
-          finish: updateVerify[i].finish,
-          actual: updateVerify[i].actual,
           Employee: { connect: { id: updateVerify[i].operatorID } },
-          approve: { connect: { id: updateVerify[i].approvebyID } },
         },
         update: {
           workCenter: { connect: { id: updateVerify[i].workId } },
           sub_depart: { connect: { id: updateVerify[i].subdepId } },
           part: updateVerify[i].part,
           start: updateVerify[i].start,
-          finish: updateVerify[i].finish,
-          actual: updateVerify[i].actual,
           Employee: { connect: { id: updateVerify[i].operatorID } },
-          approve: { connect: { id: updateVerify[i].approvebyID } },
         },
       });
       result = [...result, updateDispacthDetail];
@@ -372,5 +371,5 @@ export default {
   deleteDispacth,
   deleteDetailDispacth,
   updateFinish,
-  updateStart
+  updateStart,
 };
