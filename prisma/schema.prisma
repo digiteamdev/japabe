@@ -537,6 +537,7 @@ model wor {
   Quotations        Quotations?      @relation(fields: [quotationsId], references: [id])
   quotationsId      String?
   srimg             srimg?
+  timeschedule      timeschedule?
 
   @@index([id, job_no])
 }
@@ -652,4 +653,45 @@ model dispatchDetail {
   deleted     DateTime?
 
   @@index([id, part])
+}
+
+model masterAktivitas {
+  id        String      @id @default(cuid())
+  name      String      @db.VarChar(200)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  deleted   DateTime?
+  aktivitas aktivitas[]
+
+  @@index([id, name])
+}
+
+model timeschedule {
+  id        String      @id @default(cuid())
+  idTs      String?     @db.VarChar(100)
+  timesch   DateTime
+  wor       wor?        @relation(fields: [worId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  worId     String?     @unique
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  deleted   DateTime?
+  aktivitas aktivitas[]
+
+  @@index([id, idTs])
+}
+
+model aktivitas {
+  id              String          @id @default(cuid())
+  timeschedule    timeschedule    @relation(fields: [timeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  timeId          String
+  masterAktivitas masterAktivitas @relation(fields: [aktivitasId], references: [id])
+  aktivitasId     String
+  days            Int
+  startday        DateTime
+  endday          DateTime
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  deleted         DateTime?
+
+  @@index([id])
 }

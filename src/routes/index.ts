@@ -20,6 +20,7 @@ import typeMr from "../controllers/mrType";
 import srimg from "../controllers//srimg";
 import workcenter from "../controllers/workcenter";
 import dispacth from "../controllers/dispacth";
+import masterAktivitas from "../controllers/masterAktivitas";
 
 /***************************AUTH********************************* */
 
@@ -560,6 +561,11 @@ router.post(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   workcenter.createWorkCenter
 );
+router.post(
+  "/workcentermany",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  workcenter.createWorkCenterMany
+);
 router.put(
   "/workcenter/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
@@ -617,5 +623,30 @@ router.delete(
 );
 
 /***************************DISPACTH********************************* */
+
+/***************************MASTER AKTIVITAS********************************* */
+
+router.get(
+  "/masterAktivitas",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  masterAktivitas.getAktivitas
+);
+router.post(
+  "/masterAktivitas",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  masterAktivitas.createMasterAktivitas
+);
+router.put(
+  "/masterAktivitas/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  masterAktivitas.updateMasterAktivitas
+);
+router.delete(
+  "/masterAktivitas/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  masterAktivitas.deleteMasterAktivitas
+);
+
+/***************************MASTER AKTIVITAS********************************* */
 
 export default router;

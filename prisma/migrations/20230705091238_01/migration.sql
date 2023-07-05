@@ -563,6 +563,45 @@ CREATE TABLE "dispatchDetail" (
     CONSTRAINT "dispatchDetail_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "masterAktivitas" (
+    "id" TEXT NOT NULL,
+    "name" VARCHAR(200) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "masterAktivitas_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "timeschedule" (
+    "id" TEXT NOT NULL,
+    "idTs" VARCHAR(100),
+    "timesch" TIMESTAMP(3) NOT NULL,
+    "worId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "timeschedule_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "aktivitas" (
+    "id" TEXT NOT NULL,
+    "timeId" TEXT NOT NULL,
+    "aktivitasId" TEXT NOT NULL,
+    "days" INTEGER NOT NULL,
+    "startday" TIMESTAMP(3) NOT NULL,
+    "endday" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "aktivitas_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE INDEX "role_role_name_idx" ON "role"("role_name");
 
@@ -686,6 +725,18 @@ CREATE INDEX "dispacth_id_id_dispatch_idx" ON "dispacth"("id", "id_dispatch");
 -- CreateIndex
 CREATE INDEX "dispatchDetail_id_part_idx" ON "dispatchDetail"("id", "part");
 
+-- CreateIndex
+CREATE INDEX "masterAktivitas_id_name_idx" ON "masterAktivitas"("id", "name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "timeschedule_worId_key" ON "timeschedule"("worId");
+
+-- CreateIndex
+CREATE INDEX "timeschedule_id_idTs_idx" ON "timeschedule"("id", "idTs");
+
+-- CreateIndex
+CREATE INDEX "aktivitas_id_idx" ON "aktivitas"("id");
+
 -- AddForeignKey
 ALTER TABLE "Employee" ADD CONSTRAINT "Employee_subdepartId_fkey" FOREIGN KEY ("subdepartId") REFERENCES "sub_depart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -793,3 +844,12 @@ ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_operatorID_fkey" FOR
 
 -- AddForeignKey
 ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_approvebyID_fkey" FOREIGN KEY ("approvebyID") REFERENCES "Employee"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "timeschedule" ADD CONSTRAINT "timeschedule_worId_fkey" FOREIGN KEY ("worId") REFERENCES "wor"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "aktivitas" ADD CONSTRAINT "aktivitas_timeId_fkey" FOREIGN KEY ("timeId") REFERENCES "timeschedule"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "aktivitas" ADD CONSTRAINT "aktivitas_aktivitasId_fkey" FOREIGN KEY ("aktivitasId") REFERENCES "masterAktivitas"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

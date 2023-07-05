@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import prisma from "../middleware/depart";
+import prisma from "../middleware/masterAktivitas";
 import pagging from "../utils/paggination";
 import url from "url";
 
-const getWorkCenter = async (request: Request, response: Response) => {
+const getAktivitas = async (request: Request, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
     const hostname: any = request.headers.host;
@@ -11,14 +11,14 @@ const getWorkCenter = async (request: Request, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const workCenterCount = await prisma.workCenter.count({
+    const masterAktivitasCount = await prisma.masterAktivitas.count({
       where: {
         deleted: null,
       },
     });
     let results;
     if (request.query.page === undefined) {
-      results = await prisma.workCenter.findMany({
+      results = await prisma.masterAktivitas.findMany({
         where: {
           name: {
             contains: "",
@@ -29,7 +29,7 @@ const getWorkCenter = async (request: Request, response: Response) => {
         },
       });
     } else {
-      results = await prisma.workCenter.findMany({
+      results = await prisma.masterAktivitas.findMany({
         where: {
           name: {
             contains: pencarian,
@@ -45,11 +45,11 @@ const getWorkCenter = async (request: Request, response: Response) => {
     if (results.length > 0) {
       return response.status(200).json({
         success: true,
-        massage: "Get All WorkCenter",
+        massage: "Get All Master Aktivitas",
         result: results,
         page: pagination.page,
         limit: pagination.perPage,
-        totalData: workCenterCount,
+        totalData: masterAktivitasCount,
         currentPage: pagination.currentPage,
         nextPage: pagination.next(),
         previouspage: pagination.prev(),
@@ -67,9 +67,9 @@ const getWorkCenter = async (request: Request, response: Response) => {
   }
 };
 
-const createWorkCenter = async (request: Request, response: Response) => {
+const createMasterAktivitas = async (request: Request, response: Response) => {
   try {
-    const results = await prisma.workCenter.create({
+    const results = await prisma.masterAktivitas.create({
       data: request.body,
     });
     if (results) {
@@ -89,64 +89,20 @@ const createWorkCenter = async (request: Request, response: Response) => {
   }
 };
 
-const createWorkCenterMany = async (request: Request, response: Response) => {
-  try {
-    const results = await prisma.workCenter.createMany({
-      data: [
-        {
-          id: "clj8dks85000kczed5e7m6akz",
-          name: "Balancing",
-          createdAt: "2023-06-23T09:34:04.517Z",
-          updatedAt: "2023-06-23T09:34:04.517Z",
-          deleted: null,
-        },
-        {
-          id: "clj887h5b000yczyvx27jk2c5",
-          name: "Grooving",
-          createdAt: "2023-06-23T07:03:45.551Z",
-          updatedAt: "2023-06-23T07:03:45.551Z",
-          deleted: null,
-        },
-        {
-          id: "clj887cow000wczyvwzwb6yg8",
-          name: "Tapping",
-          createdAt: "2023-06-23T07:03:39.776Z",
-          updatedAt: "2023-06-23T07:03:39.776Z",
-          deleted: null,
-        },
-      ],
-    });
-    if (results) {
-      response.status(201).json({
-        success: true,
-        massage: "Success Add Data",
-        results: results,
-      });
-    } else {
-      response.status(400).json({
-        success: false,
-        massage: "Unsuccess Add Data",
-      });
-    }
-  } catch (error) {
-    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
-  }
-};
-
-const updatecreateWorkCenter = async (request: Request, response: Response) => {
+const updateMasterAktivitas = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
-    const updatecreateWorkCenter = await prisma.workCenter.update({
+    const updateMasterAktivitas = await prisma.masterAktivitas.update({
       data: request.body,
       where: {
         id: id,
       },
     });
-    if (updatecreateWorkCenter) {
+    if (updateMasterAktivitas) {
       response.status(201).json({
         success: true,
         massage: "Success Delete Data",
-        results: updatecreateWorkCenter,
+        results: updateMasterAktivitas,
       });
     } else {
       response.status(400).json({
@@ -159,19 +115,19 @@ const updatecreateWorkCenter = async (request: Request, response: Response) => {
   }
 };
 
-const deleteworkCenter = async (request: Request, response: Response) => {
+const deleteMasterAktivitas = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
-    const deleteworkCenter = await prisma.workCenter.delete({
+    const deleteMasterAktivitas = await prisma.masterAktivitas.delete({
       where: {
         id: id,
       },
     });
-    if (deleteworkCenter) {
+    if (deleteMasterAktivitas) {
       response.status(201).json({
         success: true,
         massage: "Success Delete Data",
-        results: deleteworkCenter,
+        results: deleteMasterAktivitas,
       });
     } else {
       response.status(400).json({
@@ -185,9 +141,8 @@ const deleteworkCenter = async (request: Request, response: Response) => {
 };
 
 export default {
-  getWorkCenter,
-  createWorkCenter,
-  createWorkCenterMany,
-  updatecreateWorkCenter,
-  deleteworkCenter,
+  getAktivitas,
+  createMasterAktivitas,
+  updateMasterAktivitas,
+  deleteMasterAktivitas,
 };
