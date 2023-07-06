@@ -5,7 +5,6 @@ import url from "url";
 
 const getHoliday = async (request: Request, response: Response) => {
   try {
-    const pencarian: any = request.query.search || "";
     const des: any = request.query.description || "";
     const hostname: any = request.headers.host;
     const pathname = url.parse(request.url).pathname;
@@ -28,7 +27,6 @@ const getHoliday = async (request: Request, response: Response) => {
       results = await prisma.holidayTms.findMany({
         where: {
           OR: [
-            { date_holiday: { lte: pencarian } },
             {
               description: {
                 contains: des,
