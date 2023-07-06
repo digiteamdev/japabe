@@ -695,3 +695,12 @@ model aktivitas {
 
   @@index([id])
 }
+
+model holidayTms {
+  id           String    @id @default(cuid())
+  date_holiday DateTime
+  description  String    @db.Text
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deleted      DateTime?
+}

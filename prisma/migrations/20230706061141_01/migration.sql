@@ -602,6 +602,18 @@ CREATE TABLE "aktivitas" (
     CONSTRAINT "aktivitas_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "holidayTms" (
+    "id" TEXT NOT NULL,
+    "date_holiday" TIMESTAMP(3) NOT NULL,
+    "description" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "holidayTms_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE INDEX "role_role_name_idx" ON "role"("role_name");
 

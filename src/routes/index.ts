@@ -21,6 +21,8 @@ import srimg from "../controllers//srimg";
 import workcenter from "../controllers/workcenter";
 import dispacth from "../controllers/dispacth";
 import masterAktivitas from "../controllers/masterAktivitas";
+import timeschedule from "../controllers/timeschedule";
+import holidayTms from "../controllers/masterHoliday";
 
 /***************************AUTH********************************* */
 
@@ -435,6 +437,11 @@ router.get(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   wor.getWor
 );
+router.get(
+  "/worTime",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  wor.getWorTimes
+);
 router.post(
   "/wor",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
@@ -648,5 +655,55 @@ router.delete(
 );
 
 /***************************MASTER AKTIVITAS********************************* */
+
+/***************************TIMESCHEDULE********************************* */
+
+router.get(
+  "/timeschedule",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  timeschedule.getTimeschedule
+);
+router.post(
+  "/timeschedule",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  timeschedule.createTimeschedule
+);
+router.put(
+  "/timeschedule/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  timeschedule.updateTimeschedule
+);
+router.delete(
+  "/timeschedule/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  timeschedule.deleteTimeschedule
+);
+
+/***************************TIMESCHEDULE********************************* */
+
+/***************************MASTER HOLIDAY********************************* */
+
+router.get(
+  "/masterHoliday",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  holidayTms.getHoliday
+);
+router.post(
+  "/masterHoliday",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  holidayTms.createMasterHoliday
+);
+router.put(
+  "/masterHoliday/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  holidayTms.updateMasterHoliday
+);
+router.delete(
+  "/masterHoliday/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  holidayTms.deleteMasterHoliday
+);
+
+/***************************MASTER HOLIDAY********************************* */
 
 export default router;

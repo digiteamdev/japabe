@@ -30,7 +30,7 @@ const getWor = async (request: Request, response: Response) => {
             },
             {
               srimg: null,
-            }
+            },
           ],
         },
         include: {
@@ -108,6 +108,70 @@ const getWor = async (request: Request, response: Response) => {
         currentPage: pagination.currentPage,
         nextPage: pagination.next(),
         previouspage: pagination.prev(),
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const getWorTimes = async (request: Request, response: Response) => {
+  try {
+    const results = await prisma.wor.findMany({
+      where: {
+        OR: [
+          {
+            timeschedule: {
+              deleted: { not: null },
+            },
+          },
+          {
+            timeschedule: null,
+          },
+        ],
+      },
+      include: {
+        customerPo: {
+          include: {
+            quotations: {
+              include: {
+                Quotations_Detail: true,
+                CustomerContact: true,
+                Customer: {
+                  include: {
+                    address: true,
+                  },
+                },
+                eqandpart: {
+                  include: {
+                    equipment: true,
+                    eq_part: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        employee: true,
+        srimg: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    if (results.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All Wor",
+        result: results,
       });
     } else {
       return response.status(200).json({
@@ -297,6 +361,7 @@ const deleteWor = async (request: Request, response: Response) => {
 
 export default {
   getWor,
+  getWorTimes,
   createWor,
   updateWor,
   updateWorStatus,
