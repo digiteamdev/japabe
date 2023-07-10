@@ -660,7 +660,7 @@ router.delete(
 
 router.get(
   "/timeschedule",
-  // jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
   timeschedule.getTimeschedule
 );
 router.post(
