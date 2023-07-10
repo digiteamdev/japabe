@@ -34,7 +34,19 @@ const getTimeschedule = async (request: Request, response: Response) => {
           createdAt: "desc",
         },
         include: {
-          wor: true,
+          wor: {
+            include: {
+              srimg: {
+                include: {
+                  dispacth: {
+                    include: {
+                      dispatchDetail: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
           aktivitas: {
             include: {
               masterAktivitas: true,

@@ -640,7 +640,7 @@ router.get(
 );
 router.post(
   "/masterAktivitas",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  // jwt.authToken({ administrator: "ADMINISTRATOR" }),
   masterAktivitas.createMasterAktivitas
 );
 router.put(
