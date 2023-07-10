@@ -580,6 +580,7 @@ CREATE TABLE "timeschedule" (
     "idTs" VARCHAR(100),
     "timesch" TIMESTAMP(3) NOT NULL,
     "worId" TEXT,
+    "holiday" BOOLEAN DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deleted" TIMESTAMP(3),

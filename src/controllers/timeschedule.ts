@@ -36,6 +36,27 @@ const getTimeschedule = async (request: Request, response: Response) => {
         include: {
           wor: {
             include: {
+              customerPo: {
+                include: {
+                  quotations: {
+                    include: {
+                      Quotations_Detail: true,
+                      CustomerContact: true,
+                      Customer: {
+                        include: {
+                          address: true,
+                        },
+                      },
+                      eqandpart: {
+                        include: {
+                          equipment: true,
+                          eq_part: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
               srimg: {
                 include: {
                   dispacth: {

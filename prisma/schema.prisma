@@ -672,6 +672,7 @@ model timeschedule {
   timesch   DateTime
   wor       wor?        @relation(fields: [worId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   worId     String?     @unique
+  holiday   Boolean?    @default(false)
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   deleted   DateTime?
