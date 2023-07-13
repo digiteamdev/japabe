@@ -163,6 +163,69 @@ const updateTimeschedule = async (request: Request, response: Response) => {
   }
 };
 
+const updateTimeAktivity = async (request: any, response: Response) => {
+  try {
+    const newArr = request.body.aktivitas;
+    const updateVerify = newArr.map(
+      (updateByveri: {
+        timeId: any;
+        aktivitasId: any;
+        days: any;
+        startday: any;
+        endday: any;
+        id: any;
+      }) => {
+        return {
+          timeId: updateByveri.timeId,
+          aktivitasId: updateByveri.aktivitasId,
+          days: updateByveri.days,
+          startday: updateByveri.startday,
+          endday: updateByveri.endday,
+          id: updateByveri.id,
+        };
+      }
+    );
+    let result: any = [];
+    for (let i = 0; i < updateVerify.length; i++) {
+      const updateTimeAktivity = await prisma.aktivitas.upsert({
+        where: {
+          id: updateVerify[i].id,
+        },
+        create: {
+          timeschedule: { connect: { id: updateVerify[i].timeId } },
+          masterAktivitas: { connect: { id: updateVerify[i].aktivitasId } },
+          days: updateVerify[i].days,
+          startday: new Date(updateVerify[i].startday),
+          endday: new Date(updateVerify[i].endday),
+        },
+        update: {
+          timeschedule: { connect: { id: updateVerify[i].timeId } },
+          masterAktivitas: { connect: { id: updateVerify[i].aktivitasId } },
+          days: updateVerify[i].days,
+          startday: new Date(updateVerify[i].startday),
+          endday: new Date(updateVerify[i].endday),
+        },
+      });
+
+      result = [...result, updateTimeAktivity];
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        result: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const deleteTimeschedule = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
@@ -192,5 +255,6 @@ export default {
   getTimeschedule,
   createTimeschedule,
   updateTimeschedule,
+  updateTimeAktivity,
   deleteTimeschedule,
 };

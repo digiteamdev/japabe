@@ -469,7 +469,7 @@ const updatePart = async (request: any, response: Response) => {
       } else {
         img = updateVerify[i].part_img;
       }
-      const updateEmployeeCertificate = await prisma.eq_part.upsert({
+      const updatePart = await prisma.eq_part.upsert({
         where: {
           id: updateVerify[i].id,
         },
@@ -485,7 +485,7 @@ const updatePart = async (request: any, response: Response) => {
           keterangan_part: updateVerify[i].keterangan_part,
         },
       });
-      result = [...result, updateEmployeeCertificate];
+      result = [...result, updatePart];
     }
     if (result) {
       response.status(201).json({

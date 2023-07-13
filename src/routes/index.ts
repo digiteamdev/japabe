@@ -673,6 +673,11 @@ router.put(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   timeschedule.updateTimeschedule
 );
+router.put(
+  "/timeschedule",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  timeschedule.updateTimeAktivity
+);
 router.delete(
   "/timeschedule/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
