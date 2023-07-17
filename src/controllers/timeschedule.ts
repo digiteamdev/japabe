@@ -173,6 +173,8 @@ const updateTimeAktivity = async (request: any, response: Response) => {
         days: any;
         startday: any;
         endday: any;
+        progress: any;
+        holiday_count: any;
         id: any;
       }) => {
         return {
@@ -197,6 +199,8 @@ const updateTimeAktivity = async (request: any, response: Response) => {
           days: updateVerify[i].days,
           startday: new Date(updateVerify[i].startday),
           endday: new Date(updateVerify[i].endday),
+          progress: updateVerify[i].progress,
+          holiday_count: updateVerify[i].holiday_count,
         },
         update: {
           timeschedule: { connect: { id: updateVerify[i].timeId } },
@@ -204,6 +208,8 @@ const updateTimeAktivity = async (request: any, response: Response) => {
           days: updateVerify[i].days,
           startday: new Date(updateVerify[i].startday),
           endday: new Date(updateVerify[i].endday),
+          progress: updateVerify[i].progress,
+          holiday_count: updateVerify[i].holiday_count,
         },
       });
 
@@ -251,10 +257,36 @@ const deleteTimeschedule = async (request: Request, response: Response) => {
   }
 };
 
+const deleTimeAktivty = async (request: Request, response: Response)=> {
+  try {
+    const id: string = request.params.id;
+    const deleTimeAktivty = await prisma.aktivitas.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (deleTimeAktivty) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Delete Data",
+        results: deleTimeAktivty,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Delete Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+}
+
 export default {
   getTimeschedule,
   createTimeschedule,
   updateTimeschedule,
   updateTimeAktivity,
   deleteTimeschedule,
+  deleTimeAktivty
 };

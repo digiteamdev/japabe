@@ -58,6 +58,9 @@ const getWor = async (request: Request, response: Response) => {
           employee: true,
           srimg: true,
         },
+        orderBy: {
+          createdAt: "desc",
+        },
       });
     } else {
       results = await prisma.wor.findMany({

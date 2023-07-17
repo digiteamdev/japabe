@@ -41,6 +41,9 @@ const getQuotation = async (request: Request, response: Response) => {
             },
           },
         },
+        orderBy: {
+          createdAt: "desc",
+        },
       });
     } else {
       results = await prisma.quotations.findMany({

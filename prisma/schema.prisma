@@ -690,6 +690,8 @@ model aktivitas {
   days            Int
   startday        DateTime
   endday          DateTime
+  progress        Int             @default(0)
+  holiday_count   Int             @default(0)
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   deleted         DateTime?

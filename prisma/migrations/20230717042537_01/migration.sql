@@ -596,6 +596,8 @@ CREATE TABLE "aktivitas" (
     "days" INTEGER NOT NULL,
     "startday" TIMESTAMP(3) NOT NULL,
     "endday" TIMESTAMP(3) NOT NULL,
+    "progress" INTEGER NOT NULL DEFAULT 0,
+    "holiday_count" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deleted" TIMESTAMP(3),

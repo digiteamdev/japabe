@@ -28,7 +28,7 @@ const getSrimg = async (request: Request, response: Response) => {
             },
             {
               dispacth: null,
-            }
+            },
           ],
         },
         include: {
@@ -62,6 +62,9 @@ const getSrimg = async (request: Request, response: Response) => {
               imgSummary: true,
             },
           },
+        },
+        orderBy: {
+          createdAt: "desc",
         },
       });
     } else {
@@ -102,6 +105,9 @@ const getSrimg = async (request: Request, response: Response) => {
               imgSummary: true,
             },
           },
+        },
+        orderBy: {
+          createdAt: "desc",
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
@@ -145,7 +151,7 @@ const createSrimg = async (request: any, response: Response) => {
         choice: detailSum[i].choice,
         noted: detailSum[i].noted,
       });
-    }    
+    }
     const summary = await prisma.srimg.create({
       data: {
         date_of_summary: new Date(request.body.date_of_summary),
@@ -158,7 +164,7 @@ const createSrimg = async (request: any, response: Response) => {
         inimg: !request.file ? "" : request.file.path,
       },
     });
-    newArrDetail.map(async(e: any, i: number) => {
+    newArrDetail.map(async (e: any, i: number) => {
       await prisma.srimgdetail.create({
         data: {
           srId: summary.id,

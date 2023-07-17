@@ -683,6 +683,11 @@ router.delete(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   timeschedule.deleteTimeschedule
 );
+router.delete(
+  "/timescheduleActivity/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  timeschedule.deleTimeAktivty
+);
 
 /***************************TIMESCHEDULE********************************* */
 
