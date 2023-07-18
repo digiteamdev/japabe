@@ -110,6 +110,7 @@ const createTimeschedule = async (request: Request, response: Response) => {
         idTs: request.body.idTs,
         wor: { connect: { id: request.body.worId } },
         timesch: new Date(request.body.timesch),
+        holiday: request.body.holiday,
         aktivitas: {
           create: request.body.aktivitas,
         },
@@ -257,7 +258,7 @@ const deleteTimeschedule = async (request: Request, response: Response) => {
   }
 };
 
-const deleTimeAktivty = async (request: Request, response: Response)=> {
+const deleTimeAktivty = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
     const deleTimeAktivty = await prisma.aktivitas.delete({
@@ -280,7 +281,7 @@ const deleTimeAktivty = async (request: Request, response: Response)=> {
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
-}
+};
 
 export default {
   getTimeschedule,
@@ -288,5 +289,5 @@ export default {
   updateTimeschedule,
   updateTimeAktivity,
   deleteTimeschedule,
-  deleTimeAktivty
+  deleTimeAktivty,
 };
