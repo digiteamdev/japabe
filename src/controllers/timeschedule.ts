@@ -236,7 +236,7 @@ const updateTimeAktivity = async (request: any, response: Response) => {
 const deleteTimeschedule = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
-    const deleteMasterAktivitas = await prisma.masterAktivitas.delete({
+    const deleteMasterAktivitas = await prisma.timeschedule.delete({
       where: {
         id: id,
       },
