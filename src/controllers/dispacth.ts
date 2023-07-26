@@ -19,10 +19,21 @@ const getDispatch = async (request: Request, response: Response) => {
     let results;
     if (request.query.page === undefined) {
       results = await prisma.dispacth.findMany({
+        where: {
+          OR: [
+            {
+              timeschedule: {
+                deleted: { not: null },
+              },
+            },
+            {
+              timeschedule: null as any,
+            },
+          ],
+        },
         include: {
-          srimg: {
+          timeschedule: {
             include: {
-              srimgdetail: true,
               wor: {
                 include: {
                   customerPo: {
@@ -61,9 +72,8 @@ const getDispatch = async (request: Request, response: Response) => {
           },
         },
         include: {
-          srimg: {
+          timeschedule: {
             include: {
-              srimgdetail: true,
               wor: {
                 include: {
                   customerPo: {
@@ -131,7 +141,7 @@ const createDispacth = async (request: Request, response: Response) => {
   try {
     const results = await prisma.dispacth.create({
       data: {
-        srimg: { connect: { id: request.body.srId } },
+        timeschedule: { connect: { id: request.body.timeschId } },
         id_dispatch: request.body.id_dispatch,
         dispacth_date: new Date(request.body.dispacth_date),
         remark: request.body.remark,
@@ -199,6 +209,7 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
         actual: any;
         operatorID: any;
         approvebyID: any;
+        aktivitasID: any;
         id: any;
       }) => {
         return {
@@ -211,6 +222,7 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
           actual: updateByveri.actual,
           operatorID: updateByveri.operatorID,
           approvebyID: updateByveri.approvebyID,
+          aktivitasID: updateByveri.aktivitasID,
           id: updateByveri.id,
         };
       }
@@ -225,6 +237,7 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
           dispacth: { connect: { id: updateVerify[i].dispacthID } },
           workCenter: { connect: { id: updateVerify[i].workId } },
           sub_depart: { connect: { id: updateVerify[i].subdepId } },
+          aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
           part: updateVerify[i].part,
           start: updateVerify[i].start,
           Employee: { connect: { id: updateVerify[i].operatorID } },
@@ -232,6 +245,7 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
         update: {
           workCenter: { connect: { id: updateVerify[i].workId } },
           sub_depart: { connect: { id: updateVerify[i].subdepId } },
+          aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
           part: updateVerify[i].part,
           start: updateVerify[i].start,
           Employee: { connect: { id: updateVerify[i].operatorID } },

@@ -19,18 +19,6 @@ const getSrimg = async (request: Request, response: Response) => {
     let results;
     if (request.query.page === undefined) {
       results = await prisma.srimg.findMany({
-        where: {
-          OR: [
-            {
-              dispacth: {
-                deleted: { not: null },
-              },
-            },
-            {
-              dispacth: null,
-            },
-          ],
-        },
         include: {
           wor: {
             include: {

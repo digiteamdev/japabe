@@ -57,15 +57,6 @@ const getTimeschedule = async (request: Request, response: Response) => {
                   },
                 },
               },
-              srimg: {
-                include: {
-                  dispacth: {
-                    include: {
-                      dispatchDetail: true,
-                    },
-                  },
-                },
-              },
             },
           },
           aktivitas: {

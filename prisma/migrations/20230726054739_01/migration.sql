@@ -530,40 +530,6 @@ CREATE TABLE "workCenter" (
 );
 
 -- CreateTable
-CREATE TABLE "dispacth" (
-    "id" TEXT NOT NULL,
-    "srId" TEXT NOT NULL,
-    "id_dispatch" VARCHAR(20),
-    "dispacth_date" TIMESTAMP(3) NOT NULL,
-    "remark" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "deleted" TIMESTAMP(3),
-
-    CONSTRAINT "dispacth_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "dispatchDetail" (
-    "id" TEXT NOT NULL,
-    "dispacthID" TEXT NOT NULL,
-    "workId" TEXT NOT NULL,
-    "subdepId" TEXT NOT NULL,
-    "part" VARCHAR(100),
-    "start" TIMESTAMP(3),
-    "finish" TIMESTAMP(3),
-    "actual" TIMESTAMP(3),
-    "operatorID" TEXT NOT NULL,
-    "approvebyID" TEXT,
-    "remark" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "deleted" TIMESTAMP(3),
-
-    CONSTRAINT "dispatchDetail_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "masterAktivitas" (
     "id" TEXT NOT NULL,
     "name" VARCHAR(200) NOT NULL,
@@ -615,6 +581,41 @@ CREATE TABLE "holidayTms" (
     "deleted" TIMESTAMP(3),
 
     CONSTRAINT "holidayTms_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "dispacth" (
+    "id" TEXT NOT NULL,
+    "timeschId" TEXT NOT NULL,
+    "id_dispatch" VARCHAR(20),
+    "dispacth_date" TIMESTAMP(3) NOT NULL,
+    "remark" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "dispacth_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "dispatchDetail" (
+    "id" TEXT NOT NULL,
+    "dispacthID" TEXT NOT NULL,
+    "workId" TEXT NOT NULL,
+    "subdepId" TEXT NOT NULL,
+    "aktivitasID" TEXT NOT NULL,
+    "part" VARCHAR(100),
+    "start" TIMESTAMP(3),
+    "finish" TIMESTAMP(3),
+    "actual" TIMESTAMP(3),
+    "operatorID" TEXT NOT NULL,
+    "approvebyID" TEXT,
+    "remark" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "dispatchDetail_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -732,15 +733,6 @@ CREATE INDEX "imgSummary_id_img_idx" ON "imgSummary"("id", "img");
 CREATE INDEX "workCenter_id_name_idx" ON "workCenter"("id", "name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "dispacth_srId_key" ON "dispacth"("srId");
-
--- CreateIndex
-CREATE INDEX "dispacth_id_id_dispatch_idx" ON "dispacth"("id", "id_dispatch");
-
--- CreateIndex
-CREATE INDEX "dispatchDetail_id_part_idx" ON "dispatchDetail"("id", "part");
-
--- CreateIndex
 CREATE INDEX "masterAktivitas_id_name_idx" ON "masterAktivitas"("id", "name");
 
 -- CreateIndex
@@ -751,6 +743,15 @@ CREATE INDEX "timeschedule_id_idTs_idx" ON "timeschedule"("id", "idTs");
 
 -- CreateIndex
 CREATE INDEX "aktivitas_id_idx" ON "aktivitas"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "dispacth_timeschId_key" ON "dispacth"("timeschId");
+
+-- CreateIndex
+CREATE INDEX "dispacth_id_id_dispatch_idx" ON "dispacth"("id", "id_dispatch");
+
+-- CreateIndex
+CREATE INDEX "dispatchDetail_id_part_idx" ON "dispatchDetail"("id", "part");
 
 -- AddForeignKey
 ALTER TABLE "Employee" ADD CONSTRAINT "Employee_subdepartId_fkey" FOREIGN KEY ("subdepartId") REFERENCES "sub_depart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -843,7 +844,16 @@ ALTER TABLE "srimgdetail" ADD CONSTRAINT "srimgdetail_srId_fkey" FOREIGN KEY ("s
 ALTER TABLE "imgSummary" ADD CONSTRAINT "imgSummary_srimgdetailId_fkey" FOREIGN KEY ("srimgdetailId") REFERENCES "srimgdetail"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "dispacth" ADD CONSTRAINT "dispacth_srId_fkey" FOREIGN KEY ("srId") REFERENCES "srimg"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "timeschedule" ADD CONSTRAINT "timeschedule_worId_fkey" FOREIGN KEY ("worId") REFERENCES "wor"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "aktivitas" ADD CONSTRAINT "aktivitas_timeId_fkey" FOREIGN KEY ("timeId") REFERENCES "timeschedule"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "aktivitas" ADD CONSTRAINT "aktivitas_aktivitasId_fkey" FOREIGN KEY ("aktivitasId") REFERENCES "masterAktivitas"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "dispacth" ADD CONSTRAINT "dispacth_timeschId_fkey" FOREIGN KEY ("timeschId") REFERENCES "timeschedule"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_dispacthID_fkey" FOREIGN KEY ("dispacthID") REFERENCES "dispacth"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -855,16 +865,10 @@ ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_workId_fkey" FOREIGN
 ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_subdepId_fkey" FOREIGN KEY ("subdepId") REFERENCES "sub_depart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_aktivitasID_fkey" FOREIGN KEY ("aktivitasID") REFERENCES "aktivitas"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_operatorID_fkey" FOREIGN KEY ("operatorID") REFERENCES "Employee"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_approvebyID_fkey" FOREIGN KEY ("approvebyID") REFERENCES "Employee"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "timeschedule" ADD CONSTRAINT "timeschedule_worId_fkey" FOREIGN KEY ("worId") REFERENCES "wor"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "aktivitas" ADD CONSTRAINT "aktivitas_timeId_fkey" FOREIGN KEY ("timeId") REFERENCES "timeschedule"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "aktivitas" ADD CONSTRAINT "aktivitas_aktivitasId_fkey" FOREIGN KEY ("aktivitasId") REFERENCES "masterAktivitas"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
