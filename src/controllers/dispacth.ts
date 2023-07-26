@@ -60,6 +60,7 @@ const getDispatch = async (request: Request, response: Response) => {
               Employee: true,
               sub_depart: true,
               workCenter: true,
+              aktivitas: true,
             },
           },
         },
