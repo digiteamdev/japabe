@@ -22,6 +22,39 @@ const getTimeschedule = async (request: Request, response: Response) => {
         orderBy: {
           id: "asc",
         },
+        include: {
+          wor: {
+            include: {
+              customerPo: {
+                include: {
+                  quotations: {
+                    include: {
+                      Quotations_Detail: true,
+                      CustomerContact: true,
+                      Customer: {
+                        include: {
+                          address: true,
+                        },
+                      },
+                      eqandpart: {
+                        include: {
+                          equipment: true,
+                          eq_part: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          aktivitas: {
+            include: {
+              masterAktivitas: true,
+              dispatchDetail: true,
+            },
+          },
+        },
       });
     } else {
       results = await prisma.timeschedule.findMany({
