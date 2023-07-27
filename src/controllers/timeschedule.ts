@@ -37,6 +37,11 @@ const getTimeschedule = async (request: Request, response: Response) => {
         include: {
           wor: {
             include: {
+              srimg: {
+                include: {
+                  srimgdetail: true,
+                },
+              },
               customerPo: {
                 include: {
                   quotations: {
@@ -60,6 +65,7 @@ const getTimeschedule = async (request: Request, response: Response) => {
               },
             },
           },
+
           aktivitas: {
             include: {
               masterAktivitas: true,
@@ -81,6 +87,11 @@ const getTimeschedule = async (request: Request, response: Response) => {
         include: {
           wor: {
             include: {
+              srimg: {
+                include: {
+                  srimgdetail: true,
+                },
+              },
               customerPo: {
                 include: {
                   quotations: {
@@ -104,6 +115,7 @@ const getTimeschedule = async (request: Request, response: Response) => {
               },
             },
           },
+
           aktivitas: {
             include: {
               masterAktivitas: true,
