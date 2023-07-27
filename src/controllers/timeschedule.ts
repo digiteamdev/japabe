@@ -133,17 +133,17 @@ const createTimeschedule = async (request: Request, response: Response) => {
 const updateTimeschedule = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
-    const updateMasterAktivitas = await prisma.masterAktivitas.update({
+    const updateTimeschedule = await prisma.timeschedule.update({
       data: request.body,
       where: {
         id: id,
       },
     });
-    if (updateMasterAktivitas) {
+    if (updateTimeschedule) {
       response.status(201).json({
         success: true,
         massage: "Success Delete Data",
-        results: updateMasterAktivitas,
+        results: updateTimeschedule,
       });
     } else {
       response.status(400).json({
