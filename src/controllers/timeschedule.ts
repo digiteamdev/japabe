@@ -19,6 +19,18 @@ const getTimeschedule = async (request: Request, response: Response) => {
     let results;
     if (request.query.page === undefined) {
       results = await prisma.timeschedule.findMany({
+        where: {
+          OR: [
+            {
+              dispacth: {
+                deleted: { not: null },
+              },
+            },
+            {
+              dispacth: null,
+            },
+          ],
+        },
         orderBy: {
           id: "asc",
         },
