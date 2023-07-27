@@ -19,18 +19,6 @@ const getDispatch = async (request: Request, response: Response) => {
     let results;
     if (request.query.page === undefined) {
       results = await prisma.dispacth.findMany({
-        where: {
-          OR: [
-            {
-              timeschedule: {
-                deleted: { not: null },
-              },
-            },
-            {
-              timeschedule: null as any,
-            },
-          ],
-        },
         include: {
           timeschedule: {
             include: {

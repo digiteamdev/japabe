@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import prisma from "../middleware/wor";
 import pagging from "../utils/paggination";
 import url from "url";
+import srimg from "./srimg";
+import timeschedule from "./timeschedule";
 
 const getWor = async (request: Request, response: Response) => {
   try {
@@ -125,7 +127,7 @@ const getWor = async (request: Request, response: Response) => {
   }
 };
 
-const getWorTimes = async (request: Request, response: Response) => {
+const getWorTimes = async (request: any, response: Response) => {
   try {
     const results = await prisma.wor.findMany({
       where: {
@@ -137,6 +139,11 @@ const getWorTimes = async (request: Request, response: Response) => {
           },
           {
             timeschedule: null,
+          },
+        ],
+        NOT: [
+          {
+            srimg: null,
           },
         ],
       },
@@ -163,6 +170,7 @@ const getWorTimes = async (request: Request, response: Response) => {
           },
         },
         employee: true,
+        timeschedule: true,
         srimg: true,
       },
       orderBy: {
