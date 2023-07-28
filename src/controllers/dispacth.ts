@@ -24,6 +24,11 @@ const getDispatch = async (request: Request, response: Response) => {
             include: {
               wor: {
                 include: {
+                  srimg: {
+                    include: {
+                      srimgdetail: true,
+                    },
+                  },
                   customerPo: {
                     include: {
                       quotations: {
@@ -45,10 +50,14 @@ const getDispatch = async (request: Request, response: Response) => {
           },
           dispatchDetail: {
             include: {
-              Employee: true,
+              Employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                },
+              },
               sub_depart: true,
               workCenter: true,
-              aktivitas: true,
             },
           },
         },
@@ -65,6 +74,11 @@ const getDispatch = async (request: Request, response: Response) => {
             include: {
               wor: {
                 include: {
+                  srimg: {
+                    include: {
+                      srimgdetail: true,
+                    },
+                  },
                   customerPo: {
                     include: {
                       quotations: {
