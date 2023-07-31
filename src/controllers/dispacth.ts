@@ -100,6 +100,7 @@ const getDispatch = async (request: Request, response: Response) => {
           },
           dispatchDetail: {
             select: {
+              id: true,
               operatorID: true,
               approvebyID: true,
               approve: {
