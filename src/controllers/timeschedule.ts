@@ -81,9 +81,6 @@ const getTimeschedule = async (request: Request, response: Response) => {
             contains: pencarian,
           },
         },
-        orderBy: {
-          createdAt: "desc",
-        },
         include: {
           wor: {
             include: {

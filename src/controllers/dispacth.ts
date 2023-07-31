@@ -99,15 +99,31 @@ const getDispatch = async (request: Request, response: Response) => {
             },
           },
           dispatchDetail: {
-            include: {
+            select: {
+              operatorID: true,
+              approvebyID: true,
+              approve: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                },
+              },
               Employee: {
                 select: {
                   id: true,
                   employee_name: true,
                 },
               },
-              sub_depart: true,
-              workCenter: true,
+              sub_depart: {
+                select: {
+                  name: true,
+                },
+              },
+              workCenter: {
+                select: {
+                  name: true,
+                },
+              },
             },
           },
         },
@@ -304,6 +320,28 @@ const updateStart = async (request: Request, response: Response) => {
 const updateFinish = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
+    const selectDispact = await prisma.dispatchDetail.findFirst({
+      where: { id: id },
+    });
+    const totalfinish = await prisma.dispatchDetail.count({
+      where: {
+        finish: {
+          not: null,
+        },
+      },
+    });
+    const totalfinishnot = await prisma.dispatchDetail.count({
+      where: {
+        aktivitasID: selectDispact?.aktivitasID,
+      },
+    });
+    const aktivityId = await prisma.dispatchDetail.findFirst({
+      where: { id: id },
+    });
+
+    const aktifitasId = aktivityId?.aktivitasID;
+    const percentase = (totalfinish / totalfinishnot) * 100;
+
     const updateFinish = await prisma.dispatchDetail.update({
       where: {
         id: id,
@@ -311,6 +349,14 @@ const updateFinish = async (request: Request, response: Response) => {
       data: {
         finish: new Date(request.body.finish),
         approve: { connect: { id: request.body.approvebyID } },
+      },
+    });
+    await prisma.aktivitas.update({
+      where: {
+        id: aktifitasId,
+      },
+      data: {
+        progress: percentase,
       },
     });
     if (updateFinish) {
