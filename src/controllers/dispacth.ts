@@ -321,6 +321,15 @@ const updateStart = async (request: Request, response: Response) => {
 const updateFinish = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
+    const updateFinish = await prisma.dispatchDetail.update({
+      where: {
+        id: id,
+      },
+      data: {
+        finish: new Date(request.body.finish),
+        approve: { connect: { id: request.body.approvebyID } },
+      },
+    });
     const selectDispact = await prisma.dispatchDetail.findFirst({
       where: { id: id },
     });
@@ -343,15 +352,6 @@ const updateFinish = async (request: Request, response: Response) => {
     const aktifitasId = aktivityId?.aktivitasID;
     const percentase = (totalfinish / totalfinishnot) * 100;
 
-    const updateFinish = await prisma.dispatchDetail.update({
-      where: {
-        id: id,
-      },
-      data: {
-        finish: new Date(request.body.finish),
-        approve: { connect: { id: request.body.approvebyID } },
-      },
-    });
     await prisma.aktivitas.update({
       where: {
         id: aktifitasId,
