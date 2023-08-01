@@ -22,21 +22,21 @@ const getWor = async (request: Request, response: Response) => {
       results = await prisma.wor.findMany({
         where: {
           status: status,
-          AND: [
+          timeschedule: {
+            deleted: null,
+          },
+          OR: [
             {
               srimg: {
                 deleted: { not: null },
               },
             },
             {
-              timeschedule: {
-                deleted: null,
-              },
+              srimg: null,
             },
           ],
           NOT: {
             timeschedule: null,
-            srimg: null,
           },
         },
         include: {
