@@ -2,8 +2,6 @@ import { Request, Response } from "express";
 import prisma from "../middleware/wor";
 import pagging from "../utils/paggination";
 import url from "url";
-import srimg from "./srimg";
-import timeschedule from "./timeschedule";
 
 const getWor = async (request: Request, response: Response) => {
   try {
@@ -24,16 +22,22 @@ const getWor = async (request: Request, response: Response) => {
       results = await prisma.wor.findMany({
         where: {
           status: status,
-          OR: [
+          AND: [
             {
               srimg: {
                 deleted: { not: null },
               },
             },
             {
-              srimg: null,
+              timeschedule: {
+                deleted: null,
+              },
             },
           ],
+          NOT: {
+            timeschedule: null,
+            srimg: null,
+          },
         },
         include: {
           customerPo: {
@@ -57,6 +61,7 @@ const getWor = async (request: Request, response: Response) => {
               },
             },
           },
+          timeschedule: true,
           employee: true,
           srimg: true,
         },
