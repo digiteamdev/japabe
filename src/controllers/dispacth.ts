@@ -104,6 +104,9 @@ const getDispatch = async (request: Request, response: Response) => {
               operatorID: true,
               approvebyID: true,
               part: true,
+              start: true,
+              finish: true,
+              actual: true,
               approve: {
                 select: {
                   id: true,
