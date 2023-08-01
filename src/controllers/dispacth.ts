@@ -126,6 +126,17 @@ const getDispatch = async (request: Request, response: Response) => {
                   name: true,
                 },
               },
+              aktivitas: {
+                select: {
+                  id: true,
+                  aktivitasId: true,
+                  masterAktivitas: {
+                    select: {
+                      name: true
+                    }
+                  }
+                }
+              }
             },
 
           },
