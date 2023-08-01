@@ -103,6 +103,7 @@ const getDispatch = async (request: Request, response: Response) => {
               id: true,
               operatorID: true,
               approvebyID: true,
+              part: true,
               approve: {
                 select: {
                   id: true,
@@ -126,6 +127,7 @@ const getDispatch = async (request: Request, response: Response) => {
                 },
               },
             },
+
           },
         },
         orderBy: {
