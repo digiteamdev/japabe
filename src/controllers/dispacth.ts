@@ -128,6 +128,9 @@ const getDispatch = async (request: Request, response: Response) => {
             },
           },
         },
+        orderBy: {
+          createdAt: "desc",
+        },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
@@ -335,6 +338,7 @@ const updateFinish = async (request: Request, response: Response) => {
     });
     const totalfinish = await prisma.dispatchDetail.count({
       where: {
+        aktivitasID: selectDispact?.aktivitasID,
         finish: {
           not: null,
         },
@@ -350,6 +354,7 @@ const updateFinish = async (request: Request, response: Response) => {
     });
 
     const aktifitasId = aktivityId?.aktivitasID;
+
     const percentase = (totalfinish / totalfinishnot) * 100;
 
     await prisma.aktivitas.update({
@@ -357,7 +362,7 @@ const updateFinish = async (request: Request, response: Response) => {
         id: aktifitasId,
       },
       data: {
-        progress: percentase,
+        progress: Math.floor(percentase),
       },
     });
     if (updateFinish) {
