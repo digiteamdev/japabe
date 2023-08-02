@@ -230,6 +230,8 @@ const updateTimeAktivity = async (request: any, response: Response) => {
           days: updateByveri.days,
           startday: updateByveri.startday,
           endday: updateByveri.endday,
+          progress: updateByveri.progress,
+          holiday_count: updateByveri.holiday_count,
           id: updateByveri.id,
         };
       }
