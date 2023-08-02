@@ -136,19 +136,13 @@ const getWorTimes = async (request: any, response: Response) => {
   try {
     const results = await prisma.wor.findMany({
       where: {
-        AND: [
-          {
-            timeschedule: {
-              deleted: { not: null },
-            },
+        timeschedule: null,
+        srimg: null,
+        NOT: {
+          timeschedule: {
+            deleted: { not: null },
           },
-          {
-            timeschedule: null,
-          },
-          {
-            srimg: null,
-          },
-        ],
+        },
       },
       include: {
         customerPo: {

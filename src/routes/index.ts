@@ -439,7 +439,7 @@ router.get(
 );
 router.get(
   "/worTime",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  // jwt.authToken({ administrator: "ADMINISTRATOR" }),
   wor.getWorTimes
 );
 router.post(
