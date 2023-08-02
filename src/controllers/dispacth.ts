@@ -72,6 +72,11 @@ const getDispatch = async (request: Request, response: Response) => {
         include: {
           timeschedule: {
             include: {
+              aktivitas: {
+                include: {
+                  masterAktivitas: true,
+                },
+              },
               wor: {
                 include: {
                   srimg: {
@@ -135,13 +140,12 @@ const getDispatch = async (request: Request, response: Response) => {
                   aktivitasId: true,
                   masterAktivitas: {
                     select: {
-                      name: true
-                    }
-                  }
-                }
-              }
+                      name: true,
+                    },
+                  },
+                },
+              },
             },
-
           },
         },
         orderBy: {
