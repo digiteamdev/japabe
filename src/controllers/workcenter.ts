@@ -94,6 +94,55 @@ const createWorkCenterMany = async (request: Request, response: Response) => {
     const results = await prisma.workCenter.createMany({
       data: [
         {
+          id: "clkt705f8001qcz5mxrwhn9lv",
+          name: "Babbit Purchase",
+          createdAt: "2023-08-02T03:52:56.181Z",
+          updatedAt: "2023-08-02T03:52:56.181Z",
+          deleted: null,
+        },
+        {
+          id: "clkt6zde1001ocz5mheat0zli",
+          name: "Delivery",
+          createdAt: "2023-08-02T03:52:19.850Z",
+          updatedAt: "2023-08-02T03:52:19.850Z",
+          deleted: null,
+        },
+        {
+          id: "clkt6z87n001mcz5muc00znth",
+          name: "Final Check QC",
+          createdAt: "2023-08-02T03:52:13.139Z",
+          updatedAt: "2023-08-02T03:52:13.139Z",
+          deleted: null,
+        },
+        {
+          id: "clkt6z1wa001kcz5m4h95sy1e",
+          name: "UT NDT Process",
+          createdAt: "2023-08-02T03:52:04.954Z",
+          updatedAt: "2023-08-02T03:52:04.954Z",
+          deleted: null,
+        },
+        {
+          id: "clkt6ypg4001icz5mw2e6bqef",
+          name: "Machining",
+          createdAt: "2023-08-02T03:51:48.821Z",
+          updatedAt: "2023-08-02T03:51:48.821Z",
+          deleted: null,
+        },
+        {
+          id: "clkt6xkbq001ccz5m6ph0cwk0",
+          name: "Welding New Babbit",
+          createdAt: "2023-08-02T03:50:55.526Z",
+          updatedAt: "2023-08-02T03:50:55.526Z",
+          deleted: null,
+        },
+        {
+          id: "clkt6xee7001acz5m7lxapmu2",
+          name: "Remove Babbit",
+          createdAt: "2023-08-02T03:50:47.840Z",
+          updatedAt: "2023-08-02T03:50:47.840Z",
+          deleted: null,
+        },
+        {
           id: "clj8dks85000kczed5e7m6akz",
           name: "Balancing",
           createdAt: "2023-06-23T09:34:04.517Z",

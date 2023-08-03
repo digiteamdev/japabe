@@ -561,6 +561,8 @@ model srimg {
   itn             String?       @db.VarChar(100)
   introduction    String?       @db.Text
   inimg           String?       @db.VarChar(100)
+  status_spv      String?       @db.VarChar(20)
+  status_manager  String?       @db.VarChar(20)
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
   deleted         DateTime?
@@ -627,19 +629,22 @@ model masterAktivitas {
 }
 
 model timeschedule {
-  id        String      @id @default(cuid())
-  idTs      String?     @db.VarChar(100)
-  timesch   DateTime
-  wor       wor?        @relation(fields: [worId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  worId     String?     @unique
-  holiday   Boolean?    @default(false)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  deleted   DateTime?
-  aktivitas aktivitas[]
-  dispacth  dispacth?
+  id             String      @id @default(cuid())
+  idTs           String?     @db.VarChar(100)
+  timesch        DateTime
+  wor            wor?        @relation(fields: [worId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  worId          String?     @unique
+  status_spv     String?     @db.VarChar(20)
+  status_manager String?     @db.VarChar(20)
+  holiday        Boolean?    @default(false)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  deleted        DateTime?
+  aktivitas      aktivitas[]
+  dispacth       dispacth?
+  drawing        drawing[]
 
-  @@index([id, idTs])
+  @@index([id, idTs, worId])
 }
 
 model aktivitas {
@@ -658,7 +663,7 @@ model aktivitas {
   deleted         DateTime?
   dispatchDetail  dispatchDetail[]
 
-  @@index([id])
+  @@index([id, timeId, aktivitasId])
 }
 
 model holidayTms {
@@ -677,12 +682,14 @@ model dispacth {
   id_dispatch    String?          @db.VarChar(20)
   dispacth_date  DateTime
   remark         String?          @db.Text
+  status_spv     String?          @db.VarChar(20)
+  status_manager String?          @db.VarChar(20)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   deleted        DateTime?
   dispatchDetail dispatchDetail[]
 
-  @@index([id, id_dispatch])
+  @@index([id, id_dispatch, timeschId])
 }
 
 model dispatchDetail {
@@ -699,14 +706,40 @@ model dispatchDetail {
   start       DateTime?
   finish      DateTime?
   actual      DateTime?
-  Employee    Employee   @relation(fields: [operatorID], references: [id])
+  Employee    Employee?  @relation(fields: [operatorID], references: [id])
   approve     Employee?  @relation(fields: [approvebyID], references: [id], name: "approves")
-  operatorID  String
+  operatorID  String?
   approvebyID String?
   remark      String?    @db.Text
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   deleted     DateTime?
 
-  @@index([id, part])
+  @@index([id, part, dispacthID, aktivitasID, workId])
+}
+
+model drawing {
+  id           String         @id @default(cuid())
+  id_drawing   String?        @db.VarChar(100)
+  timeschedule timeschedule   @relation(fields: [timeschId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  timeschId    String
+  date_drawing DateTime
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  deleted      DateTime?
+  file_drawing file_drawing[]
+
+  @@index([id, timeschId])
+}
+
+model file_drawing {
+  id          String    @id @default(cuid())
+  drawing     drawing   @relation(fields: [drawingId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  drawingId   String
+  file_upload String    @db.Text
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deleted     DateTime?
+
+  @@index([id, drawingId])
 }

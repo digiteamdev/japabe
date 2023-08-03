@@ -483,6 +483,8 @@ CREATE TABLE "srimg" (
     "itn" VARCHAR(100),
     "introduction" TEXT,
     "inimg" VARCHAR(100),
+    "status_spv" VARCHAR(20),
+    "status_manager" VARCHAR(20),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deleted" TIMESTAMP(3),
@@ -546,6 +548,8 @@ CREATE TABLE "timeschedule" (
     "idTs" VARCHAR(100),
     "timesch" TIMESTAMP(3) NOT NULL,
     "worId" TEXT,
+    "status_spv" VARCHAR(20),
+    "status_manager" VARCHAR(20),
     "holiday" BOOLEAN DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -590,6 +594,8 @@ CREATE TABLE "dispacth" (
     "id_dispatch" VARCHAR(20),
     "dispacth_date" TIMESTAMP(3) NOT NULL,
     "remark" TEXT,
+    "status_spv" VARCHAR(20),
+    "status_manager" VARCHAR(20),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deleted" TIMESTAMP(3),
@@ -608,7 +614,7 @@ CREATE TABLE "dispatchDetail" (
     "start" TIMESTAMP(3),
     "finish" TIMESTAMP(3),
     "actual" TIMESTAMP(3),
-    "operatorID" TEXT NOT NULL,
+    "operatorID" TEXT,
     "approvebyID" TEXT,
     "remark" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -616,6 +622,31 @@ CREATE TABLE "dispatchDetail" (
     "deleted" TIMESTAMP(3),
 
     CONSTRAINT "dispatchDetail_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "drawing" (
+    "id" TEXT NOT NULL,
+    "id_drawing" VARCHAR(100),
+    "timeschId" TEXT NOT NULL,
+    "date_drawing" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "drawing_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "file_drawing" (
+    "id" TEXT NOT NULL,
+    "drawingId" TEXT NOT NULL,
+    "file_upload" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "file_drawing_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -739,19 +770,25 @@ CREATE INDEX "masterAktivitas_id_name_idx" ON "masterAktivitas"("id", "name");
 CREATE UNIQUE INDEX "timeschedule_worId_key" ON "timeschedule"("worId");
 
 -- CreateIndex
-CREATE INDEX "timeschedule_id_idTs_idx" ON "timeschedule"("id", "idTs");
+CREATE INDEX "timeschedule_id_idTs_worId_idx" ON "timeschedule"("id", "idTs", "worId");
 
 -- CreateIndex
-CREATE INDEX "aktivitas_id_idx" ON "aktivitas"("id");
+CREATE INDEX "aktivitas_id_timeId_aktivitasId_idx" ON "aktivitas"("id", "timeId", "aktivitasId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "dispacth_timeschId_key" ON "dispacth"("timeschId");
 
 -- CreateIndex
-CREATE INDEX "dispacth_id_id_dispatch_idx" ON "dispacth"("id", "id_dispatch");
+CREATE INDEX "dispacth_id_id_dispatch_timeschId_idx" ON "dispacth"("id", "id_dispatch", "timeschId");
 
 -- CreateIndex
-CREATE INDEX "dispatchDetail_id_part_idx" ON "dispatchDetail"("id", "part");
+CREATE INDEX "dispatchDetail_id_part_dispacthID_aktivitasID_workId_idx" ON "dispatchDetail"("id", "part", "dispacthID", "aktivitasID", "workId");
+
+-- CreateIndex
+CREATE INDEX "drawing_id_timeschId_idx" ON "drawing"("id", "timeschId");
+
+-- CreateIndex
+CREATE INDEX "file_drawing_id_drawingId_idx" ON "file_drawing"("id", "drawingId");
 
 -- AddForeignKey
 ALTER TABLE "Employee" ADD CONSTRAINT "Employee_subdepartId_fkey" FOREIGN KEY ("subdepartId") REFERENCES "sub_depart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -868,7 +905,13 @@ ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_subdepId_fkey" FOREI
 ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_aktivitasID_fkey" FOREIGN KEY ("aktivitasID") REFERENCES "aktivitas"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_operatorID_fkey" FOREIGN KEY ("operatorID") REFERENCES "Employee"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_operatorID_fkey" FOREIGN KEY ("operatorID") REFERENCES "Employee"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_approvebyID_fkey" FOREIGN KEY ("approvebyID") REFERENCES "Employee"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "drawing" ADD CONSTRAINT "drawing_timeschId_fkey" FOREIGN KEY ("timeschId") REFERENCES "timeschedule"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "file_drawing" ADD CONSTRAINT "file_drawing_drawingId_fkey" FOREIGN KEY ("drawingId") REFERENCES "drawing"("id") ON DELETE CASCADE ON UPDATE CASCADE;

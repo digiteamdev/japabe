@@ -146,6 +146,17 @@ const createEquipmenMany = async (request: any, response: Response) => {
           updatedAt: "2023-05-19T08:56:41.121Z",
           deleted: null,
         },
+        {
+          id: "clkt84lzq002jcz5m3hgsgztn",
+          id_equipment: null,
+          nama: "Steam Turbine",
+          keterangan_eq: "Steam Turbine",
+          eq_image:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1690950263/workshop/mtw1g7aife3rd8bpy2j2.jpg",
+          createdAt: "2023-08-02T04:24:23.893Z",
+          updatedAt: "2023-08-02T04:24:23.893Z",
+          deleted: null,
+        },
       ],
     });
     if (results) {
@@ -413,6 +424,54 @@ const createPartMany = async (request: Request, response: Response) => {
             "https://res.cloudinary.com/dotshxa6z/image/upload/v1684486780/workshop/sjfavssbq6noogqtbipa.png",
           createdAt: "2023-05-19T08:59:41.173Z",
           updatedAt: "2023-05-19T08:59:41.173Z",
+          deleted: null,
+        },
+        {
+          id: "clkt84vab002lcz5mh6ckvdww",
+          id_equipment: "clkt84lzq002jcz5m3hgsgztn",
+          id_part: null,
+          nama_part: "Blade",
+          keterangan_part: "Rotating",
+          part_img:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1690950275/workshop/hz9hfd2ged06wctdb7kh.jpg",
+          createdAt: "2023-08-02T04:24:35.940Z",
+          updatedAt: "2023-08-02T04:25:20.433Z",
+          deleted: null,
+        },
+        {
+          id: "clkt85tmo002ocz5m4hlujfna",
+          id_equipment: "clkt84lzq002jcz5m3hgsgztn",
+          id_part: null,
+          nama_part: "Shaft",
+          keterangan_part: "Rotating",
+          part_img:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1690950318/workshop/swvmqrqcjjxr6iwv8vp9.jpg",
+          createdAt: "2023-08-02T04:25:20.449Z",
+          updatedAt: "2023-08-02T04:25:20.449Z",
+          deleted: null,
+        },
+        {
+          id: "clkt85tmt002qcz5muladiiev",
+          id_equipment: "clkt84lzq002jcz5m3hgsgztn",
+          id_part: null,
+          nama_part: "Bearing DE",
+          keterangan_part: "Static",
+          part_img:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1690950319/workshop/k2j7x9cedw2dtfk8pf8a.jpg",
+          createdAt: "2023-08-02T04:25:20.454Z",
+          updatedAt: "2023-08-02T04:25:20.454Z",
+          deleted: null,
+        },
+        {
+          id: "clkt85tn1002scz5m3c1focol",
+          id_equipment: "clkt84lzq002jcz5m3hgsgztn",
+          id_part: null,
+          nama_part: "Bearing NDE",
+          keterangan_part: "Static",
+          part_img:
+            "https://res.cloudinary.com/dotshxa6z/image/upload/v1690950319/workshop/gmzz1foygzpwg5zru0aw.jpg",
+          createdAt: "2023-08-02T04:25:20.462Z",
+          updatedAt: "2023-08-02T04:25:20.462Z",
           deleted: null,
         },
       ],

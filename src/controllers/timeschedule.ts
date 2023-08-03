@@ -30,6 +30,11 @@ const getTimeschedule = async (request: Request, response: Response) => {
               dispacth: null,
             },
           ],
+          NOT: {
+            wor: {
+              srimg: null,
+            },
+          },
         },
         orderBy: {
           id: "asc",
@@ -112,7 +117,6 @@ const getTimeschedule = async (request: Request, response: Response) => {
               },
             },
           },
-
           aktivitas: {
             include: {
               masterAktivitas: true,
