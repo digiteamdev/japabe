@@ -719,17 +719,19 @@ model dispatchDetail {
 }
 
 model drawing {
-  id           String         @id @default(cuid())
-  id_drawing   String?        @db.VarChar(100)
-  timeschedule timeschedule   @relation(fields: [timeschId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  timeschId    String
-  date_drawing DateTime
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  deleted      DateTime?
-  file_drawing file_drawing[]
+  id             String         @id @default(cuid())
+  id_drawing     String?        @db.VarChar(100)
+  timeschedule   timeschedule   @relation(fields: [timeschId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  timeschId      String
+  date_drawing   DateTime
+  status_spv     String?        @db.VarChar(20)
+  status_manager String?        @db.VarChar(20)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  deleted        DateTime?
+  file_drawing   file_drawing[]
 
-  @@index([id, timeschId])
+  @@index([id, timeschId, id_drawing])
 }
 
 model file_drawing {
@@ -741,5 +743,5 @@ model file_drawing {
   updatedAt   DateTime  @updatedAt
   deleted     DateTime?
 
-  @@index([id, drawingId])
+  @@index([id, drawingId, file_upload])
 }

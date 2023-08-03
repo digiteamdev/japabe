@@ -23,6 +23,7 @@ import dispacth from "../controllers/dispacth";
 import masterAktivitas from "../controllers/masterAktivitas";
 import timeschedule from "../controllers/timeschedule";
 import holidayTms from "../controllers/masterHoliday";
+import drawing from "../controllers/drawing";
 
 /***************************AUTH********************************* */
 
@@ -712,6 +713,31 @@ router.delete(
   "/masterHoliday/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   holidayTms.deleteMasterHoliday
+);
+
+/***************************MASTER HOLIDAY********************************* */
+
+/***************************MASTER HOLIDAY********************************* */
+
+router.get(
+  "/drawing",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  drawing.getDrawing
+);
+router.post(
+  "/drawing",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  drawing.createDrawing
+);
+router.put(
+  "/drawing/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  drawing.updateDrawing
+);
+router.delete(
+  "/drawing/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  drawing.deleteDrawing
 );
 
 /***************************MASTER HOLIDAY********************************* */

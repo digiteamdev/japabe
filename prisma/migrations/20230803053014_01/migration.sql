@@ -630,6 +630,8 @@ CREATE TABLE "drawing" (
     "id_drawing" VARCHAR(100),
     "timeschId" TEXT NOT NULL,
     "date_drawing" TIMESTAMP(3) NOT NULL,
+    "status_spv" VARCHAR(20),
+    "status_manager" VARCHAR(20),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deleted" TIMESTAMP(3),
@@ -785,10 +787,10 @@ CREATE INDEX "dispacth_id_id_dispatch_timeschId_idx" ON "dispacth"("id", "id_dis
 CREATE INDEX "dispatchDetail_id_part_dispacthID_aktivitasID_workId_idx" ON "dispatchDetail"("id", "part", "dispacthID", "aktivitasID", "workId");
 
 -- CreateIndex
-CREATE INDEX "drawing_id_timeschId_idx" ON "drawing"("id", "timeschId");
+CREATE INDEX "drawing_id_timeschId_id_drawing_idx" ON "drawing"("id", "timeschId", "id_drawing");
 
 -- CreateIndex
-CREATE INDEX "file_drawing_id_drawingId_idx" ON "file_drawing"("id", "drawingId");
+CREATE INDEX "file_drawing_id_drawingId_file_upload_idx" ON "file_drawing"("id", "drawingId", "file_upload");
 
 -- AddForeignKey
 ALTER TABLE "Employee" ADD CONSTRAINT "Employee_subdepartId_fkey" FOREIGN KEY ("subdepartId") REFERENCES "sub_depart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
