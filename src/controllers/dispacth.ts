@@ -50,6 +50,18 @@ const getDispatch = async (request: Request, response: Response) => {
           },
           dispatchDetail: {
             include: {
+              aktivitas: {
+                select: {
+                  id: true,
+                  aktivitasId: true,
+                  masterAktivitas: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
+                  },
+                },
+              },
               Employee: {
                 select: {
                   id: true,
@@ -126,11 +138,19 @@ const getDispatch = async (request: Request, response: Response) => {
               },
               sub_depart: {
                 select: {
+                  id: true,
                   name: true,
+                  departement: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
+                  },
                 },
               },
               workCenter: {
                 select: {
+                  id: true,
                   name: true,
                 },
               },
@@ -140,6 +160,7 @@ const getDispatch = async (request: Request, response: Response) => {
                   aktivitasId: true,
                   masterAktivitas: {
                     select: {
+                      id: true,
                       name: true,
                     },
                   },
