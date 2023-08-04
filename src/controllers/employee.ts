@@ -177,6 +177,42 @@ const getEmployee = async (request: Request, response: Response) => {
   }
 };
 
+const getEmployeeAll = async (request: Request, response: Response) => {
+  try {
+    const results = await prisma.employee.findMany({
+      include: {
+        Employee_Child: true,
+        Certificate_Employee: true,
+        Educational_Employee: true,
+        sub_depart: {
+          include: {
+            departement: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    if (results.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All Employee",
+        result: results,
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ masagge: error });
+  }
+};
+
 const getEmployeeSales = async (request: Request, response: Response) => {
   try {
     const sub: any = request.query.sub || "";
@@ -677,6 +713,7 @@ const deleteEmployeeCertificate = async (
 };
 
 export default {
+  getEmployeeAll,
   getEmployee,
   getEmployeeSales,
   createEmployee,

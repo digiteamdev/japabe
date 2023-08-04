@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import prisma from "../middleware/drawing";
 import pagging from "../utils/paggination";
 import url from "url";
+import { request } from "http";
 
 const getDrawing = async (request: Request, response: Response) => {
   try {
@@ -61,10 +62,9 @@ const getDrawing = async (request: Request, response: Response) => {
 const createDrawing = async (request: any, response: Response) => {
   try {
     const newArrDetail: any = [];
-    const detailFileDrawing: any = JSON.parse(request.body.file_drawing);
-    for (let i = 0; i < detailFileDrawing.length; i++) {
+    for (let i = 0; i < parseInt(request.body.file_lenght); i++) {
       newArrDetail.push({
-        file_upload: !request.file ? "" : request.files[i].path,
+        file_upload: !request.files ? "" : request.files[i].path,
       });
     }
     const results = await prisma.drawing.create({
@@ -123,6 +123,47 @@ const updateDrawing = async (request: Request, response: Response) => {
   }
 };
 
+const updateFileDrawing = async (request: any, response: Response) => {
+  try {
+    const newArrDetail: any = [];
+    for (let i = 0; i < parseInt(request.body.file_lenght); i++) {
+      newArrDetail.push({
+        file_upload: !request.files ? "" : request.files[i].path,
+      });
+    }
+    let result: any = [];
+    for (let i = 0; i < request.body.length; i++) {
+      const upsertFileDrawing = await prisma.file_drawing.upsert({
+        where: {
+          id: request.body[i].drawingId,
+        },
+        create: {
+          drawing: { connect: { id: request.bod[i].drawingId } },
+          file_upload: newArrDetail,
+        },
+        update: {
+          file_upload: newArrDetail,
+        },
+      });
+      result = [...result, upsertFileDrawing];
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        result: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const deleteDrawing = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
@@ -148,9 +189,36 @@ const deleteDrawing = async (request: Request, response: Response) => {
   }
 };
 
+const deleteFileDrawing = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const deleteDrawing = await prisma.file_drawing.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (deleteDrawing) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Delete Data",
+        results: deleteDrawing,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Delete Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getDrawing,
   createDrawing,
   updateDrawing,
+  updateFileDrawing,
   deleteDrawing,
+  deleteFileDrawing,
 };

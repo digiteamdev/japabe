@@ -126,6 +126,11 @@ router.get(
   employee.getEmployee
 );
 router.get(
+  "employeeAll",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  employee.getEmployeeAll
+);
+router.get(
   "/employeDepart",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   employee.getEmployeeSales
@@ -727,6 +732,7 @@ router.get(
 router.post(
   "/drawing",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  upload.array("file_upload", 1000),
   drawing.createDrawing
 );
 router.put(
@@ -734,10 +740,21 @@ router.put(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   drawing.updateDrawing
 );
+router.put(
+  "/drawing",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  upload.array("file_upload", 1000),
+  drawing.updateFileDrawing
+);
 router.delete(
   "/drawing/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   drawing.deleteDrawing
+);
+router.delete(
+  "/drawingFile/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  drawing.deleteFileDrawing
 );
 
 /***************************MASTER HOLIDAY********************************* */
