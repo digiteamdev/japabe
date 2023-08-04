@@ -126,7 +126,7 @@ router.get(
   employee.getEmployee
 );
 router.get(
-  "employeeAll",
+  "/employeeAll",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   employee.getEmployeeAll
 );
