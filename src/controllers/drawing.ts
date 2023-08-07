@@ -26,6 +26,31 @@ const getDrawing = async (request: Request, response: Response) => {
             contains: pencarian,
           },
         },
+        include: {
+          timeschedule: {
+            include: {
+              dispacth: true,
+              wor: {
+                include: {
+                  srimg: true,
+                  Quotations: {
+                    include: {
+                      CustomerPo: true,
+                      Customer: true,
+                      CustomerContact: true,
+                      eqandpart: {
+                        include: {
+                          eq_part: true,
+                          equipment: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
         orderBy: {
           createdAt: "desc",
         },
