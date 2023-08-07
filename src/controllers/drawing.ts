@@ -27,21 +27,40 @@ const getDrawing = async (request: Request, response: Response) => {
           },
         },
         include: {
+          file_drawing: true,
           timeschedule: {
             include: {
-              dispacth: true,
+              dispacth: {
+                include: {
+                  dispatchDetail: true,
+                },
+              },
               wor: {
                 include: {
-                  srimg: true,
-                  Quotations: {
+                  employee: true,
+                  srimg: {
                     include: {
-                      CustomerPo: true,
-                      Customer: true,
-                      CustomerContact: true,
-                      eqandpart: {
+                      srimgdetail: true,
+                    },
+                  },
+                  customerPo: {
+                    include: {
+                      Deskription_CusPo: true,
+                      quotations: {
                         include: {
-                          eq_part: true,
-                          equipment: true,
+                          Quotations_Detail: true,
+                          CustomerContact: true,
+                          Customer: {
+                            include: {
+                              address: true,
+                            },
+                          },
+                          eqandpart: {
+                            include: {
+                              equipment: true,
+                              eq_part: true,
+                            },
+                          },
                         },
                       },
                     },
