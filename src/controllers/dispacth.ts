@@ -293,29 +293,55 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
     );
     let result: any = [];
     for (let i = 0; i < updateVerify.length; i++) {
-      const updateDispacthDetail = await prisma.dispatchDetail.upsert({
-        where: {
-          id: updateVerify[i].id,
-        },
-        create: {
-          dispacth: { connect: { id: updateVerify[i].dispacthID } },
-          workCenter: { connect: { id: updateVerify[i].workId } },
-          sub_depart: { connect: { id: updateVerify[i].subdepId } },
-          aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
-          part: updateVerify[i].part,
-          start: updateVerify[i].start,
-          Employee: { connect: { id: updateVerify[i].operatorID } },
-        },
-        update: {
-          workCenter: { connect: { id: updateVerify[i].workId } },
-          sub_depart: { connect: { id: updateVerify[i].subdepId } },
-          aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
-          part: updateVerify[i].part,
-          start: updateVerify[i].start,
-          Employee: { connect: { id: updateVerify[i].operatorID } },
-        },
-      });
-      result = [...result, updateDispacthDetail];
+      if (updateVerify[i].operatorID === null || updateVerify[i].operatorID === "") {
+        const updateDispacthDetail = await prisma.dispatchDetail.upsert({
+          where: {
+            id: updateVerify[i].id,
+          },
+          create: {
+            dispacth: { connect: { id: updateVerify[i].dispacthID } },
+            workCenter: { connect: { id: updateVerify[i].workId } },
+            sub_depart: { connect: { id: updateVerify[i].subdepId } },
+            aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
+            part: updateVerify[i].part,
+            start: updateVerify[i].start,
+          },
+          update: {
+            workCenter: { connect: { id: updateVerify[i].workId } },
+            sub_depart: { connect: { id: updateVerify[i].subdepId } },
+            aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
+            part: updateVerify[i].part,
+            start: updateVerify[i].start,
+          },
+        });
+        result = [...result, updateDispacthDetail];
+      } else {
+        const updateDispacthDetailEmployee = await prisma.dispatchDetail.upsert(
+          {
+            where: {
+              id: updateVerify[i].id,
+            },
+            create: {
+              dispacth: { connect: { id: updateVerify[i].dispacthID } },
+              workCenter: { connect: { id: updateVerify[i].workId } },
+              sub_depart: { connect: { id: updateVerify[i].subdepId } },
+              aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
+              part: updateVerify[i].part,
+              start: updateVerify[i].start,
+              Employee: { connect: { id: updateVerify[i].operatorID } },
+            },
+            update: {
+              workCenter: { connect: { id: updateVerify[i].workId } },
+              sub_depart: { connect: { id: updateVerify[i].subdepId } },
+              aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
+              part: updateVerify[i].part,
+              start: updateVerify[i].start,
+              Employee: { connect: { id: updateVerify[i].operatorID } },
+            },
+          }
+        );
+        result = [...result, updateDispacthDetailEmployee];
+      }
     }
     if (result) {
       response.status(201).json({
