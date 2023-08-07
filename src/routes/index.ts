@@ -722,8 +722,12 @@ router.delete(
 
 /***************************MASTER HOLIDAY********************************* */
 
-/***************************MASTER HOLIDAY********************************* */
-
+/***************************DRAWING********************************* */
+router.get(
+  "/tmsdrawing",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  drawing.getDrawingTms
+);
 router.get(
   "/drawing",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
@@ -757,6 +761,6 @@ router.delete(
   drawing.deleteFileDrawing
 );
 
-/***************************MASTER HOLIDAY********************************* */
+/***************************DRAWING********************************* */
 
 export default router;

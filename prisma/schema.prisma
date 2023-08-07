@@ -642,7 +642,7 @@ model timeschedule {
   deleted        DateTime?
   aktivitas      aktivitas[]
   dispacth       dispacth?
-  drawing        drawing[]
+  drawing        drawing?
 
   @@index([id, idTs, worId])
 }
@@ -722,7 +722,7 @@ model drawing {
   id             String         @id @default(cuid())
   id_drawing     String?        @db.VarChar(100)
   timeschedule   timeschedule   @relation(fields: [timeschId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  timeschId      String
+  timeschId      String         @unique
   date_drawing   DateTime
   status_spv     String?        @db.VarChar(20)
   status_manager String?        @db.VarChar(20)

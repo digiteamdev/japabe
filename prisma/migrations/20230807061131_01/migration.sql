@@ -787,6 +787,9 @@ CREATE INDEX "dispacth_id_id_dispatch_timeschId_idx" ON "dispacth"("id", "id_dis
 CREATE INDEX "dispatchDetail_id_part_dispacthID_aktivitasID_workId_idx" ON "dispatchDetail"("id", "part", "dispacthID", "aktivitasID", "workId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "drawing_timeschId_key" ON "drawing"("timeschId");
+
+-- CreateIndex
 CREATE INDEX "drawing_id_timeschId_id_drawing_idx" ON "drawing"("id", "timeschId", "id_drawing");
 
 -- CreateIndex

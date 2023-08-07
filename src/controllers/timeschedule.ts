@@ -37,7 +37,7 @@ const getTimeschedule = async (request: Request, response: Response) => {
           },
         },
         orderBy: {
-          id: "asc",
+          id: "desc",
         },
         include: {
           wor: {
