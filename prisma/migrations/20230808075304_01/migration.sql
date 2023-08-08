@@ -278,29 +278,30 @@ CREATE TABLE "eqandpart" (
 );
 
 -- CreateTable
-CREATE TABLE "Material" (
+CREATE TABLE "grup_material" (
     "id" TEXT NOT NULL,
-    "nama_type" VARCHAR(200),
-    "material_name" VARCHAR(200),
+    "kd_group" VARCHAR(50),
+    "material_name" VARCHAR(50),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deleted" TIMESTAMP(3),
 
-    CONSTRAINT "Material_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "grup_material_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Material_Spek" (
+CREATE TABLE "Material_master" (
     "id" TEXT NOT NULL,
-    "materialId" TEXT,
-    "jumlah" VARCHAR(200),
-    "unit" VARCHAR(200),
+    "kd_material" VARCHAR(50),
+    "kd_group" TEXT,
+    "material_name" VARCHAR(200),
+    "satuan" VARCHAR(200),
     "detail" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deleted" TIMESTAMP(3),
 
-    CONSTRAINT "Material_Spek_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Material_master_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -614,6 +615,7 @@ CREATE TABLE "dispatchDetail" (
     "start" TIMESTAMP(3),
     "finish" TIMESTAMP(3),
     "actual" TIMESTAMP(3),
+    "so" BOOLEAN DEFAULT false,
     "operatorID" TEXT,
     "approvebyID" TEXT,
     "remark" TEXT,
@@ -649,6 +651,32 @@ CREATE TABLE "file_drawing" (
     "deleted" TIMESTAMP(3),
 
     CONSTRAINT "file_drawing_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "bom" (
+    "id" TEXT NOT NULL,
+    "srId" TEXT,
+    "status_spv" VARCHAR(20),
+    "status_manager" VARCHAR(20),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "bom_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "bom_detail" (
+    "id" TEXT NOT NULL,
+    "bomId" TEXT,
+    "part_name" VARCHAR(200),
+    "material_name" VARCHAR(200),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "bom_detail_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -709,10 +737,10 @@ CREATE INDEX "Equipment_id_nama_id_equipment_idx" ON "Equipment"("id", "nama", "
 CREATE INDEX "eq_part_id_nama_part_idx" ON "eq_part"("id", "nama_part");
 
 -- CreateIndex
-CREATE INDEX "Material_id_nama_type_material_name_idx" ON "Material"("id", "nama_type", "material_name");
+CREATE INDEX "grup_material_id_kd_group_material_name_idx" ON "grup_material"("id", "kd_group", "material_name");
 
 -- CreateIndex
-CREATE INDEX "Material_Spek_id_detail_materialId_idx" ON "Material_Spek"("id", "detail", "materialId");
+CREATE INDEX "Material_master_id_kd_group_material_name_kd_material_idx" ON "Material_master"("id", "kd_group", "material_name", "kd_material");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Supplier_office_email_key" ON "Supplier"("office_email");
@@ -795,6 +823,12 @@ CREATE INDEX "drawing_id_timeschId_id_drawing_idx" ON "drawing"("id", "timeschId
 -- CreateIndex
 CREATE INDEX "file_drawing_id_drawingId_file_upload_idx" ON "file_drawing"("id", "drawingId", "file_upload");
 
+-- CreateIndex
+CREATE INDEX "bom_id_srId_idx" ON "bom"("id", "srId");
+
+-- CreateIndex
+CREATE INDEX "bom_detail_id_bomId_part_name_material_name_idx" ON "bom_detail"("id", "bomId", "part_name", "material_name");
+
 -- AddForeignKey
 ALTER TABLE "Employee" ADD CONSTRAINT "Employee_subdepartId_fkey" FOREIGN KEY ("subdepartId") REFERENCES "sub_depart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -841,7 +875,7 @@ ALTER TABLE "eqandpart" ADD CONSTRAINT "eqandpart_id_part_fkey" FOREIGN KEY ("id
 ALTER TABLE "eqandpart" ADD CONSTRAINT "eqandpart_id_quotation_fkey" FOREIGN KEY ("id_quotation") REFERENCES "Quotations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Material_Spek" ADD CONSTRAINT "Material_Spek_materialId_fkey" FOREIGN KEY ("materialId") REFERENCES "Material"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Material_master" ADD CONSTRAINT "Material_master_kd_group_fkey" FOREIGN KEY ("kd_group") REFERENCES "grup_material"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "SupplierContact" ADD CONSTRAINT "SupplierContact_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "Supplier"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -920,3 +954,9 @@ ALTER TABLE "drawing" ADD CONSTRAINT "drawing_timeschId_fkey" FOREIGN KEY ("time
 
 -- AddForeignKey
 ALTER TABLE "file_drawing" ADD CONSTRAINT "file_drawing_drawingId_fkey" FOREIGN KEY ("drawingId") REFERENCES "drawing"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "bom" ADD CONSTRAINT "bom_srId_fkey" FOREIGN KEY ("srId") REFERENCES "srimg"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "bom_detail" ADD CONSTRAINT "bom_detail_bomId_fkey" FOREIGN KEY ("bomId") REFERENCES "bom"("id") ON DELETE CASCADE ON UPDATE CASCADE;

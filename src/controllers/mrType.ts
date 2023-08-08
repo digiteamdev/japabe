@@ -11,16 +11,16 @@ const getTypeMr = async (request: Request, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const typeMrCount = await prisma.material.count({
+    const typeMrCount = await prisma.grup_material.count({
       where: {
         deleted: null,
       },
     });
     let results;
     if (request.query.page === undefined) {
-      results = await prisma.material.findMany({
+      results = await prisma.grup_material.findMany({
         where: {
-          nama_type: {
+          kd_group: {
             contains: "",
           },
           material_name: {
@@ -28,15 +28,15 @@ const getTypeMr = async (request: Request, response: Response) => {
           },
         },
         include: {
-          Material_Spek: true,
+          Material_master: true,
         },
       });
     } else {
-      results = await prisma.material.findMany({
+      results = await prisma.grup_material.findMany({
         where: {
           OR: [
             {
-              nama_type: {
+              kd_group: {
                 contains: pencarian,
               },
               material_name: {
@@ -46,7 +46,7 @@ const getTypeMr = async (request: Request, response: Response) => {
           ],
         },
         include: {
-          Material_Spek: true,
+          Material_master: true,
         },
         orderBy: {
           createdAt: "desc",
@@ -58,7 +58,7 @@ const getTypeMr = async (request: Request, response: Response) => {
     if (results.length > 0) {
       return response.status(200).json({
         success: true,
-        massage: "Get All TypeMr",
+        massage: "Get All GroupMr",
         result: results,
         page: pagination.page,
         limit: pagination.perPage,
@@ -82,16 +82,16 @@ const getTypeMr = async (request: Request, response: Response) => {
 
 const createTypeMr = async (request: Request, response: Response) => {
   try {
-    const results = await prisma.material.create({
+    const results = await prisma.grup_material.create({
       data: {
-        nama_type: request.body.nama_type,
+        kd_group: request.body.kd_group,
         material_name: request.body.material_name,
-        Material_Spek: {
-          create: request.body.Material_Spek,
+        Material_master: {
+          create: request.body.Material_master,
         },
       },
       include: {
-        Material_Spek: true,
+        Material_master: true,
       },
     });
     if (results) {
@@ -114,7 +114,7 @@ const createTypeMr = async (request: Request, response: Response) => {
 const updateMaterial = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
-    const updateMaterial = await prisma.material.update({
+    const updateMaterial = await prisma.grup_material.update({
       where: {
         id: id,
       },
@@ -141,37 +141,42 @@ const updateMaterialSpek = async (request: Request, response: Response) => {
   try {
     const updateVerify = request.body.map(
       (updateByveri: {
-        jumlah: any;
-        unit: any;
+        kd_material: any;
+        kd_group: any;
+        material_name: any;
+        satuan: any;
         detail: any;
-        materialId: any;
         id: any;
       }) => {
         return {
-          jumlah: updateByveri.jumlah,
-          unit: updateByveri.unit,
+          kd_material: updateByveri.kd_material,
+          kd_group: updateByveri.kd_group,
+          material_name: updateByveri.material_name,
+          satuan: updateByveri.satuan,
           detail: updateByveri.detail,
-          materialId: updateByveri.materialId,
           id: updateByveri.id,
         };
       }
     );
     let result: any = [];
     for (let i = 0; i < updateVerify.length; i++) {
-      const updateMaterialSpek = await prisma.material_Spek.upsert({
+      const updateMaterialSpek = await prisma.material_master.upsert({
         where: {
           id: updateVerify[i].id,
         },
         create: {
-          jumlah: updateVerify[i].jumlah,
-          unit: updateVerify[i].unit,
+          kd_material: updateVerify[i].kd_material,
+          material_name: updateVerify[i].material_name,
+          satuan: updateVerify[i].satuan,
           detail: updateVerify[i].detail,
-          material: { connect: { id: updateVerify[i].materialId } },
+          grup_material: { connect: { id: updateVerify[i].kd_group } },
         },
         update: {
-          jumlah: updateVerify[i].jumlah,
-          unit: updateVerify[i].unit,
+          kd_material: updateVerify[i].kd_material,
+          material_name: updateVerify[i].material_name,
+          satuan: updateVerify[i].satuan,
           detail: updateVerify[i].detail,
+          grup_material: { connect: { id: updateVerify[i].kd_group } },
         },
       });
       result = [...result, updateMaterialSpek];
@@ -196,7 +201,7 @@ const updateMaterialSpek = async (request: Request, response: Response) => {
 const deleteMaterial = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
-    const deleteMaterial = await prisma.material.delete({
+    const deleteMaterial = await prisma.grup_material.delete({
       where: {
         id: id,
       },
@@ -221,7 +226,7 @@ const deleteMaterial = async (request: Request, response: Response) => {
 const deleteMaterialSpek = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
-    const deleteMaterialSpek = await prisma.material_Spek.delete({
+    const deleteMaterialSpek = await prisma.material_master.delete({
       where: {
         id: id,
       },

@@ -312,30 +312,31 @@ enum Keterangan_Part {
   Consumable @map("Consumable Part")
 }
 
-model Material {
-  id            String          @id @default(cuid())
-  nama_type     String?         @db.VarChar(200)
-  material_name String?         @db.VarChar(200)
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  deleted       DateTime?
-  Material_Spek Material_Spek[]
+model grup_material {
+  id              String            @id @default(cuid())
+  kd_group        String?           @db.VarChar(50)
+  material_name   String?           @db.VarChar(50)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deleted         DateTime?
+  Material_master Material_master[]
 
-  @@index([id, nama_type, material_name])
+  @@index([id, kd_group, material_name])
 }
 
-model Material_Spek {
-  id         String    @id @default(cuid())
-  material   Material? @relation(fields: [materialId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  materialId String?
-  jumlah     String?   @db.VarChar(200)
-  unit       String?   @db.VarChar(200)
-  detail     String?   @db.Text
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  deleted    DateTime?
+model Material_master {
+  id            String         @id @default(cuid())
+  kd_material   String?        @db.VarChar(50)
+  grup_material grup_material? @relation(fields: [kd_group], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  kd_group      String?
+  material_name String?        @db.VarChar(200)
+  satuan        String?        @db.VarChar(200)
+  detail        String?        @db.Text
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  deleted       DateTime?
 
-  @@index([id, detail, materialId])
+  @@index([id, kd_group, material_name, kd_material])
 }
 
 model Supplier {
@@ -567,6 +568,7 @@ model srimg {
   updatedAt       DateTime      @updatedAt
   deleted         DateTime?
   srimgdetail     srimgdetail[]
+  bom             bom[]
 
   @@index([id, worId])
 }
@@ -706,6 +708,7 @@ model dispatchDetail {
   start       DateTime?
   finish      DateTime?
   actual      DateTime?
+  so          Boolean?   @default(false)
   Employee    Employee?  @relation(fields: [operatorID], references: [id])
   approve     Employee?  @relation(fields: [approvebyID], references: [id], name: "approves")
   operatorID  String?
@@ -744,4 +747,31 @@ model file_drawing {
   deleted     DateTime?
 
   @@index([id, drawingId, file_upload])
+}
+
+model bom {
+  id             String       @id @default(cuid())
+  srimg          srimg?       @relation(fields: [srId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  srId           String?
+  status_spv     String?      @db.VarChar(20)
+  status_manager String?      @db.VarChar(20)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  deleted        DateTime?
+  bom_detail     bom_detail[]
+
+  @@index([id, srId])
+}
+
+model bom_detail {
+  id            String    @id @default(cuid())
+  bom           bom?      @relation(fields: [bomId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  bomId         String?
+  part_name     String?   @db.VarChar(200)
+  material_name String?   @db.VarChar(200)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deleted       DateTime?
+
+  @@index([id, bomId, part_name, material_name])
 }

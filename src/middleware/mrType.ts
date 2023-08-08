@@ -2,8 +2,8 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 prisma.$use(async (params, next) => {
-  if (params.model === "Material" && params.action === "delete") {
-    return prisma.material.update({
+  if (params.model === "grup_material" && params.action === "delete") {
+    return prisma.grup_material.update({
       where: { id: String(params.args.where.id) },
       data: { deleted: new Date() },
     });
@@ -12,7 +12,7 @@ prisma.$use(async (params, next) => {
 });
 
 prisma.$use(async (params, next) => {
-  if (params.model == "Material") {
+  if (params.model == "grup_material") {
     if (params.action === "findUnique" || params.action === "findFirst") {
       // Change to findFirst - you cannot filter
       // by anything except ID / unique with findUnique
