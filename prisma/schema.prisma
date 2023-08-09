@@ -568,7 +568,7 @@ model srimg {
   updatedAt       DateTime      @updatedAt
   deleted         DateTime?
   srimgdetail     srimgdetail[]
-  bom             bom[]
+  bom             bom?
 
   @@index([id, worId])
 }
@@ -752,7 +752,7 @@ model file_drawing {
 model bom {
   id             String       @id @default(cuid())
   srimg          srimg?       @relation(fields: [srId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  srId           String?
+  srId           String?      @unique
   status_spv     String?      @db.VarChar(20)
   status_manager String?      @db.VarChar(20)
   createdAt      DateTime     @default(now())

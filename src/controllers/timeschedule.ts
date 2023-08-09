@@ -182,8 +182,6 @@ const createTimeschedule = async (request: Request, response: Response) => {
       });
     }
   } catch (error) {
-    console.log(error);
-
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
 };

@@ -476,27 +476,37 @@ router.delete(
 /***************************TYPEMR********************************* */
 
 router.get(
-  "/masterMaterial",
+  "/groupMaterial",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   typeMr.getTypeMr
+);
+router.get(
+  "/masterMaterial",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  typeMr.getMasterM
+);
+router.post(
+  "/groupMaterial",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  typeMr.createTypeMr
 );
 router.post(
   "/masterMaterial",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
-  typeMr.createTypeMr
+  typeMr.createMaster
 );
 router.put(
-  "/masterMaterial/:id",
+  "/groupMaterial/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   typeMr.updateMaterial
 );
 router.put(
-  "/masterMaterial",
+  "/masterMaterial/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   typeMr.updateMaterialSpek
 );
 router.delete(
-  "/masterMaterial/:id",
+  "/groupMaterial/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   typeMr.deleteMaterial
 );

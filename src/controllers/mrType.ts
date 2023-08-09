@@ -80,18 +80,121 @@ const getTypeMr = async (request: Request, response: Response) => {
   }
 };
 
+const getMasterM = async (request: Request, response: Response) => {
+  try {
+    const pencarian: any = request.query.search || "";
+    const hostname: any = request.headers.host;
+    const pathname = url.parse(request.url).pathname;
+    const page: any = request.query.page;
+    const perPage: any = request.query.perPage;
+    const pagination: any = new pagging(page, perPage, hostname, pathname);
+    const typeMrCount = await prisma.material_master.count({
+      where: {
+        deleted: null,
+      },
+    });
+    let results;
+    if (request.query.page === undefined) {
+      results = await prisma.material_master.findMany({
+        where: {
+          kd_group: {
+            contains: "",
+          },
+          material_name: {
+            contains: "",
+          },
+        },
+        include: {
+          grup_material: true,
+        },
+      });
+    } else {
+      results = await prisma.material_master.findMany({
+        where: {
+          OR: [
+            {
+              kd_group: {
+                contains: pencarian,
+              },
+              material_name: {
+                contains: pencarian,
+              },
+            },
+          ],
+        },
+        include: {
+          grup_material: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: parseInt(pagination.perPage),
+        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+      });
+    }
+    if (results.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All MrMaster",
+        result: results,
+        page: pagination.page,
+        limit: pagination.perPage,
+        totalData: typeMrCount,
+        currentPage: pagination.currentPage,
+        nextPage: pagination.next(),
+        previouspage: pagination.prev(),
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const createTypeMr = async (request: Request, response: Response) => {
   try {
+    const r = Math.floor(Math.random() * 1000) + 1;
+    const genarate = "G" + r;
     const results = await prisma.grup_material.create({
       data: {
-        kd_group: request.body.kd_group,
+        kd_group: genarate,
         material_name: request.body.material_name,
-        Material_master: {
-          create: request.body.Material_master,
-        },
       },
-      include: {
-        Material_master: true,
+    });
+    if (results) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Add Data",
+        results: results,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Add Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const createMaster = async (request: Request, response: Response) => {
+  try {
+    const r = Math.floor(Math.random() * 1000) + 1;
+    const genarate = "M" + r;
+    const results = await prisma.material_master.create({
+      data: {
+        kd_material: genarate,
+        grup_material: { connect: { id: request.body.kd_group } },
+        material_name: request.body.material_name,
+        satuan: request.body.satuan,
+        detail: request.body.detail,
       },
     });
     if (results) {
@@ -139,48 +242,13 @@ const updateMaterial = async (request: Request, response: Response) => {
 
 const updateMaterialSpek = async (request: Request, response: Response) => {
   try {
-    const updateVerify = request.body.map(
-      (updateByveri: {
-        kd_material: any;
-        kd_group: any;
-        material_name: any;
-        satuan: any;
-        detail: any;
-        id: any;
-      }) => {
-        return {
-          kd_material: updateByveri.kd_material,
-          kd_group: updateByveri.kd_group,
-          material_name: updateByveri.material_name,
-          satuan: updateByveri.satuan,
-          detail: updateByveri.detail,
-          id: updateByveri.id,
-        };
-      }
-    );
-    let result: any = [];
-    for (let i = 0; i < updateVerify.length; i++) {
-      const updateMaterialSpek = await prisma.material_master.upsert({
-        where: {
-          id: updateVerify[i].id,
-        },
-        create: {
-          kd_material: updateVerify[i].kd_material,
-          material_name: updateVerify[i].material_name,
-          satuan: updateVerify[i].satuan,
-          detail: updateVerify[i].detail,
-          grup_material: { connect: { id: updateVerify[i].kd_group } },
-        },
-        update: {
-          kd_material: updateVerify[i].kd_material,
-          material_name: updateVerify[i].material_name,
-          satuan: updateVerify[i].satuan,
-          detail: updateVerify[i].detail,
-          grup_material: { connect: { id: updateVerify[i].kd_group } },
-        },
-      });
-      result = [...result, updateMaterialSpek];
-    }
+    const id: string = request.params.id;
+    const result = await prisma.material_master.update({
+      where: {
+        id: id,
+      },
+      data: request.body,
+    });
     if (result) {
       response.status(201).json({
         success: true,
@@ -250,7 +318,9 @@ const deleteMaterialSpek = async (request: Request, response: Response) => {
 
 export default {
   getTypeMr,
+  getMasterM,
   createTypeMr,
+  createMaster,
   updateMaterial,
   updateMaterialSpek,
   deleteMaterial,

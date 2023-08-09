@@ -824,6 +824,9 @@ CREATE INDEX "drawing_id_timeschId_id_drawing_idx" ON "drawing"("id", "timeschId
 CREATE INDEX "file_drawing_id_drawingId_file_upload_idx" ON "file_drawing"("id", "drawingId", "file_upload");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "bom_srId_key" ON "bom"("srId");
+
+-- CreateIndex
 CREATE INDEX "bom_id_srId_idx" ON "bom"("id", "srId");
 
 -- CreateIndex
