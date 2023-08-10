@@ -72,7 +72,9 @@ const CreateBom = async (request: Request, response: Response) => {
     const results = await prisma.bom.create({
       data: {
         srimg: { connect: { id: request.body.srId } },
-        bom_detail: request.body.bom_detail,
+        bom_detail: {
+          create: request.body.bom_detail
+        }
       },
       include: {
         bom_detail: true,
@@ -91,6 +93,8 @@ const CreateBom = async (request: Request, response: Response) => {
       });
     }
   } catch (error) {
+    console.log(error);
+    
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
 };
