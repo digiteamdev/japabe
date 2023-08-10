@@ -26,6 +26,31 @@ const getBom = async (request: Request, response: Response) => {
           srimg: {
             include: {
               srimgdetail: true,
+              wor: {
+                include: {
+                  customerPo: {
+                    include: {
+                      quotations: {
+                        include: {
+                          Quotations_Detail: true,
+                          CustomerContact: true,
+                          Customer: {
+                            include: {
+                              address: true,
+                            },
+                          },
+                          eqandpart: {
+                            include: {
+                              equipment: true,
+                              eq_part: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -40,9 +65,35 @@ const getBom = async (request: Request, response: Response) => {
           },
         },
         include: {
+          bom_detail: true,
           srimg: {
             include: {
               srimgdetail: true,
+              wor: {
+                include: {
+                  customerPo: {
+                    include: {
+                      quotations: {
+                        include: {
+                          Quotations_Detail: true,
+                          CustomerContact: true,
+                          Customer: {
+                            include: {
+                              address: true,
+                            },
+                          },
+                          eqandpart: {
+                            include: {
+                              equipment: true,
+                              eq_part: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },
