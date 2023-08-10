@@ -22,6 +22,13 @@ const getBom = async (request: Request, response: Response) => {
         orderBy: {
           id: "desc",
         },
+        include: {
+          srimg: {
+            include: {
+              srimgdetail: true,
+            },
+          },
+        },
       });
     } else {
       results = await prisma.bom.findMany({
@@ -33,7 +40,11 @@ const getBom = async (request: Request, response: Response) => {
           },
         },
         include: {
-          srimg: true,
+          srimg: {
+            include: {
+              srimgdetail: true,
+            },
+          },
         },
         orderBy: {
           id: "desc",
@@ -73,8 +84,8 @@ const CreateBom = async (request: Request, response: Response) => {
       data: {
         srimg: { connect: { id: request.body.srId } },
         bom_detail: {
-          create: request.body.bom_detail
-        }
+          create: request.body.bom_detail,
+        },
       },
       include: {
         bom_detail: true,
@@ -94,7 +105,7 @@ const CreateBom = async (request: Request, response: Response) => {
     }
   } catch (error) {
     console.log(error);
-    
+
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
 };
