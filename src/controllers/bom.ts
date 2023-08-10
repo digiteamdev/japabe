@@ -66,20 +66,65 @@ const getBom = async (request: Request, response: Response) => {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
 };
+
 const CreateBom = async (request: Request, response: Response) => {
   try {
+    const results = await prisma.bom.create({
+      data: {
+        srimg: { connect: { id: request.body.srId } },
+        bom_detail: request.body.bom_detail,
+      },
+      include: {
+        bom_detail: true,
+      },
+    });
+    if (results) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Add Data",
+        results: results,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Add Data",
+      });
+    }
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
 };
+
 const UpdategetBom = async (request: Request, response: Response) => {
   try {
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
 };
-const DeletegetBom = async (request: Request, response: Response) => {
+
+const DeleteBom = async (request: Request, response: Response) => {
   try {
+    const id: string = request.params.id;
+    const deleteBom = await prisma.bom.delete({
+      where: {
+        id: id,
+      },
+      include: {
+        bom_detail: true,
+      },
+    });
+    if (deleteBom) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Delete Data",
+        results: deleteBom,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Delete Data",
+      });
+    }
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
@@ -89,5 +134,5 @@ export default {
   getBom,
   CreateBom,
   UpdategetBom,
-  DeletegetBom,
+  DeleteBom,
 };

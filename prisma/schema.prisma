@@ -335,6 +335,7 @@ model Material_master {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   deleted       DateTime?
+  bom_detail    bom_detail[]
 
   @@index([id, kd_group, material_name, kd_material])
 }
@@ -586,6 +587,7 @@ model srimgdetail {
   updatedAt     DateTime     @updatedAt
   deleted       DateTime?
   imgSummary    imgSummary[]
+  bom_detail    bom_detail[]
 
   @@index([id, name_part])
 }
@@ -764,14 +766,17 @@ model bom {
 }
 
 model bom_detail {
-  id            String    @id @default(cuid())
-  bom           bom?      @relation(fields: [bomId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  bomId         String?
-  part_name     String?   @db.VarChar(200)
-  material_name String?   @db.VarChar(200)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  deleted       DateTime?
+  id              String          @id @default(cuid())
+  bom             bom?            @relation(fields: [bomId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  bomId           String?
+  srimgdetail     srimgdetail     @relation(fields: [partId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  partId          String
+  Material_master Material_master @relation(fields: [materialId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  materialId      String
+  dimensi         String          @db.VarChar(200)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  deleted         DateTime?
 
-  @@index([id, bomId, part_name, material_name])
+  @@index([id, bomId, partId, materialId])
 }

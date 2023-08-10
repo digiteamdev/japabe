@@ -24,6 +24,7 @@ import masterAktivitas from "../controllers/masterAktivitas";
 import timeschedule from "../controllers/timeschedule";
 import holidayTms from "../controllers/masterHoliday";
 import drawing from "../controllers/drawing";
+import bom from "../controllers/bom";
 
 /***************************AUTH********************************* */
 
@@ -733,6 +734,7 @@ router.delete(
 /***************************MASTER HOLIDAY********************************* */
 
 /***************************DRAWING********************************* */
+
 router.get(
   "/tmsdrawing",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
@@ -772,5 +774,30 @@ router.delete(
 );
 
 /***************************DRAWING********************************* */
+
+/***************************BOM********************************* */
+
+router.get(
+  "/srBom",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  srimg.getSrimBom
+);
+router.get(
+  "/bom",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  bom.getBom
+);
+router.post(
+  "/bom",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  bom.CreateBom
+);
+router.delete(
+  "/bom/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  bom.DeleteBom
+);
+
+/***************************BOM********************************* */
 
 export default router;

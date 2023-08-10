@@ -670,8 +670,9 @@ CREATE TABLE "bom" (
 CREATE TABLE "bom_detail" (
     "id" TEXT NOT NULL,
     "bomId" TEXT,
-    "part_name" VARCHAR(200),
-    "material_name" VARCHAR(200),
+    "partId" TEXT NOT NULL,
+    "materialId" TEXT NOT NULL,
+    "dimensi" VARCHAR(200) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deleted" TIMESTAMP(3),
@@ -830,7 +831,7 @@ CREATE UNIQUE INDEX "bom_srId_key" ON "bom"("srId");
 CREATE INDEX "bom_id_srId_idx" ON "bom"("id", "srId");
 
 -- CreateIndex
-CREATE INDEX "bom_detail_id_bomId_part_name_material_name_idx" ON "bom_detail"("id", "bomId", "part_name", "material_name");
+CREATE INDEX "bom_detail_id_bomId_partId_materialId_idx" ON "bom_detail"("id", "bomId", "partId", "materialId");
 
 -- AddForeignKey
 ALTER TABLE "Employee" ADD CONSTRAINT "Employee_subdepartId_fkey" FOREIGN KEY ("subdepartId") REFERENCES "sub_depart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -963,3 +964,9 @@ ALTER TABLE "bom" ADD CONSTRAINT "bom_srId_fkey" FOREIGN KEY ("srId") REFERENCES
 
 -- AddForeignKey
 ALTER TABLE "bom_detail" ADD CONSTRAINT "bom_detail_bomId_fkey" FOREIGN KEY ("bomId") REFERENCES "bom"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "bom_detail" ADD CONSTRAINT "bom_detail_partId_fkey" FOREIGN KEY ("partId") REFERENCES "srimgdetail"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "bom_detail" ADD CONSTRAINT "bom_detail_materialId_fkey" FOREIGN KEY ("materialId") REFERENCES "Material_master"("id") ON DELETE CASCADE ON UPDATE CASCADE;

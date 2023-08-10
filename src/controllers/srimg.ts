@@ -126,6 +126,68 @@ const getSrimg = async (request: Request, response: Response) => {
   }
 };
 
+const getSrimBom = async (request: Request, response: Response) => {
+  try {
+    const results = await prisma.srimg.findMany({
+      where: {
+        bom: null,
+      },
+      include: {
+        bom: true,
+        wor: {
+          include: {
+            customerPo: {
+              include: {
+                quotations: {
+                  include: {
+                    Quotations_Detail: true,
+                    CustomerContact: true,
+                    Customer: {
+                      include: {
+                        address: true,
+                      },
+                    },
+                    eqandpart: {
+                      include: {
+                        equipment: true,
+                        eq_part: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        srimgdetail: {
+          include: {
+            imgSummary: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    if (results.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All Summary Bill Of material",
+        result: results,
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const createSrimg = async (request: any, response: Response) => {
   try {
     const newArrDetail: any = [];
@@ -442,6 +504,7 @@ const deleteSrimgImg = async (request: any, response: Response) => {
 
 export default {
   getSrimg,
+  getSrimBom,
   createSrimg,
   createImgMany,
   updateSrimg,
