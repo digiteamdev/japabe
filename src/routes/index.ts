@@ -784,7 +784,7 @@ router.get(
 );
 router.get(
   "/bom",
-  // jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
   bom.getBom
 );
 router.post(
