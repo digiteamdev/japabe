@@ -23,6 +23,12 @@ const getBom = async (request: Request, response: Response) => {
           id: "desc",
         },
         include: {
+          bom_detail: {
+            include: {
+              Material_master: true,
+              srimgdetail: true,
+            }
+          },
           srimg: {
             include: {
               srimgdetail: true,
@@ -65,7 +71,12 @@ const getBom = async (request: Request, response: Response) => {
           },
         },
         include: {
-          bom_detail: true,
+          bom_detail: {
+            include: {
+              Material_master: true,
+              srimgdetail: true,
+            }
+          },
           srimg: {
             include: {
               srimgdetail: true,
