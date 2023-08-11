@@ -296,6 +296,84 @@ const CreateBom = async (request: Request, response: Response) => {
 
 const UpdategetBom = async (request: Request, response: Response) => {
   try {
+    const id: string = request.params.id;
+    const updateBom = await prisma.bom.update({
+      where: {
+        id: id,
+      },
+      data: {
+        srimg: { connect: { id: request.body.srId } },
+      },
+    });
+    if (updateBom) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: updateBom,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updateBom = async (request: Request, response: Response) => {
+  try {
+    const updateVerify = request.body.map(
+      (updateByveri: {
+        bomId: any;
+        partId: any;
+        materialId: any;
+        dimensi: any;
+        id: any;
+      }) => {
+        return {
+          bomId: updateByveri.bomId,
+          partId: updateByveri.partId,
+          materialId: updateByveri.materialId,
+          dimensi: updateByveri.dimensi,
+          id: updateByveri.id,
+        };
+      }
+    );
+    let result: any = [];
+    for (let i = 0; i < updateVerify.length; i++) {
+      const updateDetailBom = await prisma.bom_detail.upsert({
+        where: {
+          id: updateVerify[i].id,
+        },
+        create: {
+          bom: { connect: { id: updateVerify[i].bomId } },
+          srimgdetail: { connect: { id: updateVerify[i].partId } },
+          Material_master: { connect: { id: updateVerify[i].materialId } },
+          dimensi: updateVerify[i].dimensi,
+        },
+        update: {
+          bom: { connect: { id: updateVerify[i].bomId } },
+          srimgdetail: { connect: { id: updateVerify[i].partId } },
+          Material_master: { connect: { id: updateVerify[i].materialId } },
+          dimensi: updateVerify[i].dimensi,
+        },
+      });
+      result = [...result, updateDetailBom];
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        result: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
@@ -308,8 +386,30 @@ const DeleteBom = async (request: Request, response: Response) => {
       where: {
         id: id,
       },
-      include: {
-        bom_detail: true,
+    });
+    if (deleteBom) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Delete Data",
+        results: deleteBom,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Delete Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const DeleteBomDetail = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const deleteBom = await prisma.bom_detail.delete({
+      where: {
+        id: id,
       },
     });
     if (deleteBom) {
@@ -333,5 +433,7 @@ export default {
   getBom,
   CreateBom,
   UpdategetBom,
+  updateBom,
   DeleteBom,
+  DeleteBomDetail
 };

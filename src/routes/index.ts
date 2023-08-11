@@ -792,10 +792,25 @@ router.post(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   bom.CreateBom
 );
+router.put(
+  "/bom/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  bom.UpdategetBom
+);
+router.put(
+  "/bom",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  bom.updateBom
+);
 router.delete(
   "/bom/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   bom.DeleteBom
+);
+router.delete(
+  "/bomDetail/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  bom.DeleteBomDetail
 );
 
 /***************************BOM********************************* */
