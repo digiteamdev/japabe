@@ -32,61 +32,25 @@ const getBom = async (request: Request, response: Response) => {
           srimg: {
             include: {
               srimgdetail: true,
-              wor: {
+              timeschedule: {
                 include: {
-                  timeschedule: {
+                  wor: {
                     include: {
-                      dispacth: {
+                      customerPo: {
                         include: {
-                          dispatchDetail: {
-                            select: {
-                              id: true,
-                              operatorID: true,
-                              approvebyID: true,
-                              part: true,
-                              start: true,
-                              finish: true,
-                              actual: true,
-                              approve: {
-                                select: {
-                                  id: true,
-                                  employee_name: true,
+                          quotations: {
+                            include: {
+                              Quotations_Detail: true,
+                              CustomerContact: true,
+                              Customer: {
+                                include: {
+                                  address: true,
                                 },
                               },
-                              Employee: {
-                                select: {
-                                  id: true,
-                                  employee_name: true,
-                                },
-                              },
-                              sub_depart: {
-                                select: {
-                                  id: true,
-                                  name: true,
-                                  departement: {
-                                    select: {
-                                      id: true,
-                                      name: true,
-                                    },
-                                  },
-                                },
-                              },
-                              workCenter: {
-                                select: {
-                                  id: true,
-                                  name: true,
-                                },
-                              },
-                              aktivitas: {
-                                select: {
-                                  id: true,
-                                  aktivitasId: true,
-                                  masterAktivitas: {
-                                    select: {
-                                      id: true,
-                                      name: true,
-                                    },
-                                  },
+                              eqandpart: {
+                                include: {
+                                  equipment: true,
+                                  eq_part: true,
                                 },
                               },
                             },
@@ -95,21 +59,57 @@ const getBom = async (request: Request, response: Response) => {
                       },
                     },
                   },
-                  customerPo: {
-                    include: {
-                      quotations: {
-                        include: {
-                          Quotations_Detail: true,
-                          CustomerContact: true,
-                          Customer: {
-                            include: {
-                              address: true,
+                },
+              },
+              dispacth: {
+                include: {
+                  dispatchDetail: {
+                    select: {
+                      id: true,
+                      operatorID: true,
+                      approvebyID: true,
+                      part: true,
+                      start: true,
+                      finish: true,
+                      actual: true,
+                      approve: {
+                        select: {
+                          id: true,
+                          employee_name: true,
+                        },
+                      },
+                      Employee: {
+                        select: {
+                          id: true,
+                          employee_name: true,
+                        },
+                      },
+                      sub_depart: {
+                        select: {
+                          id: true,
+                          name: true,
+                          departement: {
+                            select: {
+                              id: true,
+                              name: true,
                             },
                           },
-                          eqandpart: {
-                            include: {
-                              equipment: true,
-                              eq_part: true,
+                        },
+                      },
+                      workCenter: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
+                      },
+                      aktivitas: {
+                        select: {
+                          id: true,
+                          aktivitasId: true,
+                          masterAktivitas: {
+                            select: {
+                              id: true,
+                              name: true,
                             },
                           },
                         },
@@ -141,61 +141,25 @@ const getBom = async (request: Request, response: Response) => {
           srimg: {
             include: {
               srimgdetail: true,
-              wor: {
+              timeschedule: {
                 include: {
-                  timeschedule: {
+                  wor: {
                     include: {
-                      dispacth: {
+                      customerPo: {
                         include: {
-                          dispatchDetail: {
-                            select: {
-                              id: true,
-                              operatorID: true,
-                              approvebyID: true,
-                              part: true,
-                              start: true,
-                              finish: true,
-                              actual: true,
-                              approve: {
-                                select: {
-                                  id: true,
-                                  employee_name: true,
+                          quotations: {
+                            include: {
+                              Quotations_Detail: true,
+                              CustomerContact: true,
+                              Customer: {
+                                include: {
+                                  address: true,
                                 },
                               },
-                              Employee: {
-                                select: {
-                                  id: true,
-                                  employee_name: true,
-                                },
-                              },
-                              sub_depart: {
-                                select: {
-                                  id: true,
-                                  name: true,
-                                  departement: {
-                                    select: {
-                                      id: true,
-                                      name: true,
-                                    },
-                                  },
-                                },
-                              },
-                              workCenter: {
-                                select: {
-                                  id: true,
-                                  name: true,
-                                },
-                              },
-                              aktivitas: {
-                                select: {
-                                  id: true,
-                                  aktivitasId: true,
-                                  masterAktivitas: {
-                                    select: {
-                                      id: true,
-                                      name: true,
-                                    },
-                                  },
+                              eqandpart: {
+                                include: {
+                                  equipment: true,
+                                  eq_part: true,
                                 },
                               },
                             },
@@ -204,21 +168,57 @@ const getBom = async (request: Request, response: Response) => {
                       },
                     },
                   },
-                  customerPo: {
-                    include: {
-                      quotations: {
-                        include: {
-                          Quotations_Detail: true,
-                          CustomerContact: true,
-                          Customer: {
-                            include: {
-                              address: true,
+                },
+              },
+              dispacth: {
+                include: {
+                  dispatchDetail: {
+                    select: {
+                      id: true,
+                      operatorID: true,
+                      approvebyID: true,
+                      part: true,
+                      start: true,
+                      finish: true,
+                      actual: true,
+                      approve: {
+                        select: {
+                          id: true,
+                          employee_name: true,
+                        },
+                      },
+                      Employee: {
+                        select: {
+                          id: true,
+                          employee_name: true,
+                        },
+                      },
+                      sub_depart: {
+                        select: {
+                          id: true,
+                          name: true,
+                          departement: {
+                            select: {
+                              id: true,
+                              name: true,
                             },
                           },
-                          eqandpart: {
-                            include: {
-                              equipment: true,
-                              eq_part: true,
+                        },
+                      },
+                      workCenter: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
+                      },
+                      aktivitas: {
+                        select: {
+                          id: true,
+                          aktivitasId: true,
+                          masterAktivitas: {
+                            select: {
+                              id: true,
+                              name: true,
                             },
                           },
                         },
@@ -435,5 +435,5 @@ export default {
   UpdategetBom,
   updateBom,
   DeleteBom,
-  DeleteBomDetail
+  DeleteBomDetail,
 };
