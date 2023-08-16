@@ -30,19 +30,19 @@ const getDrawing = async (request: Request, response: Response) => {
           file_drawing: true,
           timeschedule: {
             include: {
-              dispacth: {
+              srimg: {
                 include: {
-                  dispatchDetail: true,
+                  srimgdetail: true,
+                  dispacth: {
+                    include: {
+                      dispatchDetail: true,
+                    },
+                  },
                 },
               },
               wor: {
                 include: {
                   employee: true,
-                  srimg: {
-                    include: {
-                      srimgdetail: true,
-                    },
-                  },
                   customerPo: {
                     include: {
                       Deskription_CusPo: true,
@@ -113,13 +113,13 @@ const getDrawingTms = async (request: Request, response: Response) => {
       },
       include: {
         drawing: true,
+        srimg: {
+          include: {
+            srimgdetail: true,
+          },
+        },
         wor: {
           include: {
-            srimg: {
-              include: {
-                srimgdetail: true,
-              },
-            },
             customerPo: {
               include: {
                 quotations: {
