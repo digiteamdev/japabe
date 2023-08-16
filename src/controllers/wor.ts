@@ -27,12 +27,12 @@ const getWor = async (request: Request, response: Response) => {
           },
           OR: [
             {
-              srimg: {
+              timeschedule: {
                 deleted: { not: null },
               },
             },
             {
-              srimg: null,
+              timeschedule: null,
             },
           ],
           NOT: {
@@ -63,7 +63,6 @@ const getWor = async (request: Request, response: Response) => {
           },
           timeschedule: true,
           employee: true,
-          srimg: true,
         },
         orderBy: {
           createdAt: "desc",
@@ -136,14 +135,26 @@ const getWorTimes = async (request: any, response: Response) => {
   try {
     const results = await prisma.wor.findMany({
       where: {
-        status: "valid",
-        timeschedule: null,
-        srimg: null,
-        NOT: {
-          timeschedule: {
-            deleted: { not: null },
+        AND: [
+          {
+            status: "valid",
           },
-        },
+          {
+            timeschedule: {
+              deleted: null,
+            },
+          },
+        ],
+        NOT: [
+          {
+            timeschedule: {
+              deleted: null,
+            },
+          },
+          {
+            timeschedule: null,
+          },
+        ],
       },
       include: {
         customerPo: {
@@ -169,7 +180,6 @@ const getWorTimes = async (request: any, response: Response) => {
         },
         employee: true,
         timeschedule: true,
-        srimg: true,
       },
       orderBy: {
         createdAt: "desc",

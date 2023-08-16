@@ -538,7 +538,6 @@ model wor {
   deleted           DateTime?
   Quotations        Quotations?      @relation(fields: [quotationsId], references: [id])
   quotationsId      String?
-  srimg             srimg?
   timeschedule      timeschedule?
 
   @@index([id, job_no])
@@ -552,12 +551,53 @@ enum Priority_Status {
   XXTASREQ @map("XXT As Req")
 }
 
+model workCenter {
+  id             String           @id @default(cuid())
+  name           String?          @db.VarChar(20)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  deleted        DateTime?
+  dispatchDetail dispatchDetail[]
+
+  @@index([id, name])
+}
+
+model masterAktivitas {
+  id        String      @id @default(cuid())
+  name      String      @db.VarChar(200)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  deleted   DateTime?
+  aktivitas aktivitas[]
+
+  @@index([id, name])
+}
+
+model timeschedule {
+  id             String      @id @default(cuid())
+  idTs           String?     @db.VarChar(100)
+  timesch        DateTime
+  wor            wor?        @relation(fields: [worId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  worId          String?     @unique
+  status_spv     String?     @db.VarChar(20)
+  status_manager String?     @db.VarChar(20)
+  holiday        Boolean?    @default(false)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  deleted        DateTime?
+  aktivitas      aktivitas[]
+  drawing        drawing?
+  srimg          srimg?
+
+  @@index([id, idTs, worId])
+}
+
 model srimg {
   id              String        @id @default(cuid())
   id_summary      String?       @db.VarChar(200)
   date_of_summary DateTime?
-  wor             wor?          @relation(fields: [worId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  worId           String?       @unique
+  timeschedule    timeschedule  @relation(fields: [timeschId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  timeschId       String        @unique
   ioem            String?       @db.VarChar(100)
   isr             String?       @db.VarChar(100)
   itn             String?       @db.VarChar(100)
@@ -570,8 +610,9 @@ model srimg {
   deleted         DateTime?
   srimgdetail     srimgdetail[]
   bom             bom?
+  dispacth        dispacth?
 
-  @@index([id, worId])
+  @@index([id, timeschId])
 }
 
 model srimgdetail {
@@ -610,47 +651,6 @@ model imgSummary {
   @@index([id, img])
 }
 
-model workCenter {
-  id             String           @id @default(cuid())
-  name           String?          @db.VarChar(20)
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  deleted        DateTime?
-  dispatchDetail dispatchDetail[]
-
-  @@index([id, name])
-}
-
-model masterAktivitas {
-  id        String      @id @default(cuid())
-  name      String      @db.VarChar(200)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  deleted   DateTime?
-  aktivitas aktivitas[]
-
-  @@index([id, name])
-}
-
-model timeschedule {
-  id             String      @id @default(cuid())
-  idTs           String?     @db.VarChar(100)
-  timesch        DateTime
-  wor            wor?        @relation(fields: [worId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  worId          String?     @unique
-  status_spv     String?     @db.VarChar(20)
-  status_manager String?     @db.VarChar(20)
-  holiday        Boolean?    @default(false)
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-  deleted        DateTime?
-  aktivitas      aktivitas[]
-  dispacth       dispacth?
-  drawing        drawing?
-
-  @@index([id, idTs, worId])
-}
-
 model aktivitas {
   id              String           @id @default(cuid())
   timeschedule    timeschedule     @relation(fields: [timeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
@@ -681,8 +681,8 @@ model holidayTms {
 
 model dispacth {
   id             String           @id @default(cuid())
-  timeschedule   timeschedule     @relation(fields: [timeschId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  timeschId      String           @unique
+  srimg          srimg?           @relation(fields: [srId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  srId           String?          @unique
   id_dispatch    String?          @db.VarChar(20)
   dispacth_date  DateTime
   remark         String?          @db.Text
@@ -693,7 +693,7 @@ model dispacth {
   deleted        DateTime?
   dispatchDetail dispatchDetail[]
 
-  @@index([id, id_dispatch, timeschId])
+  @@index([id, id_dispatch, srId])
 }
 
 model dispatchDetail {

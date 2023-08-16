@@ -20,34 +20,38 @@ const getSrimg = async (request: Request, response: Response) => {
     if (request.query.page === undefined) {
       results = await prisma.srimg.findMany({
         include: {
-          wor: {
+          srimgdetail: {
             include: {
-              customerPo: {
+              imgSummary: true,
+            },
+          },
+          timeschedule: {
+            include: {
+              wor: {
                 include: {
-                  quotations: {
+                  customerPo: {
                     include: {
-                      Quotations_Detail: true,
-                      CustomerContact: true,
-                      Customer: {
+                      quotations: {
                         include: {
-                          address: true,
-                        },
-                      },
-                      eqandpart: {
-                        include: {
-                          equipment: true,
-                          eq_part: true,
+                          Quotations_Detail: true,
+                          CustomerContact: true,
+                          Customer: {
+                            include: {
+                              address: true,
+                            },
+                          },
+                          eqandpart: {
+                            include: {
+                              equipment: true,
+                              eq_part: true,
+                            },
+                          },
                         },
                       },
                     },
                   },
                 },
               },
-            },
-          },
-          srimgdetail: {
-            include: {
-              imgSummary: true,
             },
           },
         },
@@ -58,39 +62,43 @@ const getSrimg = async (request: Request, response: Response) => {
     } else {
       results = await prisma.srimg.findMany({
         where: {
-          worId: {
+          timeschId: {
             contains: pencarian,
           },
         },
         include: {
-          wor: {
+          srimgdetail: {
             include: {
-              customerPo: {
+              imgSummary: true,
+            },
+          },
+          timeschedule: {
+            include: {
+              wor: {
                 include: {
-                  quotations: {
+                  customerPo: {
                     include: {
-                      Quotations_Detail: true,
-                      CustomerContact: true,
-                      Customer: {
+                      quotations: {
                         include: {
-                          address: true,
-                        },
-                      },
-                      eqandpart: {
-                        include: {
-                          equipment: true,
-                          eq_part: true,
+                          Quotations_Detail: true,
+                          CustomerContact: true,
+                          Customer: {
+                            include: {
+                              address: true,
+                            },
+                          },
+                          eqandpart: {
+                            include: {
+                              equipment: true,
+                              eq_part: true,
+                            },
+                          },
                         },
                       },
                     },
                   },
                 },
               },
-            },
-          },
-          srimgdetail: {
-            include: {
-              imgSummary: true,
             },
           },
         },
@@ -134,34 +142,38 @@ const getSrimBom = async (request: Request, response: Response) => {
       },
       include: {
         bom: true,
-        wor: {
+        srimgdetail: {
           include: {
-            customerPo: {
+            imgSummary: true,
+          },
+        },
+        timeschedule: {
+          include: {
+            wor: {
               include: {
-                quotations: {
+                customerPo: {
                   include: {
-                    Quotations_Detail: true,
-                    CustomerContact: true,
-                    Customer: {
+                    quotations: {
                       include: {
-                        address: true,
-                      },
-                    },
-                    eqandpart: {
-                      include: {
-                        equipment: true,
-                        eq_part: true,
+                        Quotations_Detail: true,
+                        CustomerContact: true,
+                        Customer: {
+                          include: {
+                            address: true,
+                          },
+                        },
+                        eqandpart: {
+                          include: {
+                            equipment: true,
+                            eq_part: true,
+                          },
+                        },
                       },
                     },
                   },
                 },
               },
             },
-          },
-        },
-        srimgdetail: {
-          include: {
-            imgSummary: true,
           },
         },
       },
@@ -206,7 +218,7 @@ const createSrimg = async (request: any, response: Response) => {
       data: {
         date_of_summary: new Date(request.body.date_of_summary),
         id_summary: request.body.id_summary,
-        wor: { connect: { id: request.body.worId } },
+        timeschedule: { connect: { id: request.body.timeschId } },
         ioem: request.body.ioem,
         isr: request.body.isr,
         itn: request.body.itn,

@@ -22,31 +22,29 @@ const getTimeschedule = async (request: Request, response: Response) => {
         where: {
           OR: [
             {
-              dispacth: {
+              srimg: {
                 deleted: { not: null },
               },
             },
             {
-              dispacth: null,
+              srimg: null,
             },
           ],
           NOT: {
-            wor: {
-              srimg: null,
-            },
+            srimg: null,
           },
         },
         orderBy: {
           id: "desc",
         },
         include: {
+          srimg: {
+            include: {
+              srimgdetail: true,
+            },
+          },
           wor: {
             include: {
-              srimg: {
-                include: {
-                  srimgdetail: true,
-                },
-              },
               customerPo: {
                 include: {
                   quotations: {
@@ -87,13 +85,13 @@ const getTimeschedule = async (request: Request, response: Response) => {
           },
         },
         include: {
+          srimg: {
+            include: {
+              srimgdetail: true,
+            },
+          },
           wor: {
             include: {
-              srimg: {
-                include: {
-                  srimgdetail: true,
-                },
-              },
               customerPo: {
                 include: {
                   quotations: {

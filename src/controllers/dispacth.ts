@@ -20,34 +20,6 @@ const getDispatch = async (request: Request, response: Response) => {
     if (request.query.page === undefined) {
       results = await prisma.dispacth.findMany({
         include: {
-          timeschedule: {
-            include: {
-              wor: {
-                include: {
-                  srimg: {
-                    include: {
-                      srimgdetail: true,
-                    },
-                  },
-                  customerPo: {
-                    include: {
-                      quotations: {
-                        include: {
-                          Customer: true,
-                          eqandpart: {
-                            include: {
-                              equipment: true,
-                              eq_part: true,
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
           dispatchDetail: {
             include: {
               aktivitas: {
@@ -72,39 +44,29 @@ const getDispatch = async (request: Request, response: Response) => {
               workCenter: true,
             },
           },
-        },
-      });
-    } else {
-      results = await prisma.dispacth.findMany({
-        where: {
-          id_dispatch: {
-            contains: pencarian,
-          },
-        },
-        include: {
-          timeschedule: {
+          srimg: {
             include: {
-              aktivitas: {
+              srimgdetail: true,
+              timeschedule: {
                 include: {
-                  masterAktivitas: true,
-                },
-              },
-              wor: {
-                include: {
-                  srimg: {
+                  aktivitas: {
                     include: {
-                      srimgdetail: true,
+                      masterAktivitas: true,
                     },
                   },
-                  customerPo: {
+                  wor: {
                     include: {
-                      quotations: {
+                      customerPo: {
                         include: {
-                          Customer: true,
-                          eqandpart: {
+                          quotations: {
                             include: {
-                              equipment: true,
-                              eq_part: true,
+                              Customer: true,
+                              eqandpart: {
+                                include: {
+                                  equipment: true,
+                                  eq_part: true,
+                                },
+                              },
                             },
                           },
                         },
@@ -115,45 +77,18 @@ const getDispatch = async (request: Request, response: Response) => {
               },
             },
           },
+        },
+      });
+    } else {
+      results = await prisma.dispacth.findMany({
+        where: {
+          id_dispatch: {
+            contains: pencarian,
+          },
+        },
+        include: {
           dispatchDetail: {
-            select: {
-              id: true,
-              operatorID: true,
-              approvebyID: true,
-              part: true,
-              start: true,
-              finish: true,
-              actual: true,
-              approve: {
-                select: {
-                  id: true,
-                  employee_name: true,
-                },
-              },
-              Employee: {
-                select: {
-                  id: true,
-                  employee_name: true,
-                },
-              },
-              sub_depart: {
-                select: {
-                  id: true,
-                  name: true,
-                  departement: {
-                    select: {
-                      id: true,
-                      name: true,
-                    },
-                  },
-                },
-              },
-              workCenter: {
-                select: {
-                  id: true,
-                  name: true,
-                },
-              },
+            include: {
               aktivitas: {
                 select: {
                   id: true,
@@ -162,6 +97,47 @@ const getDispatch = async (request: Request, response: Response) => {
                     select: {
                       id: true,
                       name: true,
+                    },
+                  },
+                },
+              },
+              Employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                },
+              },
+              sub_depart: true,
+              workCenter: true,
+            },
+          },
+          srimg: {
+            include: {
+              srimgdetail: true,
+              timeschedule: {
+                include: {
+                  aktivitas: {
+                    include: {
+                      masterAktivitas: true,
+                    },
+                  },
+                  wor: {
+                    include: {
+                      customerPo: {
+                        include: {
+                          quotations: {
+                            include: {
+                              Customer: true,
+                              eqandpart: {
+                                include: {
+                                  equipment: true,
+                                  eq_part: true,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
                     },
                   },
                 },
@@ -205,7 +181,7 @@ const createDispacth = async (request: Request, response: Response) => {
   try {
     const results = await prisma.dispacth.create({
       data: {
-        timeschedule: { connect: { id: request.body.timeschId } },
+        srimg: { connect: { id: request.body.srId } },
         id_dispatch: request.body.id_dispatch,
         dispacth_date: new Date(request.body.dispacth_date),
         remark: request.body.remark,
@@ -293,7 +269,10 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
     );
     let result: any = [];
     for (let i = 0; i < updateVerify.length; i++) {
-      if (updateVerify[i].operatorID === null || updateVerify[i].operatorID === "") {
+      if (
+        updateVerify[i].operatorID === null ||
+        updateVerify[i].operatorID === ""
+      ) {
         const updateDispacthDetail = await prisma.dispatchDetail.upsert({
           where: {
             id: updateVerify[i].id,

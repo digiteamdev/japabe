@@ -474,11 +474,49 @@ CREATE TABLE "wor" (
 );
 
 -- CreateTable
+CREATE TABLE "workCenter" (
+    "id" TEXT NOT NULL,
+    "name" VARCHAR(20),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "workCenter_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "masterAktivitas" (
+    "id" TEXT NOT NULL,
+    "name" VARCHAR(200) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "masterAktivitas_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "timeschedule" (
+    "id" TEXT NOT NULL,
+    "idTs" VARCHAR(100),
+    "timesch" TIMESTAMP(3) NOT NULL,
+    "worId" TEXT,
+    "status_spv" VARCHAR(20),
+    "status_manager" VARCHAR(20),
+    "holiday" BOOLEAN DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "timeschedule_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "srimg" (
     "id" TEXT NOT NULL,
     "id_summary" VARCHAR(200),
     "date_of_summary" TIMESTAMP(3),
-    "worId" TEXT,
+    "timeschId" TEXT NOT NULL,
     "ioem" VARCHAR(100),
     "isr" VARCHAR(100),
     "itn" VARCHAR(100),
@@ -522,44 +560,6 @@ CREATE TABLE "imgSummary" (
 );
 
 -- CreateTable
-CREATE TABLE "workCenter" (
-    "id" TEXT NOT NULL,
-    "name" VARCHAR(20),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "deleted" TIMESTAMP(3),
-
-    CONSTRAINT "workCenter_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "masterAktivitas" (
-    "id" TEXT NOT NULL,
-    "name" VARCHAR(200) NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "deleted" TIMESTAMP(3),
-
-    CONSTRAINT "masterAktivitas_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "timeschedule" (
-    "id" TEXT NOT NULL,
-    "idTs" VARCHAR(100),
-    "timesch" TIMESTAMP(3) NOT NULL,
-    "worId" TEXT,
-    "status_spv" VARCHAR(20),
-    "status_manager" VARCHAR(20),
-    "holiday" BOOLEAN DEFAULT false,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "deleted" TIMESTAMP(3),
-
-    CONSTRAINT "timeschedule_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "aktivitas" (
     "id" TEXT NOT NULL,
     "timeId" TEXT NOT NULL,
@@ -591,7 +591,7 @@ CREATE TABLE "holidayTms" (
 -- CreateTable
 CREATE TABLE "dispacth" (
     "id" TEXT NOT NULL,
-    "timeschId" TEXT NOT NULL,
+    "srId" TEXT,
     "id_dispatch" VARCHAR(20),
     "dispacth_date" TIMESTAMP(3) NOT NULL,
     "remark" TEXT,
@@ -780,18 +780,6 @@ CREATE INDEX "term_of_pay_id_cuspoId_idx" ON "term_of_pay"("id", "cuspoId");
 CREATE INDEX "wor_id_job_no_idx" ON "wor"("id", "job_no");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "srimg_worId_key" ON "srimg"("worId");
-
--- CreateIndex
-CREATE INDEX "srimg_id_worId_idx" ON "srimg"("id", "worId");
-
--- CreateIndex
-CREATE INDEX "srimgdetail_id_name_part_idx" ON "srimgdetail"("id", "name_part");
-
--- CreateIndex
-CREATE INDEX "imgSummary_id_img_idx" ON "imgSummary"("id", "img");
-
--- CreateIndex
 CREATE INDEX "workCenter_id_name_idx" ON "workCenter"("id", "name");
 
 -- CreateIndex
@@ -804,13 +792,25 @@ CREATE UNIQUE INDEX "timeschedule_worId_key" ON "timeschedule"("worId");
 CREATE INDEX "timeschedule_id_idTs_worId_idx" ON "timeschedule"("id", "idTs", "worId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "srimg_timeschId_key" ON "srimg"("timeschId");
+
+-- CreateIndex
+CREATE INDEX "srimg_id_timeschId_idx" ON "srimg"("id", "timeschId");
+
+-- CreateIndex
+CREATE INDEX "srimgdetail_id_name_part_idx" ON "srimgdetail"("id", "name_part");
+
+-- CreateIndex
+CREATE INDEX "imgSummary_id_img_idx" ON "imgSummary"("id", "img");
+
+-- CreateIndex
 CREATE INDEX "aktivitas_id_timeId_aktivitasId_idx" ON "aktivitas"("id", "timeId", "aktivitasId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "dispacth_timeschId_key" ON "dispacth"("timeschId");
+CREATE UNIQUE INDEX "dispacth_srId_key" ON "dispacth"("srId");
 
 -- CreateIndex
-CREATE INDEX "dispacth_id_id_dispatch_timeschId_idx" ON "dispacth"("id", "id_dispatch", "timeschId");
+CREATE INDEX "dispacth_id_id_dispatch_srId_idx" ON "dispacth"("id", "id_dispatch", "srId");
 
 -- CreateIndex
 CREATE INDEX "dispatchDetail_id_part_dispacthID_aktivitasID_workId_idx" ON "dispatchDetail"("id", "part", "dispacthID", "aktivitasID", "workId");
@@ -915,7 +915,10 @@ ALTER TABLE "wor" ADD CONSTRAINT "wor_employeeId_fkey" FOREIGN KEY ("employeeId"
 ALTER TABLE "wor" ADD CONSTRAINT "wor_quotationsId_fkey" FOREIGN KEY ("quotationsId") REFERENCES "Quotations"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "srimg" ADD CONSTRAINT "srimg_worId_fkey" FOREIGN KEY ("worId") REFERENCES "wor"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "timeschedule" ADD CONSTRAINT "timeschedule_worId_fkey" FOREIGN KEY ("worId") REFERENCES "wor"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "srimg" ADD CONSTRAINT "srimg_timeschId_fkey" FOREIGN KEY ("timeschId") REFERENCES "timeschedule"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "srimgdetail" ADD CONSTRAINT "srimgdetail_srId_fkey" FOREIGN KEY ("srId") REFERENCES "srimg"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -924,16 +927,13 @@ ALTER TABLE "srimgdetail" ADD CONSTRAINT "srimgdetail_srId_fkey" FOREIGN KEY ("s
 ALTER TABLE "imgSummary" ADD CONSTRAINT "imgSummary_srimgdetailId_fkey" FOREIGN KEY ("srimgdetailId") REFERENCES "srimgdetail"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "timeschedule" ADD CONSTRAINT "timeschedule_worId_fkey" FOREIGN KEY ("worId") REFERENCES "wor"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "aktivitas" ADD CONSTRAINT "aktivitas_timeId_fkey" FOREIGN KEY ("timeId") REFERENCES "timeschedule"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "aktivitas" ADD CONSTRAINT "aktivitas_aktivitasId_fkey" FOREIGN KEY ("aktivitasId") REFERENCES "masterAktivitas"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "dispacth" ADD CONSTRAINT "dispacth_timeschId_fkey" FOREIGN KEY ("timeschId") REFERENCES "timeschedule"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "dispacth" ADD CONSTRAINT "dispacth_srId_fkey" FOREIGN KEY ("srId") REFERENCES "srimg"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_dispacthID_fkey" FOREIGN KEY ("dispacthID") REFERENCES "dispacth"("id") ON DELETE CASCADE ON UPDATE CASCADE;
