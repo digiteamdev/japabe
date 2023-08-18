@@ -680,6 +680,11 @@ router.get(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   timeschedule.getTimeschedule
 );
+router.get(
+  "/summaryTms",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  srimg.getSumaryTms
+);
 router.post(
   "/timeschedule",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),

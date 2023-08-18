@@ -134,6 +134,86 @@ const getSrimg = async (request: Request, response: Response) => {
   }
 };
 
+const getSumaryTms = async (request: Request, response: Response) => {
+  try {
+    const result = await prisma.timeschedule.findMany({
+      where: {
+        OR: [
+          {
+            deleted: null,
+          },
+          {
+            srimg: {
+              deleted: null,
+            },
+          },
+        ],
+        NOT: {
+          srimg: {
+            deleted: null,
+          },
+        },
+      },
+      orderBy: {
+        id: "desc",
+      },
+      include: {
+        srimg: {
+          include: {
+            srimgdetail: true,
+          },
+        },
+        wor: {
+          include: {
+            customerPo: {
+              include: {
+                quotations: {
+                  include: {
+                    Quotations_Detail: true,
+                    CustomerContact: true,
+                    Customer: {
+                      include: {
+                        address: true,
+                      },
+                    },
+                    eqandpart: {
+                      include: {
+                        equipment: true,
+                        eq_part: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        aktivitas: {
+          include: {
+            masterAktivitas: true,
+          },
+        },
+      },
+    });
+    if (result.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All Tms Summary",
+        result: result,
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const getSrimBom = async (request: Request, response: Response) => {
   try {
     const results = await prisma.srimg.findMany({
@@ -517,6 +597,7 @@ const deleteSrimgImg = async (request: any, response: Response) => {
 export default {
   getSrimg,
   getSrimBom,
+  getSumaryTms,
   createSrimg,
   createImgMany,
   updateSrimg,
