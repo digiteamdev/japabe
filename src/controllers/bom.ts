@@ -262,6 +262,148 @@ const getBom = async (request: Request, response: Response) => {
   }
 };
 
+const getSumaryBom = async (request: Request, response: Response) => {
+  try {
+    const result = await prisma.bom.findMany({
+      where: {
+        OR: [
+          {
+            deleted: null,
+          },
+          {
+            srimg: {
+              deleted: null,
+            }
+          },
+        ],
+        NOT: {
+          srimg: {
+            deleted: null,
+          },
+        },
+      },
+      include: {
+        bom_detail: {
+          include: {
+            Material_master: true,
+            srimgdetail: true,
+          },
+        },
+        srimg: {
+          include: {
+            srimgdetail: true,
+            timeschedule: {
+              include: {
+                wor: {
+                  include: {
+                    customerPo: {
+                      include: {
+                        quotations: {
+                          include: {
+                            Quotations_Detail: true,
+                            CustomerContact: true,
+                            Customer: {
+                              include: {
+                                address: true,
+                              },
+                            },
+                            eqandpart: {
+                              include: {
+                                equipment: true,
+                                eq_part: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            dispacth: {
+              include: {
+                dispatchDetail: {
+                  select: {
+                    id: true,
+                    operatorID: true,
+                    approvebyID: true,
+                    part: true,
+                    start: true,
+                    finish: true,
+                    actual: true,
+                    approve: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                      },
+                    },
+                    Employee: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                      },
+                    },
+                    sub_depart: {
+                      select: {
+                        id: true,
+                        name: true,
+                        departement: {
+                          select: {
+                            id: true,
+                            name: true,
+                          },
+                        },
+                      },
+                    },
+                    workCenter: {
+                      select: {
+                        id: true,
+                        name: true,
+                      },
+                    },
+                    aktivitas: {
+                      select: {
+                        id: true,
+                        aktivitasId: true,
+                        masterAktivitas: {
+                          select: {
+                            id: true,
+                            name: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    if (result.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All Summary Bom",
+        result: result,
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const CreateBom = async (request: Request, response: Response) => {
   try {
     const results = await prisma.bom.create({
@@ -436,4 +578,5 @@ export default {
   updateBom,
   DeleteBom,
   DeleteBomDetail,
+  getSumaryBom
 };

@@ -516,7 +516,7 @@ CREATE TABLE "srimg" (
     "id" TEXT NOT NULL,
     "id_summary" VARCHAR(200),
     "date_of_summary" TIMESTAMP(3),
-    "timeschId" TEXT NOT NULL,
+    "timeschId" TEXT,
     "ioem" VARCHAR(100),
     "isr" VARCHAR(100),
     "itn" VARCHAR(100),
@@ -630,7 +630,7 @@ CREATE TABLE "dispatchDetail" (
 CREATE TABLE "drawing" (
     "id" TEXT NOT NULL,
     "id_drawing" VARCHAR(100),
-    "timeschId" TEXT NOT NULL,
+    "timeschId" TEXT,
     "date_drawing" TIMESTAMP(3) NOT NULL,
     "status_spv" VARCHAR(20),
     "status_manager" VARCHAR(20),

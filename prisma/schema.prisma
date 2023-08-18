@@ -596,8 +596,8 @@ model srimg {
   id              String        @id @default(cuid())
   id_summary      String?       @db.VarChar(200)
   date_of_summary DateTime?
-  timeschedule    timeschedule  @relation(fields: [timeschId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  timeschId       String        @unique
+  timeschedule    timeschedule? @relation(fields: [timeschId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  timeschId       String?       @unique
   ioem            String?       @db.VarChar(100)
   isr             String?       @db.VarChar(100)
   itn             String?       @db.VarChar(100)
@@ -726,8 +726,8 @@ model dispatchDetail {
 model drawing {
   id             String         @id @default(cuid())
   id_drawing     String?        @db.VarChar(100)
-  timeschedule   timeschedule   @relation(fields: [timeschId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  timeschId      String         @unique
+  timeschedule   timeschedule?  @relation(fields: [timeschId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  timeschId      String?        @unique
   date_drawing   DateTime
   status_spv     String?        @db.VarChar(20)
   status_manager String?        @db.VarChar(20)

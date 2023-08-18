@@ -610,6 +610,11 @@ router.get(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   dispacth.getDispatch
 );
+router.get(
+  "/sumarryDispacth",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  dispacth.getSumaryDispacth
+);
 router.post(
   "/dispacth",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
@@ -784,6 +789,11 @@ router.delete(
 
 router.get(
   "/srBom",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  srimg.getSrimBom
+);
+router.get(
+  "/SummaryBom",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   srimg.getSrimBom
 );
