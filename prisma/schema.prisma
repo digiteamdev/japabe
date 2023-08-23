@@ -348,7 +348,7 @@ model Material_Stock {
   materialId      String?
   spesifikasi     String           @db.Text
   jumlah_Stock    Int              @default(0)
-  harga           String
+  harga           Int              @default(0)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   deleted         DateTime?

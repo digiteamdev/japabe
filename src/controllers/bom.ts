@@ -416,8 +416,8 @@ const getBomMr = async (request: Request, response: Response) => {
             Material_master: {
               include: {
                 Material_Stock: true,
-              }
-            }
+              },
+            },
           },
         },
         srimg: {
@@ -463,37 +463,36 @@ const getUserMr = async (request: Request, response: Response) => {
         employeeId: true,
       },
     });
-    const cekUserSession = await prisma.session.findUnique({
-      where: { id },
-    });
-    if (userExist === cekUserSession) return;
-    const result = await prisma.user.findFirst({
-      where: {
-        employeeId: userExist?.employeeId,
-      },
-      select: {
-        id: true,
-        username: true,
-        employee: {
-          select: {
-            id: true,
-            employee_name: true,
-            sub_depart: {
-              select: {
-                id: true,
-                name: true,
-                departement: {
-                  select: {
-                    id: true,
-                    name: true,
+    let result;
+    const EmployeeUser = userExist?.employeeId;
+    if (userExist)
+      result = await prisma.user.findFirst({
+        where: {
+          employeeId: EmployeeUser,
+        },
+        select: {
+          id: true,
+          username: true,
+          employee: {
+            select: {
+              id: true,
+              employee_name: true,
+              sub_depart: {
+                select: {
+                  id: true,
+                  name: true,
+                  departement: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
                   },
                 },
               },
             },
           },
         },
-      },
-    });
+      });
     if (result) {
       return response.status(200).json({
         success: true,

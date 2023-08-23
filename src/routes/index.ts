@@ -487,6 +487,11 @@ router.get(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   typeMr.getMasterM
 );
+router.get(
+  "/stockMaterial",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  typeMr.getStock
+);
 router.post(
   "/stockMaterial",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
