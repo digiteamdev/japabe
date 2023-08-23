@@ -306,6 +306,13 @@ const updateWorStatus = async (request: Request, response: Response) => {
     let year = d.getUTCFullYear().toString().substring(2);
 
     const genarate = year + "." + r;
+
+    const m = Math.floor(Math.random() * 10000);
+    const a = new Date();
+    let tahun = a.getUTCFullYear().toString().substring(2);
+
+    const genarateMr = "WOR" + tahun + "." + m;
+
     const id = request.params.id;
     const statusPenc = await prisma.wor.findFirst({
       where: {
@@ -321,6 +328,8 @@ const updateWorStatus = async (request: Request, response: Response) => {
         data: {
           status: "valid",
           job_no: statusPenc.status === null ? genarate : statusPenc.job_no,
+          job_no_mr:
+            statusPenc.status === null ? genarateMr : statusPenc.job_no_mr,
         },
       });
     } else {

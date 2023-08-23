@@ -105,6 +105,7 @@ const getMasterM = async (request: Request, response: Response) => {
           },
         },
         include: {
+          Material_Stock: true,
           grup_material: true,
         },
       });
@@ -123,6 +124,7 @@ const getMasterM = async (request: Request, response: Response) => {
           ],
         },
         include: {
+          Material_Stock: true,
           grup_material: true,
         },
         orderBy: {
@@ -214,6 +216,31 @@ const createMaster = async (request: Request, response: Response) => {
   }
 };
 
+const createMasterSpesifikasi = async (
+  request: Request,
+  response: Response
+) => {
+  try {
+    const results = await prisma.material_Stock.createMany({
+      data: request.body,
+    });
+    if (results) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Add Data",
+        results: results,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Add Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const updateMaterial = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
@@ -254,6 +281,32 @@ const updateMaterialSpek = async (request: Request, response: Response) => {
         success: true,
         massage: "Success Update Data",
         result: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updateStokMaterial = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const updateStokMaterial = await prisma.material_Stock.update({
+      where: {
+        id: id,
+      },
+      data: request.body,
+    });
+    if (updateStokMaterial) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        result: updateStokMaterial,
       });
     } else {
       response.status(400).json({
@@ -316,13 +369,41 @@ const deleteMaterialSpek = async (request: Request, response: Response) => {
   }
 };
 
+const deleteStokMaterial = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const result = await prisma.material_Stock.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        result: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getTypeMr,
   getMasterM,
   createTypeMr,
   createMaster,
+  createMasterSpesifikasi,
   updateMaterial,
   updateMaterialSpek,
+  updateStokMaterial,
   deleteMaterial,
   deleteMaterialSpek,
+  deleteStokMaterial,
 };

@@ -305,6 +305,21 @@ CREATE TABLE "Material_master" (
 );
 
 -- CreateTable
+CREATE TABLE "Material_Stock" (
+    "id" TEXT NOT NULL,
+    "materialId" TEXT,
+    "spesifikasi" TEXT NOT NULL,
+    "jumlah_Stock" INTEGER NOT NULL DEFAULT 0,
+    "harga" TEXT NOT NULL,
+    "satuan" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "Material_Stock_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Supplier" (
     "id" TEXT NOT NULL,
     "type_supplier" "type_sup" NOT NULL,
@@ -376,7 +391,7 @@ CREATE TABLE "Quotations" (
 CREATE TABLE "Quotations_Detail" (
     "id" TEXT NOT NULL,
     "item_of_work" VARCHAR(200),
-    "volume" INTEGER DEFAULT 0,
+    "volume" INTEGER NOT NULL DEFAULT 0,
     "unit" VARCHAR(20),
     "quo_id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -409,7 +424,7 @@ CREATE TABLE "CustomerPo" (
 CREATE TABLE "Deskription_CusPo" (
     "id" TEXT NOT NULL,
     "cuspoId" TEXT NOT NULL,
-    "qty" INTEGER DEFAULT 0,
+    "qty" INTEGER NOT NULL DEFAULT 0,
     "unit" VARCHAR(50),
     "price" TEXT,
     "discount" TEXT,
@@ -427,7 +442,7 @@ CREATE TABLE "term_of_pay" (
     "id" TEXT NOT NULL,
     "cuspoId" TEXT NOT NULL,
     "limitpay" "Limit_Pay",
-    "percent" INTEGER DEFAULT 0,
+    "percent" INTEGER NOT NULL DEFAULT 0,
     "price" TEXT,
     "date_limit" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -441,6 +456,7 @@ CREATE TABLE "term_of_pay" (
 CREATE TABLE "wor" (
     "id" TEXT NOT NULL,
     "job_no" VARCHAR(200),
+    "job_no_mr" VARCHAR(200),
     "date_wor" TIMESTAMP(3),
     "cuspoId" TEXT NOT NULL,
     "subject" VARCHAR(200),
@@ -449,7 +465,7 @@ CREATE TABLE "wor" (
     "employeeId" TEXT NOT NULL,
     "value_contract" TEXT,
     "priority_status" "Priority_Status",
-    "qty" INTEGER DEFAULT 0,
+    "qty" INTEGER NOT NULL DEFAULT 0,
     "unit" VARCHAR(20),
     "date_of_order" TIMESTAMP(3),
     "delivery_date" TIMESTAMP(3),
@@ -536,7 +552,7 @@ CREATE TABLE "srimgdetail" (
     "id" TEXT NOT NULL,
     "name_part" VARCHAR(100),
     "srId" TEXT,
-    "qty" INTEGER NOT NULL,
+    "qty" INTEGER NOT NULL DEFAULT 0,
     "input_finding" TEXT,
     "choice" "choice",
     "noted" TEXT,
@@ -680,6 +696,35 @@ CREATE TABLE "bom_detail" (
     CONSTRAINT "bom_detail_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Mr" (
+    "id" TEXT NOT NULL,
+    "no_mr" VARCHAR(50),
+    "tgl_mr" TIMESTAMP(3) NOT NULL,
+    "userId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "Mr_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "detailMr" (
+    "id" TEXT NOT NULL,
+    "mrId" TEXT,
+    "bomId" TEXT,
+    "materialId" TEXT,
+    "spesifikasi" TEXT,
+    "satuan" TEXT,
+    "qty" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "detailMr_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE INDEX "role_role_name_idx" ON "role"("role_name");
 
@@ -742,6 +787,9 @@ CREATE INDEX "grup_material_id_kd_group_material_name_idx" ON "grup_material"("i
 
 -- CreateIndex
 CREATE INDEX "Material_master_id_kd_group_material_name_kd_material_idx" ON "Material_master"("id", "kd_group", "material_name", "kd_material");
+
+-- CreateIndex
+CREATE INDEX "Material_Stock_id_materialId_spesifikasi_idx" ON "Material_Stock"("id", "materialId", "spesifikasi");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Supplier_office_email_key" ON "Supplier"("office_email");
@@ -833,6 +881,12 @@ CREATE INDEX "bom_id_srId_idx" ON "bom"("id", "srId");
 -- CreateIndex
 CREATE INDEX "bom_detail_id_bomId_partId_materialId_idx" ON "bom_detail"("id", "bomId", "partId", "materialId");
 
+-- CreateIndex
+CREATE INDEX "Mr_id_no_mr_userId_tgl_mr_idx" ON "Mr"("id", "no_mr", "userId", "tgl_mr");
+
+-- CreateIndex
+CREATE INDEX "detailMr_id_mrId_bomId_materialId_idx" ON "detailMr"("id", "mrId", "bomId", "materialId");
+
 -- AddForeignKey
 ALTER TABLE "Employee" ADD CONSTRAINT "Employee_subdepartId_fkey" FOREIGN KEY ("subdepartId") REFERENCES "sub_depart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -880,6 +934,9 @@ ALTER TABLE "eqandpart" ADD CONSTRAINT "eqandpart_id_quotation_fkey" FOREIGN KEY
 
 -- AddForeignKey
 ALTER TABLE "Material_master" ADD CONSTRAINT "Material_master_kd_group_fkey" FOREIGN KEY ("kd_group") REFERENCES "grup_material"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Material_Stock" ADD CONSTRAINT "Material_Stock_materialId_fkey" FOREIGN KEY ("materialId") REFERENCES "Material_master"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "SupplierContact" ADD CONSTRAINT "SupplierContact_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "Supplier"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -970,3 +1027,15 @@ ALTER TABLE "bom_detail" ADD CONSTRAINT "bom_detail_partId_fkey" FOREIGN KEY ("p
 
 -- AddForeignKey
 ALTER TABLE "bom_detail" ADD CONSTRAINT "bom_detail_materialId_fkey" FOREIGN KEY ("materialId") REFERENCES "Material_master"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Mr" ADD CONSTRAINT "Mr_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "detailMr" ADD CONSTRAINT "detailMr_mrId_fkey" FOREIGN KEY ("mrId") REFERENCES "Mr"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "detailMr" ADD CONSTRAINT "detailMr_bomId_fkey" FOREIGN KEY ("bomId") REFERENCES "bom"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "detailMr" ADD CONSTRAINT "detailMr_materialId_fkey" FOREIGN KEY ("materialId") REFERENCES "Material_master"("id") ON DELETE CASCADE ON UPDATE CASCADE;

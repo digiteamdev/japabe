@@ -487,6 +487,11 @@ router.get(
   typeMr.getMasterM
 );
 router.post(
+  "/stockMaterial",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  typeMr.createMasterSpesifikasi
+);
+router.post(
   "/groupMaterial",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   typeMr.createTypeMr
@@ -506,6 +511,11 @@ router.put(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   typeMr.updateMaterialSpek
 );
+router.put(
+  "/stockMaterial/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  typeMr.updateStokMaterial
+);
 router.delete(
   "/groupMaterial/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
@@ -515,6 +525,11 @@ router.delete(
   "/masterMaterial/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   typeMr.deleteMaterialSpek
+);
+router.delete(
+  "/stockMaterial/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  typeMr.deleteStokMaterial
 );
 
 /***************************TYPEMR********************************* */
@@ -802,6 +817,11 @@ router.get(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   bom.getBom
 );
+router.get(
+  "/mrBom",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  bom.getBomMr
+);
 router.post(
   "/bom",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
@@ -829,5 +849,9 @@ router.delete(
 );
 
 /***************************BOM********************************* */
+
+/***************************Material Request********************************* */
+
+/***************************Material Request********************************* */
 
 export default router;

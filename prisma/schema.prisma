@@ -77,6 +77,7 @@ model User {
   updatedAt       DateTime   @updatedAt
   employeeId      String?
   userRole        userRole[]
+  Mr              Mr[]
 
   @@index([id])
   @@map("user")
@@ -325,19 +326,35 @@ model grup_material {
 }
 
 model Material_master {
-  id            String         @id @default(cuid())
-  kd_material   String?        @db.VarChar(50)
-  grup_material grup_material? @relation(fields: [kd_group], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  kd_group      String?
-  material_name String?        @db.VarChar(200)
-  satuan        String?        @db.VarChar(200)
-  detail        String?        @db.Text
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  deleted       DateTime?
-  bom_detail    bom_detail[]
+  id             String           @id @default(cuid())
+  kd_material    String?          @db.VarChar(50)
+  grup_material  grup_material?   @relation(fields: [kd_group], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  kd_group       String?
+  material_name  String?          @db.VarChar(200)
+  satuan         String?          @db.VarChar(200)
+  detail         String?          @db.Text
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  deleted        DateTime?
+  bom_detail     bom_detail[]
+  detailMr       detailMr[]
+  Material_Stock Material_Stock[]
 
   @@index([id, kd_group, material_name, kd_material])
+}
+
+model Material_Stock {
+  id              String           @id @default(cuid())
+  Material_master Material_master? @relation(fields: [materialId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  materialId      String?
+  spesifikasi     String           @db.Text
+  jumlah_Stock    Int              @default(0)
+  harga           String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  deleted         DateTime?
+
+  @@index([id, materialId, spesifikasi])
 }
 
 model Supplier {
@@ -422,7 +439,7 @@ model Quotations {
 model Quotations_Detail {
   id           String     @id @default(cuid())
   item_of_work String?    @db.VarChar(200)
-  volume       Int?       @default(0)
+  volume       Int        @default(0)
   unit         String?    @db.VarChar(20)
   quotations   Quotations @relation(fields: [quo_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   quo_id       String
@@ -465,7 +482,7 @@ model Deskription_CusPo {
   id          String     @id @default(cuid())
   customerPo  CustomerPo @relation(fields: [cuspoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   cuspoId     String
-  qty         Int?       @default(0)
+  qty         Int        @default(0)
   unit        String?    @db.VarChar(50)
   price       String?
   discount    String?
@@ -483,7 +500,7 @@ model term_of_pay {
   customerPo CustomerPo @relation(fields: [cuspoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   cuspoId    String
   limitpay   Limit_Pay?
-  percent    Int?       @default(0)
+  percent    Int        @default(0)
   price      String?
   date_limit DateTime
   createdAt  DateTime   @default(now())
@@ -507,6 +524,7 @@ enum Limit_Pay {
 model wor {
   id                String           @id @default(cuid())
   job_no            String?          @db.VarChar(200)
+  job_no_mr         String?          @db.VarChar(200)
   date_wor          DateTime?
   customerPo        CustomerPo       @relation(fields: [cuspoId], references: [id])
   cuspoId           String
@@ -517,7 +535,7 @@ model wor {
   employeeId        String
   value_contract    String?
   priority_status   Priority_Status?
-  qty               Int?             @default(0)
+  qty               Int              @default(0)
   unit              String?          @db.VarChar(20)
   date_of_order     DateTime?
   delivery_date     DateTime?
@@ -620,7 +638,7 @@ model srimgdetail {
   name_part     String?      @db.VarChar(100)
   srimg         srimg?       @relation(fields: [srId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   srId          String?
-  qty           Int
+  qty           Int          @default(0)
   input_finding String?      @db.Text
   choice        choice?
   noted         String?      @db.Text
@@ -761,6 +779,7 @@ model bom {
   updatedAt      DateTime     @updatedAt
   deleted        DateTime?
   bom_detail     bom_detail[]
+  detailMr       detailMr[]
 
   @@index([id, srId])
 }
@@ -779,4 +798,45 @@ model bom_detail {
   deleted         DateTime?
 
   @@index([id, bomId, partId, materialId])
+}
+
+model Mr {
+  id             String     @id @default(cuid())
+  no_mr          String?    @db.VarChar(50)
+  tgl_mr         DateTime
+  user           User?      @relation(fields: [userId], references: [id])
+  userId         String?
+  status_spv     String?    @db.VarChar(20)
+  status_manager String?    @db.VarChar(20)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  deleted        DateTime?
+  detailMr       detailMr[]
+
+  @@index([id, no_mr, userId, tgl_mr])
+}
+
+model detailMr {
+  id              String           @id @default(cuid())
+  mr              Mr?              @relation(fields: [mrId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  mrId            String?
+  bom             bom?             @relation(fields: [bomId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  bomId           String?
+  Material_master Material_master? @relation(fields: [materialId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  materialId      String?
+  spesifikasi     String?
+  satuan          String?
+  qty             String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  deleted         DateTime?
+
+  @@index([id, mrId, bomId, materialId])
+}
+
+model Sr {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
 }
