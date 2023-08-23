@@ -413,7 +413,21 @@ const getBomMr = async (request: Request, response: Response) => {
       include: {
         bom_detail: {
           include: {
-            Material_master: true,
+            Material_master: {
+              include: {
+                Material_Stock: true,
+              }
+            }
+          },
+        },
+        srimg: {
+          include: {
+            srimgdetail: true,
+            timeschedule: {
+              include: {
+                wor: true,
+              },
+            },
           },
         },
       },
@@ -422,6 +436,68 @@ const getBomMr = async (request: Request, response: Response) => {
       return response.status(200).json({
         success: true,
         massage: "Get All Material Request Bom",
+        result: result,
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const getUserMr = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+
+    const userExist = await prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        username: true,
+        employeeId: true,
+      },
+    });
+    const cekUserSession = await prisma.session.findUnique({
+      where: { id },
+    });
+    if (userExist === cekUserSession) return;
+    const result = await prisma.user.findFirst({
+      where: {
+        employeeId: userExist?.employeeId,
+      },
+      select: {
+        id: true,
+        username: true,
+        employee: {
+          select: {
+            id: true,
+            employee_name: true,
+            sub_depart: {
+              select: {
+                id: true,
+                name: true,
+                departement: {
+                  select: {
+                    id: true,
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+    if (result) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All Material User",
         result: result,
       });
     } else {
@@ -463,8 +539,6 @@ const CreateBom = async (request: Request, response: Response) => {
       });
     }
   } catch (error) {
-    console.log(error);
-
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
 };
@@ -607,6 +681,7 @@ const DeleteBomDetail = async (request: Request, response: Response) => {
 export default {
   getBom,
   getBomMr,
+  getUserMr,
   CreateBom,
   UpdategetBom,
   updateBom,

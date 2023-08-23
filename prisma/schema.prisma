@@ -337,7 +337,6 @@ model Material_master {
   updatedAt      DateTime         @updatedAt
   deleted        DateTime?
   bom_detail     bom_detail[]
-  detailMr       detailMr[]
   Material_Stock Material_Stock[]
 
   @@index([id, kd_group, material_name, kd_material])
@@ -353,6 +352,7 @@ model Material_Stock {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   deleted         DateTime?
+  detailMr        detailMr[]
 
   @@index([id, materialId, spesifikasi])
 }
@@ -540,7 +540,7 @@ model wor {
   date_of_order     DateTime?
   delivery_date     DateTime?
   shipping_address  String?          @db.Text
-  estimated_man_our Int?             @default(0)
+  estimated_man_our Int              @default(0)
   eq_model          String?          @db.VarChar(100)
   eq_mfg            String?          @db.VarChar(100)
   eq_rotation       String?          @db.VarChar(200)
@@ -675,7 +675,7 @@ model aktivitas {
   timeId          String
   masterAktivitas masterAktivitas  @relation(fields: [aktivitasId], references: [id])
   aktivitasId     String
-  days            Int
+  days            Int              @default(0)
   startday        DateTime
   endday          DateTime
   progress        Int              @default(0)
@@ -779,7 +779,6 @@ model bom {
   updatedAt      DateTime     @updatedAt
   deleted        DateTime?
   bom_detail     bom_detail[]
-  detailMr       detailMr[]
 
   @@index([id, srId])
 }
@@ -796,6 +795,7 @@ model bom_detail {
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   deleted         DateTime?
+  detailMr        detailMr[]
 
   @@index([id, bomId, partId, materialId])
 }
@@ -803,7 +803,7 @@ model bom_detail {
 model Mr {
   id             String     @id @default(cuid())
   no_mr          String?    @db.VarChar(50)
-  tgl_mr         DateTime
+  date_mr        DateTime
   user           User?      @relation(fields: [userId], references: [id])
   userId         String?
   status_spv     String?    @db.VarChar(20)
@@ -813,25 +813,24 @@ model Mr {
   deleted        DateTime?
   detailMr       detailMr[]
 
-  @@index([id, no_mr, userId, tgl_mr])
+  @@index([id, no_mr, userId])
 }
 
 model detailMr {
-  id              String           @id @default(cuid())
-  mr              Mr?              @relation(fields: [mrId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  id              String          @id @default(cuid())
+  mr              Mr?             @relation(fields: [mrId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   mrId            String?
-  bom             bom?             @relation(fields: [bomId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  bom_detail      bom_detail?     @relation(fields: [bomId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   bomId           String?
-  Material_master Material_master? @relation(fields: [materialId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  materialId      String?
   spesifikasi     String?
-  satuan          String?
-  qty             String?
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  Material_Stock  Material_Stock? @relation(fields: [materialStockId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  materialStockId String?
+  qty             Int             @default(0)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
   deleted         DateTime?
 
-  @@index([id, mrId, bomId, materialId])
+  @@index([id, mrId, bomId, spesifikasi])
 }
 
 model Sr {

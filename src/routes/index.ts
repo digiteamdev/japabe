@@ -25,6 +25,7 @@ import timeschedule from "../controllers/timeschedule";
 import holidayTms from "../controllers/masterHoliday";
 import drawing from "../controllers/drawing";
 import bom from "../controllers/bom";
+import MR from "../controllers/mRequest";
 
 /***************************AUTH********************************* */
 
@@ -822,6 +823,11 @@ router.get(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   bom.getBomMr
 );
+router.get(
+  "/mrUser/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  bom.getUserMr
+);
 router.post(
   "/bom",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
@@ -851,6 +857,13 @@ router.delete(
 /***************************BOM********************************* */
 
 /***************************Material Request********************************* */
+
+router.get("/MR", jwt.authToken({ administrator: "ADMINISTRATOR" }), MR.getMr);
+router.post(
+  "/MR",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  MR.createMr
+);
 
 /***************************Material Request********************************* */
 
