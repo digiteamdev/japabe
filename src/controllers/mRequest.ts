@@ -133,13 +133,138 @@ const createMr = async (request: Request, response: Response) => {
 
 const updateMr = async (request: Request, response: Response) => {
   try {
+    const id: string = request.params.id;
+    const updateMr = await prisma.mr.update({
+      where: {
+        id: id,
+      },
+      data: request.body,
+    });
+    if (updateMr) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: updateMr,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
   } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const upsertMr = async (request: Request, response: Response) => {
+  try {
+    const updateVerify = request.body.map(
+      (updateByveri: {
+        mrId: any;
+        bomId: any;
+        spesifikasi: any;
+        materialStockId: any;
+        qty: any;
+        id: any;
+      }) => {
+        return {
+          mrId: updateByveri.mrId,
+          bomId: updateByveri.bomId,
+          spesifikasi: updateByveri.spesifikasi,
+          materialStockId: updateByveri.materialStockId,
+          qty: updateByveri.qty,
+          id: updateByveri.id,
+        };
+      }
+    );
+    let result: any = [];
+    for (let i = 0; i < updateVerify.length; i++) {
+      const upsertDetailMr = await prisma.detailMr.upsert({
+        where: {
+          id: updateVerify[i].id,
+        },
+        create: {
+          mr: { connect: { id: updateVerify[i].mrId } },
+          bom_detail: { connect: { id: updateVerify[i].bomId } },
+          spesifikasi: updateVerify[i].spesifikasi,
+          Material_Stock: { connect: { id: updateVerify[i].materialStockId } },
+          qty: updateVerify[i].qty,
+        },
+        update: {
+          mr: { connect: { id: updateVerify[i].mrId } },
+          bom_detail: { connect: { id: updateVerify[i].bomId } },
+          spesifikasi: updateVerify[i].spesifikasi,
+          Material_Stock: { connect: { id: updateVerify[i].materialStockId } },
+          qty: updateVerify[i].qty,
+        },
+      });
+      result = [...result, upsertDetailMr];
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        result: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
 };
 
 const deleteMr = async (request: Request, response: Response) => {
   try {
+    const id: string = request.params.id;
+    const deleteMr = await prisma.mr.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (deleteMr) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Delete Data",
+        results: deleteMr,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Delete Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const deleteMrDetail = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const deleteMrdetail = await prisma.detailMr.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (deleteMrdetail) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Delete Data",
+        results: deleteMrdetail,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Delete Data",
+      });
+    }
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
@@ -149,5 +274,7 @@ export default {
   getMr,
   createMr,
   updateMr,
+  upsertMr,
   deleteMr,
+  deleteMrDetail,
 };

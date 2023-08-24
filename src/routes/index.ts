@@ -869,6 +869,26 @@ router.post(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   MR.createMr
 );
+router.put(
+  "/MR",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  MR.upsertMr
+);
+router.put(
+  "/MR/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  MR.updateMr
+);
+router.delete(
+  "/MR/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  MR.deleteMr
+);
+router.delete(
+  "/MRdetail/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  MR.deleteMrDetail
+);
 
 /***************************Material Request********************************* */
 
