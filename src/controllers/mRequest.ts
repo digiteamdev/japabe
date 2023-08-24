@@ -29,6 +29,11 @@ const getMr = async (request: Request, response: Response) => {
         include: {
           detailMr: {
             include: {
+              bom_detail: {
+                include: {
+                  bom: true,
+                },
+              },
               Material_Stock: {
                 include: {
                   Material_master: {
@@ -215,7 +220,7 @@ const upsertMr = async (request: Request, response: Response) => {
     }
   } catch (error) {
     console.log(error);
-    
+
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
 };

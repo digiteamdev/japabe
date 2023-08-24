@@ -34,6 +34,12 @@ const getDispatch = async (request: Request, response: Response) => {
                   },
                 },
               },
+              approve: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                },
+              },
               Employee: {
                 select: {
                   id: true,
@@ -99,6 +105,12 @@ const getDispatch = async (request: Request, response: Response) => {
                       name: true,
                     },
                   },
+                },
+              },
+              approve: {
+                select: {
+                  id: true,
+                  employee_name: true,
                 },
               },
               Employee: {
