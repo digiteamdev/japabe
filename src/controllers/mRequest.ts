@@ -31,7 +31,20 @@ const getMr = async (request: Request, response: Response) => {
             include: {
               bom_detail: {
                 include: {
-                  bom: true,
+                  bom: {
+                    include: {
+                      srimg: {
+                        include: {
+                          srimgdetail: true,
+                          timeschedule: {
+                            include: {
+                              wor: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
                 },
               },
               Material_Stock: {
