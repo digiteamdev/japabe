@@ -413,6 +413,12 @@ const getBomMr = async (request: Request, response: Response) => {
       include: {
         bom_detail: {
           include: {
+            detailMr: {
+              select: {
+                id: true,
+                mr: true,
+              },
+            },
             Material_master: {
               include: {
                 Material_Stock: true,

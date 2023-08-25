@@ -785,8 +785,8 @@ model bom {
 
 model bom_detail {
   id              String          @id @default(cuid())
-  bom             bom?            @relation(fields: [bomId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  bomId           String?
+  bom             bom             @relation(fields: [bomId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  bomId           String
   srimgdetail     srimgdetail     @relation(fields: [partId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   partId          String
   Material_master Material_master @relation(fields: [materialId], references: [id], onUpdate: Cascade, onDelete: Cascade)
@@ -804,8 +804,8 @@ model Mr {
   id             String     @id @default(cuid())
   no_mr          String?    @db.VarChar(50)
   date_mr        DateTime
-  user           User?      @relation(fields: [userId], references: [id])
-  userId         String?
+  user           User       @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  userId         String
   status_spv     String?    @db.VarChar(20)
   status_manager String?    @db.VarChar(20)
   createdAt      DateTime   @default(now())
@@ -818,10 +818,10 @@ model Mr {
 
 model detailMr {
   id              String          @id @default(cuid())
-  mr              Mr?             @relation(fields: [mrId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  mrId            String?
-  bom_detail      bom_detail?     @relation(fields: [bomId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  bomId           String?
+  mr              Mr              @relation(fields: [mrId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  mrId            String
+  bom_detail      bom_detail      @relation(fields: [bomId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  bomId           String
   spesifikasi     String?
   Material_Stock  Material_Stock? @relation(fields: [materialStockId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   materialStockId String?
