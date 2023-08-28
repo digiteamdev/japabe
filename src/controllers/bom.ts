@@ -408,13 +408,7 @@ const getBomMr = async (request: Request, response: Response) => {
   try {
     const result = await prisma.bom.findMany({
       where: {
-        OR: [
-          {
-            Mr: {
-              deleted: null,
-            },
-          },
-        ],
+        Mr: null,
         NOT: {
           Mr: {
             deleted: null,
@@ -425,6 +419,7 @@ const getBomMr = async (request: Request, response: Response) => {
         createdAt: "desc",
       },
       include: {
+        Mr: true,
         bom_detail: {
           include: {
             detailMr: {
