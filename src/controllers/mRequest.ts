@@ -123,6 +123,7 @@ const createMr = async (request: Request, response: Response) => {
       data: {
         no_mr: genarate,
         user: { connect: { id: request.body.userId } },
+        bom: { connect: { id: request.body.bomIdU } },
         date_mr: new Date(request.body.date_mr),
         detailMr: {
           create: request.body.detailMr,
@@ -180,7 +181,7 @@ const upsertMr = async (request: Request, response: Response) => {
     const updateVerify = request.body.map(
       (updateByveri: {
         mrId: any;
-        bomId: any;
+        bomIdD: any;
         spesifikasi: any;
         materialStockId: any;
         qty: any;
@@ -188,7 +189,7 @@ const upsertMr = async (request: Request, response: Response) => {
       }) => {
         return {
           mrId: updateByveri.mrId,
-          bomId: updateByveri.bomId,
+          bomIdD: updateByveri.bomIdD,
           spesifikasi: updateByveri.spesifikasi,
           materialStockId: updateByveri.materialStockId,
           qty: updateByveri.qty,
@@ -204,14 +205,14 @@ const upsertMr = async (request: Request, response: Response) => {
         },
         create: {
           mr: { connect: { id: updateVerify[i].mrId } },
-          bom_detail: { connect: { id: updateVerify[i].bomId } },
+          bom_detail: { connect: { id: updateVerify[i].bomIdD } },
           spesifikasi: updateVerify[i].spesifikasi,
           Material_Stock: { connect: { id: updateVerify[i].materialStockId } },
           qty: updateVerify[i].qty,
         },
         update: {
           mr: { connect: { id: updateVerify[i].mrId } },
-          bom_detail: { connect: { id: updateVerify[i].bomId } },
+          bom_detail: { connect: { id: updateVerify[i].bomIdD } },
           spesifikasi: updateVerify[i].spesifikasi,
           Material_Stock: { connect: { id: updateVerify[i].materialStockId } },
           qty: updateVerify[i].qty,

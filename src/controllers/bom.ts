@@ -407,6 +407,20 @@ const getSumaryBom = async (request: Request, response: Response) => {
 const getBomMr = async (request: Request, response: Response) => {
   try {
     const result = await prisma.bom.findMany({
+      where: {
+        OR: [
+          {
+            Mr: {
+              deleted: null,
+            },
+          },
+        ],
+        NOT: {
+          Mr: {
+            deleted: null,
+          },
+        },
+      },
       orderBy: {
         createdAt: "desc",
       },

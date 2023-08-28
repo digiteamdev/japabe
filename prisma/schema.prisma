@@ -779,6 +779,7 @@ model bom {
   updatedAt      DateTime     @updatedAt
   deleted        DateTime?
   bom_detail     bom_detail[]
+  Mr             Mr?
 
   @@index([id, srId])
 }
@@ -803,6 +804,8 @@ model bom_detail {
 model Mr {
   id             String     @id @default(cuid())
   no_mr          String?    @db.VarChar(50)
+  bom            bom?       @relation(fields: [bomIdU], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  bomIdU         String?    @unique
   date_mr        DateTime
   user           User       @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   userId         String
@@ -820,8 +823,8 @@ model detailMr {
   id              String          @id @default(cuid())
   mr              Mr              @relation(fields: [mrId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   mrId            String
-  bom_detail      bom_detail      @relation(fields: [bomId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  bomId           String
+  bom_detail      bom_detail      @relation(fields: [bomIdD], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  bomIdD          String
   spesifikasi     String?
   Material_Stock  Material_Stock? @relation(fields: [materialStockId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   materialStockId String?
@@ -830,7 +833,7 @@ model detailMr {
   updatedAt       DateTime        @updatedAt
   deleted         DateTime?
 
-  @@index([id, mrId, bomId, spesifikasi])
+  @@index([id, mrId, bomIdD, spesifikasi])
 }
 
 model Sr {
