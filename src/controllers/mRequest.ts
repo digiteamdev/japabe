@@ -27,6 +27,21 @@ const getMr = async (request: Request, response: Response) => {
           },
         },
         include: {
+          bom: {
+            include: {
+              bom_detail: true,
+              srimg: {
+                include: {
+                  srimgdetail: true,
+                  timeschedule: {
+                    include: {
+                      wor: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
           detailMr: {
             include: {
               bom_detail: {
