@@ -431,6 +431,7 @@ const getBomMr = async (request: Request, response: Response) => {
             Material_master: {
               include: {
                 Material_Stock: true,
+                grup_material: true,
               },
             },
           },
