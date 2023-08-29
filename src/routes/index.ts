@@ -494,7 +494,7 @@ router.get(
 );
 router.post(
   "/stockMaterial",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR" }), 
   typeMr.createMasterSpesifikasi
 );
 router.post(

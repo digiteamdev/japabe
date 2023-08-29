@@ -34,6 +34,7 @@ const getMr = async (request: Request, response: Response) => {
                   Material_master: {
                     include: {
                       Material_Stock: true,
+                      grup_material: true,
                     },
                   },
                 },
@@ -155,6 +156,21 @@ const createMr = async (request: Request, response: Response) => {
       include: {
         detailMr: true,
       },
+    });
+    request.body.detailMr.map(async (e: any) => {
+      const getStock: any = await prisma.material_Stock.findFirst({
+        where: {
+          id: e.materialStockId,
+        },
+      });
+      await prisma.material_Stock.update({
+        where: {
+          id: e.materialStockId,
+        },
+        data: {
+          jumlah_Stock: getStock.jumlah_Stock - e.qty,
+        },
+      });
     });
     if (results) {
       response.status(201).json({
