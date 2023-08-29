@@ -316,6 +316,28 @@ const createMasterSpesifikasi = async (
   }
 };
 
+const createMasterOne = async (request: Request, response: Response) => {
+  try {
+    const results = await prisma.material_Stock.create({
+      data: request.body,
+    });
+    if (results) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Add Data",
+        results: results,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Add Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const updateMaterial = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
@@ -482,4 +504,5 @@ export default {
   deleteMaterial,
   deleteMaterialSpek,
   deleteStokMaterial,
+  createMasterOne,
 };

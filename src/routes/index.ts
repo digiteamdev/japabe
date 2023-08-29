@@ -498,6 +498,11 @@ router.post(
   typeMr.createMasterSpesifikasi
 );
 router.post(
+  "/stock",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }), 
+  typeMr.createMasterOne
+);
+router.post(
   "/groupMaterial",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   typeMr.createTypeMr
