@@ -298,7 +298,7 @@ model eqandpart {
   id_equipment String
   eq_part      eq_part    @relation(fields: [id_part], references: [id])
   id_part      String
-  quotations   Quotations @relation(fields: [id_quotation], references: [id])
+  quotations   Quotations @relation(fields: [id_quotation], references: [id], onUpdate: Cascade, onDelete: Cascade)
   id_quotation String
   qty          Int        @default(0)
   keterangan   String     @db.Text
