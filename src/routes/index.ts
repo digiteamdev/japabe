@@ -26,6 +26,7 @@ import holidayTms from "../controllers/masterHoliday";
 import drawing from "../controllers/drawing";
 import bom from "../controllers/bom";
 import MR from "../controllers/mRequest";
+import SR from "../controllers/Sr";
 
 /***************************AUTH********************************* */
 
@@ -906,5 +907,26 @@ router.delete(
 );
 
 /***************************Material Request********************************* */
+
+/***************************Service Request********************************* */
+
+router.get("/SR", jwt.authToken({ administrator: "ADMINISTRATOR" }), SR.getSr);
+router.post(
+  "/SR",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  SR.createSr
+);
+router.put(
+  "/SR/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  SR.updateSr
+);
+router.delete(
+  "/SR/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  SR.deleteSr
+);
+
+/***************************Service Request********************************* */
 
 export default router;
