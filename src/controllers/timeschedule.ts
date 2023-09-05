@@ -281,6 +281,98 @@ const updateTimeAktivity = async (request: any, response: Response) => {
   }
 };
 
+const updateTimeSchStatus = async (request: Request, response: Response) => {
+  try {
+    const id = request.params.id;
+    const statusPenc = await prisma.timeschedule.findFirst({
+      where: {
+        id: id,
+      },
+    });
+
+    let result;
+    if (
+      statusPenc?.status_spv === null ||
+      statusPenc?.status_spv === "unvalid"
+    ) {
+      const id = request.params.id;
+      result = await prisma.timeschedule.update({
+        where: { id: id },
+        data: {
+          status_spv: "valid",
+        },
+      });
+    } else {
+      result = await prisma.timeschedule.update({
+        where: { id: id },
+        data: {
+          status_spv: "unvalid",
+        },
+      });
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updateTimeSchStatusM = async (request: Request, response: Response) => {
+  try {
+    const id = request.params.id;
+    const statusPenc = await prisma.timeschedule.findFirst({
+      where: {
+        id: id,
+      },
+    });
+
+    let result;
+    if (
+      statusPenc?.status_manager === null ||
+      statusPenc?.status_manager === "unvalid"
+    ) {
+      const id = request.params.id;
+      result = await prisma.timeschedule.update({
+        where: { id: id },
+        data: {
+          status_manager: "valid",
+        },
+      });
+    } else {
+      result = await prisma.timeschedule.update({
+        where: { id: id },
+        data: {
+          status_manager: "unvalid",
+        },
+      });
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const deleteTimeschedule = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
@@ -336,6 +428,8 @@ export default {
   createTimeschedule,
   updateTimeschedule,
   updateTimeAktivity,
+  updateTimeSchStatus,
+  updateTimeSchStatusM,
   deleteTimeschedule,
   deleTimeAktivty,
 };

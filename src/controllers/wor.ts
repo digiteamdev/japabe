@@ -227,6 +227,7 @@ const createWor = async (request: any, response: Response) => {
         file_list: !request.file ? "" : request.file.path,
         noted: request.body.noted,
         status: request.body.status,
+        job_operational: request.body.job_operational
       },
     });
     if (results) {

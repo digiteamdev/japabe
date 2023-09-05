@@ -494,12 +494,12 @@ router.get(
 );
 router.post(
   "/stockMaterial",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }), 
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
   typeMr.createMasterSpesifikasi
 );
 router.post(
   "/stock",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }), 
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
   typeMr.createMasterOne
 );
 router.post(
@@ -725,6 +725,16 @@ router.put(
   "/timeschedule/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   timeschedule.updateTimeschedule
+);
+router.put(
+  "/timescheduleSpv/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  timeschedule.updateTimeSchStatus
+);
+router.put(
+  "/timescheduleMgr/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  timeschedule.updateTimeSchStatusM
 );
 router.put(
   "/timeschedule",

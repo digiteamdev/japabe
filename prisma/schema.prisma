@@ -540,6 +540,7 @@ model wor {
   date_of_order     DateTime?
   delivery_date     DateTime?
   shipping_address  String?          @db.Text
+  job_operational   Boolean?         @default(false)
   estimated_man_our Int              @default(0)
   eq_model          String?          @db.VarChar(100)
   eq_mfg            String?          @db.VarChar(100)
@@ -710,6 +711,7 @@ model dispacth {
   updatedAt      DateTime         @updatedAt
   deleted        DateTime?
   dispatchDetail dispatchDetail[]
+  Sr             Sr?
 
   @@index([id, id_dispatch, srId])
 }
@@ -737,6 +739,7 @@ model dispatchDetail {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   deleted     DateTime?
+  SrDetail    SrDetail[]
 
   @@index([id, part, dispacthID, aktivitasID, workId])
 }
@@ -825,7 +828,7 @@ model detailMr {
   mrId            String
   bom_detail      bom_detail      @relation(fields: [bomIdD], references: [id], onUpdate: Cascade, onDelete: Cascade)
   bomIdD          String
-  spesifikasi     String?
+  spesifikasi     String?         @db.Text
   Material_Stock  Material_Stock? @relation(fields: [materialStockId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   materialStockId String?
   qty             Int             @default(0)
@@ -837,8 +840,32 @@ model detailMr {
 }
 
 model Sr {
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deleted   DateTime?
+  id             String     @id @default(cuid())
+  no_sr          String?    @db.VarChar(50)
+  date_sr        DateTime
+  dispacth       dispacth?  @relation(fields: [dispacthIDS], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  dispacthIDS    String?    @unique
+  status_spv     String?    @db.VarChar(20)
+  status_manager String?    @db.VarChar(20)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  deleted        DateTime?
+  SrDetail       SrDetail[]
+
+  @@index([id, no_sr, dispacthIDS])
+}
+
+model SrDetail {
+  id               String         @id @default(cuid())
+  sr               Sr             @relation(fields: [srId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  srId             String
+  dispatchDetail   dispatchDetail @relation(fields: [dispacthdetailId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  dispacthdetailId String
+  description      String?        @db.Text
+  note             String?        @db.Text
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  deleted          DateTime?
+
+  @@index([id, srId, dispacthdetailId])
 }

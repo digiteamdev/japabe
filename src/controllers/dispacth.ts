@@ -19,7 +19,30 @@ const getDispatch = async (request: Request, response: Response) => {
     let results;
     if (request.query.page === undefined) {
       results = await prisma.dispacth.findMany({
+        where: {
+          OR: [
+            {
+              deleted: null,
+            },
+            {
+              Sr: {
+                deleted: null,
+              },
+            },
+            {
+              Sr: null,
+            },
+          ],
+          NOT: [
+            {
+              Sr: {
+                deleted: null,
+              },
+            },
+          ],
+        },
         include: {
+          Sr: true,
           dispatchDetail: {
             include: {
               aktivitas: {
@@ -440,6 +463,7 @@ const updateStart = async (request: Request, response: Response) => {
       },
       data: {
         actual: new Date(request.body.actual),
+        so: request.body.so,
       },
     });
     if (updateStart) {
