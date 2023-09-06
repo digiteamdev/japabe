@@ -78,6 +78,7 @@ model User {
   employeeId      String?
   userRole        userRole[]
   Mr              Mr[]
+  Sr              Sr[]
 
   @@index([id])
   @@map("user")
@@ -577,6 +578,7 @@ model workCenter {
   updatedAt      DateTime         @updatedAt
   deleted        DateTime?
   dispatchDetail dispatchDetail[]
+  SrDetail       SrDetail[]
 
   @@index([id, name])
 }
@@ -841,6 +843,8 @@ model detailMr {
 
 model Sr {
   id             String     @id @default(cuid())
+  user           User       @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  userId         String
   no_sr          String?    @db.VarChar(50)
   date_sr        DateTime
   dispacth       dispacth?  @relation(fields: [dispacthIDS], references: [id], onUpdate: Cascade, onDelete: Cascade)
@@ -856,15 +860,18 @@ model Sr {
 }
 
 model SrDetail {
-  id               String         @id @default(cuid())
-  sr               Sr             @relation(fields: [srId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  id               String          @id @default(cuid())
+  sr               Sr              @relation(fields: [srId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   srId             String
-  dispatchDetail   dispatchDetail @relation(fields: [dispacthdetailId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  dispacthdetailId String
-  description      String?        @db.Text
-  note             String?        @db.Text
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
+  dispatchDetail   dispatchDetail? @relation(fields: [dispacthdetailId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  dispacthdetailId String?
+  qty              Int             @default(0)
+  unit             String?          @db.VarChar(20)
+  workCenter       workCenter?     @relation(fields: [description], references: [id])
+  description      String?
+  note             String?         @db.Text
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
   deleted          DateTime?
 
   @@index([id, srId, dispacthdetailId])

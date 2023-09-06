@@ -33,6 +33,12 @@ const getSr = async (request: Request, response: Response) => {
           },
         },
         include: {
+          user: {
+            select: {
+              id: true,
+              username: true,
+            }
+          },
           dispacth: {
             include: {
               dispatchDetail: {
@@ -141,6 +147,7 @@ const createSr = async (request: Request, response: Response) => {
     const results = await prisma.sr.create({
       data: {
         no_sr: genarate,
+        user: { connect: { id: request.body.userId } },
         date_sr: new Date(request.body.date_sr),
         dispacth: { connect: { id: request.body.dispacthIDS } },
         SrDetail: {
