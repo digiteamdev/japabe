@@ -33,47 +33,10 @@ const getSr = async (request: Request, response: Response) => {
           },
         },
         include: {
-          SrDetail: {
+          dispacth: {
             include: {
               dispatchDetail: {
                 include: {
-                  dispacth: {
-                    include: {
-                      srimg: {
-                        include: {
-                          srimgdetail: true,
-                          timeschedule: {
-                            include: {
-                              aktivitas: {
-                                include: {
-                                  masterAktivitas: true,
-                                },
-                              },
-                              wor: {
-                                include: {
-                                  customerPo: {
-                                    include: {
-                                      quotations: {
-                                        include: {
-                                          Customer: true,
-                                          eqandpart: {
-                                            include: {
-                                              equipment: true,
-                                              eq_part: true,
-                                            },
-                                          },
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
                   aktivitas: {
                     select: {
                       id: true,
@@ -102,8 +65,42 @@ const getSr = async (request: Request, response: Response) => {
                   workCenter: true,
                 },
               },
+              srimg: {
+                include: {
+                  srimgdetail: true,
+                  timeschedule: {
+                    include: {
+                      aktivitas: {
+                        include: {
+                          masterAktivitas: true,
+                        },
+                      },
+                      wor: {
+                        include: {
+                          customerPo: {
+                            include: {
+                              quotations: {
+                                include: {
+                                  Customer: true,
+                                  eqandpart: {
+                                    include: {
+                                      equipment: true,
+                                      eq_part: true,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
+          SrDetail: true,
         },
         orderBy: {
           createdAt: "desc",
