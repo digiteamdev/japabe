@@ -32,6 +32,79 @@ const getSr = async (request: Request, response: Response) => {
             contains: pencarian,
           },
         },
+        include: {
+          SrDetail: {
+            include: {
+              dispatchDetail: {
+                include: {
+                  dispacth: {
+                    include: {
+                      srimg: {
+                        include: {
+                          srimgdetail: true,
+                          timeschedule: {
+                            include: {
+                              aktivitas: {
+                                include: {
+                                  masterAktivitas: true,
+                                },
+                              },
+                              wor: {
+                                include: {
+                                  customerPo: {
+                                    include: {
+                                      quotations: {
+                                        include: {
+                                          Customer: true,
+                                          eqandpart: {
+                                            include: {
+                                              equipment: true,
+                                              eq_part: true,
+                                            },
+                                          },
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                  aktivitas: {
+                    select: {
+                      id: true,
+                      aktivitasId: true,
+                      masterAktivitas: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
+                      },
+                    },
+                  },
+                  approve: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                    },
+                  },
+                  Employee: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                    },
+                  },
+                  sub_depart: true,
+                  workCenter: true,
+                },
+              },
+            },
+          },
+        },
         orderBy: {
           createdAt: "desc",
         },
