@@ -865,8 +865,9 @@ model SrDetail {
   srId             String
   dispatchDetail   dispatchDetail? @relation(fields: [dispacthdetailId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   dispacthdetailId String?
+  part             String?         @db.VarChar(200)
   qty              Int             @default(0)
-  unit             String?          @db.VarChar(20)
+  unit             String?         @db.VarChar(20)
   workCenter       workCenter?     @relation(fields: [description], references: [id])
   description      String?
   note             String?         @db.Text
