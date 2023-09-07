@@ -108,7 +108,6 @@ const getDispatch = async (request: Request, response: Response) => {
           },
         },
       });
-    } else if (request.query.page === undefined) {
       results = await prisma.wor.findMany({
         where: {
           job_operational: true,
