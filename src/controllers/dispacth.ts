@@ -108,6 +108,37 @@ const getDispatch = async (request: Request, response: Response) => {
           },
         },
       });
+    } else if (request.query.page === undefined) {
+      results = await prisma.wor.findMany({
+        where: {
+          job_operational: true,
+        },
+        include: {
+          customerPo: {
+            include: {
+              quotations: {
+                include: {
+                  Quotations_Detail: true,
+                  CustomerContact: true,
+                  Customer: {
+                    include: {
+                      address: true,
+                    },
+                  },
+                  eqandpart: {
+                    include: {
+                      equipment: true,
+                      eq_part: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          timeschedule: true,
+          employee: true,
+        },
+      });
     } else {
       results = await prisma.dispacth.findMany({
         where: {
