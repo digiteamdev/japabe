@@ -106,7 +106,11 @@ const getSr = async (request: Request, response: Response) => {
               },
             },
           },
-          SrDetail: true,
+          SrDetail: {
+            include: {
+              workCenter: true,
+            }
+          }
         },
         orderBy: {
           createdAt: "desc",
