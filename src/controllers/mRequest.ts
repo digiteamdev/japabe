@@ -143,19 +143,37 @@ const createMr = async (request: Request, response: Response) => {
   try {
     const r = Math.floor(Math.random() * 1000) + 1;
     const genarate = "MR" + r;
-    const results = await prisma.mr.create({
-      data: {
-        no_mr: genarate,
-        user: { connect: { id: request.body.userId } },
-        date_mr: new Date(request.body.date_mr),
-        detailMr: {
-          create: request.body.detailMr,
+    const bomNull = request.body.bomIdU;
+    let results;
+    if (bomNull === null)
+      results = await prisma.mr.create({
+        data: {
+          no_mr: genarate,
+          user: { connect: { id: request.body.userId } },
+          date_mr: new Date(request.body.date_mr),
+          detailMr: {
+            create: request.body.detailMr,
+          },
         },
-      },
-      include: {
-        detailMr: true,
-      },
-    });
+        include: {
+          detailMr: true,
+        },
+      });
+    if (bomNull !== null)
+      results = await prisma.mr.create({
+        data: {
+          no_mr: genarate,
+          user: { connect: { id: request.body.userId } },
+          bom: { connect: { id: request.body.bomIdU } },
+          date_mr: new Date(request.body.date_mr),
+          detailMr: {
+            create: request.body.detailMr,
+          },
+        },
+        include: {
+          detailMr: true,
+        },
+      });
     let obj: any = {};
     let stok = request.body.detailMr;
     stok.map((e: any) => {
