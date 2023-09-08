@@ -281,7 +281,7 @@ const upsertMr = async (request: Request, response: Response) => {
     let result: any = [];
     for (let i = 0; i < updateVerify.length; i++) {
       let upsertDetailMr;
-      if (request.body.bomIdD === null)
+      if (updateVerify[i].bomIdD === null)
         upsertDetailMr = await prisma.detailMr.upsert({
           where: {
             id: updateVerify[i].id,
@@ -303,7 +303,7 @@ const upsertMr = async (request: Request, response: Response) => {
             qty: updateVerify[i].qty,
           },
         });
-      if (request.body.bomIdD !== null)
+      if (updateVerify[i].bomIdD !== null)
         upsertDetailMr = await prisma.detailMr.upsert({
           where: {
             id: updateVerify[i].id,
