@@ -37,7 +37,7 @@ const getSr = async (request: Request, response: Response) => {
             select: {
               id: true,
               username: true,
-            }
+            },
           },
           dispacth: {
             include: {
@@ -109,8 +109,8 @@ const getSr = async (request: Request, response: Response) => {
           SrDetail: {
             include: {
               workCenter: true,
-            }
-          }
+            },
+          },
         },
         orderBy: {
           createdAt: "desc",
@@ -148,20 +148,37 @@ const createSr = async (request: Request, response: Response) => {
   try {
     const r = Math.floor(Math.random() * 1000) + 1;
     const genarate = "SR" + r;
-    const results = await prisma.sr.create({
-      data: {
-        no_sr: genarate,
-        user: { connect: { id: request.body.userId } },
-        date_sr: new Date(request.body.date_sr),
-        dispacth: { connect: { id: request.body.dispacthIDS } },
-        SrDetail: {
-          create: request.body.SrDetail,
+    const dispatchNull = request.body.dispacthIDS;
+    let results;
+    if (dispatchNull === null)
+      results = await prisma.sr.create({
+        data: {
+          no_sr: genarate,
+          user: { connect: { id: request.body.userId } },
+          date_sr: new Date(request.body.date_sr),
+          dispacth: { connect: { id: request.body.dispacthIDS } },
+          SrDetail: {
+            create: request.body.SrDetail,
+          },
         },
-      },
-      include: {
-        SrDetail: true,
-      },
-    });
+        include: {
+          SrDetail: true,
+        },
+      });
+    if (dispatchNull !== null)
+      results = await prisma.sr.create({
+        data: {
+          no_sr: genarate,
+          user: { connect: { id: request.body.userId } },
+          date_sr: new Date(request.body.date_sr),
+          SrDetail: {
+            create: request.body.SrDetail,
+          },
+        },
+        include: {
+          SrDetail: true,
+        },
+      });
     if (results) {
       response.status(201).json({
         success: true,
