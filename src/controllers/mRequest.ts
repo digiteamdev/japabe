@@ -27,6 +27,7 @@ const getMr = async (request: Request, response: Response) => {
           },
         },
         include: {
+          wor: true,
           bom: {
             include: {
               bom_detail: {

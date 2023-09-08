@@ -33,6 +33,7 @@ const getSr = async (request: Request, response: Response) => {
           },
         },
         include: {
+          wor: true,
           user: {
             select: {
               id: true,
