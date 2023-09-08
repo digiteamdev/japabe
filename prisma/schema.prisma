@@ -828,8 +828,8 @@ model detailMr {
   id              String          @id @default(cuid())
   mr              Mr              @relation(fields: [mrId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   mrId            String
-  bom_detail      bom_detail      @relation(fields: [bomIdD], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  bomIdD          String
+  bom_detail      bom_detail?      @relation(fields: [bomIdD], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  bomIdD          String?
   spesifikasi     String?         @db.Text
   Material_Stock  Material_Stock? @relation(fields: [materialStockId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   materialStockId String?
