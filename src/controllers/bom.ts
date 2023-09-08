@@ -407,86 +407,86 @@ const getSumaryBom = async (request: Request, response: Response) => {
 const getBomMr = async (request: Request, response: Response) => {
   try {
     let result;
-    if (result) {
-      result = await prisma.bom.findMany({
-        where: {
-          Mr: null,
-          NOT: {
-            Mr: {
-              deleted: null,
-            },
+    result = await prisma.bom.findMany({
+      where: {
+        Mr: null,
+        NOT: {
+          Mr: {
+            deleted: null,
           },
         },
-        orderBy: {
-          createdAt: "desc",
-        },
-        include: {
-          Mr: true,
-          bom_detail: {
-            include: {
-              detailMr: {
-                select: {
-                  id: true,
-                  mr: true,
-                },
-              },
-              Material_master: {
-                include: {
-                  Material_Stock: true,
-                  grup_material: true,
-                },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        Mr: true,
+        bom_detail: {
+          include: {
+            detailMr: {
+              select: {
+                id: true,
+                mr: true,
               },
             },
-          },
-          srimg: {
-            include: {
-              srimgdetail: true,
-              timeschedule: {
-                include: {
-                  wor: true,
-                },
+            Material_master: {
+              include: {
+                Material_Stock: true,
+                grup_material: true,
               },
             },
           },
         },
-      });
-    } else {
-      result = await prisma.wor.findMany({
-        where: {
-          job_operational: true,
+        srimg: {
+          include: {
+            srimgdetail: true,
+            timeschedule: {
+              include: {
+                wor: true,
+              },
+            },
+          },
         },
-        include: {
-          customerPo: {
-            include: {
-              quotations: {
-                include: {
-                  Quotations_Detail: true,
-                  CustomerContact: true,
-                  Customer: {
-                    include: {
-                      address: true,
-                    },
+      },
+    });
+    let worData;
+    worData = await prisma.wor.findMany({
+      where: {
+        job_operational: true,
+      },
+      include: {
+        customerPo: {
+          include: {
+            quotations: {
+              include: {
+                Quotations_Detail: true,
+                CustomerContact: true,
+                Customer: {
+                  include: {
+                    address: true,
                   },
-                  eqandpart: {
-                    include: {
-                      equipment: true,
-                      eq_part: true,
-                    },
+                },
+                eqandpart: {
+                  include: {
+                    equipment: true,
+                    eq_part: true,
                   },
                 },
               },
             },
           },
-          timeschedule: true,
-          employee: true,
         },
-      });
-    }
-    if (result.length > 0) {
+        timeschedule: true,
+        employee: true,
+      },
+    });
+    const results = [...result, ...worData];
+
+    if (results.length > 0) {
       return response.status(200).json({
         success: true,
         massage: "Get All Material Request Bom",
-        result: result,
+        result: results,
       });
     } else {
       return response.status(200).json({
