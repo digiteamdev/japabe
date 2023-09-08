@@ -150,6 +150,7 @@ const createMr = async (request: Request, response: Response) => {
         data: {
           no_mr: genarate,
           user: { connect: { id: request.body.userId } },
+          wor: { connect: { id: request.body.worId } },
           date_mr: new Date(request.body.date_mr),
           detailMr: {
             create: request.body.detailMr,
@@ -164,6 +165,7 @@ const createMr = async (request: Request, response: Response) => {
         data: {
           no_mr: genarate,
           user: { connect: { id: request.body.userId } },
+          wor: { connect: { id: request.body.worId } },
           bom: { connect: { id: request.body.bomIdU } },
           date_mr: new Date(request.body.date_mr),
           detailMr: {
@@ -225,8 +227,6 @@ const createMr = async (request: Request, response: Response) => {
       }
     }
   } catch (error) {
-    console.log(error);
-
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
 };
@@ -280,25 +280,53 @@ const upsertMr = async (request: Request, response: Response) => {
     );
     let result: any = [];
     for (let i = 0; i < updateVerify.length; i++) {
-      const upsertDetailMr = await prisma.detailMr.upsert({
-        where: {
-          id: updateVerify[i].id,
-        },
-        create: {
-          mr: { connect: { id: updateVerify[i].mrId } },
-          bom_detail: { connect: { id: updateVerify[i].bomIdD } },
-          spesifikasi: updateVerify[i].spesifikasi,
-          Material_Stock: { connect: { id: updateVerify[i].materialStockId } },
-          qty: updateVerify[i].qty,
-        },
-        update: {
-          mr: { connect: { id: updateVerify[i].mrId } },
-          bom_detail: { connect: { id: updateVerify[i].bomIdD } },
-          spesifikasi: updateVerify[i].spesifikasi,
-          Material_Stock: { connect: { id: updateVerify[i].materialStockId } },
-          qty: updateVerify[i].qty,
-        },
-      });
+      let upsertDetailMr;
+      if (request.body.bomIdD === null)
+        upsertDetailMr = await prisma.detailMr.upsert({
+          where: {
+            id: updateVerify[i].id,
+          },
+          create: {
+            mr: { connect: { id: updateVerify[i].mrId } },
+            spesifikasi: updateVerify[i].spesifikasi,
+            Material_Stock: {
+              connect: { id: updateVerify[i].materialStockId },
+            },
+            qty: updateVerify[i].qty,
+          },
+          update: {
+            mr: { connect: { id: updateVerify[i].mrId } },
+            spesifikasi: updateVerify[i].spesifikasi,
+            Material_Stock: {
+              connect: { id: updateVerify[i].materialStockId },
+            },
+            qty: updateVerify[i].qty,
+          },
+        });
+      if (request.body.bomIdD !== null)
+        upsertDetailMr = await prisma.detailMr.upsert({
+          where: {
+            id: updateVerify[i].id,
+          },
+          create: {
+            mr: { connect: { id: updateVerify[i].mrId } },
+            bom_detail: { connect: { id: updateVerify[i].bomIdD } },
+            spesifikasi: updateVerify[i].spesifikasi,
+            Material_Stock: {
+              connect: { id: updateVerify[i].materialStockId },
+            },
+            qty: updateVerify[i].qty,
+          },
+          update: {
+            mr: { connect: { id: updateVerify[i].mrId } },
+            bom_detail: { connect: { id: updateVerify[i].bomIdD } },
+            spesifikasi: updateVerify[i].spesifikasi,
+            Material_Stock: {
+              connect: { id: updateVerify[i].materialStockId },
+            },
+            qty: updateVerify[i].qty,
+          },
+        });
       result = [...result, upsertDetailMr];
     }
     if (result) {

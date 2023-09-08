@@ -157,6 +157,7 @@ const createSr = async (request: Request, response: Response) => {
           user: { connect: { id: request.body.userId } },
           date_sr: new Date(request.body.date_sr),
           dispacth: { connect: { id: request.body.dispacthIDS } },
+          wor: { connect: { id: request.body.worId } },
           SrDetail: {
             create: request.body.SrDetail,
           },
@@ -170,6 +171,7 @@ const createSr = async (request: Request, response: Response) => {
         data: {
           no_sr: genarate,
           user: { connect: { id: request.body.userId } },
+          wor: { connect: { id: request.body.worId } },
           date_sr: new Date(request.body.date_sr),
           SrDetail: {
             create: request.body.SrDetail,

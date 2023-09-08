@@ -559,6 +559,8 @@ model wor {
   Quotations        Quotations?      @relation(fields: [quotationsId], references: [id])
   quotationsId      String?
   timeschedule      timeschedule?
+  Mr                Mr?
+  Sr                Sr?
 
   @@index([id, job_no])
 }
@@ -808,6 +810,8 @@ model bom_detail {
 
 model Mr {
   id             String     @id @default(cuid())
+  wor            wor?       @relation(fields: [worId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  worId          String?    @unique
   no_mr          String?    @db.VarChar(50)
   bom            bom?       @relation(fields: [bomIdU], references: [id], onUpdate: Cascade, onDelete: Cascade)
   bomIdU         String?    @unique
@@ -828,7 +832,7 @@ model detailMr {
   id              String          @id @default(cuid())
   mr              Mr              @relation(fields: [mrId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   mrId            String
-  bom_detail      bom_detail?      @relation(fields: [bomIdD], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  bom_detail      bom_detail?     @relation(fields: [bomIdD], references: [id], onUpdate: Cascade, onDelete: Cascade)
   bomIdD          String?
   spesifikasi     String?         @db.Text
   Material_Stock  Material_Stock? @relation(fields: [materialStockId], references: [id], onUpdate: Cascade, onDelete: Cascade)
@@ -845,6 +849,8 @@ model Sr {
   id             String     @id @default(cuid())
   user           User       @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   userId         String
+  wor            wor?       @relation(fields: [worId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  worId          String?    @unique
   no_sr          String?    @db.VarChar(50)
   date_sr        DateTime
   dispacth       dispacth?  @relation(fields: [dispacthIDS], references: [id], onUpdate: Cascade, onDelete: Cascade)
