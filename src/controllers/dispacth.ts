@@ -112,11 +112,7 @@ const getDispatch = async (request: Request, response: Response) => {
       worData = await prisma.wor.findMany({
         where: {
           job_operational: true,
-          timeschedule: {
-            srimg: {
-              dispacth: null,
-            },
-          },
+          timeschedule: null,
         },
         include: {
           customerPo: {

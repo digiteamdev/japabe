@@ -810,7 +810,7 @@ model bom_detail {
 
 model Mr {
   id             String     @id @default(cuid())
-  wor            wor?       @relation(fields: [worId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  wor            wor?       @relation(fields: [worId], references: [id])
   worId          String?    @unique
   no_mr          String?    @db.VarChar(50)
   bom            bom?       @relation(fields: [bomIdU], references: [id], onUpdate: Cascade, onDelete: Cascade)
@@ -849,7 +849,7 @@ model Sr {
   id             String     @id @default(cuid())
   user           User       @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   userId         String
-  wor            wor?       @relation(fields: [worId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  wor            wor?       @relation(fields: [worId], references: [id])
   worId          String?    @unique
   no_sr          String?    @db.VarChar(50)
   date_sr        DateTime
