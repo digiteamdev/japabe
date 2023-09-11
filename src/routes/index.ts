@@ -921,10 +921,20 @@ router.put(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   SR.updateSr
 );
+router.put(
+  "/SR",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  SR.upsertSr
+);
 router.delete(
   "/SR/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   SR.deleteSr
+);
+router.delete(
+  "/SRdetail/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  SR.deleteDetailSr
 );
 
 /***************************Service Request********************************* */

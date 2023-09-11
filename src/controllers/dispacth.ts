@@ -16,9 +16,9 @@ const getDispatch = async (request: Request, response: Response) => {
         deleted: null,
       },
     });
-    let results;
+    let result: any;
     if (request.query.page === undefined) {
-      results = await prisma.dispacth.findMany({
+      result = await prisma.dispacth.findMany({
         where: {
           OR: [
             {
@@ -108,9 +108,22 @@ const getDispatch = async (request: Request, response: Response) => {
           },
         },
       });
-      results = await prisma.wor.findMany({
+      let worData;
+      worData = await prisma.wor.findMany({
         where: {
           job_operational: true,
+          timeschedule: {
+            srimg: {
+              dispacth: null,
+            },
+          },
+          NOT: {
+            timeschedule: {
+              srimg: {
+                dispacth: null,
+              },
+            },
+          },
         },
         include: {
           customerPo: {
@@ -134,18 +147,74 @@ const getDispatch = async (request: Request, response: Response) => {
               },
             },
           },
-          timeschedule: true,
+          timeschedule: {
+            include: {
+              srimg: {
+                include: {
+                  srimgdetail: true,
+                  dispacth: {
+                    include: {
+                      dispatchDetail: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
           employee: true,
         },
       });
+      const results = [...result, ...worData];
+      if (results.length > 0) {
+        return response.status(200).json({
+          success: true,
+          massage: "Get All Dispacth",
+          result: results,
+          page: pagination.page,
+          limit: pagination.perPage,
+          totalData: dispactCount,
+          currentPage: pagination.currentPage,
+          nextPage: pagination.next(),
+          previouspage: pagination.prev(),
+        });
+      } else {
+        return response.status(200).json({
+          success: false,
+          massage: "No data",
+          totalData: 0,
+          result: [],
+        });
+      }
     } else {
+      let results: any;
       results = await prisma.dispacth.findMany({
         where: {
           id_dispatch: {
             contains: pencarian,
           },
+          OR: [
+            {
+              deleted: null,
+            },
+            {
+              Sr: {
+                deleted: null,
+              },
+            },
+            {
+              Sr: null,
+            },
+          ],
+          NOT: [
+            {
+              Sr: {
+                deleted: null,
+              },
+            },
+          ],
         },
         include: {
+          Sr: true,
           dispatchDetail: {
             include: {
               aktivitas: {
@@ -210,32 +279,27 @@ const getDispatch = async (request: Request, response: Response) => {
             },
           },
         },
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: parseInt(pagination.perPage),
-        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
-    }
-    if (results.length > 0) {
-      return response.status(200).json({
-        success: true,
-        massage: "Get All Dispacth",
-        result: results,
-        page: pagination.page,
-        limit: pagination.perPage,
-        totalData: dispactCount,
-        currentPage: pagination.currentPage,
-        nextPage: pagination.next(),
-        previouspage: pagination.prev(),
-      });
-    } else {
-      return response.status(200).json({
-        success: false,
-        massage: "No data",
-        totalData: 0,
-        result: [],
-      });
+      if (results.length > 0) {
+        return response.status(200).json({
+          success: true,
+          massage: "Get All Dispacth",
+          result: results,
+          page: pagination.page,
+          limit: pagination.perPage,
+          totalData: dispactCount,
+          currentPage: pagination.currentPage,
+          nextPage: pagination.next(),
+          previouspage: pagination.prev(),
+        });
+      } else {
+        return response.status(200).json({
+          success: false,
+          massage: "No data",
+          totalData: 0,
+          result: [],
+        });
+      }
     }
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
