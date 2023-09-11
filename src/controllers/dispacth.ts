@@ -117,13 +117,6 @@ const getDispatch = async (request: Request, response: Response) => {
               dispacth: null,
             },
           },
-          NOT: {
-            timeschedule: {
-              srimg: {
-                dispacth: null,
-              },
-            },
-          },
         },
         include: {
           customerPo: {
