@@ -452,7 +452,23 @@ const getBomMr = async (request: Request, response: Response) => {
     let worData;
     worData = await prisma.wor.findMany({
       where: {
-        job_operational: true,
+        OR: [
+          {
+            job_operational: true,
+          },
+          {
+            Mr: {
+              deleted: null,
+            },
+          },
+        ],
+        NOT: [
+          {
+            Mr: {
+              deleted: null,
+            },
+          },
+        ],
       },
       include: {
         customerPo: {
@@ -478,6 +494,7 @@ const getBomMr = async (request: Request, response: Response) => {
         },
         timeschedule: true,
         employee: true,
+        Mr: true,
       },
     });
     const results = [...result, ...worData];

@@ -177,55 +177,54 @@ const createMr = async (request: Request, response: Response) => {
           detailMr: true,
         },
       });
-    let obj: any = {};
-    let stok = request.body.detailMr;
-    stok.map((e: any) => {
-      let jumlah = {
-        idMaterialStok: e.materialStockId,
-        qty: e.qty,
-      };
-      return Object.assign(obj, jumlah);
-    });
-    let cekStokMaterial: any = await prisma.material_Stock.findFirst({
-      where: {
-        id: obj.idMaterialStok,
-      },
-    });
-    if (
-      obj.qty > cekStokMaterial.jumlah_Stock ||
-      cekStokMaterial.jumlah_Stock <= 0
-    ) {
-      return response.status(400).json({
-        msg: "stok abis",
+    // let obj: any = {};
+    // let stok = request.body.detailMr;
+    // stok.map((e: any) => {
+    //   let jumlah = {
+    //     idMaterialStok: e.materialStockId,
+    //     qty: e.qty,
+    //   };
+    //   return Object.assign(obj, jumlah);
+    // });
+    // let cekStokMaterial: any = await prisma.material_Stock.findFirst({
+    //   where: {
+    //     id: obj.idMaterialStok,
+    //   },
+    // });
+    // if (
+    //   obj.qty > cekStokMaterial.jumlah_Stock ||
+    //   cekStokMaterial.jumlah_Stock <= 0
+    // ) {
+    //   return response.status(400).json({
+    //     msg: "stok abis",
+    //   });
+    // } else {
+    //   request.body.detailMr.map(async (e: any) => {
+    //     const getStock: any = await prisma.material_Stock.findFirst({
+    //       where: {
+    //         id: e.materialStockId,
+    //       },
+    //     });
+    //     await prisma.material_Stock.update({
+    //       where: {
+    //         id: e.materialStockId,
+    //       },
+    //       data: {
+    //         jumlah_Stock: getStock.jumlah_Stock - e.qty,
+    //       },
+    //     });
+    //   });
+    if (results) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Add Data",
+        results: results,
       });
     } else {
-      request.body.detailMr.map(async (e: any) => {
-        const getStock: any = await prisma.material_Stock.findFirst({
-          where: {
-            id: e.materialStockId,
-          },
-        });
-        await prisma.material_Stock.update({
-          where: {
-            id: e.materialStockId,
-          },
-          data: {
-            jumlah_Stock: getStock.jumlah_Stock - e.qty,
-          },
-        });
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Add Data",
       });
-      if (results) {
-        response.status(201).json({
-          success: true,
-          massage: "Success Add Data",
-          results: results,
-        });
-      } else {
-        response.status(400).json({
-          success: false,
-          massage: "Unsuccess Add Data",
-        });
-      }
     }
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
