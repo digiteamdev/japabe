@@ -704,7 +704,7 @@ model holidayTms {
 
 model dispacth {
   id             String           @id @default(cuid())
-  srimg          srimg?           @relation(fields: [srId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  srimg          srimg?           @relation(fields: [srId], references: [id])
   srId           String?          @unique
   id_dispatch    String?          @db.VarChar(20)
   dispacth_date  DateTime
@@ -751,7 +751,7 @@ model dispatchDetail {
 model drawing {
   id             String         @id @default(cuid())
   id_drawing     String?        @db.VarChar(100)
-  timeschedule   timeschedule?  @relation(fields: [timeschId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  timeschedule   timeschedule?  @relation(fields: [timeschId], references: [id])
   timeschId      String?        @unique
   date_drawing   DateTime
   status_spv     String?        @db.VarChar(20)
@@ -778,7 +778,7 @@ model file_drawing {
 
 model bom {
   id             String       @id @default(cuid())
-  srimg          srimg?       @relation(fields: [srId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  srimg          srimg?       @relation(fields: [srId], references: [id])
   srId           String?      @unique
   status_spv     String?      @db.VarChar(20)
   status_manager String?      @db.VarChar(20)
@@ -795,9 +795,9 @@ model bom_detail {
   id              String          @id @default(cuid())
   bom             bom             @relation(fields: [bomId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   bomId           String
-  srimgdetail     srimgdetail     @relation(fields: [partId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  srimgdetail     srimgdetail     @relation(fields: [partId], references: [id])
   partId          String
-  Material_master Material_master @relation(fields: [materialId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  Material_master Material_master @relation(fields: [materialId], references: [id])
   materialId      String
   dimensi         String          @db.VarChar(200)
   createdAt       DateTime        @default(now())
@@ -813,10 +813,10 @@ model Mr {
   wor            wor?       @relation(fields: [worId], references: [id])
   worId          String?    @unique
   no_mr          String?    @db.VarChar(50)
-  bom            bom?       @relation(fields: [bomIdU], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  bom            bom?       @relation(fields: [bomIdU], references: [id])
   bomIdU         String?    @unique
   date_mr        DateTime
-  user           User       @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user           User       @relation(fields: [userId], references: [id])
   userId         String
   status_spv     String?    @db.VarChar(20)
   status_manager String?    @db.VarChar(20)
@@ -832,10 +832,10 @@ model detailMr {
   id              String          @id @default(cuid())
   mr              Mr              @relation(fields: [mrId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   mrId            String
-  bom_detail      bom_detail?     @relation(fields: [bomIdD], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  bom_detail      bom_detail?     @relation(fields: [bomIdD], references: [id])
   bomIdD          String?
   spesifikasi     String?         @db.Text
-  Material_Stock  Material_Stock? @relation(fields: [materialStockId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  Material_Stock  Material_Stock? @relation(fields: [materialStockId], references: [id])
   materialStockId String?
   note            String?         @db.Text
   qty             Int             @default(0)
@@ -848,13 +848,13 @@ model detailMr {
 
 model Sr {
   id             String     @id @default(cuid())
-  user           User       @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user           User       @relation(fields: [userId], references: [id])
   userId         String
   wor            wor?       @relation(fields: [worId], references: [id])
   worId          String?    @unique
   no_sr          String?    @db.VarChar(50)
   date_sr        DateTime
-  dispacth       dispacth?  @relation(fields: [dispacthIDS], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  dispacth       dispacth?  @relation(fields: [dispacthIDS], references: [id])
   dispacthIDS    String?    @unique
   status_spv     String?    @db.VarChar(20)
   status_manager String?    @db.VarChar(20)
@@ -870,7 +870,7 @@ model SrDetail {
   id               String          @id @default(cuid())
   sr               Sr              @relation(fields: [srId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   srId             String
-  dispatchDetail   dispatchDetail? @relation(fields: [dispacthdetailId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  dispatchDetail   dispatchDetail? @relation(fields: [dispacthdetailId], references: [id])
   dispacthdetailId String?
   part             String?         @db.VarChar(200)
   qty              Int             @default(0)
