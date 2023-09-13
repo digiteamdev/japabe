@@ -274,7 +274,7 @@ const upsertSr = async (request: Request, response: Response) => {
             note: updateVerify[i].note,
           },
         });
-      if (updateVerify[i].dispacthdetailId === null)
+      if (updateVerify[i].dispacthdetailId !== null)
         updateSr = await prisma.srDetail.upsert({
           where: {
             id: updateVerify[i].id,
