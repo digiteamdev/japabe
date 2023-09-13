@@ -145,6 +145,11 @@ const getWorTimes = async (request: any, response: Response) => {
           {
             job_operational: false,
           },
+          {
+            timeschedule: {
+              deleted: null,
+            },
+          },
         ],
         NOT: [
           {
@@ -154,6 +159,9 @@ const getWorTimes = async (request: any, response: Response) => {
           },
           {
             job_operational: true,
+          },
+          {
+            status: null,
           },
         ],
       },
