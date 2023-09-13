@@ -33,7 +33,25 @@ const getSr = async (request: Request, response: Response) => {
           },
         },
         include: {
-          wor: true,
+          wor: {
+            include: {
+              customerPo: {
+                include: {
+                  quotations: {
+                    include: {
+                      Customer: true,
+                      eqandpart: {
+                        include: {
+                          equipment: true,
+                          eq_part: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
           user: {
             select: {
               id: true,
@@ -80,25 +98,6 @@ const getSr = async (request: Request, response: Response) => {
                       aktivitas: {
                         include: {
                           masterAktivitas: true,
-                        },
-                      },
-                      wor: {
-                        include: {
-                          customerPo: {
-                            include: {
-                              quotations: {
-                                include: {
-                                  Customer: true,
-                                  eqandpart: {
-                                    include: {
-                                      equipment: true,
-                                      eq_part: true,
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
                         },
                       },
                     },

@@ -265,6 +265,7 @@ const upsertMr = async (request: Request, response: Response) => {
         bomIdD: any;
         spesifikasi: any;
         materialStockId: any;
+        note: any;
         qty: any;
         id: any;
       }) => {
@@ -273,6 +274,7 @@ const upsertMr = async (request: Request, response: Response) => {
           bomIdD: updateByveri.bomIdD,
           spesifikasi: updateByveri.spesifikasi,
           materialStockId: updateByveri.materialStockId,
+          note: updateByveri.note,
           qty: updateByveri.qty,
           id: updateByveri.id,
         };
@@ -292,6 +294,7 @@ const upsertMr = async (request: Request, response: Response) => {
             Material_Stock: {
               connect: { id: updateVerify[i].materialStockId },
             },
+            note: updateVerify[i].note,
             qty: updateVerify[i].qty,
           },
           update: {
@@ -300,6 +303,7 @@ const upsertMr = async (request: Request, response: Response) => {
             Material_Stock: {
               connect: { id: updateVerify[i].materialStockId },
             },
+            note: updateVerify[i].note,
             qty: updateVerify[i].qty,
           },
         });

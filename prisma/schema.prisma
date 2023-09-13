@@ -600,7 +600,7 @@ model timeschedule {
   id             String      @id @default(cuid())
   idTs           String?     @db.VarChar(100)
   timesch        DateTime
-  wor            wor?        @relation(fields: [worId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  wor            wor?        @relation(fields: [worId], references: [id])
   worId          String?     @unique
   status_spv     String?     @db.VarChar(20)
   status_manager String?     @db.VarChar(20)
@@ -619,7 +619,7 @@ model srimg {
   id              String        @id @default(cuid())
   id_summary      String?       @db.VarChar(200)
   date_of_summary DateTime?
-  timeschedule    timeschedule? @relation(fields: [timeschId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  timeschedule    timeschedule? @relation(fields: [timeschId], references: [id])
   timeschId       String?       @unique
   ioem            String?       @db.VarChar(100)
   isr             String?       @db.VarChar(100)
@@ -676,7 +676,7 @@ model imgSummary {
 
 model aktivitas {
   id              String           @id @default(cuid())
-  timeschedule    timeschedule     @relation(fields: [timeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  timeschedule    timeschedule     @relation(fields: [timeId], references: [id])
   timeId          String
   masterAktivitas masterAktivitas  @relation(fields: [aktivitasId], references: [id])
   aktivitasId     String
@@ -837,6 +837,7 @@ model detailMr {
   spesifikasi     String?         @db.Text
   Material_Stock  Material_Stock? @relation(fields: [materialStockId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   materialStockId String?
+  note            String?         @db.Text
   qty             Int             @default(0)
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
