@@ -251,28 +251,57 @@ const upsertSr = async (request: Request, response: Response) => {
     );
     let result: any = [];
     for (let i = 0; i < updateVerify.length; i++) {
-      const updateSr = await prisma.srDetail.upsert({
-        where: {
-          id: updateVerify[i].id,
-        },
-        create: {
-          sr: { connect: { id: updateVerify[i].dispacthdetailId } },
-          dispatchDetail: { connect: { id: updateVerify[i].dispacthdetailId } },
-          part: updateVerify[i].part,
-          qty: updateVerify[i].qty,
-          unit: updateVerify[i].unit,
-          workCenter: { connect: { id: updateVerify[i].description } },
-          note: updateVerify[i].note,
-        },
-        update: {
-          dispatchDetail: { connect: { id: updateVerify[i].dispacthdetailId } },
-          part: updateVerify[i].part,
-          qty: updateVerify[i].qty,
-          unit: updateVerify[i].unit,
-          workCenter: { connect: { id: updateVerify[i].description } },
-          note: updateVerify[i].note,
-        },
-      });
+      let updateSr;
+      if (updateVerify[i].dispacthdetailId === null)
+        updateSr = await prisma.srDetail.upsert({
+          where: {
+            id: updateVerify[i].id,
+          },
+          create: {
+            sr: { connect: { id: updateVerify[i].srId } },
+            part: updateVerify[i].part,
+            qty: updateVerify[i].qty,
+            unit: updateVerify[i].unit,
+            workCenter: { connect: { id: updateVerify[i].description } },
+            note: updateVerify[i].note,
+          },
+          update: {
+            sr: { connect: { id: updateVerify[i].srId } },
+            part: updateVerify[i].part,
+            qty: updateVerify[i].qty,
+            unit: updateVerify[i].unit,
+            workCenter: { connect: { id: updateVerify[i].description } },
+            note: updateVerify[i].note,
+          },
+        });
+      if (updateVerify[i].dispacthdetailId === null)
+        updateSr = await prisma.srDetail.upsert({
+          where: {
+            id: updateVerify[i].id,
+          },
+          create: {
+            sr: { connect: { id: updateVerify[i].srId } },
+            dispatchDetail: {
+              connect: { id: updateVerify[i].dispacthdetailId },
+            },
+            part: updateVerify[i].part,
+            qty: updateVerify[i].qty,
+            unit: updateVerify[i].unit,
+            workCenter: { connect: { id: updateVerify[i].description } },
+            note: updateVerify[i].note,
+          },
+          update: {
+            sr: { connect: { id: updateVerify[i].srId } },
+            dispatchDetail: {
+              connect: { id: updateVerify[i].dispacthdetailId },
+            },
+            part: updateVerify[i].part,
+            qty: updateVerify[i].qty,
+            unit: updateVerify[i].unit,
+            workCenter: { connect: { id: updateVerify[i].description } },
+            note: updateVerify[i].note,
+          },
+        });
       result = [...result, updateSr];
     }
     if (result) {
