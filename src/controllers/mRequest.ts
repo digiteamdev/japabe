@@ -319,6 +319,7 @@ const upsertMr = async (request: Request, response: Response) => {
             Material_Stock: {
               connect: { id: updateVerify[i].materialStockId },
             },
+            note: updateVerify[i].note,
             qty: updateVerify[i].qty,
           },
           update: {
@@ -328,6 +329,7 @@ const upsertMr = async (request: Request, response: Response) => {
             Material_Stock: {
               connect: { id: updateVerify[i].materialStockId },
             },
+            note: updateVerify[i].note,
             qty: updateVerify[i].qty,
           },
         });
