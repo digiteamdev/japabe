@@ -35,7 +35,17 @@ router.post("/signin", auth.loginUser);
 router.post("/changepass", auth.updatePassword);
 router.delete(
   "/signout",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   auth.logoutUser
 );
 
@@ -125,7 +135,17 @@ router.delete(
 
 router.get(
   "/employe",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   employee.getEmployee
 );
 router.get(
@@ -206,7 +226,17 @@ router.delete(
 
 router.get(
   "/customer",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   customer.getCustomer
 );
 router.post(
@@ -247,7 +277,17 @@ router.delete(
 
 router.get(
   "/supplier",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   supplier.getSupplier
 );
 router.post(
@@ -346,49 +386,49 @@ router.delete(
 
 router.get(
   "/quotation",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   quotation.getQuotation
 );
 router.get(
   "/quotation/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   quotation.getEditPoQuotation
 );
 router.post(
   "/quotation",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   upload.single("quo_img", 1),
   quotation.createQuotation
 );
 router.put(
   "/quotation/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   upload.single("quo_img", 1),
   quotation.updateQuotation
 );
 router.put(
   "/quotationDetail",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   quotation.updateQuotationDetail
 );
 router.put(
   "/quotationEqPart",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   quotation.updateQuotationEqPart
 );
 router.delete(
   "/quotation/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   quotation.deleteQuotation
 );
 router.delete(
   "/quotationDetail/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   quotation.deleteQuotationDetail
 );
 router.delete(
   "/quotationEqPart/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   quotation.deleteQuotationEqPart
 );
 
@@ -398,42 +438,42 @@ router.delete(
 
 router.get(
   "/customerPo",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   customerPo.getcusPo
 );
 router.post(
   "/customerPo",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   customerPo.createcusPo
 );
 router.put(
   "/customerPo/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   customerPo.updatecusPo
 );
 router.put(
   "/customerPoDetail",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   customerPo.updatePoDetail
 );
 router.put(
   "/customerPoTermOfPay",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   customerPo.updatePoTermOfPay
 );
 router.delete(
   "/customerPo/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   customerPo.deletecusPo
 );
 router.delete(
   "/customerPoDetail",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   customerPo.deletecusPoDetail
 );
 router.delete(
   "/customerPoTermOfPay",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   customerPo.deletecusPoTermOfPay
 );
 
@@ -443,23 +483,27 @@ router.delete(
 
 router.get(
   "/wor",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   wor.getWor
 );
 router.get(
   "/worTime",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    ppic: "Ppic",
+  }),
   wor.getWorTimes
 );
 router.post(
   "/wor",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   upload.single("file_list", 1),
   wor.createWor
 );
 router.put(
   "/wor/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   upload.single("file_list", 1),
   wor.updateWor
 );
@@ -470,7 +514,7 @@ router.put(
 );
 router.delete(
   "/wor/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   wor.deleteWor
 );
 
@@ -550,51 +594,51 @@ router.delete(
 
 router.get(
   "/summary",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   srimg.getSrimg
 );
 router.post(
   "/summary",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   upload.single("inimg", 1),
   srimg.createSrimg
 );
 router.post(
   "/summaryImg",
   upload.array("img", 1000),
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   srimg.createImgMany
 );
 router.put(
   "/summary/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   upload.single("inimg", 1),
   srimg.updateSrimg
 );
 router.put(
   "/summaryDetail",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   srimg.updateSrimgDetail
 );
 router.put(
   "/summaryImgH",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   upload.array("img", 1000),
   srimg.updateImgSr
 );
 router.delete(
   "/summary/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   srimg.deleteSrimg
 );
 router.delete(
   "/summaryDetail/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   srimg.deleteSrimgDetail
 );
 router.delete(
   "/summaryImgH/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   srimg.deleteSrimgImg
 );
 
@@ -634,47 +678,51 @@ router.delete(
 
 router.get(
   "/dispacth",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
   dispacth.getDispatch
 );
 router.get(
   "/sumarryDispacth",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    ppic: "Ppic",
+    QAandEng: "QA & ENG",
+  }),
   dispacth.getSumaryDispacth
 );
 router.post(
   "/dispacth",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
   dispacth.createDispacth
 );
 router.put(
   "/dispacth/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
   dispacth.updateDispacth
 );
 router.put(
   "/dispacthStart/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
   dispacth.updateStart
 );
 router.put(
   "/dispacthfinish/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
   dispacth.updateFinish
 );
 router.put(
   "/dispacthDetail",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
   dispacth.updateDetailDispacth
 );
 router.delete(
   "/dispacth/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
   dispacth.deleteDispacth
 );
 router.delete(
   "/dispacthDetail/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
   dispacth.deleteDetailDispacth
 );
 
@@ -709,22 +757,26 @@ router.delete(
 
 router.get(
   "/timeschedule",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
   timeschedule.getTimeschedule
 );
 router.get(
   "/summaryTms",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    QAandEng: "QA & ENG",
+    ppic: "Ppic",
+  }),
   srimg.getSumaryTms
 );
 router.post(
   "/timeschedule",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
   timeschedule.createTimeschedule
 );
 router.put(
   "/timeschedule/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
   timeschedule.updateTimeschedule
 );
 router.put(
@@ -739,17 +791,17 @@ router.put(
 );
 router.put(
   "/timeschedule",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
   timeschedule.updateTimeAktivity
 );
 router.delete(
   "/timeschedule/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
   timeschedule.deleteTimeschedule
 );
 router.delete(
   "/timescheduleActivity/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
   timeschedule.deleTimeAktivty
 );
 
@@ -784,39 +836,39 @@ router.delete(
 
 router.get(
   "/tmsdrawing",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
   drawing.getDrawingTms
 );
 router.get(
   "/drawing",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   drawing.getDrawing
 );
 router.post(
   "/drawing",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   upload.array("file_upload", 1000),
   drawing.createDrawing
 );
 router.put(
   "/drawing/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   drawing.updateDrawing
 );
 router.put(
   "/drawing",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   upload.array("file_upload", 1000),
   drawing.updateFileDrawing
 );
 router.delete(
   "/drawing/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   drawing.deleteDrawing
 );
 router.delete(
   "/drawingFile/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   drawing.deleteFileDrawing
 );
 
@@ -826,52 +878,56 @@ router.delete(
 
 router.get(
   "/srBom",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   srimg.getSrimBom
 );
 router.get(
   "/SummaryBom",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   srimg.getSrimBom
 );
 router.get(
   "/bom",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   bom.getBom
 );
 router.get(
   "/mrBom",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+  }),
   bom.getBomMr
 );
 router.get(
   "/mrUser/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   bom.getUserMr
 );
 router.post(
   "/bom",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   bom.CreateBom
 );
 router.put(
   "/bom/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   bom.UpdategetBom
 );
 router.put(
   "/bom",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   bom.updateBom
 );
 router.delete(
   "/bom/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   bom.DeleteBom
 );
 router.delete(
   "/bomDetail/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   bom.DeleteBomDetail
 );
 
@@ -879,30 +935,34 @@ router.delete(
 
 /***************************Material Request********************************* */
 
-router.get("/MR", jwt.authToken({ administrator: "ADMINISTRATOR" }), MR.getMr);
+router.get(
+  "/MR",
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  MR.getMr
+);
 router.post(
   "/MR",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
   MR.createMr
 );
 router.put(
   "/MR",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
   MR.upsertMr
 );
 router.put(
   "/MR/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
   MR.updateMr
 );
 router.delete(
   "/MR/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
   MR.deleteMr
 );
 router.delete(
   "/MRdetail/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
   MR.deleteMrDetail
 );
 
@@ -910,30 +970,34 @@ router.delete(
 
 /***************************Service Request********************************* */
 
-router.get("/SR", jwt.authToken({ administrator: "ADMINISTRATOR" }), SR.getSr);
+router.get(
+  "/SR",
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  SR.getSr
+);
 router.post(
   "/SR",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
   SR.createSr
 );
 router.put(
   "/SR/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
   SR.updateSr
 );
 router.put(
   "/SR",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
   SR.upsertSr
 );
 router.delete(
   "/SR/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
   SR.deleteSr
 );
 router.delete(
   "/SRdetail/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
   SR.deleteDetailSr
 );
 
