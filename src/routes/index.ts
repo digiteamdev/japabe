@@ -472,17 +472,17 @@ router.put(
   customerPo.updatePoTermOfPay
 );
 router.delete(
-  "/customerPo/:id",
+  "/po/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   customerPo.deletecusPo
 );
 router.delete(
-  "/customerPoDetail",
+  "/customerPoDetail/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   customerPo.deletecusPoDetail
 );
 router.delete(
-  "/customerPoTermOfPay",
+  "/customerPoTermOfPay/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   customerPo.deletecusPoTermOfPay
 );
