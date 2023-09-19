@@ -58,6 +58,16 @@ router.get(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   user.getUser
 );
+router.delete(
+  "/user/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  user.updateRole
+);
+router.delete(
+  "/user/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  user.deleteUser
+);
 
 /***************************USER********************************* */
 
@@ -371,7 +381,7 @@ router.post(
 router.put(
   "/part",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
-  upload.array("part_img", 1000),
+  upload.single("part_img", 1000),
   equipment.updatePart
 );
 router.delete(

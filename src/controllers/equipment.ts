@@ -242,7 +242,7 @@ const createPart = async (request: any, response: Response) => {
           id_equipment: arr[i].id_equipment,
           nama_part: arr[i].nama_part,
           keterangan_part: arr[i].keterangan_part,
-          part_img: !request.files ? "" : request.files[i].path,
+          part_img: !request.file ? "" : request.file[i].path,
         });
       }
     }
