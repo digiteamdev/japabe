@@ -197,26 +197,6 @@ const getDispatch = async (request: Request, response: Response) => {
           id_dispatch: {
             contains: pencarian,
           },
-          OR: [
-            {
-              deleted: null,
-            },
-            {
-              Sr: {
-                deleted: null,
-              },
-            },
-            {
-              Sr: null,
-            },
-          ],
-          NOT: [
-            {
-              Sr: {
-                deleted: null,
-              },
-            },
-          ],
         },
         include: {
           Sr: true,
