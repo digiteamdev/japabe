@@ -1,22 +1,29 @@
 import { Request, Response } from "express";
 import prisma from "../middleware/user";
 
-const getUser = async (req: Request, res: Response) => {
+const getUser = async (request: any, res: Response) => {
   try {
+    const username = request.session.userId;
     const user = await prisma.user.findMany({
-      include: {
+      where: { username: username },
+      select: {
+        id: true,
+        username: true,
+        hashed_password: true,
         employee: {
-          include: {
-            sub_depart: {
-              include: {
-                departement: true,
-              },
-            },
+          select: {
+            id: true,
+            employee_name: true,
           },
         },
         userRole: {
-          include: {
-            role: true,
+          select: {
+            roleId: true,
+            role: {
+              select: {
+                role_name: true,
+              },
+            },
           },
         },
       },

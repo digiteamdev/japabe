@@ -48,8 +48,10 @@ const getQuotation = async (request: Request, response: Response) => {
     } else {
       results = await prisma.quotations.findMany({
         where: {
-          quo_num: {
-            contains: pencarian,
+          Customer: {
+            name: {
+              contains: pencarian,
+            },
           },
         },
         include: {
@@ -157,7 +159,7 @@ const createQuotation = async (request: any, response: Response) => {
         CustomerContact: { connect: { id: request.body.customercontactId } },
         deskription: request.body.deskription,
         date: new Date(request.body.date),
-        quo_img: !request.file ? "" : request.file.path,
+        quo_img: !request.file ? null : request.file.path,
         Quotations_Detail: {
           create: JSON.parse(request.body.Quotations_Detail),
         },

@@ -6,6 +6,7 @@ import url from "url";
 const getTimeschedule = async (request: Request, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
+    const status: any = request.query.status || undefined;
     const hostname: any = request.headers.host;
     const pathname = url.parse(request.url).pathname;
     const page: any = request.query.page;
@@ -17,9 +18,11 @@ const getTimeschedule = async (request: Request, response: Response) => {
       },
     });
     let results;
-    if (request.query.page === undefined) {
+    if (request.query.page === undefined && status != undefined) {
       results = await prisma.timeschedule.findMany({
         where: {
+          status_spv: status,
+          status_manager: status,
           OR: [
             {
               srimg: {

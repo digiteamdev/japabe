@@ -71,9 +71,24 @@ const getWor = async (request: Request, response: Response) => {
     } else {
       results = await prisma.wor.findMany({
         where: {
-          job_no: {
-            contains: pencarian,
-          },
+          OR: [
+            {
+              job_no: {
+                contains: pencarian,
+              },
+            },
+            {
+              customerPo: {
+                quotations: {
+                  Customer: {
+                    name: {
+                      contains: pencarian,
+                    },
+                  },
+                },
+              },
+            },
+          ],
         },
         include: {
           customerPo: {
@@ -93,6 +108,16 @@ const getWor = async (request: Request, response: Response) => {
                       eq_part: true,
                     },
                   },
+                },
+              },
+            },
+          },
+          timeschedule: {
+            include: {
+              drawing: true,
+              srimg: {
+                include: {
+                  dispacth: true,
                 },
               },
             },
@@ -238,7 +263,7 @@ const createWor = async (request: any, response: Response) => {
         eq_rotation: request.body.eq_rotation,
         eq_power: request.body.eq_power,
         scope_of_work: request.body.scope_of_work,
-        file_list: !request.file ? "" : request.file.path,
+        file_list: !request.file ? null : request.file.path,
         noted: request.body.noted,
         status: request.body.status,
         job_operational: request.body.job_operational === "true" ? true : false,

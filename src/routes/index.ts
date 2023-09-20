@@ -58,7 +58,7 @@ router.get(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   user.getUser
 );
-router.delete(
+router.put(
   "/user/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   user.updateRole
@@ -924,6 +924,16 @@ router.put(
   "/bom/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   bom.UpdategetBom
+);
+router.put(
+  "/bomSpv/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  bom.updateBomStatusSpv
+);
+router.put(
+  "/bomManger/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  bom.updateBomStatusM
 );
 router.put(
   "/bom",

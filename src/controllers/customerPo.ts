@@ -51,7 +51,7 @@ const getcusPo = async (request: Request, response: Response) => {
     } else {
       results = await prisma.customerPo.findMany({
         where: {
-          id_po: {
+          po_num_auto: {
             contains: pencarian,
           },
         },
