@@ -980,6 +980,16 @@ router.put(
   jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
   MR.updateMr
 );
+router.put(
+  "/MRStatusSpv/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  MR.updateMrStatus
+);
+router.put(
+  "/MRStatusManger/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  MR.updateMrStatusM
+);
 router.delete(
   "/MR/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
