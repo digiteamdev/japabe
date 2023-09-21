@@ -55,7 +55,17 @@ router.delete(
 
 router.get(
   "/user",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   user.getUser
 );
 router.put(
@@ -80,7 +90,17 @@ router.delete(
 
 router.get(
   "/role",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   role.getRole
 );
 router.post(
@@ -105,7 +125,17 @@ router.delete(
 
 router.get(
   "/depart",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   depart.getDepart
 );
 router.get(
@@ -337,7 +367,17 @@ router.delete(
 
 router.get(
   "/equipment",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   equipment.getEquipment
 );
 router.post(
@@ -374,7 +414,17 @@ router.delete(
 
 router.get(
   "/part",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   equipment.getEquipment
 );
 router.post(
@@ -401,7 +451,17 @@ router.delete(
 
 router.get(
   "/quotation",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   quotation.getQuotation
 );
 router.get(
@@ -453,7 +513,17 @@ router.delete(
 
 router.get(
   "/customerPo",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   customerPo.getcusPo
 );
 router.post(
@@ -498,7 +568,17 @@ router.delete(
 
 router.get(
   "/wor",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   wor.getWor
 );
 router.get(
@@ -539,7 +619,17 @@ router.delete(
 
 router.get(
   "/groupMaterial",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   typeMr.getTypeMr
 );
 router.get(
@@ -609,7 +699,17 @@ router.delete(
 
 router.get(
   "/summary",
-  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   srimg.getSrimg
 );
 router.post(
@@ -663,7 +763,17 @@ router.delete(
 
 router.get(
   "/workcenter",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   workcenter.getWorkCenter
 );
 router.post(
@@ -693,7 +803,17 @@ router.delete(
 
 router.get(
   "/dispacth",
-  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   dispacth.getDispatch
 );
 router.get(
@@ -747,7 +867,17 @@ router.delete(
 
 router.get(
   "/masterAktivitas",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   masterAktivitas.getAktivitas
 );
 router.post(
@@ -772,7 +902,17 @@ router.delete(
 
 router.get(
   "/timeschedule",
-  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   timeschedule.getTimeschedule
 );
 router.get(
@@ -826,7 +966,17 @@ router.delete(
 
 router.get(
   "/masterHoliday",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   holidayTms.getHoliday
 );
 router.post(
@@ -851,12 +1001,32 @@ router.delete(
 
 router.get(
   "/tmsdrawing",
-  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   drawing.getDrawingTms
 );
 router.get(
   "/drawing",
-  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   drawing.getDrawing
 );
 router.post(
@@ -893,31 +1063,77 @@ router.delete(
 
 router.get(
   "/srBom",
-  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   srimg.getSrimBom
 );
 router.get(
   "/SummaryBom",
-  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   srimg.getSrimBom
 );
 router.get(
   "/bom",
-  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   bom.getBom
 );
 router.get(
   "/mrBom",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
   }),
   bom.getBomMr
 );
 router.get(
   "/mrUser/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   bom.getUserMr
 );
 router.post(
@@ -962,7 +1178,17 @@ router.delete(
 
 router.get(
   "/MR",
-  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   MR.getMr
 );
 router.post(
@@ -1007,7 +1233,17 @@ router.delete(
 
 router.get(
   "/SR",
-  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   SR.getSr
 );
 router.post(

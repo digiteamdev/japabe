@@ -3,7 +3,7 @@ import prisma from "../middleware/Sr";
 import pagging from "../utils/paggination";
 import url from "url";
 
-const getSr = async (request: Request, response: Response) => {
+const getSr = async (request: any, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
     const hostname: any = request.headers.host;
@@ -28,6 +28,9 @@ const getSr = async (request: Request, response: Response) => {
     } else {
       results = await prisma.sr.findMany({
         where: {
+          user: {
+            username: request.session.userId,
+          },
           no_sr: {
             contains: pencarian,
           },
@@ -56,6 +59,25 @@ const getSr = async (request: Request, response: Response) => {
             select: {
               id: true,
               username: true,
+              employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                  position: true,
+                  sub_depart: {
+                    select: {
+                      id: true,
+                      name: true,
+                      departement: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
           dispacth: {

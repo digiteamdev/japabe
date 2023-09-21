@@ -36,6 +36,7 @@ const getUser = async (request: any, res: Response) => {
               province: true,
               city: true,
               districts: true,
+              position: true,
               sub_districts: true,
               ec_postalcode: true,
               phone_number: true,
