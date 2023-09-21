@@ -159,7 +159,7 @@ const getUser = async (request: any, res: Response) => {
 const updateRole = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
-    const deleteUser = await prisma.userRole.update({
+    const updateRole = await prisma.userRole.update({
       where: {
         id: id,
       },
@@ -167,16 +167,42 @@ const updateRole = async (request: Request, response: Response) => {
         role: { connect: { id: request.body.roleId } },
       },
     });
-    if (deleteUser) {
+    if (updateRole) {
       response.status(201).json({
         success: true,
         massage: "Success Delete Data",
-        results: deleteUser,
+        results: updateRole,
       });
     } else {
       response.status(400).json({
         success: false,
         massage: "Unsuccess Delete Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updateUser = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const updateUser = await prisma.user.update({
+      where: {
+        id: id,
+      },
+      data: request.body,
+    });
+    if (updateUser) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: updateUser,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
       });
     }
   } catch (error) {
@@ -212,5 +238,6 @@ const deleteUser = async (request: Request, response: Response) => {
 export default {
   getUser,
   updateRole,
+  updateUser,
   deleteUser,
 };

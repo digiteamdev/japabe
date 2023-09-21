@@ -277,6 +277,7 @@ const createEmployee = async (request: Request, response: Response) => {
         remaining_days_of: request.body.remaining_days_of,
         gender: request.body.gender,
         marital_status: request.body.marital_status,
+        position: request.body.position,
         sub_depart: { connect: { id: request.body.subdepartId } },
         employee_status: request.body.employee_status,
         spouse_name: request.body.spouse_name,

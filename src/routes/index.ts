@@ -59,9 +59,14 @@ router.get(
   user.getUser
 );
 router.put(
-  "/user/:id",
+  "/userRole/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   user.updateRole
+);
+router.put(
+  "/user/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  user.updateUser
 );
 router.delete(
   "/user/:id",

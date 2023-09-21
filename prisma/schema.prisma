@@ -46,6 +46,7 @@ model Employee {
   remaining_days_of    Int?                   @default(0)
   gender               Gender?
   marital_status       Maritial?
+  position             Position?
   sub_depart           sub_depart             @relation(fields: [subdepartId], references: [id])
   subdepartId          String
   employee_status      Employee_Status?
@@ -187,6 +188,14 @@ model sub_depart {
 enum Gender {
   Male
   Female
+}
+
+enum Position {
+  Manager
+  Operator
+  Staff
+  Supervisor
+  Director
 }
 
 enum Spouse_Gender {
