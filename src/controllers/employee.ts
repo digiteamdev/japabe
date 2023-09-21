@@ -72,6 +72,7 @@ const getEmployee = async (request: Request, response: Response) => {
           address: true,
           phone_number: true,
           email: true,
+          position: true,
           province: true,
           city: true,
           districts: true,
