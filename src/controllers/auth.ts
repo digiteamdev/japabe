@@ -99,6 +99,7 @@ const loginUser = async (request: Request, response: Response) => {
           select: {
             id: true,
             employee_name: true,
+            position: true,
           },
         },
         userRole: {
