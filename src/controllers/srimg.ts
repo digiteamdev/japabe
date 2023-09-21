@@ -235,7 +235,11 @@ const getSrimBom = async (request: Request, response: Response) => {
   try {
     const results = await prisma.srimg.findMany({
       where: {
-        bom: null,
+        NOT: {
+          bom: {
+            deleted: null,
+          },
+        },
       },
       include: {
         bom: true,
