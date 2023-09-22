@@ -176,7 +176,7 @@ const createDrawing = async (request: any, response: Response) => {
     const newArrDetail: any = [];
     for (let i = 0; i < parseInt(request.body.file_lenght); i++) {
       newArrDetail.push({
-        file_upload: !request.files ? "" : request.files[i].path,
+        file_upload: !request.files ? null : request.files[i].path,
       });
     }
     const results = await prisma.drawing.create({
@@ -240,7 +240,7 @@ const updateFileDrawing = async (request: any, response: Response) => {
     const newArrDetail: any = [];
     for (let i = 0; i < parseInt(request.body.file_lenght); i++) {
       newArrDetail.push({
-        file_upload: !request.files ? "" : request.files[i].path,
+        file_upload: !request.files ? null : request.files[i].path,
       });
     }
     let result: any = [];

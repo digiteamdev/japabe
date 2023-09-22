@@ -89,7 +89,7 @@ const createEquipment = async (request: any, response: Response) => {
         id_equipment: request.body.id_equipment,
         nama: request.body.nama,
         keterangan_eq: request.body.keterangan_eq,
-        eq_image: !request.file ? "" : request.file.path,
+        eq_image: !request.file ? null : request.file.path,
       },
     });
     if (results) {
@@ -242,7 +242,7 @@ const createPart = async (request: any, response: Response) => {
           id_equipment: arr[i].id_equipment,
           nama_part: arr[i].nama_part,
           keterangan_part: arr[i].keterangan_part,
-          part_img: !request.file ? "" : request.file[i].path,
+          part_img: !request.file ? null : request.file[i].path,
         });
       }
     }

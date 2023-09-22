@@ -324,7 +324,7 @@ const createSrimg = async (request: any, response: Response) => {
         isr: request.body.isr,
         itn: request.body.itn,
         introduction: request.body.introduction,
-        inimg: !request.file ? "" : request.file.path,
+        inimg: !request.file ? null : request.file.path,
       },
     });
     newArrDetail.map(async (e: any, i: number) => {
@@ -368,7 +368,7 @@ const createImgMany = async (request: any, response: Response) => {
       const files = request.files;
       for (const file of files) {
         const newArr = {
-          img: !files ? "" : file.path,
+          img: !files ? null : file.path,
         };
 
         imgArr.push(newArr);
