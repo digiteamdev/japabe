@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import prisma from "../middleware/user";
 import pagging from "../utils/paggination";
 import url from "url";
+import argon2 from "argon2";
 
 const getUser = async (request: any, res: Response) => {
   try {
@@ -59,6 +60,7 @@ const getUser = async (request: any, res: Response) => {
           },
           userRole: {
             select: {
+              id: true,
               roleId: true,
               role: {
                 select: {
@@ -104,6 +106,7 @@ const getUser = async (request: any, res: Response) => {
               marital_status: true,
               sub_depart: true,
               subdepartId: true,
+              position: true,
               employee_status: true,
               spouse_name: true,
               gender_spouse: true,
@@ -117,6 +120,7 @@ const getUser = async (request: any, res: Response) => {
           },
           userRole: {
             select: {
+              id: true,
               roleId: true,
               role: {
                 select: {
@@ -187,13 +191,42 @@ const updateRole = async (request: Request, response: Response) => {
 
 const updateUser = async (request: Request, response: Response) => {
   try {
+    const passwordnull = request.body.hashed_password;
     const id: string = request.params.id;
-    const updateUser = await prisma.user.update({
+    let updateUser;
+    if (passwordnull === null)
+      updateUser = await prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          username: request.body.username,
+        },
+      });
+    const hashpass: string = await argon2.hash(request.body.hashed_password);
+    if (passwordnull !== null)
+      updateUser = await prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          hashed_password: hashpass,
+        },
+      });
+    await prisma.userRole.deleteMany({
       where: {
-        id: id,
+        userId: id,
       },
-      data: request.body,
     });
+    request.body.role.map(async (role: any) => {
+      await prisma.userRole.create({
+        data: {
+          user: { connect: { id: id } },
+          role: { connect: { id: role.roleId } },
+        },
+      });
+    });
+
     if (updateUser) {
       response.status(201).json({
         success: true,

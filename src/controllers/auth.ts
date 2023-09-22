@@ -115,7 +115,9 @@ const loginUser = async (request: Request, response: Response) => {
       },
     });
     if (!userExist) {
-      return response.status(403).json("username tidak ada / belum daftar");
+      return response
+        .status(403)
+        .json({ msg: "username tidak ada / belum daftar" });
     }
     const passwordIsValid = await argon2.verify(
       userExist.hashed_password,
@@ -123,7 +125,7 @@ const loginUser = async (request: Request, response: Response) => {
     );
 
     if (!passwordIsValid) {
-      return response.status(403).json("salah password");
+      return response.status(403).json({ msg: "salah password" });
     }
 
     const token = jwt.generateToken(userExist.username);
