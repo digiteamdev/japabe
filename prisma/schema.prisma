@@ -17,6 +17,7 @@ model Role {
   role_name String     @db.VarChar(100)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+  deleted   DateTime?
   userRole  userRole[]
 
   @@index([role_name])
@@ -76,6 +77,7 @@ model User {
   employee        Employee?  @relation(fields: [employeeId], references: [id])
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
+  deleted         DateTime?
   employeeId      String?
   userRole        userRole[]
   Mr              Mr[]
@@ -86,25 +88,27 @@ model User {
 }
 
 model userRole {
-  id        String   @id @default(cuid())
-  user      User     @relation(fields: [userId], references: [id])
+  id        String    @id @default(cuid())
+  user      User      @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   userId    String
-  role      Role     @relation(fields: [roleId], references: [id])
+  role      Role      @relation(fields: [roleId], references: [id])
   roleId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
 }
 
 model Session {
-  id            String   @id @default(cuid())
-  user          User     @relation(fields: [username], references: [username])
-  username      String   @unique
+  id            String    @id @default(cuid())
+  user          User      @relation(fields: [username], references: [username], onUpdate: Cascade, onDelete: Cascade)
+  username      String    @unique
   acces_token   String?
   refresh_token String?
-  clint_ip      String?  @db.VarChar(100)
-  is_bloked     Boolean? @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  clint_ip      String?   @db.VarChar(100)
+  is_bloked     Boolean?  @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deleted       DateTime?
 
   @@index([username])
   @@map("session")
