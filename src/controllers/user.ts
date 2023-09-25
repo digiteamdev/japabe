@@ -181,6 +181,7 @@ const updateUser = async (request: Request, response: Response) => {
           id: id,
         },
         data: {
+          username: request.body.username,
           hashed_password: hashpass,
         },
       });
@@ -198,12 +199,15 @@ const updateUser = async (request: Request, response: Response) => {
         },
       });
     });
-
-    if (updateUser) {
+    const resResult = {
+      id: updateUser.id,
+      username: updateUser.username,
+    };
+    if (resResult) {
       response.status(201).json({
         success: true,
         massage: "Success Update Data",
-        results: updateUser,
+        results: resResult,
       });
     } else {
       response.status(400).json({
