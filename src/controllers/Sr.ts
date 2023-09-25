@@ -6,6 +6,7 @@ import url from "url";
 const getSr = async (request: any, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
+    const status: any = request.query.status || undefined;
     const hostname: any = request.headers.host;
     const pathname = url.parse(request.url).pathname;
     const page: any = request.query.page;
@@ -17,9 +18,11 @@ const getSr = async (request: any, response: Response) => {
       },
     });
     let results;
-    if (request.query.page === undefined) {
+    if (request.query.page === undefined && status != undefined) {
       results = await prisma.sr.findMany({
         where: {
+          status_spv: status,
+          status_manager: status,
           no_sr: {
             contains: "",
           },
@@ -220,6 +223,98 @@ const createSr = async (request: Request, response: Response) => {
   }
 };
 
+const updateSrStatus = async (request: Request, response: Response) => {
+  try {
+    const id = request.params.id;
+    const statusPenc = await prisma.sr.findFirst({
+      where: {
+        id: id,
+      },
+    });
+
+    let result;
+    if (
+      statusPenc?.status_spv === null ||
+      statusPenc?.status_spv === "unvalid"
+    ) {
+      const id = request.params.id;
+      result = await prisma.sr.update({
+        where: { id: id },
+        data: {
+          status_spv: "valid",
+        },
+      });
+    } else {
+      result = await prisma.sr.update({
+        where: { id: id },
+        data: {
+          status_spv: "unvalid",
+        },
+      });
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updateSrStatusM = async (request: Request, response: Response) => {
+  try {
+    const id = request.params.id;
+    const statusPenc = await prisma.sr.findFirst({
+      where: {
+        id: id,
+      },
+    });
+
+    let result;
+    if (
+      statusPenc?.status_manager === null ||
+      statusPenc?.status_manager === "unvalid"
+    ) {
+      const id = request.params.id;
+      result = await prisma.sr.update({
+        where: { id: id },
+        data: {
+          status_manager: "valid",
+        },
+      });
+    } else {
+      result = await prisma.sr.update({
+        where: { id: id },
+        data: {
+          status_manager: "unvalid",
+        },
+      });
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const updateSr = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
@@ -400,6 +495,8 @@ export default {
   createSr,
   updateSr,
   upsertSr,
+  updateSrStatus,
+  updateSrStatusM,
   deleteSr,
   deleteDetailSr,
 };

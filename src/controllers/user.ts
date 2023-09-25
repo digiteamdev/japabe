@@ -161,40 +161,11 @@ const getUser = async (request: any, res: Response) => {
   }
 };
 
-const updateRole = async (request: Request, response: Response) => {
-  try {
-    const id: string = request.params.id;
-    const updateRole = await prisma.userRole.update({
-      where: {
-        id: id,
-      },
-      data: {
-        role: { connect: { id: request.body.roleId } },
-      },
-    });
-    if (updateRole) {
-      response.status(201).json({
-        success: true,
-        massage: "Success Delete Data",
-        results: updateRole,
-      });
-    } else {
-      response.status(400).json({
-        success: false,
-        massage: "Unsuccess Delete Data",
-      });
-    }
-  } catch (error) {
-    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
-  }
-};
-
 const updateUser = async (request: Request, response: Response) => {
   try {
-    const passwordnull = request.body.hashed_password;
     const id: string = request.params.id;
     let updateUser;
-    if (passwordnull === null)
+    if (request.body.hashed_password === null) {
       updateUser = await prisma.user.update({
         where: {
           id: id,
@@ -203,8 +174,8 @@ const updateUser = async (request: Request, response: Response) => {
           username: request.body.username,
         },
       });
-    const hashpass: string = await argon2.hash(request.body.hashed_password);
-    if (passwordnull !== null)
+    } else {
+      const hashpass: string = await argon2.hash(request.body.hashed_password);
       updateUser = await prisma.user.update({
         where: {
           id: id,
@@ -213,6 +184,7 @@ const updateUser = async (request: Request, response: Response) => {
           hashed_password: hashpass,
         },
       });
+    }
     await prisma.userRole.deleteMany({
       where: {
         userId: id,
@@ -271,7 +243,6 @@ const deleteUser = async (request: Request, response: Response) => {
 
 export default {
   getUser,
-  updateRole,
   updateUser,
   deleteUser,
 };

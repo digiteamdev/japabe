@@ -69,11 +69,6 @@ router.get(
   user.getUser
 );
 router.put(
-  "/userRole/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
-  user.updateRole
-);
-router.put(
   "/user/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   user.updateUser
@@ -936,12 +931,12 @@ router.put(
 );
 router.put(
   "/timescheduleSpv/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
   timeschedule.updateTimeSchStatus
 );
 router.put(
   "/timescheduleMgr/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
   timeschedule.updateTimeSchStatusM
 );
 router.put(
@@ -1148,12 +1143,12 @@ router.put(
 );
 router.put(
   "/bomSpv/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   bom.updateBomStatusSpv
 );
 router.put(
   "/bomManger/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   bom.updateBomStatusM
 );
 router.put(
@@ -1255,6 +1250,16 @@ router.put(
   "/SR/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
   SR.updateSr
+);
+router.put(
+  "/SRstatusSpv/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  SR.updateSrStatus
+);
+router.put(
+  "/SRstatusManager/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  SR.updateSrStatusM
 );
 router.put(
   "/SR",
