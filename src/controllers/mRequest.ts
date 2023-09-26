@@ -26,53 +26,61 @@ const getMr = async (request: any, response: Response) => {
         },
       });
     } else {
-      results = await prisma.mr.findMany({
+      const emplo = await prisma.employee.findFirst({
         where: {
-          user: {
-            username: request.session.userId,
-          },
-          no_mr: {
-            contains: pencarian,
-          },
+          employee_name: request.session.userId,
         },
-        include: {
-          wor: true,
-          bom: {
-            include: {
-              bom_detail: {
-                include: {
-                  Material_master: {
-                    include: {
-                      Material_Stock: true,
-                      grup_material: true,
+      });
+      if (
+        emplo?.position === "Supervisor" ||
+        emplo?.position === "Manager" ||
+        emplo?.position === "Director"
+      ) {
+        results = await prisma.mr.findMany({
+          where: {
+            no_mr: {
+              contains: pencarian,
+            },
+          },
+          include: {
+            wor: true,
+            bom: {
+              include: {
+                bom_detail: {
+                  include: {
+                    Material_master: {
+                      include: {
+                        Material_Stock: true,
+                        grup_material: true,
+                      },
                     },
                   },
                 },
-              },
-              srimg: {
-                include: {
-                  srimgdetail: true,
-                  timeschedule: {
-                    include: {
-                      wor: true,
+                srimg: {
+                  include: {
+                    srimgdetail: true,
+                    timeschedule: {
+                      include: {
+                        wor: true,
+                      },
                     },
                   },
                 },
               },
             },
-          },
-          detailMr: {
-            include: {
-              bom_detail: {
-                include: {
-                  bom: {
-                    include: {
-                      srimg: {
-                        include: {
-                          srimgdetail: true,
-                          timeschedule: {
-                            include: {
-                              wor: true,
+            detailMr: {
+              include: {
+                bom_detail: {
+                  include: {
+                    bom: {
+                      include: {
+                        srimg: {
+                          include: {
+                            srimgdetail: true,
+                            timeschedule: {
+                              include: {
+                                wor: true,
+                              },
                             },
                           },
                         },
@@ -80,35 +88,35 @@ const getMr = async (request: any, response: Response) => {
                     },
                   },
                 },
-              },
-              Material_Stock: {
-                include: {
-                  Material_master: {
-                    include: {
-                      grup_material: true,
+                Material_Stock: {
+                  include: {
+                    Material_master: {
+                      include: {
+                        grup_material: true,
+                      },
                     },
                   },
                 },
               },
             },
-          },
-          user: {
-            select: {
-              id: true,
-              username: true,
-              employee: {
-                select: {
-                  id: true,
-                  employee_name: true,
-                  position: true,
-                  sub_depart: {
-                    select: {
-                      id: true,
-                      name: true,
-                      departement: {
-                        select: {
-                          id: true,
-                          name: true,
+            user: {
+              select: {
+                id: true,
+                username: true,
+                employee: {
+                  select: {
+                    id: true,
+                    employee_name: true,
+                    position: true,
+                    sub_depart: {
+                      select: {
+                        id: true,
+                        name: true,
+                        departement: {
+                          select: {
+                            id: true,
+                            name: true,
+                          },
                         },
                       },
                     },
@@ -117,13 +125,112 @@ const getMr = async (request: any, response: Response) => {
               },
             },
           },
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: parseInt(pagination.perPage),
-        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
-      });
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: parseInt(pagination.perPage),
+          skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+        });
+      } else {
+        results = await prisma.mr.findMany({
+          where: {
+            user: {
+              username: request.session.userId,
+            },
+            no_mr: {
+              contains: pencarian,
+            },
+          },
+          include: {
+            wor: true,
+            bom: {
+              include: {
+                bom_detail: {
+                  include: {
+                    Material_master: {
+                      include: {
+                        Material_Stock: true,
+                        grup_material: true,
+                      },
+                    },
+                  },
+                },
+                srimg: {
+                  include: {
+                    srimgdetail: true,
+                    timeschedule: {
+                      include: {
+                        wor: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            detailMr: {
+              include: {
+                bom_detail: {
+                  include: {
+                    bom: {
+                      include: {
+                        srimg: {
+                          include: {
+                            srimgdetail: true,
+                            timeschedule: {
+                              include: {
+                                wor: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                Material_Stock: {
+                  include: {
+                    Material_master: {
+                      include: {
+                        grup_material: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            user: {
+              select: {
+                id: true,
+                username: true,
+                employee: {
+                  select: {
+                    id: true,
+                    employee_name: true,
+                    position: true,
+                    sub_depart: {
+                      select: {
+                        id: true,
+                        name: true,
+                        departement: {
+                          select: {
+                            id: true,
+                            name: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: parseInt(pagination.perPage),
+          skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+        });
+      }
     }
     if (results.length > 0) {
       return response.status(200).json({

@@ -29,120 +29,243 @@ const getSr = async (request: any, response: Response) => {
         },
       });
     } else {
-      results = await prisma.sr.findMany({
+      const emplo = await prisma.employee.findFirst({
         where: {
-          user: {
-            username: request.session.userId,
-          },
-          no_sr: {
-            contains: pencarian,
-          },
+          employee_name: request.session.userId,
         },
-        include: {
-          wor: {
-            include: {
-              customerPo: {
-                include: {
-                  quotations: {
-                    include: {
-                      Customer: true,
-                      eqandpart: {
-                        include: {
-                          equipment: true,
-                          eq_part: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-          user: {
-            select: {
-              id: true,
-              username: true,
-              employee: {
-                select: {
-                  id: true,
-                  employee_name: true,
-                  position: true,
-                  sub_depart: {
-                    select: {
-                      id: true,
-                      name: true,
-                      departement: {
-                        select: {
-                          id: true,
-                          name: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-          dispacth: {
-            include: {
-              dispatchDetail: {
-                include: {
-                  aktivitas: {
-                    select: {
-                      id: true,
-                      aktivitasId: true,
-                      masterAktivitas: {
-                        select: {
-                          id: true,
-                          name: true,
-                        },
-                      },
-                    },
-                  },
-                  approve: {
-                    select: {
-                      id: true,
-                      employee_name: true,
-                    },
-                  },
-                  Employee: {
-                    select: {
-                      id: true,
-                      employee_name: true,
-                    },
-                  },
-                  sub_depart: true,
-                  workCenter: true,
-                },
-              },
-              srimg: {
-                include: {
-                  srimgdetail: true,
-                  timeschedule: {
-                    include: {
-                      aktivitas: {
-                        include: {
-                          masterAktivitas: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-          SrDetail: {
-            include: {
-              workCenter: true,
-            },
-          },
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: parseInt(pagination.perPage),
-        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
+      if (
+        emplo?.position === "Supervisor" ||
+        emplo?.position === "Manager" ||
+        emplo?.position === "Director"
+      ) {
+        results = await prisma.sr.findMany({
+          where: {
+            no_sr: {
+              contains: pencarian,
+            },
+          },
+          include: {
+            wor: {
+              include: {
+                customerPo: {
+                  include: {
+                    quotations: {
+                      include: {
+                        Customer: true,
+                        eqandpart: {
+                          include: {
+                            equipment: true,
+                            eq_part: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            user: {
+              select: {
+                id: true,
+                username: true,
+                employee: {
+                  select: {
+                    id: true,
+                    employee_name: true,
+                    position: true,
+                    sub_depart: {
+                      select: {
+                        id: true,
+                        name: true,
+                        departement: {
+                          select: {
+                            id: true,
+                            name: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            dispacth: {
+              include: {
+                dispatchDetail: {
+                  include: {
+                    aktivitas: {
+                      select: {
+                        id: true,
+                        aktivitasId: true,
+                        masterAktivitas: {
+                          select: {
+                            id: true,
+                            name: true,
+                          },
+                        },
+                      },
+                    },
+                    approve: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                      },
+                    },
+                    Employee: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                      },
+                    },
+                    sub_depart: true,
+                    workCenter: true,
+                  },
+                },
+                srimg: {
+                  include: {
+                    srimgdetail: true,
+                    timeschedule: {
+                      include: {
+                        aktivitas: {
+                          include: {
+                            masterAktivitas: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            SrDetail: {
+              include: {
+                workCenter: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: parseInt(pagination.perPage),
+          skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+        });
+      } else {
+        results = await prisma.sr.findMany({
+          where: {
+            user: {
+              username: request.session.userId,
+            },
+            no_sr: {
+              contains: pencarian,
+            },
+          },
+          include: {
+            wor: {
+              include: {
+                customerPo: {
+                  include: {
+                    quotations: {
+                      include: {
+                        Customer: true,
+                        eqandpart: {
+                          include: {
+                            equipment: true,
+                            eq_part: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            user: {
+              select: {
+                id: true,
+                username: true,
+                employee: {
+                  select: {
+                    id: true,
+                    employee_name: true,
+                    position: true,
+                    sub_depart: {
+                      select: {
+                        id: true,
+                        name: true,
+                        departement: {
+                          select: {
+                            id: true,
+                            name: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            dispacth: {
+              include: {
+                dispatchDetail: {
+                  include: {
+                    aktivitas: {
+                      select: {
+                        id: true,
+                        aktivitasId: true,
+                        masterAktivitas: {
+                          select: {
+                            id: true,
+                            name: true,
+                          },
+                        },
+                      },
+                    },
+                    approve: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                      },
+                    },
+                    Employee: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                      },
+                    },
+                    sub_depart: true,
+                    workCenter: true,
+                  },
+                },
+                srimg: {
+                  include: {
+                    srimgdetail: true,
+                    timeschedule: {
+                      include: {
+                        aktivitas: {
+                          include: {
+                            masterAktivitas: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            SrDetail: {
+              include: {
+                workCenter: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: parseInt(pagination.perPage),
+          skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+        });
+      }
     }
     if (results.length > 0) {
       return response.status(200).json({
