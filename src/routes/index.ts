@@ -737,6 +737,16 @@ router.put(
   srimg.updateImgSr
 );
 router.delete(
+  "/summaryStatusSpv/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
+  srimg.updateSumaryStatus
+);
+router.delete(
+  "/summaryStatusManager/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
+  srimg.updateSumaryStatusM
+);
+router.delete(
   "/summary/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
   srimg.deleteSrimg
@@ -1188,37 +1198,107 @@ router.get(
 );
 router.post(
   "/MR",
-  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   MR.createMr
 );
 router.put(
   "/MR",
-  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   MR.upsertMr
 );
 router.put(
   "/MR/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   MR.updateMr
 );
 router.put(
   "/MRStatusSpv/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   MR.updateMrStatus
 );
 router.put(
   "/MRStatusManger/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   MR.updateMrStatusM
 );
 router.delete(
   "/MR/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   MR.deleteMr
 );
 router.delete(
   "/MRdetail/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   MR.deleteMrDetail
 );
 
@@ -1243,37 +1323,107 @@ router.get(
 );
 router.post(
   "/SR",
-  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   SR.createSr
 );
 router.put(
   "/SR/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   SR.updateSr
 );
 router.put(
   "/SRstatusSpv/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   SR.updateSrStatus
 );
 router.put(
   "/SRstatusManager/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   SR.updateSrStatusM
 );
 router.put(
   "/SR",
-  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   SR.upsertSr
 );
 router.delete(
   "/SR/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   SR.deleteSr
 );
 router.delete(
   "/SRdetail/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   SR.deleteDetailSr
 );
 

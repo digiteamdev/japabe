@@ -126,7 +126,7 @@ const getTimeschedule = async (request: Request, response: Response) => {
           },
         },
         orderBy: {
-          createdAt: "desc",
+          updatedAt: "desc",
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
