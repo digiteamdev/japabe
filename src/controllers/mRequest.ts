@@ -26,9 +26,15 @@ const getMr = async (request: any, response: Response) => {
         },
       });
     } else {
+      const userLogin = await prisma.user.findFirst({
+        where: {
+          username: request.session.userId,
+        },
+      });
+      const a: any = userLogin?.employeeId;
       const emplo = await prisma.employee.findFirst({
         where: {
-          employee_name: request.session.userId,
+          id: a,
         },
       });
       if (

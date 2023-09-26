@@ -83,7 +83,7 @@ model User {
   Mr              Mr[]
   Sr              Sr[]
 
-  @@index([id])
+  @@index([id, employeeId])
   @@map("user")
 }
 
@@ -96,6 +96,8 @@ model userRole {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
+
+  @@index([id, userId, roleId])
 }
 
 model Session {
