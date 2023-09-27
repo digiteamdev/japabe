@@ -760,7 +760,7 @@ const getApproval = async (request: Request, response: Response) => {
 };
 
 const updateApproval = async (request: Request, response: Response) => {
-  try {
+  try {    
     const id: string = request.body.id;
     let result: any = [];
     result = await prisma.mr.update({
@@ -770,9 +770,9 @@ const updateApproval = async (request: Request, response: Response) => {
       data: {
         idMrAppr: request.body.idMrAppr,
         dateOfAppr: new Date(request.body.dateOfAppr),
-        user: { connect: { id: request.body.approveById } },
+        approvebyMr: { connect: { id: request.body.approveById } },
       },
-    });
+    });    
     const updateVerify = request.body.detailMr.map(
       (updateByveri: { mrappr: any; supId: any; qtyAppr: any; id: any }) => {
         return {
