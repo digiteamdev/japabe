@@ -629,7 +629,17 @@ router.get(
 );
 router.get(
   "/masterMaterial",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   typeMr.getMasterM
 );
 router.get(

@@ -82,6 +82,8 @@ model User {
   userRole        userRole[]
   Mr              Mr[]
   Sr              Sr[]
+  approvebyMr     Mr[]       @relation(name: "approveMr")
+  approvebySr     Sr[]       @relation(name: "approveSr")
 
   @@index([id, employeeId])
   @@map("user")
@@ -393,6 +395,8 @@ model Supplier {
   deleted         DateTime?
   SupplierContact SupplierContact[] @relation("suppliercontact")
   SupplierBank    SupplierBank[]    @relation("supplierbank")
+  detailMr        detailMr[]
+  SrDetail        SrDetail[]
 
   @@index([id, id_sup, supplier_name])
 }
@@ -835,12 +839,16 @@ model Mr {
   userId         String
   status_spv     String?    @db.VarChar(20)
   status_manager String?    @db.VarChar(20)
+  idMrAppr       String?    @db.VarChar(20)
+  dateOfAppr     DateTime?
+  approvebyMr    User?      @relation(fields: [approveById], references: [id], name: "approveMr")
+  approveById    String?
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
   deleted        DateTime?
   detailMr       detailMr[]
 
-  @@index([id, no_mr, userId])
+  @@index([id, no_mr, userId, idMrAppr])
 }
 
 model detailMr {
@@ -854,11 +862,26 @@ model detailMr {
   materialStockId String?
   note            String?         @db.Text
   qty             Int             @default(0)
+  mrappr          MrAppr?
+  supplier        Supplier?       @relation(fields: [supId], references: [id])
+  supId           String?
+  qtyAppr         Int             @default(0)
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   deleted         DateTime?
 
   @@index([id, mrId, bomIdD, spesifikasi])
+}
+
+enum MrAppr {
+  DP
+  Stock
+  PO
+}
+
+enum SrAppr {
+  DSO
+  SO
 }
 
 model Sr {
@@ -873,12 +896,16 @@ model Sr {
   dispacthIDS    String?    @unique
   status_spv     String?    @db.VarChar(20)
   status_manager String?    @db.VarChar(20)
+  idSrAppr       String?    @db.VarChar(20)
+  dateOfAppr     DateTime?
+  approvebySr    User?      @relation(fields: [approveById], references: [id], name: "approveSr")
+  approveById    String?
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
   deleted        DateTime?
   SrDetail       SrDetail[]
 
-  @@index([id, no_sr, dispacthIDS])
+  @@index([id, no_sr, dispacthIDS, idSrAppr])
 }
 
 model SrDetail {
@@ -893,9 +920,24 @@ model SrDetail {
   workCenter       workCenter?     @relation(fields: [description], references: [id])
   description      String?
   note             String?         @db.Text
+  srappr           SrAppr?
+  supplier         Supplier?       @relation(fields: [supId], references: [id])
+  supId            String?
+  qtyAppr          Int             @default(0)
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
   deleted          DateTime?
 
   @@index([id, srId, dispacthdetailId])
+}
+
+model coa {
+  id        String    @id @default(cuid())
+  coa_code  String    @db.VarChar(20)
+  coa_name  String    @db.VarChar(200)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  @@index([id, coa_code, coa_name])
 }
