@@ -1206,6 +1206,21 @@ router.get(
   }),
   MR.getMr
 );
+router.get(
+  "/MRapprove",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  MR.getApproval
+);
 router.post(
   "/MR",
   jwt.authToken({
@@ -1255,14 +1270,7 @@ router.put(
   "/MRStatusSpv/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   MR.updateMrStatus
 );
@@ -1270,16 +1278,17 @@ router.put(
   "/MRStatusManger/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   MR.updateMrStatusM
+);
+router.put(
+  "/MRapprove",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    purchasing: "PURCHASING",
+  }),
+  MR.updateApproval
 );
 router.delete(
   "/MR/:id",

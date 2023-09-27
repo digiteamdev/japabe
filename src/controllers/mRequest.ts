@@ -471,8 +471,6 @@ const upsertMr = async (request: Request, response: Response) => {
       });
     }
   } catch (error) {
-    console.log(error);
-
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
 };
@@ -619,13 +617,212 @@ const deleteMrDetail = async (request: Request, response: Response) => {
   }
 };
 
+const getApproval = async (request: Request, response: Response) => {
+  try {
+    const pencarian: any = request.query.search || "";
+    const hostname: any = request.headers.host;
+    const pathname = url.parse(request.url).pathname;
+    const page: any = request.query.page;
+    const perPage: any = request.query.perPage;
+    const pagination: any = new pagging(page, perPage, hostname, pathname);
+    const approvalCount = await prisma.mr.count({
+      where: {
+        deleted: null,
+        status_manager: "valid",
+        status_spv: "valid",
+      },
+    });
+    const results = await prisma.mr.findMany({
+      where: {
+        OR: [
+          {
+            status_manager: "valid",
+          },
+          {
+            status_spv: "valid",
+          },
+          {
+            idMrAppr: null,
+          },
+          {
+            idMrAppr: {
+              contains: pencarian,
+            },
+          },
+        ],
+      },
+      include: {
+        wor: true,
+        bom: {
+          include: {
+            bom_detail: {
+              include: {
+                Material_master: {
+                  include: {
+                    Material_Stock: true,
+                    grup_material: true,
+                  },
+                },
+              },
+            },
+            srimg: {
+              include: {
+                srimgdetail: true,
+                timeschedule: {
+                  include: {
+                    wor: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        detailMr: {
+          include: {
+            bom_detail: {
+              include: {
+                bom: {
+                  include: {
+                    srimg: {
+                      include: {
+                        srimgdetail: true,
+                        timeschedule: {
+                          include: {
+                            wor: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            Material_Stock: {
+              include: {
+                Material_master: {
+                  include: {
+                    grup_material: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            username: true,
+            employee: {
+              select: {
+                id: true,
+                employee_name: true,
+                position: true,
+                sub_depart: {
+                  select: {
+                    id: true,
+                    name: true,
+                    departement: {
+                      select: {
+                        id: true,
+                        name: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: parseInt(pagination.perPage),
+      skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+    });
+
+    if (results.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All MrApproval",
+        result: results,
+        page: pagination.page,
+        limit: pagination.perPage,
+        totalData: approvalCount,
+        currentPage: pagination.currentPage,
+        nextPage: pagination.next(),
+        previouspage: pagination.prev(),
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updateApproval = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.body.id;
+    let result: any = [];
+    result = await prisma.mr.update({
+      where: {
+        id: id,
+      },
+      data: {
+        idMrAppr: request.body.idMrAppr,
+        dateOfAppr: new Date(request.body.dateOfAppr),
+        user: { connect: { id: request.body.approveById } },
+      },
+    });
+    const updateVerify = request.body.detailMr.map(
+      (updateByveri: { mrappr: any; supId: any; qtyAppr: any; id: any }) => {
+        return {
+          mrappr: updateByveri.mrappr,
+          supId: updateByveri.supId,
+          qtyAppr: updateByveri.qtyAppr,
+          id: updateByveri.id,
+        };
+      }
+    );
+    for (let i = 0; i < updateVerify.length; i++) {
+      let upsertDetailMr;
+      upsertDetailMr = await prisma.detailMr.update({
+        where: {
+          id: updateVerify[i].id,
+        },
+        data: {
+          mrappr: updateVerify[i].mrappr,
+          supplier: { connect: { id: updateVerify[i].supId } },
+          qtyAppr: parseInt(updateVerify[i].qtyAppr),
+        },
+      });
+      result = [...result, upsertDetailMr];
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: updateMr,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getMr,
+  getApproval,
   createMr,
   updateMr,
   upsertMr,
   updateMrStatus,
   updateMrStatusM,
+  updateApproval,
   deleteMr,
   deleteMrDetail,
 };
