@@ -619,6 +619,345 @@ const deleteDetailSr = async (request: Request, response: Response) => {
   }
 };
 
+const getApprovalSr = async (request: Request, response: Response) => {
+  try {
+    const pencarian: any = request.query.search || "";
+    const hostname: any = request.headers.host;
+    const pathname = url.parse(request.url).pathname;
+    const page: any = request.query.page;
+    const perPage: any = request.query.perPage;
+    const pagination: any = new pagging(page, perPage, hostname, pathname);
+    const approvalCount = await prisma.sr.count({
+      where: {
+        deleted: null,
+        status_manager: "valid",
+        status_spv: "valid",
+      },
+    });
+    let results;
+    if (request.query.page === undefined) {
+      results = await prisma.sr.findMany({
+        where: {
+          idSrAppr: null,
+          NOT: [
+            {
+              status_manager: null,
+            },
+            {
+              status_spv: null,
+            },
+          ],
+        },
+        include: {
+          wor: {
+            include: {
+              customerPo: {
+                include: {
+                  quotations: {
+                    include: {
+                      Customer: true,
+                      eqandpart: {
+                        include: {
+                          equipment: true,
+                          eq_part: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          user: {
+            select: {
+              id: true,
+              username: true,
+              employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                  position: true,
+                  sub_depart: {
+                    select: {
+                      id: true,
+                      name: true,
+                      departement: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          dispacth: {
+            include: {
+              dispatchDetail: {
+                include: {
+                  aktivitas: {
+                    select: {
+                      id: true,
+                      aktivitasId: true,
+                      masterAktivitas: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
+                      },
+                    },
+                  },
+                  approve: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                    },
+                  },
+                  Employee: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                    },
+                  },
+                  sub_depart: true,
+                  workCenter: true,
+                },
+              },
+              srimg: {
+                include: {
+                  srimgdetail: true,
+                  timeschedule: {
+                    include: {
+                      aktivitas: {
+                        include: {
+                          masterAktivitas: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          SrDetail: {
+            include: {
+              workCenter: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+    } else {
+      results = await prisma.sr.findMany({
+        where: {
+          AND: [
+            {
+              status_manager: "valid",
+            },
+            {
+              status_spv: "valid",
+            },
+            {
+              idSrAppr: {
+                contains: pencarian,
+              },
+            },
+          ],
+          NOT: [
+            {
+              idSrAppr: null,
+            },
+            {
+              status_manager: null,
+            },
+            {
+              status_spv: null,
+            },
+          ],
+        },
+        include: {
+          wor: {
+            include: {
+              customerPo: {
+                include: {
+                  quotations: {
+                    include: {
+                      Customer: true,
+                      eqandpart: {
+                        include: {
+                          equipment: true,
+                          eq_part: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          user: {
+            select: {
+              id: true,
+              username: true,
+              employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                  position: true,
+                  sub_depart: {
+                    select: {
+                      id: true,
+                      name: true,
+                      departement: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          dispacth: {
+            include: {
+              dispatchDetail: {
+                include: {
+                  aktivitas: {
+                    select: {
+                      id: true,
+                      aktivitasId: true,
+                      masterAktivitas: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
+                      },
+                    },
+                  },
+                  approve: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                    },
+                  },
+                  Employee: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                    },
+                  },
+                  sub_depart: true,
+                  workCenter: true,
+                },
+              },
+              srimg: {
+                include: {
+                  srimgdetail: true,
+                  timeschedule: {
+                    include: {
+                      aktivitas: {
+                        include: {
+                          masterAktivitas: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          SrDetail: {
+            include: {
+              workCenter: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: parseInt(pagination.perPage),
+        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+      });
+    }
+    if (results.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All MrApproval",
+        result: results,
+        page: pagination.page,
+        limit: pagination.perPage,
+        totalData: approvalCount,
+        currentPage: pagination.currentPage,
+        nextPage: pagination.next(),
+        previouspage: pagination.prev(),
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updateApprovalSr = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.body.id;
+    let result: any = [];
+    result = await prisma.sr.update({
+      where: {
+        id: id,
+      },
+      data: {
+        idSrAppr: request.body.idSrAppr,
+        dateOfAppr: new Date(request.body.dateOfAppr),
+        approvebySr: { connect: { id: request.body.approveById } },
+      },
+    });
+    const updateVerify = request.body.srDetail.map(
+      (updateByveri: { srappr: any; supId: any; qtyAppr: any; id: any }) => {
+        return {
+          srappr: updateByveri.srappr,
+          supId: updateByveri.supId,
+          qtyAppr: updateByveri.qtyAppr,
+          id: updateByveri.id,
+        };
+      }
+    );
+    for (let i = 0; i < updateVerify.length; i++) {
+      let upsertDetailSr;
+      upsertDetailSr = await prisma.srDetail.update({
+        where: {
+          id: updateVerify[i].id,
+        },
+        data: {
+          srappr: updateVerify[i].mrappr,
+          supplier: { connect: { id: updateVerify[i].supId } },
+          qtyAppr: parseInt(updateVerify[i].qtyAppr),
+        },
+      });
+      result = [...result, upsertDetailSr];
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getSr,
   createSr,
@@ -628,4 +967,6 @@ export default {
   updateSrStatusM,
   deleteSr,
   deleteDetailSr,
+  getApprovalSr,
+  updateApprovalSr,
 };

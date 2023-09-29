@@ -636,10 +636,8 @@ const getApproval = async (request: Request, response: Response) => {
     if (request.query.page === undefined) {
       results = await prisma.mr.findMany({
         where: {
-          AND: [
-            {
-              idMrAppr: null,
-            },
+          idMrAppr: null,
+          NOT: [
             {
               status_manager: null,
             },
@@ -913,7 +911,7 @@ const updateApproval = async (request: Request, response: Response) => {
       response.status(201).json({
         success: true,
         massage: "Success Update Data",
-        results: updateMr,
+        results: result,
       });
     } else {
       response.status(400).json({

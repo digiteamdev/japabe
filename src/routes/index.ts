@@ -1340,6 +1340,21 @@ router.get(
   }),
   SR.getSr
 );
+router.get(
+  "/SRapprove",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  SR.getApprovalSr
+);
 router.post(
   "/SR",
   jwt.authToken({
@@ -1414,6 +1429,21 @@ router.put(
     utility: "Utility/ty",
   }),
   SR.upsertSr
+);
+router.put(
+  "/SRapprove",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  SR.updateApprovalSr
 );
 router.delete(
   "/SR/:id",
