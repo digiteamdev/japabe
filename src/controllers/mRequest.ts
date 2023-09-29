@@ -762,6 +762,31 @@ const getApproval = async (request: Request, response: Response) => {
           ],
         },
         include: {
+          approvebyMr: {
+            select: {
+              id: true,
+              username: true,
+              employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                  position: true,
+                  sub_depart: {
+                    select: {
+                      id: true,
+                      name: true,
+                      departement: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
           wor: true,
           bom: {
             include: {
@@ -789,6 +814,7 @@ const getApproval = async (request: Request, response: Response) => {
           },
           detailMr: {
             include: {
+              supplier: true,
               bom_detail: {
                 include: {
                   bom: {
