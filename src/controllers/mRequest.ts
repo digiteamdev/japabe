@@ -632,63 +632,61 @@ const getApproval = async (request: Request, response: Response) => {
         status_spv: "valid",
       },
     });
-    const results = await prisma.mr.findMany({
-      where: {
-        OR: [
-          {
-            status_manager: "valid",
-          },
-          {
-            status_spv: "valid",
-          },
-          {
-            idMrAppr: null,
-          },
-          {
-            idMrAppr: {
-              contains: pencarian,
+    let results;
+    if (request.query.page === undefined) {
+      results = await prisma.mr.findMany({
+        where: {
+          AND: [
+            {
+              idMrAppr: null,
             },
-          },
-        ],
-      },
-      include: {
-        wor: true,
-        bom: {
-          include: {
-            bom_detail: {
-              include: {
-                Material_master: {
-                  include: {
-                    Material_Stock: true,
-                    grup_material: true,
-                  },
-                },
-              },
+            {
+              status_manager: null,
             },
-            srimg: {
-              include: {
-                srimgdetail: true,
-                timeschedule: {
-                  include: {
-                    wor: true,
-                  },
-                },
-              },
+            {
+              status_spv: null,
             },
-          },
+          ],
         },
-        detailMr: {
-          include: {
-            bom_detail: {
-              include: {
-                bom: {
-                  include: {
-                    srimg: {
-                      include: {
-                        srimgdetail: true,
-                        timeschedule: {
-                          include: {
-                            wor: true,
+        include: {
+          wor: true,
+          bom: {
+            include: {
+              bom_detail: {
+                include: {
+                  Material_master: {
+                    include: {
+                      Material_Stock: true,
+                      grup_material: true,
+                    },
+                  },
+                },
+              },
+              srimg: {
+                include: {
+                  srimgdetail: true,
+                  timeschedule: {
+                    include: {
+                      wor: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          detailMr: {
+            include: {
+              bom_detail: {
+                include: {
+                  bom: {
+                    include: {
+                      srimg: {
+                        include: {
+                          srimgdetail: true,
+                          timeschedule: {
+                            include: {
+                              wor: true,
+                            },
                           },
                         },
                       },
@@ -696,35 +694,35 @@ const getApproval = async (request: Request, response: Response) => {
                   },
                 },
               },
-            },
-            Material_Stock: {
-              include: {
-                Material_master: {
-                  include: {
-                    grup_material: true,
+              Material_Stock: {
+                include: {
+                  Material_master: {
+                    include: {
+                      grup_material: true,
+                    },
                   },
                 },
               },
             },
           },
-        },
-        user: {
-          select: {
-            id: true,
-            username: true,
-            employee: {
-              select: {
-                id: true,
-                employee_name: true,
-                position: true,
-                sub_depart: {
-                  select: {
-                    id: true,
-                    name: true,
-                    departement: {
-                      select: {
-                        id: true,
-                        name: true,
+          user: {
+            select: {
+              id: true,
+              username: true,
+              employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                  position: true,
+                  sub_depart: {
+                    select: {
+                      id: true,
+                      name: true,
+                      departement: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
                       },
                     },
                   },
@@ -733,14 +731,128 @@ const getApproval = async (request: Request, response: Response) => {
             },
           },
         },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      take: parseInt(pagination.perPage),
-      skip: parseInt(pagination.page) * parseInt(pagination.perPage),
-    });
-
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+    } else {
+      results = await prisma.mr.findMany({
+        where: {
+          AND: [
+            {
+              status_manager: "valid",
+            },
+            {
+              status_spv: "valid",
+            },
+            {
+              idMrAppr: {
+                contains: pencarian,
+              },
+            },
+          ],
+          NOT: [
+            {
+              idMrAppr: null,
+            },
+            {
+              status_manager: null,
+            },
+            {
+              status_spv: null,
+            },
+          ],
+        },
+        include: {
+          wor: true,
+          bom: {
+            include: {
+              bom_detail: {
+                include: {
+                  Material_master: {
+                    include: {
+                      Material_Stock: true,
+                      grup_material: true,
+                    },
+                  },
+                },
+              },
+              srimg: {
+                include: {
+                  srimgdetail: true,
+                  timeschedule: {
+                    include: {
+                      wor: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          detailMr: {
+            include: {
+              bom_detail: {
+                include: {
+                  bom: {
+                    include: {
+                      srimg: {
+                        include: {
+                          srimgdetail: true,
+                          timeschedule: {
+                            include: {
+                              wor: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              Material_Stock: {
+                include: {
+                  Material_master: {
+                    include: {
+                      grup_material: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          user: {
+            select: {
+              id: true,
+              username: true,
+              employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                  position: true,
+                  sub_depart: {
+                    select: {
+                      id: true,
+                      name: true,
+                      departement: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: parseInt(pagination.perPage),
+        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+      });
+    }
     if (results.length > 0) {
       return response.status(200).json({
         success: true,
@@ -760,7 +872,7 @@ const getApproval = async (request: Request, response: Response) => {
 };
 
 const updateApproval = async (request: Request, response: Response) => {
-  try {    
+  try {
     const id: string = request.body.id;
     let result: any = [];
     result = await prisma.mr.update({
@@ -772,7 +884,7 @@ const updateApproval = async (request: Request, response: Response) => {
         dateOfAppr: new Date(request.body.dateOfAppr),
         approvebyMr: { connect: { id: request.body.approveById } },
       },
-    });    
+    });
     const updateVerify = request.body.detailMr.map(
       (updateByveri: { mrappr: any; supId: any; qtyAppr: any; id: any }) => {
         return {
