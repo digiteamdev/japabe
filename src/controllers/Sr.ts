@@ -353,18 +353,28 @@ const createSr = async (request: Request, response: Response) => {
   }
 };
 
-const updateSrStatus = async (request: Request, response: Response) => {
+const updateSrStatus = async (request: any, response: Response) => {
   try {
     const id = request.params.id;
+    const userLogin = await prisma.user.findFirst({
+      where: {
+        username: request.session.userId,
+      },
+    });
+    const a: any = userLogin?.employeeId;
+    const emplo = await prisma.employee.findFirst({
+      where: {
+        id: a,
+      },
+    });
     const statusPenc = await prisma.sr.findFirst({
       where: {
         id: id,
       },
     });
-
     let result;
     if (
-      statusPenc?.status_spv === null ||
+      (emplo?.position === "Supervisor" && statusPenc?.status_spv === null) ||
       statusPenc?.status_spv === "unvalid"
     ) {
       const id = request.params.id;
@@ -399,9 +409,20 @@ const updateSrStatus = async (request: Request, response: Response) => {
   }
 };
 
-const updateSrStatusM = async (request: Request, response: Response) => {
+const updateSrStatusM = async (request: any, response: Response) => {
   try {
     const id = request.params.id;
+    const userLogin = await prisma.user.findFirst({
+      where: {
+        username: request.session.userId,
+      },
+    });
+    const a: any = userLogin?.employeeId;
+    const emplo = await prisma.employee.findFirst({
+      where: {
+        id: a,
+      },
+    });
     const statusPenc = await prisma.sr.findFirst({
       where: {
         id: id,
@@ -410,7 +431,7 @@ const updateSrStatusM = async (request: Request, response: Response) => {
 
     let result;
     if (
-      statusPenc?.status_manager === null ||
+      (emplo?.position === "Manager" && statusPenc?.status_manager === null) ||
       statusPenc?.status_manager === "unvalid"
     ) {
       const id = request.params.id;

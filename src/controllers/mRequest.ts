@@ -269,7 +269,7 @@ const createMr = async (request: Request, response: Response) => {
     const genarate = "MR" + r;
     const bomNull = request.body.bomIdU;
     let results;
-    if (bomNull === null)
+    if (bomNull === null) {
       results = await prisma.mr.create({
         data: {
           no_mr: genarate,
@@ -284,7 +284,7 @@ const createMr = async (request: Request, response: Response) => {
           detailMr: true,
         },
       });
-    if (bomNull !== null)
+    } else {
       results = await prisma.mr.create({
         data: {
           no_mr: genarate,
@@ -300,6 +300,7 @@ const createMr = async (request: Request, response: Response) => {
           detailMr: true,
         },
       });
+    }
     // let obj: any = {};
     // let stok = request.body.detailMr;
     // stok.map((e: any) => {
@@ -475,18 +476,28 @@ const upsertMr = async (request: Request, response: Response) => {
   }
 };
 
-const updateMrStatus = async (request: Request, response: Response) => {
+const updateMrStatus = async (request: any, response: Response) => {
   try {
     const id = request.params.id;
+    const userLogin = await prisma.user.findFirst({
+      where: {
+        username: request.session.userId,
+      },
+    });
+    const a: any = userLogin?.employeeId;
+    const emplo = await prisma.employee.findFirst({
+      where: {
+        id: a,
+      },
+    });
     const statusPenc = await prisma.mr.findFirst({
       where: {
         id: id,
       },
     });
-
     let result;
     if (
-      statusPenc?.status_spv === null ||
+      (emplo?.position === "Supervisor" && statusPenc?.status_spv === null) ||
       statusPenc?.status_spv === "unvalid"
     ) {
       const id = request.params.id;
@@ -521,18 +532,28 @@ const updateMrStatus = async (request: Request, response: Response) => {
   }
 };
 
-const updateMrStatusM = async (request: Request, response: Response) => {
+const updateMrStatusM = async (request: any, response: Response) => {
   try {
     const id = request.params.id;
+    const userLogin = await prisma.user.findFirst({
+      where: {
+        username: request.session.userId,
+      },
+    });
+    const a: any = userLogin?.employeeId;
+    const emplo = await prisma.employee.findFirst({
+      where: {
+        id: a,
+      },
+    });
     const statusPenc = await prisma.mr.findFirst({
       where: {
         id: id,
       },
     });
-
     let result;
     if (
-      statusPenc?.status_manager === null ||
+      (emplo?.position === "Manager" && statusPenc?.status_manager === null) ||
       statusPenc?.status_manager === "unvalid"
     ) {
       const id = request.params.id;
