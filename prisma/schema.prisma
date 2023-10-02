@@ -923,7 +923,6 @@ model SrDetail {
   srappr           SrAppr?
   supplier         Supplier?       @relation(fields: [supId], references: [id])
   supId            String?
-  qtyAppr          Int             @default(0)
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
   deleted          DateTime?

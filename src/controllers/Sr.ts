@@ -973,11 +973,10 @@ const updateApprovalSr = async (request: Request, response: Response) => {
       },
     });
     const updateVerify = request.body.srDetail.map(
-      (updateByveri: { srappr: any; supId: any; qtyAppr: any; id: any }) => {
+      (updateByveri: { srappr: any; supId: any; id: any }) => {
         return {
           srappr: updateByveri.srappr,
           supId: updateByveri.supId,
-          qtyAppr: updateByveri.qtyAppr,
           id: updateByveri.id,
         };
       }
@@ -989,9 +988,8 @@ const updateApprovalSr = async (request: Request, response: Response) => {
           id: updateVerify[i].id,
         },
         data: {
-          srappr: updateVerify[i].mrappr,
+          srappr: updateVerify[i].srappr,
           supplier: { connect: { id: updateVerify[i].supId } },
-          qtyAppr: parseInt(updateVerify[i].qtyAppr),
         },
       });
       result = [...result, upsertDetailSr];

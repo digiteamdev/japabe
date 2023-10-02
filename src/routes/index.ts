@@ -27,6 +27,7 @@ import drawing from "../controllers/drawing";
 import bom from "../controllers/bom";
 import MR from "../controllers/mRequest";
 import SR from "../controllers/Sr";
+import coa from "../controllers/coa";
 
 /***************************AUTH********************************* */
 
@@ -1498,5 +1499,40 @@ router.delete(
 );
 
 /***************************Service Request********************************* */
+
+/***************************Master COA********************************* */
+
+router.get(
+  "/coa",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  coa.getCoa
+);
+router.post(
+  "/coa",
+  jwt.authToken({ administrator: "ADMINISTRATOR", utility: "Utility/ty" }),
+  coa.createCoa
+);
+router.put(
+  "/coa/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR", utility: "Utility/ty" }),
+  coa.updateCoa
+);
+router.delete(
+  "/coa/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR", utility: "Utility/ty" }),
+  coa.deleteCoa
+);
+
+/***************************Master COA********************************* */
 
 export default router;
