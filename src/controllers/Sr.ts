@@ -304,7 +304,7 @@ const createSr = async (request: Request, response: Response) => {
     const genarate = "SR" + r;
     const dispatchNull = request.body.dispacthIDS;
     let results;
-    if (dispatchNull === null)
+    if (dispatchNull === null) {
       results = await prisma.sr.create({
         data: {
           no_sr: genarate,
@@ -319,7 +319,7 @@ const createSr = async (request: Request, response: Response) => {
           SrDetail: true,
         },
       });
-    if (dispatchNull !== null)
+    } else {
       results = await prisma.sr.create({
         data: {
           no_sr: genarate,
@@ -335,6 +335,7 @@ const createSr = async (request: Request, response: Response) => {
           SrDetail: true,
         },
       });
+    }
     if (results) {
       response.status(201).json({
         success: true,
