@@ -783,31 +783,6 @@ const getApproval = async (request: Request, response: Response) => {
           ],
         },
         include: {
-          approvebyMr: {
-            select: {
-              id: true,
-              username: true,
-              employee: {
-                select: {
-                  id: true,
-                  employee_name: true,
-                  position: true,
-                  sub_depart: {
-                    select: {
-                      id: true,
-                      name: true,
-                      departement: {
-                        select: {
-                          id: true,
-                          name: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
           wor: true,
           bom: {
             include: {
@@ -934,7 +909,6 @@ const updateApproval = async (request: Request, response: Response) => {
       data: {
         idMrAppr: request.body.idMrAppr,
         dateOfAppr: new Date(request.body.dateOfAppr),
-        approvebyMr: { connect: { id: request.body.approveById } },
       },
     });
     const updateVerify = request.body.detailMr.map(
@@ -986,11 +960,11 @@ const getPrM = async (request: Request, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const pr = await prisma.mr.count({
+    const pr = await prisma.detailMr.count({
       where: {
         deleted: null,
         NOT: {
-          idPurchase: null,
+          idPurchaseR: null,
         },
       },
     });
@@ -998,7 +972,7 @@ const getPrM = async (request: Request, response: Response) => {
     if (request.query.page === undefined) {
       results = await prisma.mr.findMany({
         where: {
-          idPurchase: null,
+          // idPurchase: null,
           NOT: [
             {
               status_manager: null,
@@ -1100,15 +1074,15 @@ const getPrM = async (request: Request, response: Response) => {
         where: {
           AND: [
             {
-              idPurchase: {
-                contains: pencarian,
-              },
+              // idPurchase: {
+              //   contains: pencarian,
+              // },
             },
           ],
           NOT: [
-            {
-              idPurchase: null,
-            },
+            // {
+            //   idPurchase: null,
+            // },
             {
               status_manager: null,
             },
@@ -1118,31 +1092,6 @@ const getPrM = async (request: Request, response: Response) => {
           ],
         },
         include: {
-          approvebyMr: {
-            select: {
-              id: true,
-              username: true,
-              employee: {
-                select: {
-                  id: true,
-                  employee_name: true,
-                  position: true,
-                  sub_depart: {
-                    select: {
-                      id: true,
-                      name: true,
-                      departement: {
-                        select: {
-                          id: true,
-                          name: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
           wor: true,
           bom: {
             include: {
@@ -1268,8 +1217,8 @@ const updatePr = async (request: Request, response: Response) => {
         id: id,
       },
       data: {
-        idPurchase: request.body.idPurchase,
-        dateOfPr: new Date(request.body.dateOfPr),
+        // idPurchase: request.body.idPurchase,
+        // dateOfPr: new Date(request.body.dateOfPr),
       },
     });
     const updateVerify = request.body.detailMr.map(

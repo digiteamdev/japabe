@@ -70,20 +70,21 @@ model Employee {
 }
 
 model User {
-  id              String     @id @default(cuid())
-  username        String     @unique @db.VarChar(50)
-  hashed_password String     @db.VarChar(100)
+  id              String            @id @default(cuid())
+  username        String            @unique @db.VarChar(50)
+  hashed_password String            @db.VarChar(100)
   session         Session?
-  employee        Employee?  @relation(fields: [employeeId], references: [id])
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  employee        Employee?         @relation(fields: [employeeId], references: [id])
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
   deleted         DateTime?
   employeeId      String?
   userRole        userRole[]
   Mr              Mr[]
   Sr              Sr[]
-  approvebyMr     Mr[]       @relation(name: "approveMr")
-  approvebySr     Sr[]       @relation(name: "approveSr")
+  approvebySr     Sr[]              @relation(name: "approveSr")
+  purchase        purchase[]
+  approvedRequest approvedRequest[]
 
   @@index([id, employeeId])
   @@map("user")
@@ -878,16 +879,12 @@ model Mr {
   status_manager_dmr String?    @db.VarChar(20)
   idMrAppr           String?    @db.VarChar(20)
   dateOfAppr         DateTime?
-  approvebyMr        User?      @relation(fields: [approveById], references: [id], name: "approveMr")
-  approveById        String?
-  idPurchase         String?    @db.VarChar(20)
-  dateOfPr           DateTime?
   createdAt          DateTime   @default(now())
   updatedAt          DateTime   @updatedAt
   deleted            DateTime?
   detailMr           detailMr[]
 
-  @@index([id, no_mr, userId, idMrAppr, idPurchase])
+  @@index([id, no_mr, userId, idMrAppr])
 }
 
 model detailMr {
@@ -914,8 +911,41 @@ model detailMr {
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   deleted         DateTime?
+  purchase        purchase?       @relation(fields: [idPurchaseR], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  idPurchaseR     String?
 
   @@index([id, mrId, bomIdD, spesifikasi])
+}
+
+model purchase {
+  id                String     @id @default(cuid())
+  idPurchase        String     @db.VarChar(20)
+  dateOfPurchase    DateTime
+  cashAdv           String?    @db.VarChar(200)
+  totalAdv          Int        @default(0)
+  status_spv_pr     Boolean?   @default(false)
+  status_manager_pr Boolean?   @default(false)
+  approvebyPr       User?      @relation(fields: [approveById], references: [id])
+  approveById       String?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  deleted           DateTime?
+  detailMr          detailMr[]
+
+  @@index([id, idPurchase, dateOfPurchase])
+}
+
+model approvedRequest {
+  id                String    @id @default(cuid())
+  idApprove         String    @db.VarChar(200)
+  dateApprove       DateTime
+  status_spv_pr     Boolean?  @default(false)
+  status_manager_pr Boolean?  @default(false)
+  approveby         User?     @relation(fields: [approveById], references: [id])
+  approveById       String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deleted           DateTime?
 }
 
 model Sr {
