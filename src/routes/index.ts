@@ -1208,6 +1208,21 @@ router.get(
   MR.getMr
 );
 router.get(
+  "/mrDetail",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  MR.getdetailMr
+);
+router.get(
   "/MRapprove",
   jwt.authToken({
     administrator: "ADMINISTRATOR",

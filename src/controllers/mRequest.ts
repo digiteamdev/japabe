@@ -653,58 +653,58 @@ const getApproval = async (request: Request, response: Response) => {
         status_spv: "valid",
       },
     });
-    let results;
+    let results: any;
     if (request.query.page === undefined) {
-      results = await prisma.mr.findMany({
+      results = await prisma.approvedRequest.findMany({
         where: {
-          idMrAppr: null,
-          NOT: [
-            {
-              status_manager: null,
-            },
-            {
-              status_spv: null,
-            },
-          ],
+          idApprove: {
+            startsWith: "MP",
+          },
         },
         include: {
-          wor: true,
-          bom: {
-            include: {
-              bom_detail: {
-                include: {
-                  Material_master: {
-                    include: {
-                      Material_Stock: true,
-                      grup_material: true,
-                    },
-                  },
-                },
-              },
-              srimg: {
-                include: {
-                  srimgdetail: true,
-                  timeschedule: {
-                    include: {
-                      wor: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
           detailMr: {
             include: {
-              bom_detail: {
+              mr: {
                 include: {
+                  wor: true,
                   bom: {
                     include: {
+                      bom_detail: {
+                        include: {
+                          Material_master: {
+                            include: {
+                              Material_Stock: true,
+                              grup_material: true,
+                            },
+                          },
+                        },
+                      },
                       srimg: {
                         include: {
                           srimgdetail: true,
-                          timeschedule: {
-                            include: {
-                              wor: true,
+                        },
+                      },
+                    },
+                  },
+                  user: {
+                    select: {
+                      id: true,
+                      username: true,
+                      employee: {
+                        select: {
+                          id: true,
+                          employee_name: true,
+                          position: true,
+                          sub_depart: {
+                            select: {
+                              id: true,
+                              name: true,
+                              departement: {
+                                select: {
+                                  id: true,
+                                  name: true,
+                                },
+                              },
                             },
                           },
                         },
@@ -718,31 +718,6 @@ const getApproval = async (request: Request, response: Response) => {
                   Material_master: {
                     include: {
                       grup_material: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
-          user: {
-            select: {
-              id: true,
-              username: true,
-              employee: {
-                select: {
-                  id: true,
-                  employee_name: true,
-                  position: true,
-                  sub_depart: {
-                    select: {
-                      id: true,
-                      name: true,
-                      departement: {
-                        select: {
-                          id: true,
-                          name: true,
-                        },
-                      },
                     },
                   },
                 },
@@ -753,75 +728,69 @@ const getApproval = async (request: Request, response: Response) => {
         orderBy: {
           createdAt: "desc",
         },
+        take: parseInt(pagination.perPage),
+        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
     } else {
-      results = await prisma.mr.findMany({
+      results = await prisma.approvedRequest.findMany({
         where: {
-          AND: [
+          OR: [
             {
-              status_manager: "valid",
+              idApprove: {
+                startsWith: "MP",
+              },
             },
             {
-              status_spv: "valid",
-            },
-            {
-              idMrAppr: {
+              idApprove: {
                 contains: pencarian,
               },
             },
           ],
-          NOT: [
-            {
-              idMrAppr: null,
-            },
-            {
-              status_manager: null,
-            },
-            {
-              status_spv: null,
-            },
-          ],
         },
         include: {
-          wor: true,
-          bom: {
-            include: {
-              bom_detail: {
-                include: {
-                  Material_master: {
-                    include: {
-                      Material_Stock: true,
-                      grup_material: true,
-                    },
-                  },
-                },
-              },
-              srimg: {
-                include: {
-                  srimgdetail: true,
-                  timeschedule: {
-                    include: {
-                      wor: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
           detailMr: {
             include: {
-              approvedRequest: true,
-              supplier: true,
-              bom_detail: {
+              mr: {
                 include: {
+                  wor: true,
                   bom: {
                     include: {
+                      bom_detail: {
+                        include: {
+                          Material_master: {
+                            include: {
+                              Material_Stock: true,
+                              grup_material: true,
+                            },
+                          },
+                        },
+                      },
                       srimg: {
                         include: {
                           srimgdetail: true,
-                          timeschedule: {
-                            include: {
-                              wor: true,
+                        },
+                      },
+                    },
+                  },
+                  user: {
+                    select: {
+                      id: true,
+                      username: true,
+                      employee: {
+                        select: {
+                          id: true,
+                          employee_name: true,
+                          position: true,
+                          sub_depart: {
+                            select: {
+                              id: true,
+                              name: true,
+                              departement: {
+                                select: {
+                                  id: true,
+                                  name: true,
+                                },
+                              },
                             },
                           },
                         },
@@ -835,31 +804,6 @@ const getApproval = async (request: Request, response: Response) => {
                   Material_master: {
                     include: {
                       grup_material: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
-          user: {
-            select: {
-              id: true,
-              username: true,
-              employee: {
-                select: {
-                  id: true,
-                  employee_name: true,
-                  position: true,
-                  sub_depart: {
-                    select: {
-                      id: true,
-                      name: true,
-                      departement: {
-                        select: {
-                          id: true,
-                          name: true,
-                        },
-                      },
                     },
                   },
                 },
@@ -882,6 +826,126 @@ const getApproval = async (request: Request, response: Response) => {
         page: pagination.page,
         limit: pagination.perPage,
         totalData: approvalCount,
+        currentPage: pagination.currentPage,
+        nextPage: pagination.next(),
+        previouspage: pagination.prev(),
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const getdetailMr = async (request: Request, response: Response) => {
+  try {
+    const pencarian: any = request.query.search || "";
+    const hostname: any = request.headers.host;
+    const pathname = url.parse(request.url).pathname;
+    const page: any = request.query.page;
+    const perPage: any = request.query.perPage;
+    const pagination: any = new pagging(page, perPage, hostname, pathname);
+    const pr = await prisma.detailMr.count({
+      where: {
+        deleted: null,
+        NOT: {
+          idPurchaseR: null,
+        },
+      },
+    });
+    let results;
+    if (request.query.page === undefined) {
+      results = await prisma.detailMr.findMany({
+        where: {
+          approvedRequestId: null,
+        },
+        include: {
+          mr: {
+            include: {
+              wor: true,
+              bom: {
+                include: {
+                  bom_detail: {
+                    include: {
+                      Material_master: {
+                        include: {
+                          Material_Stock: true,
+                          grup_material: true,
+                        },
+                      },
+                    },
+                  },
+                  srimg: {
+                    include: {
+                      srimgdetail: true,
+                    },
+                  },
+                },
+              },
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                  employee: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                      position: true,
+                      sub_depart: {
+                        select: {
+                          id: true,
+                          name: true,
+                          departement: {
+                            select: {
+                              id: true,
+                              name: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          Material_Stock: {
+            include: {
+              Material_master: {
+                include: {
+                  grup_material: true,
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+    } else {
+      results = await prisma.mr.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: parseInt(pagination.perPage),
+        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+      });
+    }
+    if (results.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All detail material request",
+        result: results,
+        page: pagination.page,
+        limit: pagination.perPage,
+        totalData: pr,
         currentPage: pagination.currentPage,
         nextPage: pagination.next(),
         previouspage: pagination.prev(),
@@ -1275,6 +1339,7 @@ const updatePr = async (request: Request, response: Response) => {
 
 export default {
   getMr,
+  getdetailMr,
   getPrM,
   getApproval,
   createMr,
