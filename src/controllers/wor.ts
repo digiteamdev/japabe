@@ -369,7 +369,9 @@ const updateWorStatus = async (request: Request, response: Response) => {
           status: "valid",
           job_no: statusPenc.status === null ? genarate : statusPenc.job_no,
           job_no_mr:
-            statusPenc.status === null ? genarateMr : statusPenc.job_no_mr,
+            statusPenc.job_operational === true
+              ? genarateMr
+              : statusPenc.job_no_mr,
         },
       });
     } else {
