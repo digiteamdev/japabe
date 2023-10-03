@@ -1567,36 +1567,7 @@ router.put(
   }),
   MR.updatePr
 );
-router.put(
-  "/MRStatusSpvPr/:id",
-  jwt.authToken({
-    administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
-    purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
-  }),
-  MR.updateMrStatusPr
-);
-router.put(
-  "/MRStatusMangerPr/:id",
-  jwt.authToken({
-    administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
-    purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
-  }),
-  MR.updateMrStatusMPr
-);
+
 /***************************PurchaseMR********************************* */
 
 export default router;

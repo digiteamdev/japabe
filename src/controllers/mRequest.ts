@@ -810,6 +810,7 @@ const getApproval = async (request: Request, response: Response) => {
           },
           detailMr: {
             include: {
+              approvedRequest: true,
               supplier: true,
               bom_detail: {
                 include: {
@@ -902,13 +903,11 @@ const updateApproval = async (request: Request, response: Response) => {
   try {
     const id: string = request.body.id;
     let result: any = [];
-    result = await prisma.mr.update({
-      where: {
-        id: id,
-      },
+    result = await prisma.approvedRequest.create({
       data: {
-        idMrAppr: request.body.idMrAppr,
-        dateOfAppr: new Date(request.body.dateOfAppr),
+        idApprove: request.body.idApprove,
+        dateApprove: new Date(request.body.dateApprove),
+        user: { connect: { id: request.body.approveById } },
       },
     });
     const updateVerify = request.body.detailMr.map(
@@ -921,21 +920,22 @@ const updateApproval = async (request: Request, response: Response) => {
         };
       }
     );
-    for (let i = 0; i < updateVerify.length; i++) {
-      let upsertDetailMr;
-      upsertDetailMr = await prisma.detailMr.update({
-        where: {
-          id: updateVerify[i].id,
-        },
-        data: {
-          mrappr: updateVerify[i].mrappr,
-          supplier: { connect: { id: updateVerify[i].supId } },
-          qtyAppr: parseInt(updateVerify[i].qtyAppr),
-        },
-      });
-      result = [...result, upsertDetailMr];
-    }
     if (result) {
+      for (let i = 0; i < updateVerify.length; i++) {
+        let upsertDetailMr;
+        upsertDetailMr = await prisma.detailMr.update({
+          where: {
+            id: updateVerify[i].id,
+          },
+          data: {
+            mrappr: updateVerify[i].mrappr,
+            supplier: { connect: { id: updateVerify[i].supId } },
+            approvedRequest: { connect: { id: result.id } },
+            qtyAppr: parseInt(updateVerify[i].qtyAppr),
+          },
+        });
+        result = [...result, upsertDetailMr];
+      }
       response.status(201).json({
         success: true,
         massage: "Success Update Data",
@@ -1251,124 +1251,10 @@ const updatePr = async (request: Request, response: Response) => {
           coa: { connect: { id: updateVerify[i].akunId } },
           disc: updateVerify[i].disc,
           currency: updateVerify[i].currency,
-          total: updateVerify[i].total
+          total: updateVerify[i].total,
         },
       });
       result = [...result, upsertDetailMr];
-    }
-    if (result) {
-      response.status(201).json({
-        success: true,
-        massage: "Success Update Data",
-        results: result,
-      });
-    } else {
-      response.status(400).json({
-        success: false,
-        massage: "Unsuccess Update Data",
-      });
-    }
-  } catch (error) {
-    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
-  }
-};
-
-const updateMrStatusPr = async (request: any, response: Response) => {
-  try {
-    const id = request.params.id;
-    const userLogin = await prisma.user.findFirst({
-      where: {
-        username: request.session.userId,
-      },
-    });
-    const a: any = userLogin?.employeeId;
-    const emplo = await prisma.employee.findFirst({
-      where: {
-        id: a,
-      },
-    });
-    const statusPenc = await prisma.mr.findFirst({
-      where: {
-        id: id,
-      },
-    });
-    let result;
-    if (
-      (emplo?.position === "Supervisor" &&
-        statusPenc?.status_spv_pr === null) ||
-      statusPenc?.status_spv_pr === "unvalid"
-    ) {
-      const id = request.params.id;
-      result = await prisma.mr.update({
-        where: { id: id },
-        data: {
-          status_spv_pr: "valid",
-        },
-      });
-    } else {
-      result = await prisma.mr.update({
-        where: { id: id },
-        data: {
-          status_spv_pr: "unvalid",
-        },
-      });
-    }
-    if (result) {
-      response.status(201).json({
-        success: true,
-        massage: "Success Update Data",
-        results: result,
-      });
-    } else {
-      response.status(400).json({
-        success: false,
-        massage: "Unsuccess Update Data",
-      });
-    }
-  } catch (error) {
-    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
-  }
-};
-
-const updateMrStatusMPr = async (request: any, response: Response) => {
-  try {
-    const id = request.params.id;
-    const userLogin = await prisma.user.findFirst({
-      where: {
-        username: request.session.userId,
-      },
-    });
-    const a: any = userLogin?.employeeId;
-    const emplo = await prisma.employee.findFirst({
-      where: {
-        id: a,
-      },
-    });
-    const statusPenc = await prisma.mr.findFirst({
-      where: {
-        id: id,
-      },
-    });
-    let result;
-    if (
-      (emplo?.position === "Manager" &&
-        statusPenc?.status_manager_pr === null) ||
-      statusPenc?.status_manager_pr === "unvalid"
-    ) {
-      const id = request.params.id;
-      result = await prisma.mr.update({
-        where: { id: id },
-        data: {
-          status_manager_pr: "valid",
-        },
-      });
-    } else {
-      result = await prisma.mr.update({
-        where: { id: id },
-        data: {
-          status_manager_pr: "unvalid",
-        },
-      });
     }
     if (result) {
       response.status(201).json({
@@ -1397,8 +1283,6 @@ export default {
   updatePr,
   updateMrStatus,
   updateMrStatusM,
-  updateMrStatusPr,
-  updateMrStatusMPr,
   updateApproval,
   deleteMr,
   deleteMrDetail,

@@ -873,10 +873,6 @@ model Mr {
   userId             String
   status_spv         String?    @db.VarChar(20)
   status_manager     String?    @db.VarChar(20)
-  status_spv_pr      String?    @db.VarChar(20)
-  status_manager_pr  String?    @db.VarChar(20)
-  status_spv_dmr     String?    @db.VarChar(20)
-  status_manager_dmr String?    @db.VarChar(20)
   idMrAppr           String?    @db.VarChar(20)
   dateOfAppr         DateTime?
   createdAt          DateTime   @default(now())
@@ -888,31 +884,33 @@ model Mr {
 }
 
 model detailMr {
-  id              String          @id @default(cuid())
-  mr              Mr              @relation(fields: [mrId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  mrId            String
-  bom_detail      bom_detail?     @relation(fields: [bomIdD], references: [id])
-  bomIdD          String?
-  spesifikasi     String?         @db.Text
-  Material_Stock  Material_Stock? @relation(fields: [materialStockId], references: [id])
-  materialStockId String?
-  note            String?         @db.Text
-  qty             Int             @default(0)
-  mrappr          MrAppr?
-  supplier        Supplier?       @relation(fields: [supId], references: [id])
-  supId           String?
-  qtyAppr         Int             @default(0)
-  tax             Tax?
-  coa             coa?            @relation(fields: [akunId], references: [id])
-  akunId          String?
-  disc            Int             @default(0)
-  currency        Currency?
-  total           Int             @default(0)
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  deleted         DateTime?
-  purchase        purchase?       @relation(fields: [idPurchaseR], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  idPurchaseR     String?
+  id                String           @id @default(cuid())
+  mr                Mr               @relation(fields: [mrId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  mrId              String
+  bom_detail        bom_detail?      @relation(fields: [bomIdD], references: [id])
+  bomIdD            String?
+  spesifikasi       String?          @db.Text
+  Material_Stock    Material_Stock?  @relation(fields: [materialStockId], references: [id])
+  materialStockId   String?
+  note              String?          @db.Text
+  qty               Int              @default(0)
+  mrappr            MrAppr?
+  supplier          Supplier?        @relation(fields: [supId], references: [id])
+  supId             String?
+  qtyAppr           Int              @default(0)
+  tax               Tax?
+  coa               coa?             @relation(fields: [akunId], references: [id])
+  akunId            String?
+  disc              Int              @default(0)
+  currency          Currency?
+  total             Int              @default(0)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  deleted           DateTime?
+  purchase          purchase?        @relation(fields: [idPurchaseR], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  idPurchaseR       String?
+  approvedRequest   approvedRequest? @relation(fields: [approvedRequestId], references: [id])
+  approvedRequestId String?
 
   @@index([id, mrId, bomIdD, spesifikasi])
 }
@@ -936,16 +934,17 @@ model purchase {
 }
 
 model approvedRequest {
-  id                String    @id @default(cuid())
-  idApprove         String    @db.VarChar(200)
+  id                String     @id @default(cuid())
+  idApprove         String     @db.VarChar(200)
   dateApprove       DateTime
-  status_spv_pr     Boolean?  @default(false)
-  status_manager_pr Boolean?  @default(false)
-  approveby         User?     @relation(fields: [approveById], references: [id])
+  status_spv_pr     Boolean?   @default(false)
+  status_manager_pr Boolean?   @default(false)
+  user              User?      @relation(fields: [approveById], references: [id])
   approveById       String?
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
   deleted           DateTime?
+  detailMr          detailMr[]
 }
 
 model Sr {
