@@ -750,6 +750,8 @@ const getApproval = async (request: Request, response: Response) => {
         include: {
           detailMr: {
             include: {
+              supplier: true,
+              approvedRequest: true,
               mr: {
                 include: {
                   wor: true,
@@ -965,7 +967,6 @@ const getdetailMr = async (request: Request, response: Response) => {
 
 const updateApproval = async (request: Request, response: Response) => {
   try {
-    const id: string = request.body.id;
     let result: any = [];
     result = await prisma.approvedRequest.create({
       data: {
@@ -998,12 +999,74 @@ const updateApproval = async (request: Request, response: Response) => {
             qtyAppr: parseInt(updateVerify[i].qtyAppr),
           },
         });
-        result = [...result, upsertDetailMr];
       }
       response.status(201).json({
         success: true,
         massage: "Success Update Data",
         results: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updateApprovalOne = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.body.id;
+    let result: any = [];
+    result = await prisma.mr.update({
+      where: {
+        id: id,
+      },
+      data: {
+        user: { connect: { id: request.body.approveById } },
+      },
+    });
+    const updateVerify = request.body.detailMr.map(
+      (updateByveri: {
+        mrappr: any;
+        supId: any;
+        qtyAppr: any;
+        approvedRequestId: any;
+        id: any;
+      }) => {
+        return {
+          approvedRequestId: updateByveri.approvedRequestId,
+          mrappr: updateByveri.mrappr,
+          supId: updateByveri.supId,
+          qtyAppr: updateByveri.qtyAppr,
+          id: updateByveri.id,
+        };
+      }
+    );
+    for (let i = 0; i < updateVerify.length; i++) {
+      let upsertDetailMr;
+      upsertDetailMr = await prisma.detailMr.update({
+        where: {
+          id: updateVerify[i].id,
+        },
+        data: {
+          mrappr: updateVerify[i].mrappr,
+          supplier: { connect: { id: updateVerify[i].supId } },
+          approvedRequest: {
+            connect: { id: updateVerify[i].approvedRequestId },
+          },
+          qtyAppr: parseInt(updateVerify[i].qtyAppr),
+        },
+      });
+      result = [...result, upsertDetailMr];
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: updateMr,
       });
     } else {
       response.status(400).json({
@@ -1345,6 +1408,7 @@ export default {
   createMr,
   updateMr,
   upsertMr,
+  updateApprovalOne,
   updatePr,
   updateMrStatus,
   updateMrStatusM,
