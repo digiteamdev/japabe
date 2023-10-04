@@ -773,6 +773,31 @@ const getApproval = async (request: Request, response: Response) => {
           ],
         },
         include: {
+          user: {
+            select: {
+              id: true,
+              username: true,
+              employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                  position: true,
+                  sub_depart: {
+                    select: {
+                      id: true,
+                      name: true,
+                      departement: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
           detailMr: {
             include: {
               supplier: true,
@@ -1045,7 +1070,7 @@ const updateApprovalOne = async (request: Request, response: Response) => {
   try {
     const id: string = request.body.id;
     let result: any = [];
-    result = await prisma.mr.update({
+    result = await prisma.approvedRequest.update({
       where: {
         id: id,
       },
@@ -1091,7 +1116,7 @@ const updateApprovalOne = async (request: Request, response: Response) => {
       response.status(201).json({
         success: true,
         massage: "Success Update Data",
-        results: updateMr,
+        results: result,
       });
     } else {
       response.status(400).json({

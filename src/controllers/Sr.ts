@@ -658,39 +658,14 @@ const getApprovalSr = async (request: Request, response: Response) => {
     });
     let results;
     if (request.query.page === undefined) {
-      results = await prisma.sr.findMany({
+      results = await prisma.approvedRequest.findMany({
         where: {
-          idSrAppr: null,
-          NOT: [
-            {
-              status_manager: null,
-            },
-            {
-              status_spv: null,
-            },
-          ],
+          idApprove: {
+            startsWith: "PR",
+          },
         },
         include: {
-          wor: {
-            include: {
-              customerPo: {
-                include: {
-                  quotations: {
-                    include: {
-                      Customer: true,
-                      eqandpart: {
-                        include: {
-                          equipment: true,
-                          eq_part: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-          User: {
+          user: {
             select: {
               id: true,
               username: true,
@@ -715,113 +690,93 @@ const getApprovalSr = async (request: Request, response: Response) => {
               },
             },
           },
-          dispacth: {
+          detailMr: {
             include: {
-              dispatchDetail: {
+              mr: {
                 include: {
-                  aktivitas: {
+                  wor: true,
+                  bom: {
+                    include: {
+                      bom_detail: {
+                        include: {
+                          Material_master: {
+                            include: {
+                              Material_Stock: true,
+                              grup_material: true,
+                            },
+                          },
+                        },
+                      },
+                      srimg: {
+                        include: {
+                          srimgdetail: true,
+                        },
+                      },
+                    },
+                  },
+                  user: {
                     select: {
                       id: true,
-                      aktivitasId: true,
-                      masterAktivitas: {
+                      username: true,
+                      employee: {
                         select: {
                           id: true,
-                          name: true,
+                          employee_name: true,
+                          position: true,
+                          sub_depart: {
+                            select: {
+                              id: true,
+                              name: true,
+                              departement: {
+                                select: {
+                                  id: true,
+                                  name: true,
+                                },
+                              },
+                            },
+                          },
                         },
                       },
                     },
                   },
-                  approve: {
-                    select: {
-                      id: true,
-                      employee_name: true,
-                    },
-                  },
-                  Employee: {
-                    select: {
-                      id: true,
-                      employee_name: true,
-                    },
-                  },
-                  sub_depart: true,
-                  workCenter: true,
                 },
               },
-              srimg: {
+              Material_Stock: {
                 include: {
-                  srimgdetail: true,
-                  timeschedule: {
+                  Material_master: {
                     include: {
-                      aktivitas: {
-                        include: {
-                          masterAktivitas: true,
-                        },
-                      },
+                      grup_material: true,
                     },
                   },
                 },
               },
-            },
-          },
-          SrDetail: {
-            include: {
-              workCenter: true,
             },
           },
         },
         orderBy: {
           createdAt: "desc",
         },
+        take: parseInt(pagination.perPage),
+        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
     } else {
-      results = await prisma.sr.findMany({
+      results = await prisma.approvedRequest.findMany({
         where: {
-          AND: [
+          OR: [
             {
-              status_manager: "valid",
+              idApprove: {
+                startsWith: "PR",
+              },
             },
             {
-              status_spv: "valid",
-            },
-            {
-              idSrAppr: {
+              idApprove: {
                 contains: pencarian,
               },
             },
           ],
-          NOT: [
-            {
-              idSrAppr: null,
-            },
-            {
-              status_manager: null,
-            },
-            {
-              status_spv: null,
-            },
-          ],
         },
         include: {
-          wor: {
-            include: {
-              customerPo: {
-                include: {
-                  quotations: {
-                    include: {
-                      Customer: true,
-                      eqandpart: {
-                        include: {
-                          equipment: true,
-                          eq_part: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-          User: {
+          user: {
             select: {
               id: true,
               username: true,
@@ -846,58 +801,66 @@ const getApprovalSr = async (request: Request, response: Response) => {
               },
             },
           },
-          dispacth: {
+          detailMr: {
             include: {
-              dispatchDetail: {
+              mr: {
                 include: {
-                  aktivitas: {
+                  wor: true,
+                  bom: {
+                    include: {
+                      bom_detail: {
+                        include: {
+                          Material_master: {
+                            include: {
+                              Material_Stock: true,
+                              grup_material: true,
+                            },
+                          },
+                        },
+                      },
+                      srimg: {
+                        include: {
+                          srimgdetail: true,
+                        },
+                      },
+                    },
+                  },
+                  user: {
                     select: {
                       id: true,
-                      aktivitasId: true,
-                      masterAktivitas: {
+                      username: true,
+                      employee: {
                         select: {
                           id: true,
-                          name: true,
+                          employee_name: true,
+                          position: true,
+                          sub_depart: {
+                            select: {
+                              id: true,
+                              name: true,
+                              departement: {
+                                select: {
+                                  id: true,
+                                  name: true,
+                                },
+                              },
+                            },
+                          },
                         },
                       },
                     },
                   },
-                  approve: {
-                    select: {
-                      id: true,
-                      employee_name: true,
-                    },
-                  },
-                  Employee: {
-                    select: {
-                      id: true,
-                      employee_name: true,
-                    },
-                  },
-                  sub_depart: true,
-                  workCenter: true,
                 },
               },
-              srimg: {
+              Material_Stock: {
                 include: {
-                  srimgdetail: true,
-                  timeschedule: {
+                  Material_master: {
                     include: {
-                      aktivitas: {
-                        include: {
-                          masterAktivitas: true,
-                        },
-                      },
+                      grup_material: true,
                     },
                   },
                 },
               },
-            },
-          },
-          SrDetail: {
-            include: {
-              workCenter: true,
-              supplier: true,
             },
           },
         },
@@ -911,7 +874,7 @@ const getApprovalSr = async (request: Request, response: Response) => {
     if (results.length > 0) {
       return response.status(200).json({
         success: true,
-        massage: "Get All MrApproval",
+        massage: "Get All SrApproval",
         result: results,
         page: pagination.page,
         limit: pagination.perPage,
@@ -935,39 +898,193 @@ const getApprovalSr = async (request: Request, response: Response) => {
 
 const updateApprovalSr = async (request: Request, response: Response) => {
   try {
+    let result: any = [];
+    result = await prisma.approvedRequest.create({
+      data: {
+        idApprove: request.body.idApprove,
+        dateApprove: new Date(request.body.dateApprove),
+        user: { connect: { id: request.body.approveById } },
+      },
+    });
+    const updateVerify = request.body.srDetail.map(
+      (updateByveri: { srappr: any; supId: any; qtyAppr: any; id: any }) => {
+        return {
+          srappr: updateByveri.srappr,
+          supId: updateByveri.supId,
+          qtyAppr: updateByveri.qtyAppr,
+          id: updateByveri.id,
+        };
+      }
+    );
+    if (result) {
+      for (let i = 0; i < updateVerify.length; i++) {
+        let upsertDetailSr;
+        upsertDetailSr = await prisma.srDetail.update({
+          where: {
+            id: updateVerify[i].id,
+          },
+          data: {
+            srappr: updateVerify[i].srappr,
+            supplier: { connect: { id: updateVerify[i].supId } },
+            approvedRequest: { connect: { id: result.id } },
+            qtyAppr: parseInt(updateVerify[i].qtyAppr),
+          },
+        });
+      }
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const getdetailSr = async (request: Request, response: Response) => {
+  try {
+    const pencarian: any = request.query.search || "";
+    const hostname: any = request.headers.host;
+    const pathname = url.parse(request.url).pathname;
+    const page: any = request.query.page;
+    const perPage: any = request.query.perPage;
+    const pagination: any = new pagging(page, perPage, hostname, pathname);
+    const pr = await prisma.srDetail.count({
+      where: {
+        deleted: null,
+        NOT: {
+          idPurchaseR: null,
+        },
+      },
+    });
+    let results;
+    if (request.query.page === undefined) {
+      results = await prisma.srDetail.findMany({
+        where: {
+          approvedRequestId: null,
+        },
+        include: {
+          sr: {
+            include: {
+              wor: true,
+              User: {
+                select: {
+                  id: true,
+                  username: true,
+                  employee: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                      position: true,
+                      sub_depart: {
+                        select: {
+                          id: true,
+                          name: true,
+                          departement: {
+                            select: {
+                              id: true,
+                              name: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          workCenter: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+    } else {
+      results = await prisma.mr.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: parseInt(pagination.perPage),
+        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+      });
+    }
+    if (results.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All detail service request",
+        result: results,
+        page: pagination.page,
+        limit: pagination.perPage,
+        totalData: pr,
+        currentPage: pagination.currentPage,
+        nextPage: pagination.next(),
+        previouspage: pagination.prev(),
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updateApprovalOneSR = async (request: Request, response: Response) => {
+  try {
     const id: string = request.body.id;
     let result: any = [];
-    result = await prisma.sr.update({
+    result = await prisma.approvedRequest.update({
       where: {
         id: id,
       },
       data: {
-        idSrAppr: request.body.idSrAppr,
-        dateOfAppr: new Date(request.body.dateOfAppr),
-        // approvebySr: { connect: { id: request.body.approveById } },
+        user: { connect: { id: request.body.approveById } },
       },
     });
     const updateVerify = request.body.srDetail.map(
-      (updateByveri: { srappr: any; supId: any; id: any }) => {
+      (updateByveri: {
+        srappr: any;
+        supId: any;
+        qtyAppr: any;
+        approvedRequestId: any;
+        id: any;
+      }) => {
         return {
+          approvedRequestId: updateByveri.approvedRequestId,
           srappr: updateByveri.srappr,
           supId: updateByveri.supId,
+          qtyAppr: updateByveri.qtyAppr,
           id: updateByveri.id,
         };
       }
     );
     for (let i = 0; i < updateVerify.length; i++) {
-      let upsertDetailSr;
-      upsertDetailSr = await prisma.srDetail.update({
+      let upsertDetailMr;
+      upsertDetailMr = await prisma.srDetail.update({
         where: {
           id: updateVerify[i].id,
         },
         data: {
           srappr: updateVerify[i].srappr,
           supplier: { connect: { id: updateVerify[i].supId } },
+          approvedRequest: {
+            connect: { id: updateVerify[i].approvedRequestId },
+          },
+          qtyAppr: parseInt(updateVerify[i].qtyAppr),
         },
       });
-      result = [...result, upsertDetailSr];
+      result = [...result, upsertDetailMr];
     }
     if (result) {
       response.status(201).json({
@@ -988,6 +1105,7 @@ const updateApprovalSr = async (request: Request, response: Response) => {
 
 export default {
   getSr,
+  getdetailSr,
   createSr,
   updateSr,
   upsertSr,
@@ -997,4 +1115,5 @@ export default {
   deleteDetailSr,
   getApprovalSr,
   updateApprovalSr,
+  updateApprovalOneSR,
 };

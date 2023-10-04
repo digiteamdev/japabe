@@ -1393,6 +1393,21 @@ router.get(
   SR.getSr
 );
 router.get(
+  "/detailSR",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  SR.getdetailSr
+);
+router.get(
   "/SRapprove",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
@@ -1481,6 +1496,21 @@ router.put(
     utility: "Utility/ty",
   }),
   SR.upsertSr
+);
+router.put(
+  "/detailSR",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  SR.updateApprovalOneSR
 );
 router.put(
   "/SRapprove",

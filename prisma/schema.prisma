@@ -995,6 +995,7 @@ model SrDetail {
   idPurchaseR       String?
   approvedRequest   approvedRequest? @relation(fields: [approvedRequestId], references: [id])
   approvedRequestId String?
+  qtyAppr           Int              @default(0)
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
   deleted           DateTime?
