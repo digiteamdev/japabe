@@ -71,7 +71,7 @@ const getSr = async (request: any, response: Response) => {
                 },
               },
             },
-            User: {
+            user: {
               select: {
                 id: true,
                 username: true,
@@ -159,7 +159,7 @@ const getSr = async (request: any, response: Response) => {
       } else {
         results = await prisma.sr.findMany({
           where: {
-            User: {
+            user: {
               username: request.session.userId,
             },
             no_sr: {
@@ -186,7 +186,7 @@ const getSr = async (request: any, response: Response) => {
                 },
               },
             },
-            User: {
+            user: {
               select: {
                 id: true,
                 username: true,
@@ -308,7 +308,7 @@ const createSr = async (request: Request, response: Response) => {
       results = await prisma.sr.create({
         data: {
           no_sr: genarate,
-          User: { connect: { id: request.body.userId } },
+          user: { connect: { id: request.body.userId } },
           date_sr: new Date(request.body.date_sr),
           wor: { connect: { id: request.body.worId } },
           SrDetail: {
@@ -323,7 +323,7 @@ const createSr = async (request: Request, response: Response) => {
       results = await prisma.sr.create({
         data: {
           no_sr: genarate,
-          User: { connect: { id: request.body.userId } },
+          user: { connect: { id: request.body.userId } },
           dispacth: { connect: { id: request.body.dispacthIDS } },
           wor: { connect: { id: request.body.worId } },
           date_sr: new Date(request.body.date_sr),
@@ -973,7 +973,7 @@ const getdetailSr = async (request: Request, response: Response) => {
           sr: {
             include: {
               wor: true,
-              User: {
+              user: {
                 select: {
                   id: true,
                   username: true,
@@ -1070,21 +1070,37 @@ const updateApprovalOneSR = async (request: Request, response: Response) => {
       }
     );
     for (let i = 0; i < updateVerify.length; i++) {
-      let upsertDetailMr;
-      upsertDetailMr = await prisma.srDetail.update({
-        where: {
-          id: updateVerify[i].id,
-        },
-        data: {
-          srappr: updateVerify[i].srappr,
-          supplier: { connect: { id: updateVerify[i].supId } },
-          approvedRequest: {
-            connect: { id: updateVerify[i].approvedRequestId },
+      if (updateVerify.approvedRequestId === null) {
+        let upsertDetailSr;
+        upsertDetailSr = await prisma.srDetail.update({
+          where: {
+            id: updateVerify[i].id,
           },
-          qtyAppr: parseInt(updateVerify[i].qtyAppr),
-        },
-      });
-      result = [...result, upsertDetailMr];
+          data: {
+            srappr: updateVerify[i].srappr,
+            supplier: { disconnect: true },
+            approvedRequest: { disconnect: true },
+            qtyAppr: parseInt(updateVerify[i].qtyAppr),
+          },
+        });
+        result = [...result, upsertDetailSr];
+      } else {
+        let upsertDetailSr;
+        upsertDetailSr = await prisma.srDetail.update({
+          where: {
+            id: updateVerify[i].id,
+          },
+          data: {
+            srappr: updateVerify[i].srappr,
+            supplier: { connect: { id: updateVerify[i].supId } },
+            approvedRequest: {
+              connect: { id: updateVerify[i].approvedRequestId },
+            },
+            qtyAppr: parseInt(updateVerify[i].qtyAppr),
+          },
+        });
+        result = [...result, upsertDetailSr];
+      }
     }
     if (result) {
       response.status(201).json({

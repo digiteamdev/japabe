@@ -868,7 +868,7 @@ model Mr {
   bom            bom?       @relation(fields: [bomIdU], references: [id])
   bomIdU         String?    @unique
   date_mr        DateTime
-  user           User       @relation(fields: [userId], references: [id])
+  user           User?      @relation(fields: [userId], references: [id])
   userId         String
   status_spv     String?    @db.VarChar(20)
   status_manager String?    @db.VarChar(20)
@@ -964,7 +964,7 @@ model Sr {
   updatedAt      DateTime   @updatedAt
   deleted        DateTime?
   SrDetail       SrDetail[]
-  User           User?      @relation(fields: [userId], references: [id])
+  user           User?      @relation(fields: [userId], references: [id])
   userId         String?
 
   @@index([id, no_sr, dispacthIDS, idSrAppr])

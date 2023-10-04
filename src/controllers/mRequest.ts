@@ -1096,21 +1096,37 @@ const updateApprovalOne = async (request: Request, response: Response) => {
       }
     );
     for (let i = 0; i < updateVerify.length; i++) {
-      let upsertDetailMr;
-      upsertDetailMr = await prisma.detailMr.update({
-        where: {
-          id: updateVerify[i].id,
-        },
-        data: {
-          mrappr: updateVerify[i].mrappr,
-          supplier: { connect: { id: updateVerify[i].supId } },
-          approvedRequest: {
-            connect: { id: updateVerify[i].approvedRequestId },
+      if (updateVerify[i].approvedRequestId === null) {
+        let upsertDetailMr;
+        upsertDetailMr = await prisma.detailMr.update({
+          where: {
+            id: updateVerify[i].id,
           },
-          qtyAppr: parseInt(updateVerify[i].qtyAppr),
-        },
-      });
-      result = [...result, upsertDetailMr];
+          data: {
+            mrappr: updateVerify[i].mrappr,
+            supplier: { disconnect: true },
+            approvedRequest: { disconnect: true },
+            qtyAppr: parseInt(updateVerify[i].qtyAppr),
+          },
+        });
+        result = [...result, upsertDetailMr];
+      } else {
+        let upsertDetailMr;
+        upsertDetailMr = await prisma.detailMr.update({
+          where: {
+            id: updateVerify[i].id,
+          },
+          data: {
+            mrappr: updateVerify[i].mrappr,
+            supplier: { connect: { id: updateVerify[i].supId } },
+            approvedRequest: {
+              connect: { id: updateVerify[i].approvedRequestId },
+            },
+            qtyAppr: parseInt(updateVerify[i].qtyAppr),
+          },
+        });
+        result = [...result, upsertDetailMr];
+      }
     }
     if (result) {
       response.status(201).json({
