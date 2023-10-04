@@ -662,6 +662,31 @@ const getApproval = async (request: Request, response: Response) => {
           },
         },
         include: {
+          user: {
+            select: {
+              id: true,
+              username: true,
+              employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                  position: true,
+                  sub_depart: {
+                    select: {
+                      id: true,
+                      name: true,
+                      departement: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
           detailMr: {
             include: {
               mr: {

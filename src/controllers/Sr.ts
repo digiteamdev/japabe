@@ -71,7 +71,7 @@ const getSr = async (request: any, response: Response) => {
                 },
               },
             },
-            user: {
+            User: {
               select: {
                 id: true,
                 username: true,
@@ -159,7 +159,7 @@ const getSr = async (request: any, response: Response) => {
       } else {
         results = await prisma.sr.findMany({
           where: {
-            user: {
+            User: {
               username: request.session.userId,
             },
             no_sr: {
@@ -186,7 +186,7 @@ const getSr = async (request: any, response: Response) => {
                 },
               },
             },
-            user: {
+            User: {
               select: {
                 id: true,
                 username: true,
@@ -308,7 +308,7 @@ const createSr = async (request: Request, response: Response) => {
       results = await prisma.sr.create({
         data: {
           no_sr: genarate,
-          user: { connect: { id: request.body.userId } },
+          User: { connect: { id: request.body.userId } },
           date_sr: new Date(request.body.date_sr),
           wor: { connect: { id: request.body.worId } },
           SrDetail: {
@@ -323,7 +323,7 @@ const createSr = async (request: Request, response: Response) => {
       results = await prisma.sr.create({
         data: {
           no_sr: genarate,
-          user: { connect: { id: request.body.userId } },
+          User: { connect: { id: request.body.userId } },
           dispacth: { connect: { id: request.body.dispacthIDS } },
           wor: { connect: { id: request.body.worId } },
           date_sr: new Date(request.body.date_sr),
@@ -690,7 +690,7 @@ const getApprovalSr = async (request: Request, response: Response) => {
               },
             },
           },
-          user: {
+          User: {
             select: {
               id: true,
               username: true,
@@ -802,31 +802,6 @@ const getApprovalSr = async (request: Request, response: Response) => {
           ],
         },
         include: {
-          approvebySr: {
-            select: {
-              id: true,
-              username: true,
-              employee: {
-                select: {
-                  id: true,
-                  employee_name: true,
-                  position: true,
-                  sub_depart: {
-                    select: {
-                      id: true,
-                      name: true,
-                      departement: {
-                        select: {
-                          id: true,
-                          name: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
           wor: {
             include: {
               customerPo: {
@@ -846,7 +821,7 @@ const getApprovalSr = async (request: Request, response: Response) => {
               },
             },
           },
-          user: {
+          User: {
             select: {
               id: true,
               username: true,
@@ -969,7 +944,7 @@ const updateApprovalSr = async (request: Request, response: Response) => {
       data: {
         idSrAppr: request.body.idSrAppr,
         dateOfAppr: new Date(request.body.dateOfAppr),
-        approvebySr: { connect: { id: request.body.approveById } },
+        // approvebySr: { connect: { id: request.body.approveById } },
       },
     });
     const updateVerify = request.body.srDetail.map(
