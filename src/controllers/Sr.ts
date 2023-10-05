@@ -693,6 +693,7 @@ const getApprovalSr = async (request: Request, response: Response) => {
           },
           SrDetail: {
             include: {
+              workCenter: true,
               sr: {
                 include: {
                   wor: {
@@ -818,6 +819,7 @@ const getApprovalSr = async (request: Request, response: Response) => {
           },
           SrDetail: {
             include: {
+              workCenter: true,
               sr: {
                 include: {
                   wor: {
