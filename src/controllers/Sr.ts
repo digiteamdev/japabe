@@ -649,11 +649,12 @@ const getApprovalSr = async (request: Request, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const approvalCount = await prisma.sr.count({
+    const approvalCount = await prisma.approvedRequest.count({
       where: {
         deleted: null,
-        status_manager: "valid",
-        status_spv: "valid",
+        idApprove: {
+          startsWith: "SA",
+        },
       },
     });
     let results;
@@ -661,7 +662,7 @@ const getApprovalSr = async (request: Request, response: Response) => {
       results = await prisma.approvedRequest.findMany({
         where: {
           idApprove: {
-            startsWith: "PR",
+            startsWith: "SA",
           },
         },
         include: {
@@ -762,10 +763,10 @@ const getApprovalSr = async (request: Request, response: Response) => {
     } else {
       results = await prisma.approvedRequest.findMany({
         where: {
-          OR: [
+          AND: [
             {
               idApprove: {
-                startsWith: "PR",
+                startsWith: "SA",
               },
             },
             {
