@@ -908,7 +908,7 @@ model detailMr {
   deleted           DateTime?
   purchase          purchase?        @relation(fields: [idPurchaseR], references: [id], onUpdate: Cascade, onDelete: Cascade)
   idPurchaseR       String?
-  approvedRequest   approvedRequest? @relation(fields: [approvedRequestId], references: [id])
+  approvedRequest   approvedRequest? @relation(fields: [approvedRequestId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   approvedRequestId String?
 
   @@index([id, mrId, bomIdD, spesifikasi, idPurchaseR])
@@ -993,7 +993,7 @@ model SrDetail {
   total             Int              @default(0)
   purchase          purchase?        @relation(fields: [idPurchaseR], references: [id], onUpdate: Cascade, onDelete: Cascade)
   idPurchaseR       String?
-  approvedRequest   approvedRequest? @relation(fields: [approvedRequestId], references: [id])
+  approvedRequest   approvedRequest? @relation(fields: [approvedRequestId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   approvedRequestId String?
   qtyAppr           Int              @default(0)
   createdAt         DateTime         @default(now())

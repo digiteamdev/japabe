@@ -1152,59 +1152,64 @@ const getPrM = async (request: Request, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const pr = await prisma.purchase.count({
+    const pr = await prisma.detailMr.count({
       where: {
         deleted: null,
-        idPurchase: {
-          startsWith: "MP",
+        idPurchaseR: null,
+        NOT: {
+          approvedRequestId: null,
         },
       },
     });
     let results;
     if (request.query.page === undefined) {
-      results = await prisma.purchase.findMany({
+      results = await prisma.detailMr.findMany({
         where: {
-          idPurchase: null,
+          idPurchaseR: null,
+          NOT: {
+            approvedRequestId: null,
+          },
         },
         include: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-              employee: {
-                select: {
-                  id: true,
-                  employee_name: true,
-                  position: true,
-                  sub_depart: {
-                    select: {
-                      id: true,
-                      name: true,
-                      departement: {
-                        select: {
-                          id: true,
-                          name: true,
+          mr: {
+            include: {
+              wor: true,
+              bom: {
+                include: {
+                  bom_detail: {
+                    include: {
+                      Material_master: {
+                        include: {
+                          Material_Stock: true,
+                          grup_material: true,
                         },
                       },
                     },
                   },
+                  srimg: {
+                    include: {
+                      srimgdetail: true,
+                    },
+                  },
                 },
               },
-            },
-          },
-          detailMr: {
-            include: {
-              mr: true,
-              bom_detail: {
-                include: {
-                  bom: {
-                    include: {
-                      srimg: {
-                        include: {
-                          srimgdetail: true,
-                          timeschedule: {
-                            include: {
-                              wor: true,
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                  employee: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                      position: true,
+                      sub_depart: {
+                        select: {
+                          id: true,
+                          name: true,
+                          departement: {
+                            select: {
+                              id: true,
+                              name: true,
                             },
                           },
                         },
@@ -1213,13 +1218,13 @@ const getPrM = async (request: Request, response: Response) => {
                   },
                 },
               },
-              Material_Stock: {
+            },
+          },
+          Material_Stock: {
+            include: {
+              Material_master: {
                 include: {
-                  Material_master: {
-                    include: {
-                      grup_material: true,
-                    },
-                  },
+                  grup_material: true,
                 },
               },
             },
@@ -1230,60 +1235,62 @@ const getPrM = async (request: Request, response: Response) => {
         },
       });
     } else {
-      results = await prisma.purchase.findMany({
+      results = await prisma.detailMr.findMany({
         where: {
-          AND: [
-            {
-              idPurchase: {
-                startsWith: "MP",
-              },
-            },
-            {
-              idPurchase: {
-                contains: pencarian,
-              },
-            },
-          ],
+          // AND: [
+          //   {
+          //     idPurchaseR: null,
+          //   },
+          //   {
+          //     idPurchaseR: {
+          //       contains: pencarian,
+          //     },
+          //   },
+          // ],
+          NOT: {
+            approvedRequestId: null,
+          },
         },
         include: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-              employee: {
-                select: {
-                  id: true,
-                  employee_name: true,
-                  position: true,
-                  sub_depart: {
-                    select: {
-                      id: true,
-                      name: true,
-                      departement: {
-                        select: {
-                          id: true,
-                          name: true,
+          mr: {
+            include: {
+              wor: true,
+              bom: {
+                include: {
+                  bom_detail: {
+                    include: {
+                      Material_master: {
+                        include: {
+                          Material_Stock: true,
+                          grup_material: true,
                         },
                       },
                     },
                   },
+                  srimg: {
+                    include: {
+                      srimgdetail: true,
+                    },
+                  },
                 },
               },
-            },
-          },
-          detailMr: {
-            include: {
-              mr: true,
-              bom_detail: {
-                include: {
-                  bom: {
-                    include: {
-                      srimg: {
-                        include: {
-                          srimgdetail: true,
-                          timeschedule: {
-                            include: {
-                              wor: true,
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                  employee: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                      position: true,
+                      sub_depart: {
+                        select: {
+                          id: true,
+                          name: true,
+                          departement: {
+                            select: {
+                              id: true,
+                              name: true,
                             },
                           },
                         },
@@ -1292,13 +1299,13 @@ const getPrM = async (request: Request, response: Response) => {
                   },
                 },
               },
-              Material_Stock: {
+            },
+          },
+          Material_Stock: {
+            include: {
+              Material_master: {
                 include: {
-                  Material_master: {
-                    include: {
-                      grup_material: true,
-                    },
-                  },
+                  grup_material: true,
                 },
               },
             },
@@ -1338,21 +1345,19 @@ const getPrM = async (request: Request, response: Response) => {
 
 const updatePr = async (request: Request, response: Response) => {
   try {
-    const id: string = request.body.id;
     let result: any = [];
-    result = await prisma.mr.update({
-      where: {
-        id: id,
-      },
+    result = await prisma.purchase.create({
       data: {
-        // idPurchase: request.body.idPurchase,
-        // dateOfPr: new Date(request.body.dateOfPr),
+        dateOfPurchase: request.body.dateOfPurchase,
+        idPurchase: request.body.idPurchase,
       },
     });
     const updateVerify = request.body.detailMr.map(
       (updateByveri: {
         tax: any;
+        idPurchaseR: any;
         akunId: any;
+        supId: any;
         id: any;
         disc: any;
         currency: any;
@@ -1360,31 +1365,36 @@ const updatePr = async (request: Request, response: Response) => {
       }) => {
         return {
           tax: updateByveri.tax,
+          idPurchaseR: updateByveri.idPurchaseR,
           akunId: updateByveri.akunId,
           disc: updateByveri.disc,
           currency: updateByveri.currency,
           total: updateByveri.total,
+          supId: updateByveri.supId,
           id: updateByveri.id,
         };
       }
     );
-    for (let i = 0; i < updateVerify.length; i++) {
-      let upsertDetailMr;
-      upsertDetailMr = await prisma.detailMr.update({
-        where: {
-          id: updateVerify[i].id,
-        },
-        data: {
-          tax: updateVerify[i].tax,
-          coa: { connect: { id: updateVerify[i].akunId } },
-          disc: updateVerify[i].disc,
-          currency: updateVerify[i].currency,
-          total: updateVerify[i].total,
-        },
-      });
-      result = [...result, upsertDetailMr];
-    }
+    console.log(result.idPurchase);
+
     if (result) {
+      for (let i = 0; i < updateVerify.length; i++) {
+        let upsertDetailMr;
+        upsertDetailMr = await prisma.detailMr.update({
+          where: {
+            id: updateVerify[i].id,
+          },
+          data: {
+            tax: updateVerify[i].tax,
+            coa: { connect: { id: updateVerify[i].akunId } },
+            supplier: { connect: { id: updateVerify[i].supId } },
+            disc: updateVerify[i].disc,
+            currency: updateVerify[i].currency,
+            total: updateVerify[i].total,
+            purchase: { connect: { id: updateVerify[i].idPurchaseR } },
+          },
+        });
+      }
       response.status(201).json({
         success: true,
         massage: "Success Update Data",
