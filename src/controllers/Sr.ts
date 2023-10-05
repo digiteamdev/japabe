@@ -691,47 +691,21 @@ const getApprovalSr = async (request: Request, response: Response) => {
               },
             },
           },
-          detailMr: {
+          SrDetail: {
             include: {
-              mr: {
+              sr: {
                 include: {
-                  wor: true,
-                  bom: {
+                  wor: {
                     include: {
-                      bom_detail: {
+                      customerPo: {
                         include: {
-                          Material_master: {
+                          quotations: {
                             include: {
-                              Material_Stock: true,
-                              grup_material: true,
-                            },
-                          },
-                        },
-                      },
-                      srimg: {
-                        include: {
-                          srimgdetail: true,
-                        },
-                      },
-                    },
-                  },
-                  user: {
-                    select: {
-                      id: true,
-                      username: true,
-                      employee: {
-                        select: {
-                          id: true,
-                          employee_name: true,
-                          position: true,
-                          sub_depart: {
-                            select: {
-                              id: true,
-                              name: true,
-                              departement: {
-                                select: {
-                                  id: true,
-                                  name: true,
+                              Customer: true,
+                              eqandpart: {
+                                include: {
+                                  equipment: true,
+                                  eq_part: true,
                                 },
                               },
                             },
@@ -742,13 +716,53 @@ const getApprovalSr = async (request: Request, response: Response) => {
                   },
                 },
               },
-              Material_Stock: {
+              supplier: true,
+              dispatchDetail: {
                 include: {
-                  Material_master: {
+                  dispacth: {
                     include: {
-                      grup_material: true,
+                      srimg: {
+                        include: {
+                          srimgdetail: true,
+                          timeschedule: {
+                            include: {
+                              aktivitas: {
+                                include: {
+                                  masterAktivitas: true,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
                     },
                   },
+                  aktivitas: {
+                    select: {
+                      id: true,
+                      aktivitasId: true,
+                      masterAktivitas: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
+                      },
+                    },
+                  },
+                  approve: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                    },
+                  },
+                  Employee: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                    },
+                  },
+                  sub_depart: true,
+                  workCenter: true,
                 },
               },
             },
@@ -802,47 +816,21 @@ const getApprovalSr = async (request: Request, response: Response) => {
               },
             },
           },
-          detailMr: {
+          SrDetail: {
             include: {
-              mr: {
+              sr: {
                 include: {
-                  wor: true,
-                  bom: {
+                  wor: {
                     include: {
-                      bom_detail: {
+                      customerPo: {
                         include: {
-                          Material_master: {
+                          quotations: {
                             include: {
-                              Material_Stock: true,
-                              grup_material: true,
-                            },
-                          },
-                        },
-                      },
-                      srimg: {
-                        include: {
-                          srimgdetail: true,
-                        },
-                      },
-                    },
-                  },
-                  user: {
-                    select: {
-                      id: true,
-                      username: true,
-                      employee: {
-                        select: {
-                          id: true,
-                          employee_name: true,
-                          position: true,
-                          sub_depart: {
-                            select: {
-                              id: true,
-                              name: true,
-                              departement: {
-                                select: {
-                                  id: true,
-                                  name: true,
+                              Customer: true,
+                              eqandpart: {
+                                include: {
+                                  equipment: true,
+                                  eq_part: true,
                                 },
                               },
                             },
@@ -853,13 +841,53 @@ const getApprovalSr = async (request: Request, response: Response) => {
                   },
                 },
               },
-              Material_Stock: {
+              supplier: true,
+              dispatchDetail: {
                 include: {
-                  Material_master: {
+                  dispacth: {
                     include: {
-                      grup_material: true,
+                      srimg: {
+                        include: {
+                          srimgdetail: true,
+                          timeschedule: {
+                            include: {
+                              aktivitas: {
+                                include: {
+                                  masterAktivitas: true,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
                     },
                   },
+                  aktivitas: {
+                    select: {
+                      id: true,
+                      aktivitasId: true,
+                      masterAktivitas: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
+                      },
+                    },
+                  },
+                  approve: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                    },
+                  },
+                  Employee: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                    },
+                  },
+                  sub_depart: true,
+                  workCenter: true,
                 },
               },
             },
