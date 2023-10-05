@@ -1101,7 +1101,7 @@ const updateApprovalOneSR = async (request: Request, response: Response) => {
       }
     );
     for (let i = 0; i < updateVerify.length; i++) {
-      if (updateVerify.approvedRequestId === null) {
+      if (updateVerify[i].approvedRequestId === null) {
         let upsertDetailSr;
         upsertDetailSr = await prisma.srDetail.update({
           where: {
