@@ -1114,7 +1114,6 @@ const updateApprovalOneSR = async (request: Request, response: Response) => {
             qtyAppr: parseInt(updateVerify[i].qtyAppr),
           },
         });
-        result = [...result, upsertDetailSr];
       } else {
         let upsertDetailSr;
         upsertDetailSr = await prisma.srDetail.update({
@@ -1130,7 +1129,6 @@ const updateApprovalOneSR = async (request: Request, response: Response) => {
             qtyAppr: parseInt(updateVerify[i].qtyAppr),
           },
         });
-        result = [...result, upsertDetailSr];
       }
     }
     if (result) {

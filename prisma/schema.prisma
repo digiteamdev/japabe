@@ -916,13 +916,13 @@ model detailMr {
 
 model purchase {
   id                String     @id @default(cuid())
-  idPurchase        String     @db.VarChar(20)
+  idPurchase        String?    @db.VarChar(20)
   dateOfPurchase    DateTime
   cashAdv           String?    @db.VarChar(200)
   totalAdv          Int        @default(0)
   status_spv_pr     Boolean?   @default(false)
   status_manager_pr Boolean?   @default(false)
-  approvebyPr       User?      @relation(fields: [approveById], references: [id])
+  user              User?      @relation(fields: [approveById], references: [id])
   approveById       String?
   createdAt         DateTime   @default(now())
   updatedAt         DateTime   @updatedAt

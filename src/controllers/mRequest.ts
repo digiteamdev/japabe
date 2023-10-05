@@ -1110,7 +1110,6 @@ const updateApprovalOne = async (request: Request, response: Response) => {
             qtyAppr: parseInt(updateVerify[i].qtyAppr),
           },
         });
-        result = [...result, upsertDetailMr];
       } else {
         let upsertDetailMr;
         upsertDetailMr = await prisma.detailMr.update({
@@ -1126,7 +1125,6 @@ const updateApprovalOne = async (request: Request, response: Response) => {
             qtyAppr: parseInt(updateVerify[i].qtyAppr),
           },
         });
-        result = [...result, upsertDetailMr];
       }
     }
     if (result) {
@@ -1154,48 +1152,40 @@ const getPrM = async (request: Request, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const pr = await prisma.detailMr.count({
+    const pr = await prisma.purchase.count({
       where: {
         deleted: null,
-        NOT: {
-          idPurchaseR: null,
+        idPurchase: {
+          startsWith: "MP",
         },
       },
     });
     let results;
     if (request.query.page === undefined) {
-      results = await prisma.mr.findMany({
+      results = await prisma.purchase.findMany({
         where: {
-          // idPurchase: null,
-          NOT: [
-            {
-              status_manager: null,
-            },
-            {
-              status_spv: null,
-            },
-          ],
+          idPurchase: null,
         },
         include: {
-          wor: true,
-          bom: {
-            include: {
-              bom_detail: {
-                include: {
-                  Material_master: {
-                    include: {
-                      Material_Stock: true,
-                      grup_material: true,
-                    },
-                  },
-                },
-              },
-              srimg: {
-                include: {
-                  srimgdetail: true,
-                  timeschedule: {
-                    include: {
-                      wor: true,
+          user: {
+            select: {
+              id: true,
+              username: true,
+              employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                  position: true,
+                  sub_depart: {
+                    select: {
+                      id: true,
+                      name: true,
+                      departement: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
+                      },
                     },
                   },
                 },
@@ -1204,6 +1194,7 @@ const getPrM = async (request: Request, response: Response) => {
           },
           detailMr: {
             include: {
+              mr: true,
               bom_detail: {
                 include: {
                   bom: {
@@ -1227,31 +1218,6 @@ const getPrM = async (request: Request, response: Response) => {
                   Material_master: {
                     include: {
                       grup_material: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
-          user: {
-            select: {
-              id: true,
-              username: true,
-              employee: {
-                select: {
-                  id: true,
-                  employee_name: true,
-                  position: true,
-                  sub_depart: {
-                    select: {
-                      id: true,
-                      name: true,
-                      departement: {
-                        select: {
-                          id: true,
-                          name: true,
-                        },
-                      },
                     },
                   },
                 },
@@ -1264,47 +1230,41 @@ const getPrM = async (request: Request, response: Response) => {
         },
       });
     } else {
-      results = await prisma.mr.findMany({
+      results = await prisma.purchase.findMany({
         where: {
           AND: [
             {
-              // idPurchase: {
-              //   contains: pencarian,
-              // },
-            },
-          ],
-          NOT: [
-            // {
-            //   idPurchase: null,
-            // },
-            {
-              status_manager: null,
+              idPurchase: {
+                startsWith: "MP",
+              },
             },
             {
-              status_spv: null,
+              idPurchase: {
+                contains: pencarian,
+              },
             },
           ],
         },
         include: {
-          wor: true,
-          bom: {
-            include: {
-              bom_detail: {
-                include: {
-                  Material_master: {
-                    include: {
-                      Material_Stock: true,
-                      grup_material: true,
-                    },
-                  },
-                },
-              },
-              srimg: {
-                include: {
-                  srimgdetail: true,
-                  timeschedule: {
-                    include: {
-                      wor: true,
+          user: {
+            select: {
+              id: true,
+              username: true,
+              employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                  position: true,
+                  sub_depart: {
+                    select: {
+                      id: true,
+                      name: true,
+                      departement: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
+                      },
                     },
                   },
                 },
@@ -1313,8 +1273,7 @@ const getPrM = async (request: Request, response: Response) => {
           },
           detailMr: {
             include: {
-              coa: true,
-              supplier: true,
+              mr: true,
               bom_detail: {
                 include: {
                   bom: {
@@ -1338,31 +1297,6 @@ const getPrM = async (request: Request, response: Response) => {
                   Material_master: {
                     include: {
                       grup_material: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
-          user: {
-            select: {
-              id: true,
-              username: true,
-              employee: {
-                select: {
-                  id: true,
-                  employee_name: true,
-                  position: true,
-                  sub_depart: {
-                    select: {
-                      id: true,
-                      name: true,
-                      departement: {
-                        select: {
-                          id: true,
-                          name: true,
-                        },
-                      },
                     },
                   },
                 },
