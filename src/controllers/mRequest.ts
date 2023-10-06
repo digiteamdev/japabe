@@ -1375,8 +1375,6 @@ const updatePr = async (request: Request, response: Response) => {
         };
       }
     );
-    console.log(result.idPurchase);
-
     if (result) {
       for (let i = 0; i < updateVerify.length; i++) {
         let upsertDetailMr;
@@ -1391,7 +1389,7 @@ const updatePr = async (request: Request, response: Response) => {
             disc: updateVerify[i].disc,
             currency: updateVerify[i].currency,
             total: updateVerify[i].total,
-            purchase: { connect: { id: updateVerify[i].idPurchaseR } },
+            purchase: { connect: { id: result.id } },
           },
         });
       }
