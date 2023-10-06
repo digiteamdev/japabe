@@ -847,6 +847,11 @@ enum Currency {
   SGD
 }
 
+enum TaxPr {
+  ppn
+  noneppn @map("none ppn")
+}
+
 model coa {
   id        String     @id @default(cuid())
   coa_code  String     @db.VarChar(20)
@@ -897,7 +902,7 @@ model detailMr {
   supplier          Supplier?        @relation(fields: [supId], references: [id])
   supId             String?
   qtyAppr           Int              @default(0)
-  tax               Tax?
+  taxpr             TaxPr?
   coa               coa?             @relation(fields: [akunId], references: [id])
   akunId            String?
   disc              Int              @default(0)
