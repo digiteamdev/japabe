@@ -1145,19 +1145,18 @@ const updateApprovalOne = async (request: Request, response: Response) => {
 const getPrM = async (request: Request, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
-    const typeMR: any = request.query.type || null;
+    const typeMR: any = request.query.type || "PO" || "DP" || "Stock";
     const hostname: any = request.headers.host;
     const pathname = url.parse(request.url).pathname;
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const pr = await prisma.detailMr.count({
+    const pr = await prisma.purchase.count({
       where: {
         deleted: null,
-        idPurchaseR: null,
-        NOT: {
-          approvedRequestId: null,
-        },
+        idPurchase:{
+          startsWith: "PR"
+        }
       },
     });
     let results;
@@ -1243,7 +1242,7 @@ const getPrM = async (request: Request, response: Response) => {
     } else {
       results = await prisma.purchase.findMany({
         where: {
-          OR: [
+          AND: [
             {
               detailMr: {
                 some: {
@@ -1254,6 +1253,11 @@ const getPrM = async (request: Request, response: Response) => {
             {
               idPurchase: {
                 contains: pencarian,
+              },
+            },
+            {
+              idPurchase: {
+                startsWith: "PR"
               },
             },
           ],
@@ -1268,6 +1272,7 @@ const getPrM = async (request: Request, response: Response) => {
         include: {
           detailMr: {
             include: {
+              coa: true,
               supplier: true,
               mr: {
                 include: {

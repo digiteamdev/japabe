@@ -1678,4 +1678,38 @@ router.put(
 
 /***************************PurchaseMR********************************* */
 
+/***************************PurchaseSR********************************* */
+router.get(
+  "/srPR",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  SR.getPsR
+);
+
+router.put(
+  "/srPR",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  SR.updatePsr
+);
+/***************************PurchaseSR********************************* */
+
 export default router;

@@ -1148,8 +1148,344 @@ const updateApprovalOneSR = async (request: Request, response: Response) => {
   }
 };
 
+const getPsR = async (request: Request, response: Response) => {
+  try {
+    const pencarian: any = request.query.search || "";
+    const typeMR: any = request.query.type || ("SO" && "DSO");
+    const hostname: any = request.headers.host;
+    const pathname = url.parse(request.url).pathname;
+    const page: any = request.query.page;
+    const perPage: any = request.query.perPage;
+    const pagination: any = new pagging(page, perPage, hostname, pathname);
+    const pr = await prisma.purchase.count({
+      where: {
+        deleted: null,
+        idPurchase: {
+          startsWith: "PSR",
+        },
+      },
+    });
+    let results;
+    if (request.query.page === undefined) {
+      results = await prisma.srDetail.findMany({
+        where: {
+          AND: [
+            {
+              idPurchaseR: null,
+            },
+            {
+              srappr: typeMR,
+            },
+          ],
+          NOT: {
+            approvedRequestId: null,
+          },
+        },
+        include: {
+          workCenter: true,
+          supplier: true,
+          sr: {
+            include: {
+              wor: true,
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                  employee: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                      position: true,
+                      sub_depart: {
+                        select: {
+                          id: true,
+                          name: true,
+                          departement: {
+                            select: {
+                              id: true,
+                              name: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              dispacth: {
+                include: {
+                  dispatchDetail: {
+                    include: {
+                      aktivitas: {
+                        select: {
+                          id: true,
+                          aktivitasId: true,
+                          masterAktivitas: {
+                            select: {
+                              id: true,
+                              name: true,
+                            },
+                          },
+                        },
+                      },
+                      approve: {
+                        select: {
+                          id: true,
+                          employee_name: true,
+                        },
+                      },
+                      Employee: {
+                        select: {
+                          id: true,
+                          employee_name: true,
+                        },
+                      },
+                      sub_depart: true,
+                      workCenter: true,
+                    },
+                  },
+                  srimg: {
+                    include: {
+                      srimgdetail: true,
+                      timeschedule: {
+                        include: {
+                          aktivitas: {
+                            include: {
+                              masterAktivitas: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+    } else {
+      results = await prisma.purchase.findMany({
+        where: {
+          AND: [
+            {
+              SrDetail: {
+                some: {
+                  srappr: typeMR,
+                },
+              },
+            },
+            {
+              idPurchase: {
+                contains: pencarian,
+              },
+            },
+            {
+              idPurchase: {
+                startsWith: "PSR",
+              },
+            },
+          ],
+          NOT: {
+            detailMr: {
+              some: {
+                idPurchaseR: null,
+              },
+            },
+          },
+        },
+        include: {
+          SrDetail: {
+            include: {
+              coa: true,
+              supplier: true,
+              workCenter: true,
+              sr: {
+                include: {
+                  wor: true,
+                  user: {
+                    select: {
+                      id: true,
+                      username: true,
+                      employee: {
+                        select: {
+                          id: true,
+                          employee_name: true,
+                          position: true,
+                          sub_depart: {
+                            select: {
+                              id: true,
+                              name: true,
+                              departement: {
+                                select: {
+                                  id: true,
+                                  name: true,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                  dispacth: {
+                    include: {
+                      dispatchDetail: {
+                        include: {
+                          aktivitas: {
+                            select: {
+                              id: true,
+                              aktivitasId: true,
+                              masterAktivitas: {
+                                select: {
+                                  id: true,
+                                  name: true,
+                                },
+                              },
+                            },
+                          },
+                          approve: {
+                            select: {
+                              id: true,
+                              employee_name: true,
+                            },
+                          },
+                          Employee: {
+                            select: {
+                              id: true,
+                              employee_name: true,
+                            },
+                          },
+                          sub_depart: true,
+                          workCenter: true,
+                        },
+                      },
+                      srimg: {
+                        include: {
+                          srimgdetail: true,
+                          timeschedule: {
+                            include: {
+                              aktivitas: {
+                                include: {
+                                  masterAktivitas: true,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: parseInt(pagination.perPage),
+        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+      });
+    }
+    if (results.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All Purchase services request",
+        result: results,
+        page: pagination.page,
+        limit: pagination.perPage,
+        totalData: pr,
+        currentPage: pagination.currentPage,
+        nextPage: pagination.next(),
+        previouspage: pagination.prev(),
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updatePsr = async (request: Request, response: Response) => {
+  try {
+    let result: any = [];
+    result = await prisma.purchase.create({
+      data: {
+        dateOfPurchase: request.body.dateOfPurchase,
+        idPurchase: request.body.idPurchase,
+      },
+    });
+    const updateVerify = request.body.srDetail.map(
+      (updateByveri: {
+        taxpr: any;
+        idPurchaseR: any;
+        akunId: any;
+        supId: any;
+        id: any;
+        disc: any;
+        currency: any;
+        total: any;
+      }) => {
+        return {
+          taxpr: updateByveri.taxpr,
+          idPurchaseR: updateByveri.idPurchaseR,
+          akunId: updateByveri.akunId,
+          disc: updateByveri.disc,
+          currency: updateByveri.currency,
+          total: updateByveri.total,
+          supId: updateByveri.supId,
+          id: updateByveri.id,
+        };
+      }
+    );
+    if (result) {
+      for (let i = 0; i < updateVerify.length; i++) {
+        let upsertDetailSr;
+        upsertDetailSr = await prisma.srDetail.update({
+          where: {
+            id: updateVerify[i].id,
+          },
+          data: {
+            tax: updateVerify[i].tax,
+            coa: { connect: { id: updateVerify[i].akunId } },
+            supplier: { connect: { id: updateVerify[i].supId } },
+            disc: updateVerify[i].disc,
+            currency: updateVerify[i].currency,
+            total: updateVerify[i].total,
+            purchase: { connect: { id: result.id } },
+          },
+        });
+      }
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getSr,
+  getPsR,
+  updatePsr,
   getdetailSr,
   createSr,
   updateSr,

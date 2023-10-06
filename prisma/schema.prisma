@@ -920,20 +920,21 @@ model detailMr {
 }
 
 model purchase {
-  id                String     @id @default(cuid())
-  idPurchase        String?    @db.VarChar(20)
-  dateOfPurchase    DateTime
-  cashAdv           String?    @db.VarChar(200)
-  totalAdv          Int        @default(0)
-  status_spv_pr     Boolean?   @default(false)
-  status_manager_pr Boolean?   @default(false)
-  user              User?      @relation(fields: [approveById], references: [id])
-  approveById       String?
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime   @updatedAt
-  deleted           DateTime?
-  detailMr          detailMr[]
-  SrDetail          SrDetail[]
+  id                      String     @id @default(cuid())
+  idPurchase              String?    @db.VarChar(20)
+  dateOfPurchase          DateTime
+  cashAdv                 String?    @db.VarChar(200)
+  totalAdv                Int        @default(0)
+  status_spv_pr           Boolean?   @default(false)
+  status_manager_pr       Boolean?   @default(false)
+  status_manager_director Boolean?   @default(false)
+  user                    User?      @relation(fields: [approveById], references: [id])
+  approveById             String?
+  createdAt               DateTime   @default(now())
+  updatedAt               DateTime   @updatedAt
+  deleted                 DateTime?
+  detailMr                detailMr[]
+  SrDetail                SrDetail[]
 
   @@index([id, idPurchase, dateOfPurchase])
 }
