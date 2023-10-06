@@ -500,7 +500,6 @@ const updateMrStatus = async (request: any, response: Response) => {
       (emplo?.position === "Supervisor" && statusPenc?.status_spv === null) ||
       statusPenc?.status_spv === "unvalid"
     ) {
-      const id = request.params.id;
       result = await prisma.mr.update({
         where: { id: id },
         data: {
@@ -556,7 +555,6 @@ const updateMrStatusM = async (request: any, response: Response) => {
       (emplo?.position === "Manager" && statusPenc?.status_manager === null) ||
       statusPenc?.status_manager === "unvalid"
     ) {
-      const id = request.params.id;
       result = await prisma.mr.update({
         where: { id: id },
         data: {
@@ -1243,64 +1241,75 @@ const getPrM = async (request: Request, response: Response) => {
         },
       });
     } else {
-      results = await prisma.detailMr.findMany({
+      results = await prisma.purchase.findMany({
         where: {
-          AND: [
+          OR: [
             {
-              mrappr: typeMR,
+              detailMr: {
+                some: {
+                  mrappr: typeMR,
+                },
+              },
             },
             {
-              purchase: {
-                idPurchase: {
-                  contains: pencarian,
-                },
+              idPurchase: {
+                contains: pencarian,
               },
             },
           ],
           NOT: {
-            idPurchaseR: null,
+            detailMr: {
+              some: {
+                idPurchaseR: null,
+              },
+            },
           },
         },
         include: {
-          mr: {
+          detailMr: {
             include: {
-              wor: true,
-              bom: {
+              supplier: true,
+              mr: {
                 include: {
-                  bom_detail: {
+                  wor: true,
+                  bom: {
                     include: {
-                      Material_master: {
+                      bom_detail: {
                         include: {
-                          Material_Stock: true,
-                          grup_material: true,
+                          Material_master: {
+                            include: {
+                              Material_Stock: true,
+                              grup_material: true,
+                            },
+                          },
+                        },
+                      },
+                      srimg: {
+                        include: {
+                          srimgdetail: true,
                         },
                       },
                     },
                   },
-                  srimg: {
-                    include: {
-                      srimgdetail: true,
-                    },
-                  },
-                },
-              },
-              user: {
-                select: {
-                  id: true,
-                  username: true,
-                  employee: {
+                  user: {
                     select: {
                       id: true,
-                      employee_name: true,
-                      position: true,
-                      sub_depart: {
+                      username: true,
+                      employee: {
                         select: {
                           id: true,
-                          name: true,
-                          departement: {
+                          employee_name: true,
+                          position: true,
+                          sub_depart: {
                             select: {
                               id: true,
                               name: true,
+                              departement: {
+                                select: {
+                                  id: true,
+                                  name: true,
+                                },
+                              },
                             },
                           },
                         },
@@ -1309,13 +1318,13 @@ const getPrM = async (request: Request, response: Response) => {
                   },
                 },
               },
-            },
-          },
-          Material_Stock: {
-            include: {
-              Material_master: {
+              Material_Stock: {
                 include: {
-                  grup_material: true,
+                  Material_master: {
+                    include: {
+                      grup_material: true,
+                    },
+                  },
                 },
               },
             },
@@ -1442,8 +1451,6 @@ const updatedetailPr = async (request: Request, response: Response) => {
         };
       }
     );
-    console.log(updateVerify);
-    
     let result: any = [];
     for (let i = 0; i < updateVerify.length; i++) {
       let upsertDetailMr;
@@ -1461,14 +1468,122 @@ const updatedetailPr = async (request: Request, response: Response) => {
         },
       });
       result = [...result, upsertDetailMr];
-console.log(result);
-
     }
     if (result) {
       response.status(201).json({
         success: true,
         massage: "Success Update Data",
         result: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updatePrStatus = async (request: any, response: Response) => {
+  try {
+    const id = request.params.id;
+    const userLogin = await prisma.user.findFirst({
+      where: {
+        username: request.session.userId,
+      },
+    });
+    const a: any = userLogin?.employeeId;
+    const emplo = await prisma.employee.findFirst({
+      where: {
+        id: a,
+      },
+    });
+    const statusPenc = await prisma.purchase.findFirst({
+      where: {
+        id: id,
+      },
+    });
+    let result;
+    if (
+      emplo?.position === "Supervisor" &&
+      statusPenc?.status_spv_pr === false
+    ) {
+      result = await prisma.purchase.update({
+        where: { id: id },
+        data: {
+          status_spv_pr: true,
+        },
+      });
+    } else {
+      result = await prisma.purchase.update({
+        where: { id: id },
+        data: {
+          status_spv_pr: false,
+        },
+      });
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updatePrStatusM = async (request: any, response: Response) => {
+  try {
+    const id = request.params.id;
+    const userLogin = await prisma.user.findFirst({
+      where: {
+        username: request.session.userId,
+      },
+    });
+    const a: any = userLogin?.employeeId;
+    const emplo = await prisma.employee.findFirst({
+      where: {
+        id: a,
+      },
+    });
+    const statusPenc = await prisma.purchase.findFirst({
+      where: {
+        id: id,
+      },
+    });
+    let result;
+    if (
+      emplo?.position === "Manager" &&
+      statusPenc?.status_manager_pr === false
+    ) {
+      result = await prisma.purchase.update({
+        where: { id: id },
+        data: {
+          status_manager_pr: true,
+        },
+      });
+    } else {
+      result = await prisma.purchase.update({
+        where: { id: id },
+        data: {
+          status_manager_pr: false,
+        },
+      });
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: result,
       });
     } else {
       response.status(400).json({
@@ -1495,6 +1610,8 @@ export default {
   updateMrStatus,
   updateMrStatusM,
   updateApproval,
+  updatePrStatus,
+  updatePrStatusM,
   deleteMr,
   deleteMrDetail,
 };
