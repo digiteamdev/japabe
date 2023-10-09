@@ -857,7 +857,6 @@ enum TaxPsrDmr {
   pph
   ppn_and_pph @map("ppn and pph")
   nontax      @map("non tax")
-  none
 }
 
 model coa {

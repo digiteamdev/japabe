@@ -1456,7 +1456,7 @@ const updatePsr = async (request: Request, response: Response) => {
             id: updateVerify[i].id,
           },
           data: {
-            taxPsrDmr: updateVerify[i].TaxPsrDmr,
+            taxPsrDmr: updateVerify[i].taxPsrDmr,
             coa: { connect: { id: updateVerify[i].akunId } },
             supplier: { connect: { id: updateVerify[i].supId } },
             disc: updateVerify[i].disc,
