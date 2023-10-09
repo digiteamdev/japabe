@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import prisma from "../middleware/mRequest";
 import pagging from "../utils/paggination";
 import url from "url";
+import { Prisma } from "@prisma/client";
 
 const getMr = async (request: any, response: Response) => {
   try {
@@ -1154,9 +1155,9 @@ const getPrM = async (request: Request, response: Response) => {
     const pr = await prisma.purchase.count({
       where: {
         deleted: null,
-        idPurchase:{
-          startsWith: "PR"
-        }
+        idPurchase: {
+          startsWith: "PR",
+        },
       },
     });
     let results;
@@ -1257,7 +1258,7 @@ const getPrM = async (request: Request, response: Response) => {
             },
             {
               idPurchase: {
-                startsWith: "PR"
+                startsWith: "PR",
               },
             },
           ],
@@ -1369,65 +1370,74 @@ const getPrM = async (request: Request, response: Response) => {
 
 const updatePr = async (request: Request, response: Response) => {
   try {
-    let result: any = [];
-    result = await prisma.purchase.create({
-      data: {
-        dateOfPurchase: request.body.dateOfPurchase,
-        idPurchase: request.body.idPurchase,
-      },
-    });
-    const updateVerify = request.body.detailMr.map(
-      (updateByveri: {
-        taxpr: any;
-        idPurchaseR: any;
-        akunId: any;
-        supId: any;
-        id: any;
-        disc: any;
-        currency: any;
-        total: any;
-      }) => {
-        return {
-          taxpr: updateByveri.taxpr,
-          idPurchaseR: updateByveri.idPurchaseR,
-          akunId: updateByveri.akunId,
-          disc: updateByveri.disc,
-          currency: updateByveri.currency,
-          total: updateByveri.total,
-          supId: updateByveri.supId,
-          id: updateByveri.id,
-        };
-      }
-    );
-    if (result) {
-      for (let i = 0; i < updateVerify.length; i++) {
-        let upsertDetailMr;
-        upsertDetailMr = await prisma.detailMr.update({
-          where: {
-            id: updateVerify[i].id,
-          },
+    await prisma.$transaction(
+      async (prisma) => {
+        let result: any = [];
+        result = await prisma.purchase.create({
           data: {
-            taxpr: updateVerify[i].taxpr,
-            coa: { connect: { id: updateVerify[i].akunId } },
-            supplier: { connect: { id: updateVerify[i].supId } },
-            disc: updateVerify[i].disc,
-            currency: updateVerify[i].currency,
-            total: updateVerify[i].total,
-            purchase: { connect: { id: result.id } },
+            dateOfPurchase: request.body.dateOfPurchase,
+            idPurchase: request.body.idPurchase,
           },
         });
+        const updateVerify = request.body.detailMr.map(
+          (updateByveri: {
+            taxpr: any;
+            idPurchaseR: any;
+            akunId: any;
+            supId: any;
+            id: any;
+            disc: any;
+            currency: any;
+            total: any;
+          }) => {
+            return {
+              taxpr: updateByveri.taxpr,
+              idPurchaseR: updateByveri.idPurchaseR,
+              akunId: updateByveri.akunId,
+              disc: updateByveri.disc,
+              currency: updateByveri.currency,
+              total: updateByveri.total,
+              supId: updateByveri.supId,
+              id: updateByveri.id,
+            };
+          }
+        );
+        let upsertDetailMr: any;
+        if (result) {
+          for (let i = 0; i < updateVerify.length; i++) {
+            upsertDetailMr = await prisma.detailMr.update({
+              where: {
+                id: updateVerify[i].id,
+              },
+              data: {
+                taxpr: updateVerify[i].taxpr,
+                coa: { connect: { id: updateVerify[i].akunId } },
+                supplier: { connect: { id: updateVerify[i].supId } },
+                disc: updateVerify[i].disc,
+                currency: updateVerify[i].currency,
+                total: updateVerify[i].total,
+                purchase: { connect: { id: result.id } },
+              },
+            });
+          }
+          response.status(201).json({
+            success: true,
+            massage: "Success Update Data",
+            results: result,
+          });
+        } else {
+          response.status(400).json({
+            success: false,
+            massage: "Unsuccess Update Data",
+          });
+        }
+      },
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable, // optional, default defined by database configuration
+        maxWait: 5000, // default: 2000
+        timeout: 10000, // default: 5000
       }
-      response.status(201).json({
-        success: true,
-        massage: "Success Update Data",
-        results: result,
-      });
-    } else {
-      response.status(400).json({
-        success: false,
-        massage: "Unsuccess Update Data",
-      });
-    }
+    );
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
