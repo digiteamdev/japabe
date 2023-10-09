@@ -1710,6 +1710,38 @@ router.put(
   }),
   SR.updatePsr
 );
+
+router.put(
+  "/srPsR",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  SR.updatedetailPsr
+);
+
+router.put(
+  "/psrStatusMgr/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  SR.updatePsrStatusM
+);
 /***************************PurchaseSR********************************* */
 
 export default router;

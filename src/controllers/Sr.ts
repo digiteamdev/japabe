@@ -1482,6 +1482,119 @@ const updatePsr = async (request: Request, response: Response) => {
   }
 };
 
+const updatedetailPsr = async (request: Request, response: Response) => {
+  try {    
+    const updateVerify = request.body.srDetail.map(
+      (updateByveri: {
+        taxPsrDmr: any;
+        akunId: any;
+        supId: any;
+        id: any;
+        disc: any;
+        currency: any;
+        total: any;
+      }) => {
+        return {
+          taxPsrDmr: updateByveri.taxPsrDmr,
+          akunId: updateByveri.akunId,
+          disc: updateByveri.disc,
+          currency: updateByveri.currency,
+          total: updateByveri.total,
+          supId: updateByveri.supId,
+          id: updateByveri.id,
+        };
+      }
+    );
+    let result: any = [];
+    for (let i = 0; i < updateVerify.length; i++) {
+      let upsertDetailSr;
+      upsertDetailSr = await prisma.srDetail.update({
+        where: {
+          id: updateVerify[i].id,
+        },
+        data: {
+          taxPsrDmr: updateVerify[i].taxPsrDmr,
+          coa: { connect: { id: updateVerify[i].akunId } },
+          supplier: { connect: { id: updateVerify[i].supId } },
+          disc: updateVerify[i].disc,
+          currency: updateVerify[i].currency,
+          total: updateVerify[i].total,
+        },
+      });
+      result = [...result, upsertDetailSr];
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        result: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updatePsrStatusM = async (request: any, response: Response) => {
+  try {
+    const id = request.params.id;
+    const userLogin = await prisma.user.findFirst({
+      where: {
+        username: request.session.userId,
+      },
+    });
+    const a: any = userLogin?.employeeId;
+    const emplo = await prisma.employee.findFirst({
+      where: {
+        id: a,
+      },
+    });
+    const statusPenc = await prisma.purchase.findFirst({
+      where: {
+        id: id,
+      },
+    });
+    let result;
+    if (
+      emplo?.position === "Manager" &&
+      statusPenc?.status_manager_pr === false
+    ) {
+      result = await prisma.purchase.update({
+        where: { id: id },
+        data: {
+          status_manager_pr: true,
+        },
+      });
+    } else {
+      result = await prisma.purchase.update({
+        where: { id: id },
+        data: {
+          status_manager_pr: false,
+        },
+      });
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getSr,
   getPsR,
@@ -1497,4 +1610,6 @@ export default {
   getApprovalSr,
   updateApprovalSr,
   updateApprovalOneSR,
+  updatedetailPsr,
+  updatePsrStatusM
 };
