@@ -1427,7 +1427,7 @@ const updatePsr = async (request: Request, response: Response) => {
     });
     const updateVerify = request.body.srDetail.map(
       (updateByveri: {
-        taxpr: any;
+        taxPsrDmr: any;
         idPurchaseR: any;
         akunId: any;
         supId: any;
@@ -1437,7 +1437,7 @@ const updatePsr = async (request: Request, response: Response) => {
         total: any;
       }) => {
         return {
-          taxpr: updateByveri.taxpr,
+          taxPsrDmr: updateByveri.taxPsrDmr,
           idPurchaseR: updateByveri.idPurchaseR,
           akunId: updateByveri.akunId,
           disc: updateByveri.disc,
@@ -1456,7 +1456,7 @@ const updatePsr = async (request: Request, response: Response) => {
             id: updateVerify[i].id,
           },
           data: {
-            tax: updateVerify[i].tax,
+            taxPsrDmr: updateVerify[i].TaxPsrDmr,
             coa: { connect: { id: updateVerify[i].akunId } },
             supplier: { connect: { id: updateVerify[i].supId } },
             disc: updateVerify[i].disc,
