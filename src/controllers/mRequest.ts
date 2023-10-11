@@ -1146,7 +1146,7 @@ const updateApprovalOne = async (request: Request, response: Response) => {
 const getPrM = async (request: Request, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
-    const typeMR: any = request.query.type || "PO" || "DP" || "Stock";
+    const typeMR: any = request.query.type || "PO" && "DP";
     const hostname: any = request.headers.host;
     const pathname = url.parse(request.url).pathname;
     const page: any = request.query.page;
@@ -1156,7 +1156,7 @@ const getPrM = async (request: Request, response: Response) => {
       where: {
         deleted: null,
         idPurchase: {
-          startsWith: "PR",
+          startsWith: typeMR,
         },
       },
     });
@@ -1245,30 +1245,16 @@ const getPrM = async (request: Request, response: Response) => {
         where: {
           AND: [
             {
-              detailMr: {
-                some: {
-                  mrappr: typeMR,
-                },
-              },
-            },
-            {
               idPurchase: {
                 contains: pencarian,
               },
             },
             {
               idPurchase: {
-                startsWith: "PR",
+                startsWith: typeMR,
               },
             },
           ],
-          NOT: {
-            detailMr: {
-              some: {
-                idPurchaseR: null,
-              },
-            },
-          },
         },
         include: {
           detailMr: {

@@ -1162,7 +1162,7 @@ const getPsR = async (request: Request, response: Response) => {
       where: {
         deleted: null,
         idPurchase: {
-          startsWith: "PSR",
+          startsWith: typeMR,
         },
       },
     });
@@ -1273,30 +1273,16 @@ const getPsR = async (request: Request, response: Response) => {
         where: {
           AND: [
             {
-              SrDetail: {
-                some: {
-                  srappr: typeMR,
-                },
-              },
-            },
-            {
               idPurchase: {
                 contains: pencarian,
               },
             },
             {
               idPurchase: {
-                startsWith: "PSR",
+                startsWith: typeMR,
               },
             },
           ],
-          NOT: {
-            detailMr: {
-              some: {
-                idPurchaseR: null,
-              },
-            },
-          },
         },
         include: {
           SrDetail: {
