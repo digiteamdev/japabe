@@ -1146,7 +1146,7 @@ const updateApprovalOne = async (request: Request, response: Response) => {
 const getPrM = async (request: Request, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
-    const typeMR: any = request.query.type || "PO" && "DP";
+    const typeMR: any = request.query.type || ("PO" && "DP");
     const hostname: any = request.headers.host;
     const pathname = url.parse(request.url).pathname;
     const page: any = request.query.page;
@@ -1556,35 +1556,40 @@ const updatePrStatusM = async (request: any, response: Response) => {
         id: a,
       },
     });
-    const statusPenc = await prisma.purchase.findFirst({
-      where: {
-        id: id,
-      },
-    });
     let result;
+    let error_position: boolean = false;
     if (
-      emplo?.position === "Manager" &&
-      statusPenc?.status_manager_pr === false
+      (emplo?.position === "Director" &&
+        request.body.statusApprove.status_manager_director !== undefined) ||
+      (emplo?.position === "Manager" &&
+        request.body.statusApprove.status_manager_pr !== undefined)
     ) {
       result = await prisma.purchase.update({
         where: { id: id },
-        data: {
-          status_manager_pr: true,
-        },
+        data: request.body.statusApprove,
       });
+    } else if (
+      (emplo?.position === "Director" &&
+        request.body.statusApprove.status_manager_pr === undefined) ||
+      (emplo?.position === "Manager" &&
+        request.body.statusApprove.status_manager_director === undefined)
+    ) {
+      false;
     } else {
-      result = await prisma.purchase.update({
-        where: { id: id },
-        data: {
-          status_manager_pr: false,
-        },
-      });
+      error_position = true;
     }
-    if (result) {
+    if (result && !error_position) {
       response.status(201).json({
         success: true,
         massage: "Success Update Data",
         results: result,
+      });
+    } else if (error_position) {
+      response.status(400).json({
+        success: false,
+        massage: `anda bukan ${
+          emplo?.position === "Director" ? "Manager" : "Director"
+        }`,
       });
     } else {
       response.status(400).json({
