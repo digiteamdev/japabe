@@ -28,6 +28,7 @@ import bom from "../controllers/bom";
 import MR from "../controllers/mRequest";
 import SR from "../controllers/Sr";
 import coa from "../controllers/coa";
+import director from "../controllers/approvalDirector"
 
 /***************************AUTH********************************* */
 
@@ -1743,5 +1744,24 @@ router.put(
   SR.updatePsrStatusM
 );
 /***************************PurchaseSR********************************* */
+
+/***************************Director********************************* */
+router.get(
+  "/directorApproval",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  director.getAllApprove
+);
+/***************************Director********************************* */
+
 
 export default router;
