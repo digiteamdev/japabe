@@ -1134,6 +1134,7 @@ const updatePsr = async (request: Request, response: Response) => {
             idPurchaseR: any;
             akunId: any;
             supId: any;
+            price: any;
             id: any;
             disc: any;
             currency: any;
@@ -1144,6 +1145,7 @@ const updatePsr = async (request: Request, response: Response) => {
               idPurchaseR: updateByveri.idPurchaseR,
               akunId: updateByveri.akunId,
               disc: updateByveri.disc,
+              price: updateByveri.price,
               currency: updateByveri.currency,
               total: updateByveri.total,
               supId: updateByveri.supId,
@@ -1164,6 +1166,7 @@ const updatePsr = async (request: Request, response: Response) => {
                 supplier: { connect: { id: updateVerify[i].supId } },
                 disc: updateVerify[i].disc,
                 currency: updateVerify[i].currency,
+                price: updateVerify[i].price,
                 total: updateVerify[i].total,
                 purchase: { connect: { id: result.id } },
               },
@@ -1201,6 +1204,7 @@ const updatedetailPsr = async (request: Request, response: Response) => {
         supId: any;
         id: any;
         disc: any;
+        price: any;
         currency: any;
         total: any;
       }) => {
@@ -1208,6 +1212,7 @@ const updatedetailPsr = async (request: Request, response: Response) => {
           taxPsrDmr: updateByveri.taxPsrDmr,
           akunId: updateByveri.akunId,
           disc: updateByveri.disc,
+          price: updateByveri.price,
           currency: updateByveri.currency,
           total: updateByveri.total,
           supId: updateByveri.supId,
@@ -1226,6 +1231,7 @@ const updatedetailPsr = async (request: Request, response: Response) => {
           taxPsrDmr: updateVerify[i].taxPsrDmr,
           coa: { connect: { id: updateVerify[i].akunId } },
           supplier: { connect: { id: updateVerify[i].supId } },
+          price: updateVerify[i].price,
           disc: updateVerify[i].disc,
           currency: updateVerify[i].currency,
           total: updateVerify[i].total,

@@ -914,6 +914,7 @@ model detailMr {
   akunId            String?
   disc              Int              @default(0)
   currency          Currency?
+  price             Int              @default(0)
   total             Int              @default(0)
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
@@ -938,8 +939,6 @@ model purchase {
   status_manager_director status_manager_director?
   user                    User?                    @relation(fields: [approveById], references: [id])
   approveById             String?
-  price                   Int                      @default(0)
-  note                    String?                  @db.Text
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @updatedAt
   deleted                 DateTime?
@@ -1012,6 +1011,7 @@ model SrDetail {
   akunId            String?
   disc              Int              @default(0)
   currency          Currency?
+  price             Int              @default(0)
   total             Int              @default(0)
   purchase          purchase?        @relation(fields: [idPurchaseR], references: [id], onUpdate: Cascade, onDelete: Cascade)
   idPurchaseR       String?

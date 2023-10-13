@@ -1116,12 +1116,14 @@ const updatePr = async (request: Request, response: Response) => {
             id: any;
             disc: any;
             currency: any;
+            price: any;
             total: any;
           }) => {
             return {
               taxpr: updateByveri.taxpr,
               idPurchaseR: updateByveri.idPurchaseR,
               akunId: updateByveri.akunId,
+              price: updateByveri.price,
               disc: updateByveri.disc,
               currency: updateByveri.currency,
               total: updateByveri.total,
@@ -1142,6 +1144,7 @@ const updatePr = async (request: Request, response: Response) => {
                 coa: { connect: { id: updateVerify[i].akunId } },
                 supplier: { connect: { id: updateVerify[i].supId } },
                 disc: updateVerify[i].disc,
+                price: updateVerify[i].price,
                 currency: updateVerify[i].currency,
                 total: updateVerify[i].total,
                 purchase: { connect: { id: result.id } },
@@ -1178,6 +1181,7 @@ const updatedetailPr = async (request: Request, response: Response) => {
         taxpr: any;
         akunId: any;
         supId: any;
+        price: any;
         id: any;
         disc: any;
         currency: any;
@@ -1187,6 +1191,7 @@ const updatedetailPr = async (request: Request, response: Response) => {
           taxpr: updateByveri.taxpr,
           akunId: updateByveri.akunId,
           disc: updateByveri.disc,
+          price: updateByveri.price,
           currency: updateByveri.currency,
           total: updateByveri.total,
           supId: updateByveri.supId,
@@ -1205,6 +1210,7 @@ const updatedetailPr = async (request: Request, response: Response) => {
           taxpr: updateVerify[i].taxpr,
           coa: { connect: { id: updateVerify[i].akunId } },
           supplier: { connect: { id: updateVerify[i].supId } },
+          price: updateVerify[i].price,
           disc: updateVerify[i].disc,
           currency: updateVerify[i].currency,
           total: updateVerify[i].total,
