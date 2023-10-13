@@ -2,6 +2,9 @@
 CREATE TYPE "Gender" AS ENUM ('Male', 'Female');
 
 -- CreateEnum
+CREATE TYPE "Position" AS ENUM ('Manager', 'Operator', 'Staff', 'Supervisor', 'Director');
+
+-- CreateEnum
 CREATE TYPE "Spouse_Gender" AS ENUM ('Male', 'Female');
 
 -- CreateEnum
@@ -34,12 +37,31 @@ CREATE TYPE "Priority_Status" AS ENUM ('ST', 'XT', 'XXT', 'XT As Req', 'XXT As R
 -- CreateEnum
 CREATE TYPE "choice" AS ENUM ('Manufacture New', 'Supply New', 'Repair');
 
+-- CreateEnum
+CREATE TYPE "MrAppr" AS ENUM ('DP', 'Stock', 'PO');
+
+-- CreateEnum
+CREATE TYPE "SrAppr" AS ENUM ('DSO', 'SO');
+
+-- CreateEnum
+CREATE TYPE "Currency" AS ENUM ('IDR', 'AUD', 'EUR', 'USD', 'YEN', 'SGD');
+
+-- CreateEnum
+CREATE TYPE "TaxPr" AS ENUM ('ppn', 'none ppn');
+
+-- CreateEnum
+CREATE TYPE "TaxPsrDmr" AS ENUM ('ppn', 'pph', 'ppn and pph', 'non tax');
+
+-- CreateEnum
+CREATE TYPE "status_manager_director" AS ENUM ('revision', 'reject', 'approve');
+
 -- CreateTable
 CREATE TABLE "role" (
     "id" TEXT NOT NULL,
     "role_name" VARCHAR(100) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
 
     CONSTRAINT "role_pkey" PRIMARY KEY ("id")
 );
@@ -67,6 +89,7 @@ CREATE TABLE "Employee" (
     "remaining_days_of" INTEGER DEFAULT 0,
     "gender" "Gender",
     "marital_status" "Maritial",
+    "position" "Position",
     "subdepartId" TEXT NOT NULL,
     "employee_status" "Employee_Status",
     "spouse_name" VARCHAR(200),
@@ -88,6 +111,7 @@ CREATE TABLE "user" (
     "hashed_password" VARCHAR(100) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
     "employeeId" TEXT,
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
@@ -100,6 +124,7 @@ CREATE TABLE "userRole" (
     "roleId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
 
     CONSTRAINT "userRole_pkey" PRIMARY KEY ("id")
 );
@@ -114,6 +139,7 @@ CREATE TABLE "session" (
     "is_bloked" BOOLEAN DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
 
     CONSTRAINT "session_pkey" PRIMARY KEY ("id")
 );
@@ -310,8 +336,7 @@ CREATE TABLE "Material_Stock" (
     "materialId" TEXT,
     "spesifikasi" TEXT NOT NULL,
     "jumlah_Stock" INTEGER NOT NULL DEFAULT 0,
-    "harga" TEXT NOT NULL,
-    "satuan" TEXT NOT NULL,
+    "harga" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deleted" TIMESTAMP(3),
@@ -470,7 +495,8 @@ CREATE TABLE "wor" (
     "date_of_order" TIMESTAMP(3),
     "delivery_date" TIMESTAMP(3),
     "shipping_address" TEXT,
-    "estimated_man_our" INTEGER DEFAULT 0,
+    "job_operational" BOOLEAN DEFAULT false,
+    "estimated_man_our" INTEGER NOT NULL DEFAULT 0,
     "eq_model" VARCHAR(100),
     "eq_mfg" VARCHAR(100),
     "eq_rotation" VARCHAR(200),
@@ -580,7 +606,7 @@ CREATE TABLE "aktivitas" (
     "id" TEXT NOT NULL,
     "timeId" TEXT NOT NULL,
     "aktivitasId" TEXT NOT NULL,
-    "days" INTEGER NOT NULL,
+    "days" INTEGER NOT NULL DEFAULT 0,
     "startday" TIMESTAMP(3) NOT NULL,
     "endday" TIMESTAMP(3) NOT NULL,
     "progress" INTEGER NOT NULL DEFAULT 0,
@@ -685,7 +711,7 @@ CREATE TABLE "bom" (
 -- CreateTable
 CREATE TABLE "bom_detail" (
     "id" TEXT NOT NULL,
-    "bomId" TEXT,
+    "bomId" TEXT NOT NULL,
     "partId" TEXT NOT NULL,
     "materialId" TEXT NOT NULL,
     "dimensi" VARCHAR(200) NOT NULL,
@@ -697,11 +723,29 @@ CREATE TABLE "bom_detail" (
 );
 
 -- CreateTable
+CREATE TABLE "coa" (
+    "id" TEXT NOT NULL,
+    "coa_code" VARCHAR(20) NOT NULL,
+    "coa_name" VARCHAR(200) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "coa_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Mr" (
     "id" TEXT NOT NULL,
+    "worId" TEXT,
     "no_mr" VARCHAR(50),
-    "tgl_mr" TIMESTAMP(3) NOT NULL,
-    "userId" TEXT,
+    "bomIdU" TEXT,
+    "date_mr" TIMESTAMP(3) NOT NULL,
+    "userId" TEXT NOT NULL,
+    "status_spv" VARCHAR(20),
+    "status_manager" VARCHAR(20),
+    "idMrAppr" VARCHAR(20),
+    "dateOfAppr" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deleted" TIMESTAMP(3),
@@ -712,17 +756,110 @@ CREATE TABLE "Mr" (
 -- CreateTable
 CREATE TABLE "detailMr" (
     "id" TEXT NOT NULL,
-    "mrId" TEXT,
-    "bomId" TEXT,
-    "materialId" TEXT,
+    "mrId" TEXT NOT NULL,
+    "bomIdD" TEXT,
     "spesifikasi" TEXT,
-    "satuan" TEXT,
-    "qty" TEXT,
+    "materialStockId" TEXT,
+    "note" TEXT,
+    "qty" INTEGER NOT NULL DEFAULT 0,
+    "mrappr" "MrAppr",
+    "supId" TEXT,
+    "qtyAppr" INTEGER NOT NULL DEFAULT 0,
+    "taxpr" "TaxPr",
+    "akunId" TEXT,
+    "disc" INTEGER NOT NULL DEFAULT 0,
+    "currency" "Currency",
+    "total" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+    "note_revision" TEXT,
+    "idPurchaseR" TEXT,
+    "approvedRequestId" TEXT,
+
+    CONSTRAINT "detailMr_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "purchase" (
+    "id" TEXT NOT NULL,
+    "idPurchase" VARCHAR(20),
+    "dateOfPurchase" TIMESTAMP(3) NOT NULL,
+    "cashAdv" VARCHAR(200),
+    "totalAdv" INTEGER NOT NULL DEFAULT 0,
+    "status_spv_pr" BOOLEAN DEFAULT false,
+    "status_manager_pr" BOOLEAN DEFAULT false,
+    "status_manager_director" "status_manager_director",
+    "approveById" TEXT,
+    "price" INTEGER NOT NULL DEFAULT 0,
+    "note" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deleted" TIMESTAMP(3),
 
-    CONSTRAINT "detailMr_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "purchase_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "approvedRequest" (
+    "id" TEXT NOT NULL,
+    "idApprove" VARCHAR(200) NOT NULL,
+    "dateApprove" TIMESTAMP(3) NOT NULL,
+    "status_spv_pr" BOOLEAN DEFAULT false,
+    "status_manager_pr" BOOLEAN DEFAULT false,
+    "approveById" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "approvedRequest_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Sr" (
+    "id" TEXT NOT NULL,
+    "worId" TEXT,
+    "no_sr" VARCHAR(50),
+    "date_sr" TIMESTAMP(3) NOT NULL,
+    "dispacthIDS" TEXT,
+    "status_spv" VARCHAR(20),
+    "status_manager" VARCHAR(20),
+    "idSrAppr" VARCHAR(20),
+    "dateOfAppr" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+    "userId" TEXT,
+
+    CONSTRAINT "Sr_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "SrDetail" (
+    "id" TEXT NOT NULL,
+    "srId" TEXT NOT NULL,
+    "dispacthdetailId" TEXT,
+    "part" VARCHAR(200),
+    "qty" INTEGER NOT NULL DEFAULT 0,
+    "unit" VARCHAR(20),
+    "description" TEXT,
+    "note" TEXT,
+    "srappr" "SrAppr",
+    "supId" TEXT,
+    "taxPsrDmr" "TaxPsrDmr",
+    "akunId" TEXT,
+    "disc" INTEGER NOT NULL DEFAULT 0,
+    "currency" "Currency",
+    "total" INTEGER NOT NULL DEFAULT 0,
+    "idPurchaseR" TEXT,
+    "approvedRequestId" TEXT,
+    "qtyAppr" INTEGER NOT NULL DEFAULT 0,
+    "note_revision" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" TIMESTAMP(3),
+
+    CONSTRAINT "SrDetail_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -744,7 +881,10 @@ CREATE INDEX "Employee_id_nick_name_NIK_id_card_NIP_employee_name_idx" ON "Emplo
 CREATE UNIQUE INDEX "user_username_key" ON "user"("username");
 
 -- CreateIndex
-CREATE INDEX "user_id_idx" ON "user"("id");
+CREATE INDEX "user_id_employeeId_idx" ON "user"("id", "employeeId");
+
+-- CreateIndex
+CREATE INDEX "userRole_id_userId_roleId_idx" ON "userRole"("id", "userId", "roleId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "session_username_key" ON "session"("username");
@@ -882,10 +1022,34 @@ CREATE INDEX "bom_id_srId_idx" ON "bom"("id", "srId");
 CREATE INDEX "bom_detail_id_bomId_partId_materialId_idx" ON "bom_detail"("id", "bomId", "partId", "materialId");
 
 -- CreateIndex
-CREATE INDEX "Mr_id_no_mr_userId_tgl_mr_idx" ON "Mr"("id", "no_mr", "userId", "tgl_mr");
+CREATE INDEX "coa_id_coa_code_coa_name_idx" ON "coa"("id", "coa_code", "coa_name");
 
 -- CreateIndex
-CREATE INDEX "detailMr_id_mrId_bomId_materialId_idx" ON "detailMr"("id", "mrId", "bomId", "materialId");
+CREATE UNIQUE INDEX "Mr_worId_key" ON "Mr"("worId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Mr_bomIdU_key" ON "Mr"("bomIdU");
+
+-- CreateIndex
+CREATE INDEX "Mr_id_no_mr_userId_idMrAppr_idx" ON "Mr"("id", "no_mr", "userId", "idMrAppr");
+
+-- CreateIndex
+CREATE INDEX "detailMr_id_mrId_bomIdD_spesifikasi_idPurchaseR_idx" ON "detailMr"("id", "mrId", "bomIdD", "spesifikasi", "idPurchaseR");
+
+-- CreateIndex
+CREATE INDEX "purchase_id_idPurchase_dateOfPurchase_idx" ON "purchase"("id", "idPurchase", "dateOfPurchase");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Sr_worId_key" ON "Sr"("worId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Sr_dispacthIDS_key" ON "Sr"("dispacthIDS");
+
+-- CreateIndex
+CREATE INDEX "Sr_id_no_sr_dispacthIDS_idSrAppr_idx" ON "Sr"("id", "no_sr", "dispacthIDS", "idSrAppr");
+
+-- CreateIndex
+CREATE INDEX "SrDetail_id_srId_dispacthdetailId_idPurchaseR_idx" ON "SrDetail"("id", "srId", "dispacthdetailId", "idPurchaseR");
 
 -- AddForeignKey
 ALTER TABLE "Employee" ADD CONSTRAINT "Employee_subdepartId_fkey" FOREIGN KEY ("subdepartId") REFERENCES "sub_depart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -894,13 +1058,13 @@ ALTER TABLE "Employee" ADD CONSTRAINT "Employee_subdepartId_fkey" FOREIGN KEY ("
 ALTER TABLE "user" ADD CONSTRAINT "user_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "Employee"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "userRole" ADD CONSTRAINT "userRole_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "userRole" ADD CONSTRAINT "userRole_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "userRole" ADD CONSTRAINT "userRole_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "session" ADD CONSTRAINT "session_username_fkey" FOREIGN KEY ("username") REFERENCES "user"("username") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "session" ADD CONSTRAINT "session_username_fkey" FOREIGN KEY ("username") REFERENCES "user"("username") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "CustomerContact" ADD CONSTRAINT "CustomerContact_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -930,7 +1094,7 @@ ALTER TABLE "eqandpart" ADD CONSTRAINT "eqandpart_id_equipment_fkey" FOREIGN KEY
 ALTER TABLE "eqandpart" ADD CONSTRAINT "eqandpart_id_part_fkey" FOREIGN KEY ("id_part") REFERENCES "eq_part"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "eqandpart" ADD CONSTRAINT "eqandpart_id_quotation_fkey" FOREIGN KEY ("id_quotation") REFERENCES "Quotations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "eqandpart" ADD CONSTRAINT "eqandpart_id_quotation_fkey" FOREIGN KEY ("id_quotation") REFERENCES "Quotations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Material_master" ADD CONSTRAINT "Material_master_kd_group_fkey" FOREIGN KEY ("kd_group") REFERENCES "grup_material"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -972,10 +1136,10 @@ ALTER TABLE "wor" ADD CONSTRAINT "wor_employeeId_fkey" FOREIGN KEY ("employeeId"
 ALTER TABLE "wor" ADD CONSTRAINT "wor_quotationsId_fkey" FOREIGN KEY ("quotationsId") REFERENCES "Quotations"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "timeschedule" ADD CONSTRAINT "timeschedule_worId_fkey" FOREIGN KEY ("worId") REFERENCES "wor"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "timeschedule" ADD CONSTRAINT "timeschedule_worId_fkey" FOREIGN KEY ("worId") REFERENCES "wor"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "srimg" ADD CONSTRAINT "srimg_timeschId_fkey" FOREIGN KEY ("timeschId") REFERENCES "timeschedule"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "srimg" ADD CONSTRAINT "srimg_timeschId_fkey" FOREIGN KEY ("timeschId") REFERENCES "timeschedule"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "srimgdetail" ADD CONSTRAINT "srimgdetail_srId_fkey" FOREIGN KEY ("srId") REFERENCES "srimg"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -990,7 +1154,7 @@ ALTER TABLE "aktivitas" ADD CONSTRAINT "aktivitas_timeId_fkey" FOREIGN KEY ("tim
 ALTER TABLE "aktivitas" ADD CONSTRAINT "aktivitas_aktivitasId_fkey" FOREIGN KEY ("aktivitasId") REFERENCES "masterAktivitas"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "dispacth" ADD CONSTRAINT "dispacth_srId_fkey" FOREIGN KEY ("srId") REFERENCES "srimg"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "dispacth" ADD CONSTRAINT "dispacth_srId_fkey" FOREIGN KEY ("srId") REFERENCES "srimg"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_dispacthID_fkey" FOREIGN KEY ("dispacthID") REFERENCES "dispacth"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1011,31 +1175,85 @@ ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_operatorID_fkey" FOR
 ALTER TABLE "dispatchDetail" ADD CONSTRAINT "dispatchDetail_approvebyID_fkey" FOREIGN KEY ("approvebyID") REFERENCES "Employee"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "drawing" ADD CONSTRAINT "drawing_timeschId_fkey" FOREIGN KEY ("timeschId") REFERENCES "timeschedule"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "drawing" ADD CONSTRAINT "drawing_timeschId_fkey" FOREIGN KEY ("timeschId") REFERENCES "timeschedule"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "file_drawing" ADD CONSTRAINT "file_drawing_drawingId_fkey" FOREIGN KEY ("drawingId") REFERENCES "drawing"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "bom" ADD CONSTRAINT "bom_srId_fkey" FOREIGN KEY ("srId") REFERENCES "srimg"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "bom" ADD CONSTRAINT "bom_srId_fkey" FOREIGN KEY ("srId") REFERENCES "srimg"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "bom_detail" ADD CONSTRAINT "bom_detail_bomId_fkey" FOREIGN KEY ("bomId") REFERENCES "bom"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "bom_detail" ADD CONSTRAINT "bom_detail_partId_fkey" FOREIGN KEY ("partId") REFERENCES "srimgdetail"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "bom_detail" ADD CONSTRAINT "bom_detail_partId_fkey" FOREIGN KEY ("partId") REFERENCES "srimgdetail"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "bom_detail" ADD CONSTRAINT "bom_detail_materialId_fkey" FOREIGN KEY ("materialId") REFERENCES "Material_master"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "bom_detail" ADD CONSTRAINT "bom_detail_materialId_fkey" FOREIGN KEY ("materialId") REFERENCES "Material_master"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Mr" ADD CONSTRAINT "Mr_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Mr" ADD CONSTRAINT "Mr_worId_fkey" FOREIGN KEY ("worId") REFERENCES "wor"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Mr" ADD CONSTRAINT "Mr_bomIdU_fkey" FOREIGN KEY ("bomIdU") REFERENCES "bom"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Mr" ADD CONSTRAINT "Mr_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "detailMr" ADD CONSTRAINT "detailMr_mrId_fkey" FOREIGN KEY ("mrId") REFERENCES "Mr"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "detailMr" ADD CONSTRAINT "detailMr_bomId_fkey" FOREIGN KEY ("bomId") REFERENCES "bom"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "detailMr" ADD CONSTRAINT "detailMr_bomIdD_fkey" FOREIGN KEY ("bomIdD") REFERENCES "bom_detail"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "detailMr" ADD CONSTRAINT "detailMr_materialId_fkey" FOREIGN KEY ("materialId") REFERENCES "Material_master"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "detailMr" ADD CONSTRAINT "detailMr_materialStockId_fkey" FOREIGN KEY ("materialStockId") REFERENCES "Material_Stock"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "detailMr" ADD CONSTRAINT "detailMr_supId_fkey" FOREIGN KEY ("supId") REFERENCES "Supplier"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "detailMr" ADD CONSTRAINT "detailMr_akunId_fkey" FOREIGN KEY ("akunId") REFERENCES "coa"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "detailMr" ADD CONSTRAINT "detailMr_idPurchaseR_fkey" FOREIGN KEY ("idPurchaseR") REFERENCES "purchase"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "detailMr" ADD CONSTRAINT "detailMr_approvedRequestId_fkey" FOREIGN KEY ("approvedRequestId") REFERENCES "approvedRequest"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "purchase" ADD CONSTRAINT "purchase_approveById_fkey" FOREIGN KEY ("approveById") REFERENCES "user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "approvedRequest" ADD CONSTRAINT "approvedRequest_approveById_fkey" FOREIGN KEY ("approveById") REFERENCES "user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Sr" ADD CONSTRAINT "Sr_worId_fkey" FOREIGN KEY ("worId") REFERENCES "wor"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Sr" ADD CONSTRAINT "Sr_dispacthIDS_fkey" FOREIGN KEY ("dispacthIDS") REFERENCES "dispacth"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Sr" ADD CONSTRAINT "Sr_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SrDetail" ADD CONSTRAINT "SrDetail_srId_fkey" FOREIGN KEY ("srId") REFERENCES "Sr"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SrDetail" ADD CONSTRAINT "SrDetail_dispacthdetailId_fkey" FOREIGN KEY ("dispacthdetailId") REFERENCES "dispatchDetail"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SrDetail" ADD CONSTRAINT "SrDetail_description_fkey" FOREIGN KEY ("description") REFERENCES "workCenter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SrDetail" ADD CONSTRAINT "SrDetail_supId_fkey" FOREIGN KEY ("supId") REFERENCES "Supplier"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SrDetail" ADD CONSTRAINT "SrDetail_akunId_fkey" FOREIGN KEY ("akunId") REFERENCES "coa"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SrDetail" ADD CONSTRAINT "SrDetail_idPurchaseR_fkey" FOREIGN KEY ("idPurchaseR") REFERENCES "purchase"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SrDetail" ADD CONSTRAINT "SrDetail_approvedRequestId_fkey" FOREIGN KEY ("approvedRequestId") REFERENCES "approvedRequest"("id") ON DELETE CASCADE ON UPDATE CASCADE;

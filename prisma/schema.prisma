@@ -918,6 +918,7 @@ model detailMr {
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
   deleted           DateTime?
+  note_revision     String?          @db.Text
   purchase          purchase?        @relation(fields: [idPurchaseR], references: [id], onUpdate: Cascade, onDelete: Cascade)
   idPurchaseR       String?
   approvedRequest   approvedRequest? @relation(fields: [approvedRequestId], references: [id], onUpdate: Cascade, onDelete: Cascade)
@@ -927,23 +928,31 @@ model detailMr {
 }
 
 model purchase {
-  id                      String     @id @default(cuid())
-  idPurchase              String?    @db.VarChar(20)
+  id                      String                   @id @default(cuid())
+  idPurchase              String?                  @db.VarChar(20)
   dateOfPurchase          DateTime
-  cashAdv                 String?    @db.VarChar(200)
-  totalAdv                Int        @default(0)
-  status_spv_pr           Boolean?   @default(false)
-  status_manager_pr       Boolean?   @default(false)
-  status_manager_director Boolean?   @default(false)
-  user                    User?      @relation(fields: [approveById], references: [id])
+  cashAdv                 String?                  @db.VarChar(200)
+  totalAdv                Int                      @default(0)
+  status_spv_pr           Boolean?                 @default(false)
+  status_manager_pr       Boolean?                 @default(false)
+  status_manager_director status_manager_director?
+  user                    User?                    @relation(fields: [approveById], references: [id])
   approveById             String?
-  createdAt               DateTime   @default(now())
-  updatedAt               DateTime   @updatedAt
+  price                   Int                      @default(0)
+  note                    String?                  @db.Text
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
   deleted                 DateTime?
   detailMr                detailMr[]
   SrDetail                SrDetail[]
 
   @@index([id, idPurchase, dateOfPurchase])
+}
+
+enum status_manager_director {
+  revision
+  reject
+  approve
 }
 
 model approvedRequest {
@@ -1009,6 +1018,7 @@ model SrDetail {
   approvedRequest   approvedRequest? @relation(fields: [approvedRequestId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   approvedRequestId String?
   qtyAppr           Int              @default(0)
+  note_revision     String?          @db.Text
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
   deleted           DateTime?

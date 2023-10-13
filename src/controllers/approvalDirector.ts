@@ -102,6 +102,7 @@ const getAllApprove = async (request: Request, response: Response) => {
         },
         SrDetail: {
           include: {
+            workCenter: true,
             supplier: true,
             approvedRequest: true,
             coa: true,

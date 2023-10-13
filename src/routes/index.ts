@@ -28,7 +28,8 @@ import bom from "../controllers/bom";
 import MR from "../controllers/mRequest";
 import SR from "../controllers/Sr";
 import coa from "../controllers/coa";
-import director from "../controllers/approvalDirector"
+import director from "../controllers/approvalDirector";
+import approvalRequest from "../controllers/approvalRequest";
 
 /***************************AUTH********************************* */
 
@@ -1208,6 +1209,7 @@ router.get(
   }),
   MR.getMr
 );
+
 router.get(
   "/mrDetail",
   jwt.authToken({
@@ -1223,21 +1225,7 @@ router.get(
   }),
   MR.getdetailMr
 );
-router.get(
-  "/MRapprove",
-  jwt.authToken({
-    administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
-    purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
-  }),
-  MR.getApproval
-);
+
 router.post(
   "/MR",
   jwt.authToken({
@@ -1253,6 +1241,7 @@ router.post(
   }),
   MR.createMr
 );
+
 router.put(
   "/MR",
   jwt.authToken({
@@ -1268,6 +1257,7 @@ router.put(
   }),
   MR.upsertMr
 );
+
 router.put(
   "/MR/:id",
   jwt.authToken({
@@ -1283,6 +1273,7 @@ router.put(
   }),
   MR.updateMr
 );
+
 router.put(
   "/MRStatusSpv/:id",
   jwt.authToken({
@@ -1298,6 +1289,7 @@ router.put(
   }),
   MR.updateMrStatus
 );
+
 router.put(
   "/MRStatusManger/:id",
   jwt.authToken({
@@ -1343,6 +1335,7 @@ router.put(
   }),
   MR.updateApprovalOne
 );
+
 router.delete(
   "/MR/:id",
   jwt.authToken({
@@ -1358,6 +1351,7 @@ router.delete(
   }),
   MR.deleteMr
 );
+
 router.delete(
   "/MRdetail/:id",
   jwt.authToken({
@@ -1393,6 +1387,7 @@ router.get(
   }),
   SR.getSr
 );
+
 router.get(
   "/detailSR",
   jwt.authToken({
@@ -1408,21 +1403,7 @@ router.get(
   }),
   SR.getdetailSr
 );
-router.get(
-  "/SRapprove",
-  jwt.authToken({
-    administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
-    purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
-  }),
-  SR.getApprovalSr
-);
+
 router.post(
   "/SR",
   jwt.authToken({
@@ -1438,6 +1419,7 @@ router.post(
   }),
   SR.createSr
 );
+
 router.put(
   "/SR/:id",
   jwt.authToken({
@@ -1453,6 +1435,7 @@ router.put(
   }),
   SR.updateSr
 );
+
 router.put(
   "/SRstatusSpv/:id",
   jwt.authToken({
@@ -1468,6 +1451,7 @@ router.put(
   }),
   SR.updateSrStatus
 );
+
 router.put(
   "/SRstatusManager/:id",
   jwt.authToken({
@@ -1483,6 +1467,7 @@ router.put(
   }),
   SR.updateSrStatusM
 );
+
 router.put(
   "/SR",
   jwt.authToken({
@@ -1498,6 +1483,7 @@ router.put(
   }),
   SR.upsertSr
 );
+
 router.put(
   "/detailSR",
   jwt.authToken({
@@ -1513,6 +1499,7 @@ router.put(
   }),
   SR.updateApprovalOneSR
 );
+
 router.put(
   "/SRapprove",
   jwt.authToken({
@@ -1528,6 +1515,7 @@ router.put(
   }),
   SR.updateApprovalSr
 );
+
 router.delete(
   "/SR/:id",
   jwt.authToken({
@@ -1543,6 +1531,7 @@ router.delete(
   }),
   SR.deleteSr
 );
+
 router.delete(
   "/SRdetail/:id",
   jwt.authToken({
@@ -1763,5 +1752,24 @@ router.get(
 );
 /***************************Director********************************* */
 
+/***************************Approval Request********************************* */
+
+router.get(
+  "/approvalRequest",
+  // jwt.authToken({
+  //   administrator: "ADMINISTRATOR",
+  //   marketing: "MARKETING",
+  //   HRandGA: "HR & GA",
+  //   finance: "FINANCE & ACC",
+  //   QAandEng: "QA & ENG",
+  //   purchasing: "PURCHASING",
+  //   drafter: "DRAFTER",
+  //   ppic: "Ppic",
+  //   utility: "Utility/ty",
+  // }),
+  approvalRequest.getAllApproveRequest
+);
+
+/***************************Approval Request********************************* */
 
 export default router;
