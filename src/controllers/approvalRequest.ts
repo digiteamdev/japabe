@@ -227,7 +227,7 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
     } else {
       results = await prisma.approvedRequest.findMany({
         where: {
-          AND: [
+          OR: [
             {
               idApprove: {
                 startsWith: type,
