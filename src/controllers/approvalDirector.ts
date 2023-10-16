@@ -13,14 +13,15 @@ const getAllApprove = async (request: Request, response: Response) => {
     const pagination: any = new pagging(page, perPage, hostname, pathname);
     const purchaserCount = await prisma.purchase.count({
       where: {
-        AND: [
+        deleted: null,
+        OR: [
           {
-            deleted: null,
+            status_manager_director: null,
           },
           {
-            status_manager_pr: true,
+            status_manager_director: "revision",
           },
-        ],
+        ]
       },
     });
     const results = await prisma.purchase.findMany({
@@ -31,6 +32,19 @@ const getAllApprove = async (request: Request, response: Response) => {
           },
           {
             status_manager_pr: true,
+          },
+          {
+            idPurchase: {
+              contains: pencarian,
+            },
+          },
+        ],
+        OR: [
+          {
+            status_manager_director: null,
+          },
+          {
+            status_manager_director: "revision",
           },
         ],
       },
