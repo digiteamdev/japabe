@@ -1344,6 +1344,25 @@ const updatePrStatusM = async (request: any, response: Response) => {
           });
         }
       }
+      if (request.body.revision_sr !== undefined) {
+        const updateVerify = request.body.revision_sr.map(
+          (updateByveri: { note_revision: any; id: any }) => {
+            return {
+              note_revision: updateByveri.note_revision,
+              id: updateByveri.id,
+            };
+          }
+        );
+        let result: any = [];
+        for (let i = 0; i < updateVerify.length; i++) {
+          result = await prisma.srDetail.update({
+            where: { id: updateVerify[i].id },
+            data: {
+              note_revision: updateVerify[i].note_revision,
+            },
+          });
+        }
+      }
     } else if (
       (emplo?.position === "Director" &&
         request.body.statusApprove.status_manager_pr === undefined) ||
