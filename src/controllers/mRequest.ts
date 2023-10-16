@@ -1185,7 +1185,7 @@ const updatedetailPr = async (request: Request, response: Response) => {
         akunId: any;
         supId: any;
         price: any;
-        note_revision: any
+        note_revision: any;
         id: any;
         qtyAppr: any;
         disc: any;
@@ -1325,6 +1325,25 @@ const updatePrStatusM = async (request: any, response: Response) => {
         where: { id: id },
         data: request.body.statusApprove,
       });
+      if (request.body.revision !== undefined) {
+        const updateVerify = request.body.revision.map(
+          (updateByveri: { note_revision: any; id: any }) => {
+            return {
+              note_revision: updateByveri.note_revision,
+              id: updateByveri.id,
+            };
+          }
+        );
+        let result: any = [];
+        for (let i = 0; i < updateVerify.length; i++) {
+          result = await prisma.detailMr.update({
+            where: { id: updateVerify[i].id },
+            data: {
+              note_revision: updateVerify[i].note_revision,
+            },
+          });
+        }
+      }
     } else if (
       (emplo?.position === "Director" &&
         request.body.statusApprove.status_manager_pr === undefined) ||
