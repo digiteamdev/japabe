@@ -1207,6 +1207,7 @@ const updatedetailPsr = async (request: Request, response: Response) => {
         supId: any;
         id: any;
         disc: any;
+        note_revision: any
         qtyAppr: any;
         price: any;
         currency: any;
@@ -1217,6 +1218,7 @@ const updatedetailPsr = async (request: Request, response: Response) => {
           akunId: updateByveri.akunId,
           disc: updateByveri.disc,
           price: updateByveri.price,
+          note_revision: updateByveri.note_revision,
           currency: updateByveri.currency,
           qtyAppr: updateByveri.qtyAppr,
           total: updateByveri.total,
@@ -1237,6 +1239,7 @@ const updatedetailPsr = async (request: Request, response: Response) => {
           coa: { connect: { id: updateVerify[i].akunId } },
           supplier: { connect: { id: updateVerify[i].supId } },
           price: updateVerify[i].price,
+          note_revision: updateVerify[i].note_revision,
           qtyAppr: updateVerify[i].qtyAppr,
           disc: updateVerify[i].disc,
           currency: updateVerify[i].currency,
