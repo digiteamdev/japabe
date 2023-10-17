@@ -30,6 +30,7 @@ import SR from "../controllers/Sr";
 import coa from "../controllers/coa";
 import director from "../controllers/approvalDirector";
 import approvalRequest from "../controllers/approvalRequest";
+import poandso from "../controllers/poandso";
 
 /***************************AUTH********************************* */
 
@@ -1771,5 +1772,25 @@ router.get(
 );
 
 /***************************Approval Request********************************* */
+
+/***************************PO AND SO********************************* */
+
+router.get(
+  "/poandso",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  poandso.getPo
+);
+
+/***************************PO AND SO********************************* */
 
 export default router;

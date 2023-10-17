@@ -516,15 +516,18 @@ model Deskription_CusPo {
 }
 
 model term_of_pay {
-  id         String     @id @default(cuid())
-  customerPo CustomerPo @relation(fields: [cuspoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  cuspoId    String
+  id         String      @id @default(cuid())
+  customerPo CustomerPo? @relation(fields: [cuspoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  cuspoId    String?
+  poandso    poandso?    @relation(fields: [poandsoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  poandsoId  String?
   limitpay   Limit_Pay?
-  percent    Int        @default(0)
+  percent    Int         @default(0)
   price      String?
   date_limit DateTime
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  note       String?     @db.Text
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
   deleted    DateTime?
 
   @@index([id, cuspoId])
@@ -924,6 +927,8 @@ model detailMr {
   idPurchaseR       String?
   approvedRequest   approvedRequest? @relation(fields: [approvedRequestId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   approvedRequestId String?
+  poandso           poandso?         @relation(fields: [poandsoId], references: [id])
+  poandsoId         String?
 
   @@index([id, mrId, bomIdD, spesifikasi, idPurchaseR])
 }
@@ -1022,6 +1027,23 @@ model SrDetail {
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
   deleted           DateTime?
+  poandso           poandso?         @relation(fields: [poandsoId], references: [id])
+  poandsoId         String?
 
   @@index([id, srId, dispacthdetailId, idPurchaseR])
+}
+
+model poandso {
+  id          String        @id @default(cuid())
+  id_so       String?       @db.VarChar(20)
+  your_reff   String?       @db.Text
+  note        String?       @db.Text
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  deleted     DateTime?
+  term_of_pay term_of_pay[]
+  SrDetail    SrDetail[]
+  detailMr    detailMr[]
+
+  @@index([id, id_so])
 }
