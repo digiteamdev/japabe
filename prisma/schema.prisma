@@ -1034,16 +1034,19 @@ model SrDetail {
 }
 
 model poandso {
-  id          String        @id @default(cuid())
-  id_so       String?       @db.VarChar(20)
-  your_reff   String?       @db.Text
-  note        String?       @db.Text
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  deleted     DateTime?
-  term_of_pay term_of_pay[]
-  SrDetail    SrDetail[]
-  detailMr    detailMr[]
+  id             String        @id @default(cuid())
+  id_so          String?       @db.VarChar(20)
+  date_prepared  DateTime
+  your_reff      String?       @db.Text
+  note           String?       @db.Text
+  status_manager Boolean?      @default(false)
+  DP             Int           @default(0)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  deleted        DateTime?
+  term_of_pay    term_of_pay[]
+  SrDetail       SrDetail[]
+  detailMr       detailMr[]
 
   @@index([id, id_so])
 }
