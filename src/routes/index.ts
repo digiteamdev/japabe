@@ -1816,6 +1816,15 @@ router.post(
   poandso.createPo
 );
 
+router.put(
+  "/poandsoStatus/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    purchasing: "PURCHASING",
+  }),
+  poandso.updateStatusMpoandso
+);
+
 /***************************PO AND SO********************************* */
 
 export default router;
