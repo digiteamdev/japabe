@@ -7,6 +7,7 @@ const getPo = async (request: Request, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
     const type: any = request.query.type || "";
+    const typePOSO: any = request.query.typePOSO || "";
     const hostname: any = request.headers.host;
     const pathname = url.parse(request.url).pathname;
     const page: any = request.query.page;
@@ -253,12 +254,11 @@ const getPo = async (request: Request, response: Response) => {
         },
       });
     } else {
-      results = await prisma.purchase.findMany({
+      results = await prisma.poandso.findMany({
         where: {
           deleted: null,
-          status_manager_director: "approve",
-          idPurchase: {
-            startsWith: type,
+          id_so: {
+            startsWith: typePOSO,
           },
           NOT: [
             {
