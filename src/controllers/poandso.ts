@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import prisma from "../middleware/podandso";
 import pagging from "../utils/paggination";
 import url from "url";
+import { Prisma } from "@prisma/client";
 
 const getPo = async (request: Request, response: Response) => {
   try {
@@ -47,10 +48,14 @@ const getPo = async (request: Request, response: Response) => {
                 include: {
                   wor: {
                     include: {
-                      Quotations: {
+                      customerPo: {
                         include: {
-                          Quotations_Detail: true,
-                          CustomerContact: true,
+                          quotations: {
+                            include: {
+                              Quotations_Detail: true,
+                              CustomerContact: true,
+                            },
+                          },
                         },
                       },
                     },
@@ -441,33 +446,63 @@ const getPo = async (request: Request, response: Response) => {
 
 const createPo = async (request: Request, response: Response) => {
   try {
-    const results = await prisma.poandso.create({
-      data: {
-        id_so: request.body.id_so,
-        date_prepared: new Date(request.body.date_prepared),
-        your_reff: request.body.your_reff,
-        note: request.body.note,
-        DP: request.body.DP,
-        term_of_pay: {
-          create: request.body.term_of_pay,
-        },
+    await prisma.$transaction(
+      async (prisma) => {
+        const results = await prisma.poandso.create({
+          data: {
+            id_so: request.body.id_so,
+            date_prepared: new Date(request.body.date_prepared),
+            supplier: { connect: { id: request.body.supplierId } },
+            your_reff: request.body.your_reff,
+            note: request.body.note,
+            DP: request.body.DP,
+            term_of_pay: {
+              create: request.body.term_of_pay,
+            },
+          },
+          include: {
+            term_of_pay: true,
+          },
+        });
+        if (request.body.detailMrID !== null) {
+          await prisma.detailMr.update({
+            where: {
+              id: request.body.detailMrID,
+            },
+            data: {
+              poandsoId: results.id,
+            },
+          });
+        }
+        if (request.body.detailSrID !== null) {
+          await prisma.srDetail.update({
+            where: {
+              id: request.body.detailSrID,
+            },
+            data: {
+              poandsoId: results.id,
+            },
+          });
+        }
+        if (results) {
+          response.status(201).json({
+            success: true,
+            massage: "Success Add Data",
+            results: results,
+          });
+        } else {
+          response.status(400).json({
+            success: false,
+            massage: "Unsuccess Add Data",
+          });
+        }
       },
-      include: {
-        term_of_pay: true,
-      },
-    });
-    if (results) {
-      response.status(201).json({
-        success: true,
-        massage: "Success Add Data",
-        results: results,
-      });
-    } else {
-      response.status(400).json({
-        success: false,
-        massage: "Unsuccess Add Data",
-      });
-    }
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable, // optional, default defined by database configuration
+        maxWait: 5000, // default: 2000
+        timeout: 10000, // default: 5000
+      }
+    );
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }

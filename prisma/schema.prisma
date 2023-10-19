@@ -397,6 +397,7 @@ model Supplier {
   SupplierBank    SupplierBank[]    @relation("supplierbank")
   detailMr        detailMr[]
   SrDetail        SrDetail[]
+  poandso         poandso[]
 
   @@index([id, id_sup, supplier_name])
 }
@@ -1036,6 +1037,8 @@ model SrDetail {
 model poandso {
   id             String        @id @default(cuid())
   id_so          String?       @db.VarChar(20)
+  supplier       Supplier      @relation(fields: [supplierId], references: [id])
+  supplierId     String
   date_prepared  DateTime
   your_reff      String?       @db.Text
   note           String?       @db.Text
