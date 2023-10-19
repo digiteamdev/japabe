@@ -520,11 +520,9 @@ model term_of_pay {
   id         String      @id @default(cuid())
   customerPo CustomerPo? @relation(fields: [cuspoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   cuspoId    String?
-  poandso    poandso?    @relation(fields: [poandsoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  poandsoId  String?
   limitpay   Limit_Pay?
   percent    Int         @default(0)
-  price      String?
+  price      Int         @default(0)
   date_limit DateTime
   note       String?     @db.Text
   createdAt  DateTime    @default(now())
@@ -1035,21 +1033,36 @@ model SrDetail {
 }
 
 model poandso {
-  id             String        @id @default(cuid())
-  id_so          String?       @db.VarChar(20)
-  supplier       Supplier      @relation(fields: [supplierId], references: [id])
-  supplierId     String
-  date_prepared  DateTime
-  your_reff      String?       @db.Text
-  note           String?       @db.Text
-  status_manager Boolean?      @default(false)
-  DP             Int           @default(0)
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  deleted        DateTime?
-  term_of_pay    term_of_pay[]
-  SrDetail       SrDetail[]
-  detailMr       detailMr[]
+  id                String              @id @default(cuid())
+  id_so             String?             @db.VarChar(20)
+  supplier          Supplier            @relation(fields: [supplierId], references: [id])
+  supplierId        String
+  date_prepared     DateTime
+  your_reff         String?             @db.Text
+  note              String?             @db.Text
+  status_manager    Boolean?            @default(false)
+  DP                Int                 @default(0)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  deleted           DateTime?
+  SrDetail          SrDetail[]
+  detailMr          detailMr[]
+  term_of_pay_po_so term_of_pay_po_so[]
 
   @@index([id, id_so])
+}
+
+model term_of_pay_po_so {
+  id        String     @id @default(cuid())
+  poandso   poandso    @relation(fields: [poandsoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  poandsoId String
+  limitpay  Limit_Pay?
+  percent   Int        @default(0)
+  price     Int        @default(0)
+  invoice   String?    @db.Text
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  deleted   DateTime?
+
+  @@index([id, poandsoId])
 }

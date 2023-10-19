@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import prisma from "../middleware/podandso";
 import pagging from "../utils/paggination";
 import url from "url";
-import { Prisma } from "@prisma/client";
 
 const getPo = async (request: Request, response: Response) => {
   try {
@@ -446,63 +445,59 @@ const getPo = async (request: Request, response: Response) => {
 
 const createPo = async (request: Request, response: Response) => {
   try {
-    await prisma.$transaction(
-      async (prisma) => {
-        const results = await prisma.poandso.create({
-          data: {
-            id_so: request.body.id_so,
-            date_prepared: new Date(request.body.date_prepared),
-            supplier: { connect: { id: request.body.supplierId } },
-            your_reff: request.body.your_reff,
-            note: request.body.note,
-            DP: request.body.DP,
-            term_of_pay: {
-              create: request.body.term_of_pay,
-            },
+    const results = await prisma.poandso.create({
+      data: {
+        id_so: request.body.id_so,
+        date_prepared: new Date(request.body.date_prepared),
+        supplier: { connect: { id: request.body.supplierId } },
+        your_reff: request.body.your_reff,
+        note: request.body.note,
+        DP: request.body.DP,
+        term_of_pay_po_so: {
+          create: request.body.term_of_pay_po_so,
+        },
+      },
+      include: {
+        term_of_pay_po_so: true,
+      },
+    });
+    if (request.body.detailMrID !== null) {
+      request.body.detailMrID.map(async (dataId: any) => {
+        console.log(results.id);
+        await prisma.detailMr.update({
+          where: {
+            id: dataId.id,
           },
-          include: {
-            term_of_pay: true,
+          data: {
+            poandsoId: results.id,
           },
         });
-        if (request.body.detailMrID !== null) {
-          await prisma.detailMr.update({
-            where: {
-              id: request.body.detailMrID,
-            },
-            data: {
-              poandsoId: results.id,
-            },
-          });
-        }
-        if (request.body.detailSrID !== null) {
-          await prisma.srDetail.update({
-            where: {
-              id: request.body.detailSrID,
-            },
-            data: {
-              poandsoId: results.id,
-            },
-          });
-        }
-        if (results) {
-          response.status(201).json({
-            success: true,
-            massage: "Success Add Data",
-            results: results,
-          });
-        } else {
-          response.status(400).json({
-            success: false,
-            massage: "Unsuccess Add Data",
-          });
-        }
-      },
-      {
-        isolationLevel: Prisma.TransactionIsolationLevel.Serializable, // optional, default defined by database configuration
-        maxWait: 5000, // default: 2000
-        timeout: 10000, // default: 5000
-      }
-    );
+      });
+    }
+    if (request.body.detailSrID !== null) {
+      request.body.detailSrID.map(async (dataId: any) => {
+        await prisma.srDetail.update({
+          where: {
+            id: dataId.id,
+          },
+          data: {
+            poandsoId: results.id,
+          },
+        });
+      });
+    }
+    if (results) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Add Data",
+        results: results,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Add Data",
+      });
+    }
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
