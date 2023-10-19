@@ -1791,6 +1791,22 @@ router.get(
   poandso.getPo
 );
 
+router.get(
+  "/poandsoAll",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  poandso.getPoandSo
+);
+
 router.post(
   "/poandso",
   jwt.authToken({
