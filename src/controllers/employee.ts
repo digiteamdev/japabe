@@ -375,6 +375,7 @@ const updateEmployeeChild = async (request: Request, response: Response) => {
           gender_child: updateVerify[i].gender_child,
           child_birth_place: updateVerify[i].child_birth_place,
           child_birth_date: updateVerify[i].child_birth_date,
+          employee: { connect: { id: updateVerify[i].employeeId } },
         },
       });
       result = [...result, updateEmployeeChild];
@@ -566,6 +567,7 @@ const updateEmployeeCertificate = async (request: any, response: Response) => {
             certificate_name: updateVerify[i].certificate_name,
             certificate_img: img,
             end_date: updateVerify[i].end_date,
+            employee: { connect: { id: updateVerify[i].employeeId } },
           },
         });
       result = [...result, updateEmployeeCertificate];
@@ -640,6 +642,7 @@ const updateEmployeeEdu = async (request: any, response: Response) => {
           ijazah: img,
           graduation: updateVerify[i].graduation,
           last_edu: updateVerify[i].last_edu,
+          employee: { connect: { id: updateVerify[i].employeeId } },
         },
       });
       result = [...result, updateEmployeeEdu];

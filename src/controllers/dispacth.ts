@@ -480,6 +480,7 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
             start: updateVerify[i].start,
           },
           update: {
+            dispacth: { connect: { id: updateVerify[i].dispacthID } },
             workCenter: { connect: { id: updateVerify[i].workId } },
             sub_depart: { connect: { id: updateVerify[i].subdepId } },
             aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
@@ -504,6 +505,7 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
               Employee: { connect: { id: updateVerify[i].operatorID } },
             },
             update: {
+              dispacth: { connect: { id: updateVerify[i].dispacthID } },
               workCenter: { connect: { id: updateVerify[i].workId } },
               sub_depart: { connect: { id: updateVerify[i].subdepId } },
               aktivitas: { connect: { id: updateVerify[i].aktivitasID } },

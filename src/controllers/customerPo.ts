@@ -228,6 +228,7 @@ const updatePoDetail = async (request: Request, response: Response) => {
           price: updateVerify[i].price,
           discount: updateVerify[i].discount,
           total: updateVerify[i].total,
+          customerPo: { connect: { id: updateVerify[i].cuspoId } },
         },
       });
       result = [...result, updatePoDetail];
@@ -288,6 +289,7 @@ const updatePoTermOfPay = async (request: Request, response: Response) => {
           percent: updateVerify[i].percent,
           price: updateVerify[i].price,
           date_limit: updateVerify[i].date_limit,
+          customerPo: { connect: { id: updateVerify[i].cuspoId } },
         },
       });
       result = [...result, updatePoTermOfPay];

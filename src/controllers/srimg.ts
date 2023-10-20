@@ -467,6 +467,7 @@ const updateSrimgDetail = async (request: any, response: Response) => {
         },
         update: {
           name_part: updateVerify[i].name_part,
+          srimg: { connect: { id: updateVerify[i].srId } },
           qty: parseInt(updateVerify[i].qty),
           input_finding: updateVerify[i].input_finding,
           choice: updateVerify[i].choice,

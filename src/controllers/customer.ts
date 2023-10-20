@@ -185,6 +185,7 @@ const updateCustomerContact = async (request: Request, response: Response) => {
           contact_person: updateVerify[i].contact_person,
           email_person: updateVerify[i].email_person,
           phone: updateVerify[i].phone,
+          customer: { connect: { id: updateVerify[i].customerID } },
         },
       });
       result = [...result, updateCustomerContact];
@@ -262,6 +263,7 @@ const updateCustomerAddress = async (request: Request, response: Response) => {
           districts: updateVerify[i].districts,
           sub_districts: updateVerify[i].sub_districts,
           ec_postalcode: updateVerify[i].ec_postalcode,
+          customer: { connect: { id: updateVerify[i].customerID } },
         },
       });
       result = [...result, updateCustomerAddress];

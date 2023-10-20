@@ -179,6 +179,7 @@ const updateSupplierContact = async (request: Request, response: Response) => {
           contact_person: updateVerify[i].contact_person,
           email_person: updateVerify[i].email_person,
           phone: updateVerify[i].phone,
+          supplier: { connect: { id: updateVerify[i].supplierId } },
         },
       });
       result = [...result, updateSupplierContact];
@@ -235,6 +236,7 @@ const updateSupplierBank = async (request: Request, response: Response) => {
           account_name: updateVerify[i].account_name,
           bank_name: updateVerify[i].bank_name,
           rekening: updateVerify[i].rekening,
+          supplier: { connect: { id: updateVerify[i].supplierId } },
         },
       });
       result = [...result, updateSupplierBank];

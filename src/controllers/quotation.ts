@@ -258,6 +258,7 @@ const updateQuotationDetail = async (request: Request, response: Response) => {
           item_of_work: updateVerify[i].item_of_work,
           volume: updateVerify[i].volume,
           unit: updateVerify[i].unit,
+          quotations: { connect: { id: updateVerify[i].quo_id } },
         },
       });
       result = [...result, updateQuotationDetail];
