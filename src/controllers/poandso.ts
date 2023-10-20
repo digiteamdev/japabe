@@ -366,7 +366,12 @@ const getPoandSo = async (request: Request, response: Response) => {
       },
       include: {
         term_of_pay_po_so: true,
-        supplier: true,
+        supplier: {
+          include: {
+            SupplierContact: true,
+            SupplierBank: true,
+          }
+        },
         detailMr: {
           include: {
             supplier: {
