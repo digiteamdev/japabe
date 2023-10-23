@@ -42,7 +42,8 @@ const getAllApprove = async (request: Request, response: Response) => {
         ],
       },
     });
-    const results = await prisma.purchase.findMany({
+    let result;
+    result = await prisma.purchase.findMany({
       where: {
         AND: [
           {
@@ -63,24 +64,6 @@ const getAllApprove = async (request: Request, response: Response) => {
           },
           {
             status_manager_director: "revision",
-          },
-          {
-            detailMr: {
-              some: {
-                poandso: {
-                  status_manager: true,
-                },
-              },
-            },
-          },
-          {
-            SrDetail: {
-              some: {
-                poandso: {
-                  status_manager: true,
-                },
-              },
-            },
           },
         ],
       },
@@ -245,6 +228,168 @@ const getAllApprove = async (request: Request, response: Response) => {
       take: parseInt(pagination.perPage),
       skip: parseInt(pagination.page) * parseInt(pagination.perPage),
     });
+    let poandsoData;
+    poandsoData = await prisma.poandso.findMany({
+      where: {
+        status_manager: true,
+      },
+      include: {
+        detailMr: {
+          include: {
+            supplier: true,
+            approvedRequest: true,
+            poandso: true,
+            coa: true,
+            mr: {
+              include: {
+                wor: true,
+                bom: {
+                  include: {
+                    bom_detail: {
+                      include: {
+                        Material_master: {
+                          include: {
+                            Material_Stock: true,
+                            grup_material: true,
+                          },
+                        },
+                      },
+                    },
+                    srimg: {
+                      include: {
+                        srimgdetail: true,
+                      },
+                    },
+                  },
+                },
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    employee: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                        position: true,
+                        sub_depart: {
+                          select: {
+                            id: true,
+                            name: true,
+                            departement: {
+                              select: {
+                                id: true,
+                                name: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            Material_Stock: {
+              include: {
+                Material_master: {
+                  include: {
+                    grup_material: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        SrDetail: {
+          include: {
+            workCenter: true,
+            supplier: true,
+            approvedRequest: true,
+            poandso: true,
+            coa: true,
+            sr: {
+              include: {
+                wor: true,
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    employee: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                        position: true,
+                        sub_depart: {
+                          select: {
+                            id: true,
+                            name: true,
+                            departement: {
+                              select: {
+                                id: true,
+                                name: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                dispacth: {
+                  include: {
+                    dispatchDetail: {
+                      include: {
+                        aktivitas: {
+                          select: {
+                            id: true,
+                            aktivitasId: true,
+                            masterAktivitas: {
+                              select: {
+                                id: true,
+                                name: true,
+                              },
+                            },
+                          },
+                        },
+                        approve: {
+                          select: {
+                            id: true,
+                            employee_name: true,
+                          },
+                        },
+                        Employee: {
+                          select: {
+                            id: true,
+                            employee_name: true,
+                          },
+                        },
+                        sub_depart: true,
+                        workCenter: true,
+                      },
+                    },
+                    srimg: {
+                      include: {
+                        srimgdetail: true,
+                        timeschedule: {
+                          include: {
+                            aktivitas: {
+                              include: {
+                                masterAktivitas: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+    const results = [...result, poandsoData];
     if (results.length > 0) {
       return response.status(200).json({
         success: true,
