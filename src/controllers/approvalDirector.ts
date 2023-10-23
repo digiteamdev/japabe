@@ -389,7 +389,7 @@ const getAllApprove = async (request: Request, response: Response) => {
         },
       },
     });
-    const results = [...result, poandsoData];
+    const results = [...result, ...poandsoData];
     if (results.length > 0) {
       return response.status(200).json({
         success: true,
