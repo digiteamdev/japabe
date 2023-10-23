@@ -319,6 +319,12 @@ const deletecusPo = async (request: Request, response: Response) => {
         id: id,
       },
     });
+    await prisma.customerPo.update({
+      where: { id: id },
+      data: {
+        quo_id: null,
+      },
+    });
     if (deletecusPo) {
       response.status(201).json({
         success: true,
