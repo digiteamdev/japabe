@@ -472,6 +472,9 @@ const getBomMr = async (request: Request, response: Response) => {
               deleted: null,
             },
           },
+          {
+            status: null
+          }
         ],
       },
       include: {

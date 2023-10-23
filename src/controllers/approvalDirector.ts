@@ -21,7 +21,25 @@ const getAllApprove = async (request: Request, response: Response) => {
           {
             status_manager_director: "revision",
           },
-        ]
+          {
+            detailMr: {
+              some: {
+                poandso: {
+                  status_manager: true,
+                },
+              },
+            },
+          },
+          {
+            SrDetail: {
+              some: {
+                poandso: {
+                  status_manager: true,
+                },
+              },
+            },
+          },
+        ],
       },
     });
     const results = await prisma.purchase.findMany({
@@ -46,6 +64,24 @@ const getAllApprove = async (request: Request, response: Response) => {
           {
             status_manager_director: "revision",
           },
+          {
+            detailMr: {
+              some: {
+                poandso: {
+                  status_manager: true,
+                },
+              },
+            },
+          },
+          {
+            SrDetail: {
+              some: {
+                poandso: {
+                  status_manager: true,
+                },
+              },
+            },
+          },
         ],
       },
       include: {
@@ -53,6 +89,7 @@ const getAllApprove = async (request: Request, response: Response) => {
           include: {
             supplier: true,
             approvedRequest: true,
+            poandso: true,
             coa: true,
             mr: {
               include: {
@@ -119,6 +156,7 @@ const getAllApprove = async (request: Request, response: Response) => {
             workCenter: true,
             supplier: true,
             approvedRequest: true,
+            poandso: true,
             coa: true,
             sr: {
               include: {

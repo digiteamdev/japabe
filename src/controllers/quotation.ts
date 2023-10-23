@@ -20,10 +20,18 @@ const getQuotation = async (request: Request, response: Response) => {
     if (request.query.page === undefined) {
       results = await prisma.quotations.findMany({
         where: {
-          quo_num: {
-            contains: "",
-          },
-          CustomerPo: null,
+          OR: [
+            {
+              CustomerPo: null,
+            },
+            {
+              NOT: {
+                CustomerPo: {
+                  deleted: null,
+                },
+              },
+            },
+          ],
         },
         include: {
           CustomerPo: true,
