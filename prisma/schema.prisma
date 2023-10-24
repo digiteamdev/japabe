@@ -475,8 +475,8 @@ model CustomerPo {
   id                String              @id @default(cuid())
   id_po             String?             @db.VarChar(100)
   po_num_auto       String?             @db.VarChar(200)
-  quotations        Quotations?          @relation(fields: [quo_id], references: [id])
-  quo_id            String?              @unique
+  quotations        Quotations          @relation(fields: [quo_id], references: [id])
+  quo_id            String              @unique
   tax               Tax?
   noted             String?             @db.Text
   vat               String
@@ -1041,6 +1041,7 @@ model poandso {
   your_reff         String?             @db.Text
   note              String?             @db.Text
   status_manager    Boolean?            @default(false)
+  status_director   Boolean?            @default(false)
   DP                Int                 @default(0)
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt

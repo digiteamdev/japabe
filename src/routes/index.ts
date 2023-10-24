@@ -1231,14 +1231,7 @@ router.post(
   "/MR",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   MR.createMr
 );
@@ -1247,14 +1240,7 @@ router.put(
   "/MR",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   MR.upsertMr
 );
@@ -1263,14 +1249,7 @@ router.put(
   "/MR/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   MR.updateMr
 );
@@ -1279,14 +1258,7 @@ router.put(
   "/MRStatusSpv/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   MR.updateMrStatus
 );
@@ -1295,14 +1267,7 @@ router.put(
   "/MRStatusManger/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   MR.updateMrStatusM
 );
@@ -1310,14 +1275,7 @@ router.put(
   "/MRapprove",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   MR.updateApproval
 );
@@ -1325,14 +1283,7 @@ router.put(
   "/MRdetailUpdate",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   MR.updateApprovalOne
 );
@@ -1341,14 +1292,7 @@ router.delete(
   "/MR/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   MR.deleteMr
 );
@@ -1357,14 +1301,7 @@ router.delete(
   "/MRdetail/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   MR.deleteMrDetail
 );
@@ -1409,14 +1346,7 @@ router.post(
   "/SR",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   SR.createSr
 );
@@ -1425,14 +1355,7 @@ router.put(
   "/SR/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   SR.updateSr
 );
@@ -1441,14 +1364,7 @@ router.put(
   "/SRstatusSpv/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   SR.updateSrStatus
 );
@@ -1457,14 +1373,7 @@ router.put(
   "/SRstatusManager/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   SR.updateSrStatusM
 );
@@ -1473,14 +1382,7 @@ router.put(
   "/SR",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   SR.upsertSr
 );
@@ -1489,14 +1391,7 @@ router.put(
   "/detailSR",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   SR.updateApprovalOneSR
 );
@@ -1505,14 +1400,7 @@ router.put(
   "/SRapprove",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   SR.updateApprovalSr
 );
@@ -1521,14 +1409,7 @@ router.delete(
   "/SR/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   SR.deleteSr
 );
@@ -1537,14 +1418,7 @@ router.delete(
   "/SRdetail/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   SR.deleteDetailSr
 );
@@ -1607,14 +1481,7 @@ router.put(
   "/mrPr",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   MR.updatePr
 );
@@ -1623,14 +1490,7 @@ router.put(
   "/mrPrdetail",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   MR.updatedetailPr
 );
@@ -1639,14 +1499,7 @@ router.put(
   "/prStatusSpv/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   MR.updatePrStatus
 );
@@ -1655,14 +1508,7 @@ router.put(
   "/prStatusMgr/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   MR.updatePrStatusM
 );
@@ -1690,14 +1536,7 @@ router.put(
   "/srPR",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   SR.updatePsr
 );
@@ -1706,14 +1545,7 @@ router.put(
   "/srPsR",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   SR.updatedetailPsr
 );
@@ -1722,14 +1554,7 @@ router.put(
   "/psrStatusMgr/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   SR.updatePsrStatusM
 );
@@ -1745,11 +1570,16 @@ router.get(
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   director.getAllApprove
+);
+
+router.put(
+  "/directorApproval/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+  }),
+  director.updateStatusDpoandso
 );
 /***************************Director********************************* */
 

@@ -415,6 +415,63 @@ const getAllApprove = async (request: Request, response: Response) => {
   }
 };
 
+const updateStatusDpoandso = async (request: any, response: Response) => {
+  try {
+    const id = request.params.id;
+    const userLogin = await prisma.user.findFirst({
+      where: {
+        username: request.session.userId,
+      },
+    });
+    const a: any = userLogin?.employeeId;
+    const emplo = await prisma.employee.findFirst({
+      where: {
+        id: a,
+      },
+    });
+    const statusPenc = await prisma.poandso.findFirst({
+      where: {
+        id: id,
+      },
+    });
+    let result;
+    if (
+      (emplo?.position === "Director" && statusPenc?.status_director === null) ||
+      statusPenc?.status_director === false
+    ) {
+      const id = request.params.id;
+      result = await prisma.poandso.update({
+        where: { id: id },
+        data: {
+          status_director: true,
+        },
+      });
+    } else {
+      result = await prisma.poandso.update({
+        where: { id: id },
+        data: {
+          status_manager: false,
+        },
+      });
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getAllApprove,
+  updateStatusDpoandso,
 };
