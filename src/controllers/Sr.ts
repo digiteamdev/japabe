@@ -440,6 +440,7 @@ const updateSrStatusM = async (request: any, response: Response) => {
         where: { id: id },
         data: {
           status_manager: "valid",
+          status_spv: "valid",
         },
       });
     } else {
@@ -447,6 +448,7 @@ const updateSrStatusM = async (request: any, response: Response) => {
         where: { id: id },
         data: {
           status_manager: "unvalid",
+          status_spv: "unvalid",
         },
       });
     }

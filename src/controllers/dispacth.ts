@@ -127,6 +127,9 @@ const getDispatch = async (request: Request, response: Response) => {
                 deleted: null,
               },
             },
+            {
+              status: null,
+            },
           ],
         },
         include: {
