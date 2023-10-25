@@ -59,6 +59,7 @@ const getQuotation = async (request: Request, response: Response) => {
           Customer: {
             name: {
               contains: pencarian,
+              mode: 'insensitive',
             },
           },
         },

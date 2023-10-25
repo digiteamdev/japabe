@@ -19,11 +19,6 @@ const getcusPo = async (request: Request, response: Response) => {
     let results;
     if (request.query.page === undefined) {
       results = await prisma.customerPo.findMany({
-        where: {
-          id_po: {
-            contains: "",
-          },
-        },
         include: {
           quotations: {
             include: {
@@ -52,7 +47,8 @@ const getcusPo = async (request: Request, response: Response) => {
       results = await prisma.customerPo.findMany({
         where: {
           po_num_auto: {
-            contains: pencarian,
+            contains:  pencarian,
+            mode: 'insensitive',
           },
         },
         include: {

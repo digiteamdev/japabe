@@ -19,11 +19,6 @@ const getCustomer = async (request: Request, response: Response) => {
     let results;
     if (request.query.page === undefined) {
       results = await prisma.customer.findMany({
-        where: {
-          name: {
-            contains: "",
-          },
-        },
         include: {
           contact: true,
           address: true,
@@ -34,6 +29,7 @@ const getCustomer = async (request: Request, response: Response) => {
         where: {
           name: {
             contains: pencarian,
+            mode: 'insensitive',
           },
         },
         include: {
