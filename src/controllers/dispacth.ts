@@ -204,6 +204,17 @@ const getDispatch = async (request: Request, response: Response) => {
         where: {
           id_dispatch: {
             contains: pencarian,
+            mode: "insensitive",
+          },
+          srimg: {
+            timeschedule: {
+              wor: {
+                job_no: {
+                  contains: pencarian,
+                  mode: "insensitive",
+                },
+              },
+            },
           },
         },
         include: {
@@ -271,6 +282,9 @@ const getDispatch = async (request: Request, response: Response) => {
               },
             },
           },
+        },
+        orderBy: {
+          createdAt: "desc",
         },
       });
       if (results.length > 0) {

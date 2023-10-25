@@ -85,6 +85,13 @@ const getTimeschedule = async (request: Request, response: Response) => {
         where: {
           idTs: {
             contains: pencarian,
+            mode: "insensitive",
+          },
+          wor: {
+            job_no: {
+              contains: pencarian,
+              mode: "insensitive",
+            },
           },
         },
         include: {
@@ -352,6 +359,7 @@ const updateTimeSchStatusM = async (request: Request, response: Response) => {
         where: { id: id },
         data: {
           status_manager: "valid",
+          status_spv: "valid",
         },
       });
     } else {
@@ -359,6 +367,7 @@ const updateTimeSchStatusM = async (request: Request, response: Response) => {
         where: { id: id },
         data: {
           status_manager: "unvalid",
+          status_spv: "unvalid",
         },
       });
     }
