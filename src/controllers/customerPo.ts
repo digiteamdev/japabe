@@ -56,6 +56,7 @@ const getcusPo = async (request: Request, response: Response) => {
           },
         },
         include: {
+          wor: true,
           quotations: {
             include: {
               Customer: {
