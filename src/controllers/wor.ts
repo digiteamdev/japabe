@@ -75,7 +75,13 @@ const getWor = async (request: Request, response: Response) => {
             {
               job_no: {
                 contains: pencarian,
-                mode: 'insensitive',
+                mode: "insensitive",
+              },
+            },
+            {
+              job_no_mr: {
+                contains: pencarian,
+                mode: "insensitive",
               },
             },
             {
@@ -84,7 +90,7 @@ const getWor = async (request: Request, response: Response) => {
                   Customer: {
                     name: {
                       contains: pencarian,
-                      mode: 'insensitive',
+                      mode: "insensitive",
                     },
                   },
                 },
