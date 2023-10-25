@@ -497,6 +497,7 @@ enum Tax {
   ppn
   pph
   ppn_and_pph @map("ppn and pph")
+  nontax      @map("non tax")
 }
 
 model Deskription_CusPo {
@@ -852,6 +853,7 @@ enum Currency {
 enum TaxPr {
   ppn
   noneppn @map("none ppn")
+  nontax  @map("non tax")
 }
 
 enum TaxPsrDmr {
