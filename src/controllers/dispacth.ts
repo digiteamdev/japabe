@@ -206,16 +206,6 @@ const getDispatch = async (request: Request, response: Response) => {
             contains: pencarian,
             mode: "insensitive",
           },
-          srimg: {
-            timeschedule: {
-              wor: {
-                job_no: {
-                  contains: pencarian,
-                  mode: "insensitive",
-                },
-              },
-            },
-          },
         },
         include: {
           Sr: true,

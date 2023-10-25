@@ -87,12 +87,6 @@ const getTimeschedule = async (request: Request, response: Response) => {
             contains: pencarian,
             mode: "insensitive",
           },
-          wor: {
-            job_no: {
-              contains: pencarian,
-              mode: "insensitive",
-            },
-          },
         },
         include: {
           srimg: {
