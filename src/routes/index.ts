@@ -194,73 +194,91 @@ router.get(
 );
 router.get(
   "/employeeAll",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   employee.getEmployeeAll
 );
 router.get(
   "/employeDepart",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   employee.getEmployeeSales
 );
 router.post(
   "/employe",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
   employee.createEmployee
 );
 router.post(
   "/employeeedu",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
-
+  jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
   upload.array("ijazah", 1000),
   employee.createEmployeEdu
 );
 router.post(
   "/employeCertificate",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
-
+  jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
   upload.array("certificate_img", 1000),
   employee.createEmployeCertificate
 );
 router.put(
   "/employe/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
   employee.updateEmployee
 );
 router.put(
   "/employechild",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
   employee.updateEmployeeChild
 );
 router.put(
   "/employeEdu",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
   upload.array("ijazah", 1000),
   employee.updateEmployeeEdu
 );
 router.put(
   "/employeCer",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
   upload.array("certificate_img", 1000),
   employee.updateEmployeeCertificate
 );
 router.delete(
   "/employe/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
   employee.deleteEmployee
 );
 router.delete(
   "/employeChild/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
   employee.deleteEmployeeChild
 );
 router.delete(
   "/employeEdu/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
   employee.deleteEmployeeEdu
 );
 router.delete(
   "/employeCer/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
   employee.deleteEmployeeCertificate
 );
 
@@ -285,33 +303,33 @@ router.get(
 );
 router.post(
   "/customer",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   customer.createCustomer
 );
 router.post(
   "/customerCsvXlsx",
   middle.importData,
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   customer.createCsvNxlsx
 );
 router.put(
   "/customer/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   customer.updateCustomer
 );
 router.put(
   "/customercontact",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   customer.updateCustomerContact
 );
 router.put(
   "/customeraddress",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   customer.updateCustomerAddress
 );
 router.delete(
   "/customer/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   customer.deleteCustomer
 );
 
@@ -336,27 +354,27 @@ router.get(
 );
 router.post(
   "/supplier",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
   supplier.createSupplier
 );
 router.put(
   "/supplier/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
   supplier.updateSupplier
 );
 router.put(
   "/suppliercontact",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
   supplier.updateSupplierContact
 );
 router.put(
   "/supplierbank",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
   supplier.updateSupplierBank
 );
 router.delete(
   "/supplier/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", purchasing: "PURCHASING" }),
   supplier.deleteSupplier
 );
 
@@ -465,7 +483,17 @@ router.get(
 );
 router.get(
   "/quotation/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   quotation.getEditPoQuotation
 );
 router.post(
@@ -585,7 +613,13 @@ router.get(
   jwt.authToken({
     administrator: "ADMINISTRATOR",
     marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
     ppic: "Ppic",
+    utility: "Utility/ty",
   }),
   wor.getWorTimes
 );
@@ -603,7 +637,7 @@ router.put(
 );
 router.put(
   "/worStatus/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   wor.updateWorStatus
 );
 router.delete(

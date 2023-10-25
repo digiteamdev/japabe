@@ -63,6 +63,7 @@ const getQuotation = async (request: Request, response: Response) => {
           },
         },
         include: {
+          CustomerPo: true,
           Customer: {
             include: {
               address: true,
