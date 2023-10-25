@@ -163,6 +163,9 @@ const updatecusPo = async (request: Request, response: Response) => {
         quotations: { connect: { id: request.body.quo_id } },
         tax: request.body.tax,
         noted: request.body.noted,
+        vat: request.body.vat,
+        grand_tot: request.body.grand_tot,
+        total: request.body.total,
         date_of_po: new Date(request.body.date_of_po),
       },
     });
