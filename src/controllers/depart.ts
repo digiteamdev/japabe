@@ -19,11 +19,6 @@ const getDepart = async (request: Request, response: Response) => {
     let results;
     if (request.query.page === undefined) {
       results = await prisma.sub_depart.findMany({
-        where: {
-          name: {
-            contains: "",
-          },
-        },
         orderBy: {
           name: "asc",
         },
@@ -34,9 +29,30 @@ const getDepart = async (request: Request, response: Response) => {
     } else {
       results = await prisma.departement.findMany({
         where: {
-          name: {
-            contains: pencarian,
-          },
+          OR: [
+            {
+              name: {
+                contains: pencarian,
+                mode: "insensitive",
+              },
+            },
+            {
+              sub_depart: {
+                some: {
+                  dispatchDetail: {
+                    some: {
+                      dispacth: {
+                        id_dispatch: {
+                          contains: pencarian,
+                          mode: "insensitive",
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
         },
         include: {
           sub_depart: true,

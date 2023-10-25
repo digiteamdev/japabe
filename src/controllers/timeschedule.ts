@@ -83,9 +83,11 @@ const getTimeschedule = async (request: Request, response: Response) => {
     } else {
       results = await prisma.timeschedule.findMany({
         where: {
-          idTs: {
-            contains: pencarian,
-            mode: "insensitive",
+          wor: {
+            job_no: {
+              contains: pencarian,
+              mode: "insensitive",
+            },
           },
         },
         include: {
