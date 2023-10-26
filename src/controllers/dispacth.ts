@@ -557,6 +557,7 @@ const updateStart = async (request: Request, response: Response) => {
       data: {
         actual: new Date(request.body.actual),
         so: request.body.so,
+        Employee: { connect: { id: request.body.operatorID } },
       },
     });
     if (updateStart) {
@@ -586,6 +587,7 @@ const updateFinish = async (request: Request, response: Response) => {
       data: {
         finish: new Date(request.body.finish),
         approve: { connect: { id: request.body.approvebyID } },
+        Employee: { connect: { id: request.body.operatorID } },
       },
     });
     const selectDispact = await prisma.dispatchDetail.findFirst({
