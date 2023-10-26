@@ -19,11 +19,6 @@ const getWorkCenter = async (request: Request, response: Response) => {
     let results;
     if (request.query.page === undefined) {
       results = await prisma.workCenter.findMany({
-        where: {
-          name: {
-            contains: "",
-          },
-        },
         orderBy: {
           name: "asc",
         },
@@ -33,6 +28,7 @@ const getWorkCenter = async (request: Request, response: Response) => {
         where: {
           name: {
             contains: pencarian,
+            mode: 'insensitive'
           },
         },
         orderBy: {

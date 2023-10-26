@@ -24,35 +24,15 @@ const getDepart = async (request: Request, response: Response) => {
         },
         include: {
           departement: true,
-        }
+        },
       });
     } else {
       results = await prisma.departement.findMany({
         where: {
-          OR: [
-            {
-              name: {
-                contains: pencarian,
-                mode: "insensitive",
-              },
-            },
-            {
-              sub_depart: {
-                some: {
-                  dispatchDetail: {
-                    some: {
-                      dispacth: {
-                        id_dispatch: {
-                          contains: pencarian,
-                          mode: "insensitive",
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          ]
+          name: {
+            contains: pencarian,
+            mode: "insensitive",
+          },
         },
         include: {
           sub_depart: true,

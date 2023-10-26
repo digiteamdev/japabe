@@ -19,11 +19,6 @@ const getEquipment = async (request: Request, response: Response) => {
     let results;
     if (request.query.page === undefined) {
       results = await prisma.equipment.findMany({
-        where: {
-          nama: {
-            contains: "",
-          },
-        },
         include: {
           eq_part: {
             select: {
@@ -45,6 +40,7 @@ const getEquipment = async (request: Request, response: Response) => {
         where: {
           nama: {
             contains: pencarian,
+            mode: "insensitive",
           },
         },
         include: {
