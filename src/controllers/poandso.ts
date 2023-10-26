@@ -62,8 +62,8 @@ const getPo = async (request: Request, response: Response) => {
           {
             idPurchase: {
               contains: pencarian,
-              mode: "insensitive"
-            }
+              mode: "insensitive",
+            },
           },
           {
             SrDetail: {
@@ -71,24 +71,24 @@ const getPo = async (request: Request, response: Response) => {
                 supplier: {
                   supplier_name: {
                     contains: pencarian,
-                    mode: "insensitive"
-                  }
-                }
-              }
-            }
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
           },
           {
             detailMr: {
-              some:{ 
+              some: {
                 supplier: {
                   supplier_name: {
                     contains: pencarian,
-                    mode: "insensitive"
-                  }
-                }
-              }
-            }
-          }
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+          },
         ],
       },
       include: {
@@ -391,6 +391,36 @@ const getPoandSo = async (request: Request, response: Response) => {
           {
             id_so: {
               startsWith: type,
+            },
+          },
+          {
+            id_so: {
+              contains: pencarian,
+              mode: "insensitive",
+            },
+          },
+          {
+            SrDetail: {
+              some: {
+                supplier: {
+                  supplier_name: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+          },
+          {
+            detailMr: {
+              some: {
+                supplier: {
+                  supplier_name: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
+              },
             },
           },
         ],
