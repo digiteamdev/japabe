@@ -386,41 +386,12 @@ const getPoandSo = async (request: Request, response: Response) => {
       where: {
         id_so: {
           contains: pencarian,
+          mode: "insensitive",
         },
         OR: [
           {
             id_so: {
               startsWith: type,
-            },
-          },
-          {
-            id_so: {
-              contains: pencarian,
-              mode: "insensitive",
-            },
-          },
-          {
-            SrDetail: {
-              some: {
-                supplier: {
-                  supplier_name: {
-                    contains: pencarian,
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-          },
-          {
-            detailMr: {
-              some: {
-                supplier: {
-                  supplier_name: {
-                    contains: pencarian,
-                    mode: "insensitive",
-                  },
-                },
-              },
             },
           },
         ],
