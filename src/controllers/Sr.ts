@@ -47,7 +47,7 @@ const getSr = async (request: any, response: Response) => {
           where: {
             no_sr: {
               contains: pencarian,
-              mode: "insensitive"
+              mode: "insensitive",
             },
           },
           include: {
@@ -163,7 +163,7 @@ const getSr = async (request: any, response: Response) => {
             },
             no_sr: {
               contains: pencarian,
-              mode: "insensitive"
+              mode: "insensitive",
             },
           },
           include: {
@@ -986,13 +986,11 @@ const getPsR = async (request: Request, response: Response) => {
     } else {
       results = await prisma.purchase.findMany({
         where: {
+          idPurchase: {
+            contains: pencarian,
+            mode: "insensitive",
+          },
           OR: [
-            {
-              idPurchase: {
-                contains: pencarian,
-                mode: "insensitive"
-              },
-            },
             {
               idPurchase: {
                 startsWith: typeMR,
