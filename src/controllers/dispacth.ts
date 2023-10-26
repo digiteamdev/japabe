@@ -39,6 +39,13 @@ const getDispatch = async (request: Request, response: Response) => {
                 deleted: null,
               },
             },
+            {
+              dispatchDetail: {
+                some: {
+                  so: null,
+                }
+              }
+            }
           ],
         },
         include: {
@@ -110,8 +117,6 @@ const getDispatch = async (request: Request, response: Response) => {
         orderBy: {
           createdAt: "desc",
         },
-        take: parseInt(pagination.perPage),
-        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
       let worData;
       worData = await prisma.wor.findMany({
@@ -276,6 +281,8 @@ const getDispatch = async (request: Request, response: Response) => {
         orderBy: {
           createdAt: "desc",
         },
+        take: parseInt(pagination.perPage),
+        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
       if (results.length > 0) {
         return response.status(200).json({
@@ -550,16 +557,29 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
 const updateStart = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
-    const updateStart = await prisma.dispatchDetail.update({
-      where: {
-        id: id,
-      },
-      data: {
-        actual: new Date(request.body.actual),
-        so: request.body.so,
-        Employee: { connect: { id: request.body.operatorID } },
-      },
-    });
+    let updateStart;
+    if (request.body.operatorID === null) {            
+      updateStart = await prisma.dispatchDetail.update({
+        where: {
+          id: id,
+        },
+        data: {
+          actual: new Date(request.body.actual),
+          so: request.body.so,
+        },
+      });
+    } else {
+      updateStart = await prisma.dispatchDetail.update({
+        where: {
+          id: id,
+        },
+        data: {
+          actual: new Date(request.body.actual),
+          so: request.body.so,
+          Employee: { connect: { id: request.body.operatorID } },
+        },
+      });
+    }
     if (updateStart) {
       response.status(201).json({
         success: true,
