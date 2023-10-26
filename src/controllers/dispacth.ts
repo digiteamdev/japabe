@@ -20,6 +20,11 @@ const getDispatch = async (request: Request, response: Response) => {
     if (request.query.page === undefined) {
       result = await prisma.dispacth.findMany({
         where: {
+          dispatchDetail: {
+            some: {
+              so: true,
+            },
+          },
           OR: [
             {
               deleted: null,
@@ -39,13 +44,6 @@ const getDispatch = async (request: Request, response: Response) => {
                 deleted: null,
               },
             },
-            {
-              dispatchDetail: {
-                some: {
-                  so: false,
-                }
-              }
-            }
           ],
         },
         include: {
@@ -558,7 +556,7 @@ const updateStart = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
     let updateStart;
-    if (request.body.operatorID === null) {            
+    if (request.body.operatorID === null) {
       updateStart = await prisma.dispatchDetail.update({
         where: {
           id: id,
