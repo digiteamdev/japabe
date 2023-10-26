@@ -42,7 +42,7 @@ const getDispatch = async (request: Request, response: Response) => {
             {
               dispatchDetail: {
                 some: {
-                  so: null,
+                  so: false,
                 }
               }
             }
