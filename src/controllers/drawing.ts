@@ -24,6 +24,7 @@ const getDrawing = async (request: Request, response: Response) => {
         where: {
           id_drawing: {
             contains: pencarian,
+            mode: "insensitive"
           },
         },
         include: {

@@ -24,9 +24,6 @@ const getSr = async (request: any, response: Response) => {
         where: {
           status_spv: status,
           status_manager: status,
-          no_sr: {
-            contains: "",
-          },
         },
       });
     } else {
@@ -50,6 +47,7 @@ const getSr = async (request: any, response: Response) => {
           where: {
             no_sr: {
               contains: pencarian,
+              mode: "insensitive"
             },
           },
           include: {
@@ -165,6 +163,7 @@ const getSr = async (request: any, response: Response) => {
             },
             no_sr: {
               contains: pencarian,
+              mode: "insensitive"
             },
           },
           include: {
@@ -987,10 +986,11 @@ const getPsR = async (request: Request, response: Response) => {
     } else {
       results = await prisma.purchase.findMany({
         where: {
-          AND: [
+          OR: [
             {
               idPurchase: {
                 contains: pencarian,
+                mode: "insensitive"
               },
             },
             {
@@ -1128,6 +1128,7 @@ const updatePsr = async (request: Request, response: Response) => {
           data: {
             dateOfPurchase: request.body.dateOfPurchase,
             idPurchase: request.body.idPurchase,
+            note: request.body.note,
           },
         });
         const updateVerify = request.body.srDetail.map(

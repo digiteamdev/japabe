@@ -19,11 +19,6 @@ const getSupplier = async (request: Request, response: Response) => {
     let results;
     if (request.query.page === undefined) {
       results = await prisma.supplier.findMany({
-        where: {
-          supplier_name: {
-            contains: "",
-          },
-        },
         include: {
           SupplierBank: true,
           SupplierContact: true,
@@ -34,6 +29,7 @@ const getSupplier = async (request: Request, response: Response) => {
         where: {
           supplier_name: {
             contains: pencarian,
+            mode: "insensitive"
           },
         },
         include: {

@@ -55,6 +55,7 @@ const getAllApprove = async (request: Request, response: Response) => {
           {
             idPurchase: {
               contains: pencarian,
+              mode: "insensitive"
             },
           },
         ],

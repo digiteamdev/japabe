@@ -19,14 +19,6 @@ const getTypeMr = async (request: Request, response: Response) => {
     let results;
     if (request.query.page === undefined) {
       results = await prisma.grup_material.findMany({
-        where: {
-          kd_group: {
-            contains: "",
-          },
-          material_name: {
-            contains: "",
-          },
-        },
         include: {
           Material_master: true,
         },
@@ -38,9 +30,11 @@ const getTypeMr = async (request: Request, response: Response) => {
             {
               kd_group: {
                 contains: pencarian,
+                mode: "insensitive"
               },
               material_name: {
                 contains: pencarian,
+                mode: "insensitive"
               },
             },
           ],
@@ -96,14 +90,6 @@ const getMasterM = async (request: Request, response: Response) => {
     let results;
     if (request.query.page === undefined) {
       results = await prisma.material_master.findMany({
-        where: {
-          kd_group: {
-            contains: "",
-          },
-          material_name: {
-            contains: "",
-          },
-        },
         include: {
           Material_Stock: true,
           grup_material: true,
@@ -116,9 +102,11 @@ const getMasterM = async (request: Request, response: Response) => {
             {
               kd_group: {
                 contains: pencarian,
+                mode: "insensitive"
               },
               material_name: {
                 contains: pencarian,
+                mode: "insensitive"
               },
             },
           ],
@@ -175,11 +163,6 @@ const getStock = async (request: Request, response: Response) => {
     let results;
     if (request.query.page === undefined) {
       results = await prisma.material_Stock.findMany({
-        where: {
-          spesifikasi: {
-            contains: "",
-          },
-        },
         include: {
           Material_master: {
             include: {
@@ -193,6 +176,7 @@ const getStock = async (request: Request, response: Response) => {
         where: {
           spesifikasi: {
             contains: pencarian,
+            mode: "insensitive"
           },
         },
         include: {

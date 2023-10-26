@@ -47,6 +47,7 @@ const getMr = async (request: any, response: Response) => {
           where: {
             no_mr: {
               contains: pencarian,
+              mode: "insensitive"
             },
           },
           include: {
@@ -146,6 +147,7 @@ const getMr = async (request: any, response: Response) => {
             },
             no_mr: {
               contains: pencarian,
+              mode: "insensitive"
             },
           },
           include: {
@@ -987,10 +989,11 @@ const getPrM = async (request: Request, response: Response) => {
     } else {
       results = await prisma.purchase.findMany({
         where: {
-          AND: [
+          OR: [
             {
               idPurchase: {
                 contains: pencarian,
+                mode: "insensitive"
               },
             },
             {
@@ -1107,6 +1110,7 @@ const updatePr = async (request: Request, response: Response) => {
           data: {
             dateOfPurchase: request.body.dateOfPurchase,
             idPurchase: request.body.idPurchase,
+            note: request.body.note,
           },
         });
         const updateVerify = request.body.detailMr.map(

@@ -6,6 +6,7 @@ import url from "url";
 const getPo = async (request: Request, response: Response) => {
   try {
     const type: any = request.query.type || "";
+    const pencarian: any = request.query.search || "";
     const hostname: any = request.headers.host;
     const pathname = url.parse(request.url).pathname;
     const page: any = request.query.page;
@@ -58,6 +59,36 @@ const getPo = async (request: Request, response: Response) => {
               },
             },
           },
+          {
+            idPurchase: {
+              contains: pencarian,
+              mode: "insensitive"
+            }
+          },
+          {
+            SrDetail: {
+              some: {
+                supplier: {
+                  supplier_name: {
+                    contains: pencarian,
+                    mode: "insensitive"
+                  }
+                }
+              }
+            }
+          },
+          {
+            detailMr: {
+              some:{ 
+                supplier: {
+                  supplier_name: {
+                    contains: pencarian,
+                    mode: "insensitive"
+                  }
+                }
+              }
+            }
+          }
         ],
       },
       include: {
@@ -370,7 +401,7 @@ const getPoandSo = async (request: Request, response: Response) => {
           include: {
             SupplierContact: true,
             SupplierBank: true,
-          }
+          },
         },
         detailMr: {
           include: {

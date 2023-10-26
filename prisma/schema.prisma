@@ -945,6 +945,7 @@ model purchase {
   status_manager_director status_manager_director?
   user                    User?                    @relation(fields: [approveById], references: [id])
   approveById             String?
+  note                    String?                  @db.Text
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @updatedAt
   deleted                 DateTime?

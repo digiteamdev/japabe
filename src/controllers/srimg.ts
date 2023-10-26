@@ -84,6 +84,25 @@ const getSrimg = async (request: Request, response: Response) => {
         where: {
           timeschId: {
             contains: pencarian,
+            mode: "insensitive",
+          },
+          timeschedule: {
+            wor: {
+              job_no: {
+                contains: pencarian,
+                mode: "insensitive",
+              },
+              customerPo: {
+                quotations: {
+                  Customer: {
+                    name: {
+                      contains: pencarian,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            },
           },
         },
         include: {

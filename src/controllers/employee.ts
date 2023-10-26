@@ -37,22 +37,26 @@ const getEmployee = async (request: Request, response: Response) => {
             {
               NIK: {
                 contains: pencarian,
+                mode: "insensitive"
               },
             },
             {
               employee_name: {
                 contains: pencarian,
+                mode: "insensitive"
               },
             },
             {
               phone_number: {
                 contains: pencarian,
+                mode: "insensitive"
               },
             },
             {
               sub_depart: {
                 name: {
                   contains: pencarian,
+                  mode: "insensitive"
                 },
               },
             },

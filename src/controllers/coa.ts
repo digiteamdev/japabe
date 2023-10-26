@@ -19,11 +19,6 @@ const getCoa = async (request: Request, response: Response) => {
     let results;
     if (request.query.page === undefined) {
       results = await prisma.coa.findMany({
-        where: {
-          coa_name: {
-            contains: "",
-          },
-        },
         orderBy: {
           createdAt: "asc",
         },
@@ -33,6 +28,7 @@ const getCoa = async (request: Request, response: Response) => {
         where: {
           coa_name: {
             contains: pencarian,
+            mode: "insensitive"
           },
         },
         orderBy: {
