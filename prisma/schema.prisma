@@ -91,7 +91,7 @@ model User {
 
 model userRole {
   id        String    @id @default(cuid())
-  user      User      @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id])
   userId    String
   role      Role      @relation(fields: [roleId], references: [id])
   roleId    String
@@ -104,7 +104,7 @@ model userRole {
 
 model Session {
   id            String    @id @default(cuid())
-  user          User      @relation(fields: [username], references: [username], onUpdate: Cascade, onDelete: Cascade)
+  user          User      @relation(fields: [username], references: [username])
   username      String    @unique
   acces_token   String?
   refresh_token String?
