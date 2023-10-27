@@ -1201,6 +1201,16 @@ const updatePsr = async (request: Request, response: Response) => {
 
 const updatedetailPsr = async (request: Request, response: Response) => {
   try {
+    const id = request.body.id;
+    let result: any;
+    result = await prisma.purchase.update({
+      where: { id: id },
+      data: {
+        dateOfPurchase: request.body.dateOfPurchase,
+        idPurchase: request.body.idPurchase,
+        note: request.body.note,
+      },
+    });
     const updateVerify = request.body.srDetail.map(
       (updateByveri: {
         taxPsrDmr: any;
@@ -1228,7 +1238,6 @@ const updatedetailPsr = async (request: Request, response: Response) => {
         };
       }
     );
-    let result: any = [];
     for (let i = 0; i < updateVerify.length; i++) {
       let upsertDetailSr;
       upsertDetailSr = await prisma.srDetail.update({
@@ -1247,7 +1256,7 @@ const updatedetailPsr = async (request: Request, response: Response) => {
           total: updateVerify[i].total,
         },
       });
-      result = [...result, upsertDetailSr];
+      result = [result, upsertDetailSr];
     }
     if (result) {
       response.status(201).json({
