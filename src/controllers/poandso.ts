@@ -15,7 +15,32 @@ const getPo = async (request: Request, response: Response) => {
     const poandsoCount = await prisma.purchase.count({
       where: {
         deleted: null,
-        status_manager_director: "approve",
+        OR: [
+          {
+            status_manager_director: null,
+          },
+          {
+            status_manager_director: "revision",
+          },
+          {
+            detailMr: {
+              some: {
+                poandso: {
+                  status_manager: true,
+                },
+              },
+            },
+          },
+          {
+            SrDetail: {
+              some: {
+                poandso: {
+                  status_manager: true,
+                },
+              },
+            },
+          },
+        ],
         NOT: [
           {
             detailMr: {
@@ -40,11 +65,16 @@ const getPo = async (request: Request, response: Response) => {
     const results = await prisma.purchase.findMany({
       where: {
         deleted: null,
-        status_manager_director: "approve",
         idPurchase: {
           startsWith: type,
         },
         OR: [
+          {
+            status_manager_director: null,
+          },
+          {
+            status_manager_director: "revision",
+          },
           {
             detailMr: {
               some: {
