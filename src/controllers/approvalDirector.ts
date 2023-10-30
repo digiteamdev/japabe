@@ -55,7 +55,7 @@ const getAllApprove = async (request: Request, response: Response) => {
           {
             idPurchase: {
               contains: pencarian,
-              mode: "insensitive"
+              mode: "insensitive",
             },
           },
         ],
@@ -430,36 +430,74 @@ const updateStatusDpoandso = async (request: any, response: Response) => {
         id: a,
       },
     });
-    const statusPenc = await prisma.poandso.findFirst({
-      where: {
-        id: id,
-      },
-    });
     let result;
+    let error_position: boolean = false;
     if (
-      (emplo?.position === "Director" && statusPenc?.status_director === null) ||
-      statusPenc?.status_director === false
+      emplo?.position === "Director" &&
+      request.body.statusApprove.status_manager_director !== undefined
     ) {
-      const id = request.params.id;
       result = await prisma.poandso.update({
         where: { id: id },
-        data: {
-          status_director: true,
-        },
+        data: request.body.statusApprove,
       });
+      if (request.body.revision !== undefined) {
+        const updateVerify = request.body.revision.map(
+          (updateByveri: { note_revision: any; id: any }) => {
+            return {
+              note_revision: updateByveri.note_revision,
+              id: updateByveri.id,
+            };
+          }
+        );
+        let result: any = [];
+        for (let i = 0; i < updateVerify.length; i++) {
+          result = await prisma.detailMr.update({
+            where: { id: updateVerify[i].id },
+            data: {
+              note_revision: updateVerify[i].note_revision,
+            },
+          });
+        }
+      }
+      if (request.body.revision_sr !== undefined) {
+        const updateVerify = request.body.revision_sr.map(
+          (updateByveri: { note_revision: any; id: any }) => {
+            return {
+              note_revision: updateByveri.note_revision,
+              id: updateByveri.id,
+            };
+          }
+        );
+        let result: any = [];
+        for (let i = 0; i < updateVerify.length; i++) {
+          result = await prisma.srDetail.update({
+            where: { id: updateVerify[i].id },
+            data: {
+              note_revision: updateVerify[i].note_revision,
+            },
+          });
+        }
+      }
+    } else if (
+      emplo?.position === "Manager" &&
+      request.body.statusApprove.status_manager_director === undefined
+    ) {
+      false;
     } else {
-      result = await prisma.poandso.update({
-        where: { id: id },
-        data: {
-          status_manager: false,
-        },
-      });
+      error_position = true;
     }
-    if (result) {
+    if (result && !error_position) {
       response.status(201).json({
         success: true,
         massage: "Success Update Data",
         results: result,
+      });
+    } else if (error_position) {
+      response.status(400).json({
+        success: false,
+        massage: `anda bukan ${
+          emplo?.position === "Director" ? "Manager" : "Director"
+        }`,
       });
     } else {
       response.status(400).json({

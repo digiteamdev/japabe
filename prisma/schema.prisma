@@ -1036,22 +1036,22 @@ model SrDetail {
 }
 
 model poandso {
-  id                String              @id @default(cuid())
-  id_so             String?             @db.VarChar(20)
-  supplier          Supplier            @relation(fields: [supplierId], references: [id])
-  supplierId        String
-  date_prepared     DateTime
-  your_reff         String?             @db.Text
-  note              String?             @db.Text
-  status_manager    Boolean?            @default(false)
-  status_director   Boolean?            @default(false)
-  DP                Int                 @default(0)
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  deleted           DateTime?
-  SrDetail          SrDetail[]
-  detailMr          detailMr[]
-  term_of_pay_po_so term_of_pay_po_so[]
+  id                      String                   @id @default(cuid())
+  id_so                   String?                  @db.VarChar(20)
+  supplier                Supplier                 @relation(fields: [supplierId], references: [id])
+  supplierId              String
+  date_prepared           DateTime
+  your_reff               String?                  @db.Text
+  note                    String?                  @db.Text
+  status_manager          Boolean?                 @default(false)
+  status_manager_director status_manager_director?
+  DP                      Int                      @default(0)
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  deleted                 DateTime?
+  SrDetail                SrDetail[]
+  detailMr                detailMr[]
+  term_of_pay_po_so       term_of_pay_po_so[]
 
   @@index([id, id_so])
 }
