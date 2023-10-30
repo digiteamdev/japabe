@@ -40,6 +40,9 @@ const getAllApprove = async (request: Request, response: Response) => {
             },
           },
         ],
+        NOT: {
+          status_manager_director: "approve",
+        },
       },
     });
     let result;
@@ -67,6 +70,9 @@ const getAllApprove = async (request: Request, response: Response) => {
             status_manager_director: "revision",
           },
         ],
+        NOT: {
+          status_manager_director: "approve",
+        }
       },
       include: {
         detailMr: {
