@@ -209,6 +209,16 @@ const getDispatch = async (request: Request, response: Response) => {
             contains: pencarian,
             mode: "insensitive",
           },
+          srimg: {
+            timeschedule: {
+              wor: {
+                job_no: {
+                  contains: pencarian,
+                  mode: "insensitive",
+                }
+              }
+            }
+          }
         },
         include: {
           Sr: true,
@@ -605,7 +615,6 @@ const updateFinish = async (request: Request, response: Response) => {
       data: {
         finish: new Date(request.body.finish),
         approve: { connect: { id: request.body.approvebyID } },
-        Employee: { connect: { id: request.body.operatorID } },
       },
     });
     const selectDispact = await prisma.dispatchDetail.findFirst({
