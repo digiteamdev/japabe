@@ -205,20 +205,26 @@ const getDispatch = async (request: Request, response: Response) => {
       let results: any;
       results = await prisma.dispacth.findMany({
         where: {
-          id_dispatch: {
-            contains: pencarian,
-            mode: "insensitive",
-          },
-          srimg: {
-            timeschedule: {
-              wor: {
-                job_no: {
-                  contains: pencarian,
-                  mode: "insensitive",
-                }
-              }
-            }
-          }
+          OR: [
+            {
+              id_dispatch: {
+                contains: pencarian,
+                mode: "insensitive",
+              },
+            },
+            {
+              srimg: {
+                timeschedule: {
+                  wor: {
+                    job_no: {
+                      contains: pencarian,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            },
+          ],
         },
         include: {
           Sr: true,
