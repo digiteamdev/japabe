@@ -37,26 +37,26 @@ const getEmployee = async (request: Request, response: Response) => {
             {
               NIK: {
                 contains: pencarian,
-                mode: "insensitive"
+                mode: "insensitive",
               },
             },
             {
               employee_name: {
                 contains: pencarian,
-                mode: "insensitive"
+                mode: "insensitive",
               },
             },
             {
               phone_number: {
                 contains: pencarian,
-                mode: "insensitive"
+                mode: "insensitive",
               },
             },
             {
               sub_depart: {
                 name: {
                   contains: pencarian,
-                  mode: "insensitive"
+                  mode: "insensitive",
                 },
               },
             },
@@ -278,6 +278,7 @@ const createEmployee = async (request: Request, response: Response) => {
         sub_districts: request.body.sub_districts,
         ec_postalcode: request.body.ec_postalcode,
         phone_number: request.body.phone_number,
+        photo: !request.file ? request.body.eq_image : request.file.path,
         start_join: new Date(request.body.start_join),
         remaining_days_of: request.body.remaining_days_of,
         gender: request.body.gender,
@@ -321,7 +322,36 @@ const updateEmployee = async (request: Request, response: Response) => {
       where: {
         id: id,
       },
-      data: request.body,
+      data: {
+        NIP: request.body.NIP,
+        NIK: request.body.NIK,
+        NPWP: request.body.NPWP,
+        id_card: request.body.id_card,
+        employee_name: request.body.employee_name,
+        nick_name: request.body.nick_name,
+        email: request.body.email,
+        birth_place: request.body.birth_place,
+        birth_date: new Date(request.body.birth_date),
+        address: request.body.address,
+        province: request.body.province,
+        city: request.body.city,
+        districts: request.body.districts,
+        sub_districts: request.body.sub_districts,
+        ec_postalcode: request.body.ec_postalcode,
+        phone_number: request.body.phone_number,
+        photo: !request.file ? request.body.eq_image : request.file.path,
+        start_join: new Date(request.body.start_join),
+        remaining_days_of: request.body.remaining_days_of,
+        gender: request.body.gender,
+        marital_status: request.body.marital_status,
+        position: request.body.position,
+        sub_depart: { connect: { id: request.body.subdepartId } },
+        employee_status: request.body.employee_status,
+        spouse_name: request.body.spouse_name,
+        gender_spouse: request.body.gender_spouse,
+        spouse_birth_place: request.body.spouse_birth_place,
+        spouse_birth_date: new Date(),
+      },
     });
     if (updateDivision) {
       response.status(201).json({

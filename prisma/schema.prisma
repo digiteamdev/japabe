@@ -37,6 +37,7 @@ model Employee {
   birth_place          String?                @db.VarChar(100)
   birth_date           DateTime?
   address              String?                @db.Text
+  photo                String?                @db.Text
   province             String?                @db.VarChar(100)
   city                 String?                @db.VarChar(100)
   districts            String?                @db.VarChar(100)
