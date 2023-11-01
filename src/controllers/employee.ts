@@ -260,6 +260,18 @@ const getEmployeeSales = async (request: Request, response: Response) => {
 
 const createEmployee = async (request: Request, response: Response) => {
   try {
+    const newArrEdu = [];
+    if (request.body.Employee_Child) {
+      const arr = JSON.parse(request.body.Employee_Child);
+      for (let i = 0; i < arr.length; i++) {
+        newArrEdu.push({
+          employeeId: arr[i].employeeId,
+          name: arr[i].name,
+          child_birth_date: arr[i].child_birth_date,
+          child_birth_place: arr[i].child_birth_place,
+        });
+      }
+    }
     const results = await prisma.employee.create({
       data: {
         NIP: request.body.NIP,
@@ -270,17 +282,17 @@ const createEmployee = async (request: Request, response: Response) => {
         nick_name: request.body.nick_name,
         email: request.body.email,
         birth_place: request.body.birth_place,
-        birth_date: new Date(request.body.birth_date),
+        birth_date: JSON.parse(request.body.birth_date),
         address: request.body.address,
         province: request.body.province,
         city: request.body.city,
         districts: request.body.districts,
         sub_districts: request.body.sub_districts,
-        ec_postalcode: request.body.ec_postalcode,
+        ec_postalcode: JSON.parse(request.body.ec_postalcode),
         phone_number: request.body.phone_number,
         photo: !request.file ? null : request.file.path,
-        start_join: new Date(request.body.start_join),
-        remaining_days_of: request.body.remaining_days_of,
+        start_join: JSON.parse(request.body.start_join),
+        remaining_days_of: JSON.parse(request.body.remaining_days_of),
         gender: request.body.gender,
         marital_status: request.body.marital_status,
         position: request.body.position,
@@ -289,9 +301,9 @@ const createEmployee = async (request: Request, response: Response) => {
         spouse_name: request.body.spouse_name,
         gender_spouse: request.body.gender_spouse,
         spouse_birth_place: request.body.spouse_birth_place,
-        spouse_birth_date: new Date(),
+        spouse_birth_date: JSON.parse(request.body.spouse_birth_date),
         Employee_Child: {
-          create: request.body.Employee_Child,
+          create: newArrEdu,
         },
       },
       include: {
