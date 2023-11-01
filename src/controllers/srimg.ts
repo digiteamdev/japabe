@@ -82,28 +82,34 @@ const getSrimg = async (request: Request, response: Response) => {
     } else {
       results = await prisma.srimg.findMany({
         where: {
-          timeschId: {
-            contains: pencarian,
-            mode: "insensitive",
-          },
-          timeschedule: {
-            wor: {
-              job_no: {
-                contains: pencarian,
-                mode: "insensitive",
+          OR: [
+            {
+              timeschedule: {
+                wor: {
+                  job_no: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
               },
-              customerPo: {
-                quotations: {
-                  Customer: {
-                    name: {
-                      contains: pencarian,
-                      mode: "insensitive",
+            },
+            {
+              timeschedule: {
+                wor: {
+                  customerPo: {
+                    quotations: {
+                      Customer: {
+                        name: {
+                          contains: pencarian,
+                          mode: "insensitive",
+                        },
+                      },
                     },
                   },
                 },
               },
             },
-          },
+          ],
         },
         include: {
           srimgdetail: {

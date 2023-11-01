@@ -207,9 +207,21 @@ const getDispatch = async (request: Request, response: Response) => {
         where: {
           OR: [
             {
-              id_dispatch: {
-                contains: pencarian,
-                mode: "insensitive",
+              srimg: {
+                timeschedule: {
+                  wor: {
+                    customerPo: {
+                      quotations: {
+                        Customer: {
+                          name: {
+                            contains: pencarian,
+                            mode: "insensitive",
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
               },
             },
             {

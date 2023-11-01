@@ -32,6 +32,8 @@ const getTypeMr = async (request: Request, response: Response) => {
                 contains: pencarian,
                 mode: "insensitive",
               },
+            },
+            {
               material_name: {
                 contains: pencarian,
                 mode: "insensitive",
@@ -104,6 +106,8 @@ const getMasterM = async (request: Request, response: Response) => {
                 contains: pencarian,
                 mode: "insensitive",
               },
+            },
+            {
               material_name: {
                 contains: pencarian,
                 mode: "insensitive",

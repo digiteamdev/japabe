@@ -133,16 +133,8 @@ const getBom = async (request: Request, response: Response) => {
           OR: [
             {
               srimg: {
-                id_summary: {
-                  contains: pencarian,
-                  mode: "insensitive",
-                },
                 timeschedule: {
                   wor: {
-                    job_no: {
-                      contains: pencarian,
-                      mode: "insensitive",
-                    },
                     customerPo: {
                       quotations: {
                         Customer: {
@@ -152,6 +144,18 @@ const getBom = async (request: Request, response: Response) => {
                           },
                         },
                       },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              srimg: {
+                timeschedule: {
+                  wor: {
+                    job_no: {
+                      contains: pencarian,
+                      mode: "insensitive",
                     },
                   },
                 },

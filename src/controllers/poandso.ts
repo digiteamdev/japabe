@@ -90,9 +90,27 @@ const getPo = async (request: Request, response: Response) => {
             },
           },
           {
-            idPurchase: {
-              contains: pencarian,
-              mode: "insensitive",
+            detailMr: {
+              some: {
+                poandso: {
+                  id_so: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+          },
+          {
+            SrDetail: {
+              some: {
+                poandso: {
+                  id_so: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
+              },
             },
           },
           {
