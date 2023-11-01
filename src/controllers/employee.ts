@@ -269,9 +269,10 @@ const createEmployee = async (request: Request, response: Response) => {
           name: arr[i].name,
           child_birth_date: arr[i].child_birth_date,
           child_birth_place: arr[i].child_birth_place,
+          gender_child: arr[i].gender_child
         });
       }
-    }
+    }        
     const results = await prisma.employee.create({
       data: {
         NIP: request.body.NIP,
@@ -282,7 +283,7 @@ const createEmployee = async (request: Request, response: Response) => {
         nick_name: request.body.nick_name,
         email: request.body.email,
         birth_place: request.body.birth_place,
-        birth_date: JSON.parse(request.body.birth_date),
+        birth_date: new Date(request.body.birth_date),
         address: request.body.address,
         province: request.body.province,
         city: request.body.city,
@@ -291,7 +292,7 @@ const createEmployee = async (request: Request, response: Response) => {
         ec_postalcode: JSON.parse(request.body.ec_postalcode),
         phone_number: request.body.phone_number,
         photo: !request.file ? null : request.file.path,
-        start_join: JSON.parse(request.body.start_join),
+        start_join: new Date(request.body.start_join),
         remaining_days_of: JSON.parse(request.body.remaining_days_of),
         gender: request.body.gender,
         marital_status: request.body.marital_status,
@@ -301,7 +302,7 @@ const createEmployee = async (request: Request, response: Response) => {
         spouse_name: request.body.spouse_name,
         gender_spouse: request.body.gender_spouse,
         spouse_birth_place: request.body.spouse_birth_place,
-        spouse_birth_date: JSON.parse(request.body.spouse_birth_date),
+        spouse_birth_date: new Date(request.body.spouse_birth_date),
         Employee_Child: {
           create: newArrEdu,
         },
@@ -343,7 +344,7 @@ const updateEmployee = async (request: Request, response: Response) => {
         nick_name: request.body.nick_name,
         email: request.body.email,
         birth_place: request.body.birth_place,
-        birth_date: JSON.parse(request.body.birth_date),
+        birth_date: new Date(request.body.birth_date),
         address: request.body.address,
         province: request.body.province,
         city: request.body.city,
@@ -352,7 +353,7 @@ const updateEmployee = async (request: Request, response: Response) => {
         ec_postalcode: JSON.parse(request.body.ec_postalcode),
         phone_number: request.body.phone_number,
         photo: !request.file ? null : request.file.path,
-        start_join: JSON.parse(request.body.start_join),
+        start_join: new Date(request.body.start_join),
         remaining_days_of: JSON.parse(request.body.remaining_days_of),
         gender: request.body.gender,
         marital_status: request.body.marital_status,
@@ -362,7 +363,7 @@ const updateEmployee = async (request: Request, response: Response) => {
         spouse_name: request.body.spouse_name,
         gender_spouse: request.body.gender_spouse,
         spouse_birth_place: request.body.spouse_birth_place,
-        spouse_birth_date: JSON.parse(request.body.spouse_birth_date),
+        spouse_birth_date: new Date(request.body.spouse_birth_date),
       },
     });
     if (updateDivision) {
