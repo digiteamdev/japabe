@@ -22,9 +22,13 @@ const getDrawing = async (request: Request, response: Response) => {
     } else {
       results = await prisma.drawing.findMany({
         where: {
-          id_drawing: {
-            contains: pencarian,
-            mode: "insensitive"
+          timeschedule: {
+            wor: {
+              job_no: {
+                contains: pencarian,
+                mode: "insensitive",
+              },
+            },
           },
         },
         include: {

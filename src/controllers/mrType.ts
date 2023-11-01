@@ -30,11 +30,11 @@ const getTypeMr = async (request: Request, response: Response) => {
             {
               kd_group: {
                 contains: pencarian,
-                mode: "insensitive"
+                mode: "insensitive",
               },
               material_name: {
                 contains: pencarian,
-                mode: "insensitive"
+                mode: "insensitive",
               },
             },
           ],
@@ -102,11 +102,11 @@ const getMasterM = async (request: Request, response: Response) => {
             {
               kd_group: {
                 contains: pencarian,
-                mode: "insensitive"
+                mode: "insensitive",
               },
               material_name: {
                 contains: pencarian,
-                mode: "insensitive"
+                mode: "insensitive",
               },
             },
           ],
@@ -174,10 +174,22 @@ const getStock = async (request: Request, response: Response) => {
     } else {
       results = await prisma.material_Stock.findMany({
         where: {
-          spesifikasi: {
-            contains: pencarian,
-            mode: "insensitive"
-          },
+          OR: [
+            {
+              spesifikasi: {
+                contains: pencarian,
+                mode: "insensitive",
+              },
+            },
+            {
+              Material_master: {
+                material_name: {
+                  contains: pencarian,
+                  mode: "insensitive",
+                },
+              },
+            },
+          ],
         },
         include: {
           Material_master: {

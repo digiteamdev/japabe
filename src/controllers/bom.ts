@@ -130,30 +130,34 @@ const getBom = async (request: Request, response: Response) => {
     } else {
       results = await prisma.bom.findMany({
         where: {
-          srimg: {
-            id_summary: {
-              contains: pencarian,
-              mode: "insensitive",
-            },
-            timeschedule: {
-              wor: {
-                job_no: {
+          OR: [
+            {
+              srimg: {
+                id_summary: {
                   contains: pencarian,
                   mode: "insensitive",
                 },
-                customerPo: {
-                  quotations: {
-                    Customer: {
-                      name: {
-                        contains: pencarian,
-                        mode: "insensitive",
+                timeschedule: {
+                  wor: {
+                    job_no: {
+                      contains: pencarian,
+                      mode: "insensitive",
+                    },
+                    customerPo: {
+                      quotations: {
+                        Customer: {
+                          name: {
+                            contains: pencarian,
+                            mode: "insensitive",
+                          },
+                        },
                       },
                     },
                   },
                 },
               },
             },
-          },
+          ],
         },
         include: {
           bom_detail: {
