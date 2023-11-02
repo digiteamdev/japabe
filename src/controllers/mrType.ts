@@ -100,20 +100,10 @@ const getMasterM = async (request: Request, response: Response) => {
     } else {
       results = await prisma.material_master.findMany({
         where: {
-          OR: [
-            {
-              kd_group: {
-                contains: pencarian,
-                mode: "insensitive",
-              },
-            },
-            {
-              material_name: {
-                contains: pencarian,
-                mode: "insensitive",
-              },
-            },
-          ],
+          material_name: {
+            contains: pencarian,
+            mode: "insensitive",
+          },
         },
         include: {
           Material_Stock: true,
