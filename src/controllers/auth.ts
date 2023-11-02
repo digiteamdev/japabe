@@ -100,6 +100,7 @@ const loginUser = async (request: Request, response: Response) => {
             id: true,
             employee_name: true,
             position: true,
+            photo: true,
           },
         },
         userRole: {
