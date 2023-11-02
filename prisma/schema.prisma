@@ -28,11 +28,11 @@ model Employee {
   id                   String                 @id @default(cuid())
   user                 User[]
   NIP                  String?                @db.VarChar(200)
-  NIK                  String?                @db.VarChar(200)
+  NIK                  String?                @unique @db.VarChar(200)
   NPWP                 String?                @db.VarChar(200)
   id_card              String?                @unique
   employee_name        String?                @db.VarChar(200)
-  nick_name            String?                @unique @db.VarChar(50)
+  nick_name            String?                @db.VarChar(50)
   email                String?                @unique @db.VarChar(100)
   birth_place          String?                @db.VarChar(100)
   birth_date           DateTime?

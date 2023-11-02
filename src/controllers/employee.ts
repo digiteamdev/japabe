@@ -309,7 +309,7 @@ const createEmployee = async (request: Request, response: Response) => {
         spouse_birth_place: !request.body.spouse_birth_place
           ? null
           : request.body.spouse_birth_place,
-        spouse_birth_date: new Date!(request.body.spouse_birth_date)
+        spouse_birth_date: !Date.parse(request.body.spouse_birth_date)
           ? null
           : new Date(request.body.spouse_birth_date),
         Employee_Child: {
@@ -378,7 +378,7 @@ const updateEmployee = async (request: Request, response: Response) => {
         spouse_birth_place: !request.body.spouse_birth_place
           ? null
           : request.body.spouse_birth_place,
-        spouse_birth_date: new Date!(request.body.spouse_birth_date)
+        spouse_birth_date: !Date.parse(request.body.spouse_birth_date)
           ? null
           : new Date(request.body.spouse_birth_date),
       },
