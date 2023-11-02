@@ -54,4 +54,47 @@ prisma.$use(async (error, next) => {
   return next(error);
 });
 
+prisma.$use(async (params, next) => {
+  if (params.model == "Employee") {
+    if (params.action == "update") {
+      // Change to updateMany - you cannot filter
+      // by anything except ID / unique with findUnique
+      params.action = "updateMany";
+      // Add 'deleted' filter
+      // ID filter maintained
+      params.args.where["deleted"] = false;
+    }
+    if (params.action == "updateMany") {
+      if (params.args.where != undefined) {
+        params.args.where["deleted"] = false;
+      } else {
+        params.args["where"] = { deleted: false };
+      }
+    }
+  }
+  return next(params);
+});
+
+prisma.$use(async (params, next) => {
+  // Check incoming query type
+  if (params.model == "Employee") {
+    if (params.action == "delete") {
+      // Delete queries
+      // Change action to an update
+      params.action = "update";
+      params.args["data"] = { deleted: true };
+    }
+    if (params.action == "deleteMany") {
+      // Delete many queries
+      params.action = "updateMany";
+      if (params.args.data != undefined) {
+        params.args.data["deleted"] = true;
+      } else {
+        params.args["data"] = { deleted: true };
+      }
+    }
+  }
+  return next(params);
+});
+
 export default prisma;
