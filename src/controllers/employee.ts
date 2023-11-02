@@ -93,6 +93,7 @@ const getEmployee = async (request: Request, response: Response) => {
           gender_spouse: true,
           birth_place: true,
           birth_date: true,
+          photo: true,
           createdAt: true,
           updatedAt: true,
           deleted: true,
@@ -269,10 +270,10 @@ const createEmployee = async (request: Request, response: Response) => {
           name: arr[i].name,
           child_birth_date: arr[i].child_birth_date,
           child_birth_place: arr[i].child_birth_place,
-          gender_child: arr[i].gender_child
+          gender_child: arr[i].gender_child,
         });
       }
-    }        
+    }
     const results = await prisma.employee.create({
       data: {
         NIP: request.body.NIP,
@@ -299,10 +300,18 @@ const createEmployee = async (request: Request, response: Response) => {
         position: request.body.position,
         sub_depart: { connect: { id: request.body.subdepartId } },
         employee_status: request.body.employee_status,
-        spouse_name: request.body.spouse_name,
-        gender_spouse: request.body.gender_spouse,
-        spouse_birth_place: request.body.spouse_birth_place,
-        spouse_birth_date: new Date(request.body.spouse_birth_date),
+        spouse_name: !request.body.spouse_name
+          ? null
+          : request.body.spouse_name,
+        gender_spouse: !request.body.gender_spouse
+          ? null
+          : request.body.gender_spouse,
+        spouse_birth_place: !request.body.spouse_birth_place
+          ? null
+          : request.body.spouse_birth_place,
+        spouse_birth_date: new Date!(request.body.spouse_birth_date)
+          ? null
+          : new Date(request.body.spouse_birth_date),
         Employee_Child: {
           create: newArrEdu,
         },
@@ -360,10 +369,18 @@ const updateEmployee = async (request: Request, response: Response) => {
         position: request.body.position,
         sub_depart: { connect: { id: request.body.subdepartId } },
         employee_status: request.body.employee_status,
-        spouse_name: request.body.spouse_name,
-        gender_spouse: request.body.gender_spouse,
-        spouse_birth_place: request.body.spouse_birth_place,
-        spouse_birth_date: new Date(request.body.spouse_birth_date),
+        spouse_name: !request.body.spouse_name
+          ? null
+          : request.body.spouse_name,
+        gender_spouse: !request.body.gender_spouse
+          ? null
+          : request.body.gender_spouse,
+        spouse_birth_place: !request.body.spouse_birth_place
+          ? null
+          : request.body.spouse_birth_place,
+        spouse_birth_date: new Date!(request.body.spouse_birth_date)
+          ? null
+          : new Date(request.body.spouse_birth_date),
       },
     });
     if (updateDivision) {
