@@ -46,6 +46,7 @@ const getUser = async (request: any, res: Response) => {
               gender: true,
               marital_status: true,
               sub_depart: true,
+              photo: true,
               subdepartId: true,
               employee_status: true,
               spouse_name: true,
@@ -220,6 +221,32 @@ const updateUser = async (request: Request, response: Response) => {
   }
 };
 
+const updatePhoto = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const updatePhoto = await prisma.employee.update({
+      where: { id: id },
+      data: {
+        photo: !request.file ? null : request.file.path,
+      },
+    });
+    if (updatePhoto) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: updatePhoto,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const deleteUser = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
@@ -248,5 +275,6 @@ const deleteUser = async (request: Request, response: Response) => {
 export default {
   getUser,
   updateUser,
+  updatePhoto,
   deleteUser,
 };

@@ -77,6 +77,12 @@ router.put(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   user.updateUser
 );
+router.put(
+  "/userPhoto/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  upload.single("photo", 1000),
+  user.updatePhoto
+);
 router.delete(
   "/user/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
