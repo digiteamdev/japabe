@@ -92,6 +92,7 @@ const getUser = async (request: any, res: Response) => {
               id_card: true,
               nick_name: true,
               email: true,
+              photo: true,
               birth_place: true,
               birth_date: true,
               address: true,
