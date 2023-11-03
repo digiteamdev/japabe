@@ -340,7 +340,7 @@ const createEmployee = async (request: Request, response: Response) => {
 const updateEmployee = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
-    const updateDivision = await prisma.employee.update({
+    const updateEmployee = await prisma.employee.update({
       where: {
         id: id,
       },
@@ -359,35 +359,26 @@ const updateEmployee = async (request: Request, response: Response) => {
         city: request.body.city,
         districts: request.body.districts,
         sub_districts: request.body.sub_districts,
-        ec_postalcode: JSON.parse(request.body.ec_postalcode),
+        ec_postalcode: request.body.ec_postalcode,
         phone_number: request.body.phone_number,
-        photo: !request.file ? null : request.file.path,
         start_join: new Date(request.body.start_join),
-        remaining_days_of: JSON.parse(request.body.remaining_days_of),
+        remaining_days_of: request.body.remaining_days_of,
         gender: request.body.gender,
         marital_status: request.body.marital_status,
         position: request.body.position,
         sub_depart: { connect: { id: request.body.subdepartId } },
         employee_status: request.body.employee_status,
-        spouse_name: !request.body.spouse_name
-          ? null
-          : request.body.spouse_name,
-        gender_spouse: !request.body.gender_spouse
-          ? null
-          : request.body.gender_spouse,
-        spouse_birth_place: !request.body.spouse_birth_place
-          ? null
-          : request.body.spouse_birth_place,
-        spouse_birth_date: !Date.parse(request.body.spouse_birth_date)
-          ? null
-          : new Date(request.body.spouse_birth_date),
+        spouse_name: request.body.spouse_name,
+        gender_spouse: request.body.gender_spouse,
+        spouse_birth_place: request.body.spouse_birth_place,
+        spouse_birth_date: new Date(request.body.spouse_birth_date),
       },
     });
-    if (updateDivision) {
+    if (updateEmployee) {
       response.status(201).json({
         success: true,
         massage: "Success Update Data",
-        results: updateDivision,
+        results: updateEmployee,
       });
     } else {
       response.status(400).json({

@@ -249,7 +249,6 @@ router.post(
 router.put(
   "/employe/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
-  upload.single("photo", 1000),
   employee.updateEmployee
 );
 router.put(
