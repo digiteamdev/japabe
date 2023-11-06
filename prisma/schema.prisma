@@ -1025,7 +1025,6 @@ model SrDetail {
   price             Int              @default(0)
   total             Int              @default(0)
   qty_receive       Int?             @default(0)
-  status_stock      status_stock?
   purchase          purchase?        @relation(fields: [idPurchaseR], references: [id], onUpdate: Cascade, onDelete: Cascade)
   idPurchaseR       String?
   approvedRequest   approvedRequest? @relation(fields: [approvedRequestId], references: [id], onUpdate: Cascade, onDelete: Cascade)

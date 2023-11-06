@@ -1239,12 +1239,10 @@ const updatePoandSo = async (request: Request, response: Response) => {
         const updateVerifySr = request.body.srDetail.map(
           (updateVerifySr: {
             qty_receive: any;
-            status_stock: any;
             id: any;
           }) => {
             return {
               qty_receive: updateVerifySr.qty_receive,
-              status_stock: updateVerifySr.status_stock,
               id: updateVerifySr.id,
             };
           }
@@ -1298,9 +1296,31 @@ const updatePoandSo = async (request: Request, response: Response) => {
               },
               data: {
                 qty_receive: updateVerify[i].qty_receive,
-                status_stock: updateVerify[i].status_stock,
               },
             });
+            if (
+              (result &&
+                statusReceive?.qtyAppr === upsertDetailMr.qty_receive) ||
+              statusReceive?.qtyAppr < upsertDetailMr.qty_receive
+            ) {
+              result = await prisma.poandso.update({
+                where: {
+                  id: result.id,
+                },
+                data: {
+                  status_receive: true,
+                },
+              });
+            } else {
+              result = await prisma.poandso.update({
+                where: {
+                  id: result.id,
+                },
+                data: {
+                  status_receive: false,
+                },
+              });
+            }
           }
           response.status(201).json({
             success: true,
