@@ -921,6 +921,8 @@ model detailMr {
   currency          Currency?
   price             Int              @default(0)
   total             Int              @default(0)
+  qty_receive       Int?             @default(0)
+  status_stock      status_stock?
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
   deleted           DateTime?
@@ -938,6 +940,7 @@ model detailMr {
 model purchase {
   id                      String                   @id @default(cuid())
   idPurchase              String?                  @db.VarChar(20)
+  id_receive              String?                  @db.VarChar(20)
   dateOfPurchase          DateTime
   cashAdv                 String?                  @db.VarChar(200)
   totalAdv                Int                      @default(0)
@@ -953,7 +956,7 @@ model purchase {
   detailMr                detailMr[]
   SrDetail                SrDetail[]
 
-  @@index([id, idPurchase, dateOfPurchase])
+  @@index([id, idPurchase, dateOfPurchase, id_receive])
 }
 
 enum status_manager_director {
@@ -1021,6 +1024,8 @@ model SrDetail {
   currency          Currency?
   price             Int              @default(0)
   total             Int              @default(0)
+  qty_receive       Int?             @default(0)
+  status_stock      status_stock?
   purchase          purchase?        @relation(fields: [idPurchaseR], references: [id], onUpdate: Cascade, onDelete: Cascade)
   idPurchaseR       String?
   approvedRequest   approvedRequest? @relation(fields: [approvedRequestId], references: [id], onUpdate: Cascade, onDelete: Cascade)
@@ -1036,9 +1041,16 @@ model SrDetail {
   @@index([id, srId, dispacthdetailId, idPurchaseR])
 }
 
+enum status_stock {
+  non
+  stock
+}
+
 model poandso {
   id                      String                   @id @default(cuid())
   id_so                   String?                  @db.VarChar(20)
+  id_receive              String?                  @db.VarChar(20)
+  date_receive            DateTime?
   supplier                Supplier                 @relation(fields: [supplierId], references: [id])
   supplierId              String
   date_prepared           DateTime
@@ -1046,6 +1058,7 @@ model poandso {
   note                    String?                  @db.Text
   status_manager          Boolean?                 @default(false)
   status_manager_director status_manager_director?
+  status_receive          Boolean?                 @default(false)
   DP                      Int                      @default(0)
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @updatedAt

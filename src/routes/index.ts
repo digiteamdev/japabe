@@ -1880,4 +1880,40 @@ router.put(
 
 /***************************PO AND SO**************************************** */
 
+/***************************Receive PO AND SO**************************************** */
+
+router.get(
+  "/poandsoReceive",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  poandso.getAllReceive
+);
+
+router.put(
+  "/poandsoReceive",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  poandso.updatePoandSo
+);
+
+/***************************Receive PO AND SO**************************************** */
+
 export default router;
