@@ -1237,10 +1237,7 @@ const updatePoandSo = async (request: Request, response: Response) => {
           }
         );
         const updateVerifySr = request.body.srDetail.map(
-          (updateVerifySr: {
-            qty_receive: any;
-            id: any;
-          }) => {
+          (updateVerifySr: { qty_receive: any; id: any }) => {
             return {
               qty_receive: updateVerifySr.qty_receive,
               id: updateVerifySr.id,
@@ -1248,7 +1245,7 @@ const updatePoandSo = async (request: Request, response: Response) => {
           }
         );
         let upsertDetailMr: any = [];
-        if (result && updateVerify) {
+        if (result && updateVerify.length !== 0) {
           for (let i = 0; i < updateVerify.length; i++) {
             upsertDetailMr = await prisma.detailMr.update({
               where: {
@@ -1288,7 +1285,7 @@ const updatePoandSo = async (request: Request, response: Response) => {
             massage: "Success Update Data",
             results: result,
           });
-        } else if (result && updateVerifySr) {
+        } else if (result && updateVerifySr.length !== 0) {
           for (let i = 0; i < updateVerify.length; i++) {
             upsertDetailMr = await prisma.srDetail.update({
               where: {
@@ -1298,30 +1295,15 @@ const updatePoandSo = async (request: Request, response: Response) => {
                 qty_receive: updateVerify[i].qty_receive,
               },
             });
-            if (
-              (result &&
-                statusReceive?.qtyAppr === upsertDetailMr.qty_receive) ||
-              statusReceive?.qtyAppr < upsertDetailMr.qty_receive
-            ) {
-              result = await prisma.poandso.update({
-                where: {
-                  id: result.id,
-                },
-                data: {
-                  status_receive: true,
-                },
-              });
-            } else {
-              result = await prisma.poandso.update({
-                where: {
-                  id: result.id,
-                },
-                data: {
-                  status_receive: false,
-                },
-              });
-            }
           }
+          result = await prisma.poandso.update({
+            where: {
+              id: result.id,
+            },
+            data: {
+              status_receive: true,
+            },
+          });
           response.status(201).json({
             success: true,
             massage: "Success Update Data",
