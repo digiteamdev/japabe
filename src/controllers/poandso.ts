@@ -934,6 +934,15 @@ const updateStatusMpoandso = async (request: any, response: Response) => {
 
 const updatePoSoTerm = async (request: any, response: Response) => {
   try {
+    const id = request.body.id;
+    let result: any;
+    result = await prisma.poandso.update({
+      where: { id: id },
+      data: {
+        your_reff: request.body.your_reff,
+        note: request.body.note,
+      },
+    });    
     const updateVerify = request.body.term_of_pay_po_so.map(
       (updateByveri: {
         poandsoId: any;
@@ -953,14 +962,20 @@ const updatePoSoTerm = async (request: any, response: Response) => {
         };
       }
     );
-    let result: any;
     for (let i = 0; i < updateVerify.length; i++) {
       let updateTermOfpay;
-      updateTermOfpay = await prisma.term_of_pay_po_so.update({
+      updateTermOfpay = await prisma.term_of_pay_po_so.upsert({
         where: {
           id: updateVerify[i].id,
         },
-        data: {
+        create: {
+          poandso: { connect: { id: updateVerify[i].poandsoId } },
+          limitpay: updateVerify[i].limitpay,
+          price: updateVerify[i].price,
+          percent: updateVerify[i].percent,
+          invoice: updateVerify[i].invoice,
+        },
+        update: {
           poandso: { connect: { id: updateVerify[i].poandsoId } },
           limitpay: updateVerify[i].limitpay,
           price: updateVerify[i].price,
