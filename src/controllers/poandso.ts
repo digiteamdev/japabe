@@ -941,8 +941,9 @@ const updatePoSoTerm = async (request: any, response: Response) => {
       data: {
         your_reff: request.body.your_reff,
         note: request.body.note,
+        DP: request.body.DP,
       },
-    });    
+    });
     const updateVerify = request.body.term_of_pay_po_so.map(
       (updateByveri: {
         poandsoId: any;
@@ -1397,6 +1398,31 @@ const updatePoandSo = async (request: Request, response: Response) => {
   }
 };
 
+const deleteTermOf = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const deleteTermOf = await prisma.term_of_pay_po_so.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (deleteTermOf) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Delete Data",
+        results: deleteTermOf,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Delete Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getPo,
   getPoandSo,
@@ -1405,4 +1431,5 @@ export default {
   updatePoandSo,
   getAllReceive,
   updatePoSoTerm,
+  deleteTermOf
 };

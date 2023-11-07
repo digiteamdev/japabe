@@ -1930,6 +1930,22 @@ router.put(
   poandso.updatePoSoTerm
 );
 
+router.delete(
+  "/poandsoTermOfPay/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  poandso.deleteTermOf
+);
+
 /***************************Receive PO AND SO**************************************** */
 
 export default router;
