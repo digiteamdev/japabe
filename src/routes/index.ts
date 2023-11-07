@@ -1930,7 +1930,7 @@ router.put(
   poandso.updatePoSoTerm
 );
 
-router.delete(
+router.post(
   "/poandsoTermOfPay",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
