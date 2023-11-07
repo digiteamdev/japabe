@@ -1931,7 +1931,7 @@ router.put(
 );
 
 router.delete(
-  "/poandsoTermOfPay/:id",
+  "/poandsoTermOfPay",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
     marketing: "MARKETING",

@@ -1400,22 +1400,25 @@ const updatePoandSo = async (request: Request, response: Response) => {
 
 const deleteTermOf = async (request: Request, response: Response) => {
   try {
-    const id: string = request.params.id;
-    const deleteTermOf = await prisma.term_of_pay_po_so.delete({
-      where: {
-        id: id,
-      },
-    });
-    if (deleteTermOf) {
+    const result = request.body.termOfPayRemove.map(
+      async (termOfPayRemove: any) => {
+        await prisma.term_of_pay_po_so.delete({
+          where: {
+            id: termOfPayRemove.id,
+          },
+        });
+      }
+    );
+    if (result) {
       response.status(201).json({
         success: true,
-        massage: "Success Delete Data",
-        results: deleteTermOf,
+        massage: "Success Update Data",
+        results: result,
       });
     } else {
       response.status(400).json({
         success: false,
-        massage: "Unsuccess Delete Data",
+        massage: "Unsuccess Update Data",
       });
     }
   } catch (error) {
@@ -1431,5 +1434,5 @@ export default {
   updatePoandSo,
   getAllReceive,
   updatePoSoTerm,
-  deleteTermOf
+  deleteTermOf,
 };
