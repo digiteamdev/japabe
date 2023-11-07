@@ -932,6 +932,61 @@ const updateStatusMpoandso = async (request: any, response: Response) => {
   }
 };
 
+const updatePoSoTerm = async (request: any, response: Response) => {
+  try {
+    const updateVerify = request.body.term_of_pay_po_so.map(
+      (updateByveri: {
+        poandsoId: any;
+        limitpay: any;
+        percent: any;
+        price: any;
+        invoice: any;
+        id: any;
+      }) => {
+        return {
+          poandsoId: updateByveri.poandsoId,
+          limitpay: updateByveri.limitpay,
+          price: updateByveri.price,
+          percent: updateByveri.percent,
+          invoice: updateByveri.invoice,
+          id: updateByveri.id,
+        };
+      }
+    );
+    let result: any;
+    for (let i = 0; i < updateVerify.length; i++) {
+      let updateTermOfpay;
+      updateTermOfpay = await prisma.term_of_pay_po_so.update({
+        where: {
+          id: updateVerify[i].id,
+        },
+        data: {
+          poandso: { connect: { id: updateVerify[i].poandsoId } },
+          limitpay: updateVerify[i].limitpay,
+          price: updateVerify[i].price,
+          percent: updateVerify[i].percent,
+          invoice: updateVerify[i].invoice,
+        },
+      });
+      result = [updateTermOfpay];
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        result: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const getAllReceive = async (request: Request, response: Response) => {
   try {
     const type: any = request.query.type || "";
@@ -1334,4 +1389,5 @@ export default {
   updateStatusMpoandso,
   updatePoandSo,
   getAllReceive,
+  updatePoSoTerm,
 };

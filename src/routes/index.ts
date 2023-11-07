@@ -1914,6 +1914,22 @@ router.put(
   poandso.updatePoandSo
 );
 
+router.put(
+  "/poandsoTermOfPay",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  poandso.updatePoSoTerm
+);
+
 /***************************Receive PO AND SO**************************************** */
 
 export default router;
