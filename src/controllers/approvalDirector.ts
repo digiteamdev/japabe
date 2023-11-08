@@ -73,6 +73,9 @@ const getAllApprove = async (request: Request, response: Response) => {
             status_manager_director: "approve",
           },
           {
+            status_manager_director: "reject",
+          },
+          {
             detailMr: {
               some: {
                 purchase: {
@@ -271,6 +274,9 @@ const getAllApprove = async (request: Request, response: Response) => {
           },
         ],
         NOT: [
+          {
+            status_manager_director: "reject",
+          },
           {
             status_manager_director: "approve",
           },
