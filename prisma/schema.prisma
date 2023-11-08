@@ -1071,16 +1071,17 @@ model poandso {
 }
 
 model term_of_pay_po_so {
-  id        String     @id @default(cuid())
-  poandso   poandso    @relation(fields: [poandsoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  poandsoId String
-  limitpay  Limit_Pay?
-  percent   Int        @default(0)
-  price     Int        @default(0)
-  invoice   String?    @db.Text
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  deleted   DateTime?
+  id            String     @id @default(cuid())
+  poandso       poandso    @relation(fields: [poandsoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  poandsoId     String
+  limitpay      Limit_Pay?
+  percent       Int        @default(0)
+  price         Int        @default(0)
+  invoice       String?    @db.Text
+  status_kontra Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  deleted       DateTime?
 
   @@index([id, poandsoId])
 }

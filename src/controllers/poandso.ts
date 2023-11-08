@@ -1036,6 +1036,9 @@ const getAllReceive = async (request: Request, response: Response) => {
         where: {
           AND: [
             {
+              status_kontra: false,
+            },
+            {
               poandso: {
                 id_so: {
                   contains: pencarian,
