@@ -462,7 +462,9 @@ const updateStatusDpoandso = async (request: any, response: Response) => {
     ) {
       result = await prisma.poandso.update({
         where: { id: id },
-        data: request.body.statusApprove,
+        data: {
+          status_manager_director: request.body.statusApprove.status
+        },
       });
       if (request.body.revision !== undefined) {
         const updateVerify = request.body.revision.map(
