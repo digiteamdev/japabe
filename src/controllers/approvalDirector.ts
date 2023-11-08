@@ -48,18 +48,18 @@ const getAllApprove = async (request: Request, response: Response) => {
     let result;
     result = await prisma.purchase.findMany({
       where: {
-        OR: [
+        OR: {
+          idPurchase: {
+            contains: pencarian,
+            mode: "insensitive",
+          },
+        },
+        AND: [
           {
             deleted: null,
           },
           {
             status_manager_pr: true,
-          },
-          {
-            idPurchase: {
-              contains: pencarian,
-              mode: "insensitive",
-            },
           },
           {
             status_manager_director: null,
@@ -68,9 +68,29 @@ const getAllApprove = async (request: Request, response: Response) => {
             status_manager_director: "revision",
           },
         ],
-        NOT: {
-          status_manager_director: "approve",
-        },
+        NOT: [
+          {
+            status_manager_director: "approve",
+          },
+          {
+            detailMr: {
+              some: {
+                purchase: {
+                  status_manager_director: "approve",
+                },
+              },
+            },
+          },
+          {
+            SrDetail: {
+              some: {
+                purchase: {
+                  status_manager_director: "approve",
+                },
+              },
+            },
+          },
+        ],
       },
       include: {
         detailMr: {
@@ -236,8 +256,24 @@ const getAllApprove = async (request: Request, response: Response) => {
     let poandsoData;
     poandsoData = await prisma.poandso.findMany({
       where: {
-        status_manager: true,
+        AND: [
+          {
+            status_manager: true,
+          },
+          {
+            deleted: null,
+          },
+          {
+            status_manager_director: null,
+          },
+          {
+            status_manager_director: "revision",
+          },
+        ],
         NOT: [
+          {
+            status_receive: false,
+          },
           {
             detailMr: {
               some: {
@@ -463,7 +499,7 @@ const updateStatusDpoandso = async (request: any, response: Response) => {
       result = await prisma.poandso.update({
         where: { id: id },
         data: {
-          status_manager_director: request.body.statusApprove.status
+          status_manager_director: request.body.statusApprove.status,
         },
       });
       if (request.body.revision !== undefined) {
