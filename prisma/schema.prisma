@@ -1089,7 +1089,7 @@ model term_of_pay_po_so {
 model kontrabon {
   id            String    @id @default(cuid())
   poandso       poandso   @relation(fields: [poandsoId], references: [id])
-  poandsoId     String    @db.VarChar(20)
+  poandsoId     String    
   id_kontrabon  String
   date_prepered DateTime
   tax_prepered  DateTime?
@@ -1098,6 +1098,7 @@ model kontrabon {
   tax_invoice   String?   @db.Text
   DO            String?   @db.VarChar(200)
   grandtotal    Int       @default(0)
+  status_valid  Boolean   @default(false)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   deleted       DateTime?

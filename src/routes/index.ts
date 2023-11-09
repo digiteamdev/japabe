@@ -31,6 +31,7 @@ import coa from "../controllers/coa";
 import director from "../controllers/approvalDirector";
 import approvalRequest from "../controllers/approvalRequest";
 import poandso from "../controllers/poandso";
+import kontraBon from "../controllers/kontraBon";
 
 /***************************AUTH********************************* */
 
@@ -1947,5 +1948,41 @@ router.post(
 );
 
 /***************************Receive PO AND SO**************************************** */
+
+/***************************Kontra Bon**************************************** */
+
+router.get(
+  "/kontrabonAll",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  kontraBon.getKontraBon
+);
+
+router.post(
+  "/kontrabon",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  kontraBon.createKontraBon
+);
+
+/***************************Kontra Bon**************************************** */
 
 export default router;
