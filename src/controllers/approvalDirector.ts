@@ -11,40 +11,60 @@ const getAllApprove = async (request: Request, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const purchaserCount = await prisma.purchase.count({
+    let totalCount: any = 0;
+    totalCount = await prisma.purchase.count({
       where: {
         deleted: null,
-        AND: [
+        OR: [
+          {
+            status_manager_pr: true,
+          },
           {
             status_manager_director: null,
           },
           {
             status_manager_director: "revision",
           },
+        ],
+        NOT: [
           {
-            detailMr: {
-              some: {
-                poandso: {
-                  status_manager: true,
-                },
-              },
-            },
+            status_manager_director: "reject",
           },
           {
-            SrDetail: {
-              some: {
-                poandso: {
-                  status_manager: true,
-                },
-              },
-            },
+            status_manager_director: "approve",
           },
         ],
-        NOT: {
-          status_manager_director: "approve",
-        },
       },
     });
+    let totalCuntPoandSo: any = 0;
+    totalCuntPoandSo = await prisma.poandso.count({
+      where: {
+        deleted: null,
+        OR: [
+          {
+            status_manager: true,
+          },
+          {
+            deleted: null,
+          },
+          {
+            status_manager_director: null,
+          },
+          {
+            status_manager_director: "revision",
+          },
+        ],
+        NOT: [
+          {
+            status_manager_director: "reject",
+          },
+          {
+            status_manager_director: "approve",
+          },
+        ],
+      },
+    });
+    let total: any = totalCount + totalCuntPoandSo;
     let result;
     result = await prisma.purchase.findMany({
       where: {
@@ -74,24 +94,6 @@ const getAllApprove = async (request: Request, response: Response) => {
           },
           {
             status_manager_director: "reject",
-          },
-          {
-            detailMr: {
-              some: {
-                purchase: {
-                  status_manager_director: "approve",
-                },
-              },
-            },
-          },
-          {
-            SrDetail: {
-              some: {
-                purchase: {
-                  status_manager_director: "approve",
-                },
-              },
-            },
           },
         ],
       },
@@ -280,24 +282,6 @@ const getAllApprove = async (request: Request, response: Response) => {
           {
             status_manager_director: "approve",
           },
-          {
-            detailMr: {
-              some: {
-                purchase: {
-                  status_manager_director: "approve",
-                },
-              },
-            },
-          },
-          {
-            SrDetail: {
-              some: {
-                purchase: {
-                  status_manager_director: "approve",
-                },
-              },
-            },
-          },
         ],
       },
       include: {
@@ -455,6 +439,11 @@ const getAllApprove = async (request: Request, response: Response) => {
           },
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: parseInt(pagination.perPage),
+      skip: parseInt(pagination.page) * parseInt(pagination.perPage),
     });
     const results = [...result, ...poandsoData];
     if (results.length > 0) {
@@ -464,7 +453,7 @@ const getAllApprove = async (request: Request, response: Response) => {
         result: results,
         page: pagination.page,
         limit: pagination.perPage,
-        totalData: purchaserCount,
+        totalData: total,
         currentPage: pagination.currentPage,
         nextPage: pagination.next(),
         previouspage: pagination.prev(),
