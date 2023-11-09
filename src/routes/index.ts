@@ -460,7 +460,7 @@ router.post(
 router.put(
   "/part",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
-  upload.single("part_img", 1000),
+  upload.array("part_img", 1000),
   equipment.updatePart
 );
 router.delete(
