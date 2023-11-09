@@ -524,23 +524,43 @@ const updatePart = async (request: any, response: Response) => {
       } else {
         img = updateVerify[i].part_img;
       }
-      const updatePart = await prisma.eq_part.upsert({
-        where: {
-          id: updateVerify[i].id,
-        },
-        create: {
-          nama_part: updateVerify[i].nama_part,
-          part_img: img,
-          keterangan_part: updateVerify[i].keterangan_part,
-          equipment: { connect: { id: updateVerify[i].id_equipment } },
-        },
-        update: {
-          nama_part: updateVerify[i].nama_part,
-          part_img: img,
-          keterangan_part: updateVerify[i].keterangan_part,
-        },
-      });
-      result = [...result, updatePart];
+      if (img) {
+        const updatePart = await prisma.eq_part.upsert({
+          where: {
+            id: updateVerify[i].id,
+          },
+          create: {
+            nama_part: updateVerify[i].nama_part,
+            part_img: img,
+            keterangan_part: updateVerify[i].keterangan_part,
+            equipment: { connect: { id: updateVerify[i].id_equipment } },
+          },
+          update: {
+            nama_part: updateVerify[i].nama_part,
+            part_img: img,
+            keterangan_part: updateVerify[i].keterangan_part,
+          },
+        });
+        result = [...result, updatePart];
+      } else {
+        const updatePart = await prisma.eq_part.upsert({
+          where: {
+            id: updateVerify[i].id,
+          },
+          create: {
+            nama_part: updateVerify[i].nama_part,
+            part_img: "",
+            keterangan_part: updateVerify[i].keterangan_part,
+            equipment: { connect: { id: updateVerify[i].id_equipment } },
+          },
+          update: {
+            nama_part: updateVerify[i].nama_part,
+            part_img: "",
+            keterangan_part: updateVerify[i].keterangan_part,
+          },
+        });
+        result = [...result, updatePart];
+      }
     }
     if (result) {
       response.status(201).json({

@@ -613,26 +613,47 @@ const updateEmployeeCertificate = async (request: any, response: Response) => {
       } else {
         img = updateVerify[i].certificate_img;
       }
-
-      const updateEmployeeCertificate =
-        await prisma.certificate_Employee.upsert({
-          where: {
-            id: updateVerify[i].id,
-          },
-          create: {
-            certificate_name: updateVerify[i].certificate_name,
-            certificate_img: img,
-            end_date: updateVerify[i].end_date,
-            employee: { connect: { id: updateVerify[i].employeeId } },
-          },
-          update: {
-            certificate_name: updateVerify[i].certificate_name,
-            certificate_img: img,
-            end_date: updateVerify[i].end_date,
-            employee: { connect: { id: updateVerify[i].employeeId } },
-          },
-        });
-      result = [...result, updateEmployeeCertificate];
+      if (img) {
+        const updateEmployeeCertificate =
+          await prisma.certificate_Employee.upsert({
+            where: {
+              id: updateVerify[i].id,
+            },
+            create: {
+              certificate_name: updateVerify[i].certificate_name,
+              certificate_img: img,
+              end_date: updateVerify[i].end_date,
+              employee: { connect: { id: updateVerify[i].employeeId } },
+            },
+            update: {
+              certificate_name: updateVerify[i].certificate_name,
+              certificate_img: img,
+              end_date: updateVerify[i].end_date,
+              employee: { connect: { id: updateVerify[i].employeeId } },
+            },
+          });
+        result = [...result, updateEmployeeCertificate];
+      } else {
+        const updateEmployeeCertificate =
+          await prisma.certificate_Employee.upsert({
+            where: {
+              id: updateVerify[i].id,
+            },
+            create: {
+              certificate_name: updateVerify[i].certificate_name,
+              certificate_img: "",
+              end_date: updateVerify[i].end_date,
+              employee: { connect: { id: updateVerify[i].employeeId } },
+            },
+            update: {
+              certificate_name: updateVerify[i].certificate_name,
+              certificate_img: "",
+              end_date: updateVerify[i].end_date,
+              employee: { connect: { id: updateVerify[i].employeeId } },
+            },
+          });
+        result = [...result, updateEmployeeCertificate];
+      }
     }
     if (result) {
       response.status(201).json({
@@ -688,26 +709,49 @@ const updateEmployeeEdu = async (request: any, response: Response) => {
       } else {
         img = updateVerify[i].ijazah;
       }
-      const updateEmployeeEdu = await prisma.educational_Employee.upsert({
-        where: {
-          id: updateVerify[i].id,
-        },
-        create: {
-          school_name: updateVerify[i].school_name,
-          ijazah: img,
-          last_edu: updateVerify[i].last_edu,
-          graduation: updateVerify[i].graduation,
-          employee: { connect: { id: updateVerify[i].employeeId } },
-        },
-        update: {
-          school_name: updateVerify[i].school_name,
-          ijazah: img,
-          graduation: updateVerify[i].graduation,
-          last_edu: updateVerify[i].last_edu,
-          employee: { connect: { id: updateVerify[i].employeeId } },
-        },
-      });
-      result = [...result, updateEmployeeEdu];
+      if (img) {
+        const updateEmployeeEdu = await prisma.educational_Employee.upsert({
+          where: {
+            id: updateVerify[i].id,
+          },
+          create: {
+            school_name: updateVerify[i].school_name,
+            ijazah: img,
+            last_edu: updateVerify[i].last_edu,
+            graduation: updateVerify[i].graduation,
+            employee: { connect: { id: updateVerify[i].employeeId } },
+          },
+          update: {
+            school_name: updateVerify[i].school_name,
+            ijazah: img,
+            graduation: updateVerify[i].graduation,
+            last_edu: updateVerify[i].last_edu,
+            employee: { connect: { id: updateVerify[i].employeeId } },
+          },
+        });
+        result = [...result, updateEmployeeEdu];
+      } else {
+        const updateEmployeeEdu = await prisma.educational_Employee.upsert({
+          where: {
+            id: updateVerify[i].id,
+          },
+          create: {
+            school_name: updateVerify[i].school_name,
+            ijazah: "",
+            last_edu: updateVerify[i].last_edu,
+            graduation: updateVerify[i].graduation,
+            employee: { connect: { id: updateVerify[i].employeeId } },
+          },
+          update: {
+            school_name: updateVerify[i].school_name,
+            ijazah: "",
+            graduation: updateVerify[i].graduation,
+            last_edu: updateVerify[i].last_edu,
+            employee: { connect: { id: updateVerify[i].employeeId } },
+          },
+        });
+        result = [...result, updateEmployeeEdu];
+      }
     }
     if (result) {
       response.status(201).json({
