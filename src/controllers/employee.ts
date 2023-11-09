@@ -274,6 +274,13 @@ const createEmployee = async (request: Request, response: Response) => {
         });
       }
     }
+    const selectEmployeEmail = await prisma.employee.findFirst({
+      where: {
+        email: request.body.email,
+      },
+    });
+    if (selectEmployeEmail)
+      return response.status(200).json({ msg: "email sudah terpakai" });
     const results = await prisma.employee.create({
       data: {
         NIP: request.body.NIP,
@@ -513,7 +520,7 @@ const createEmployeEdu = async (request: any, response: Response) => {
           school_name: arr[i].school_name,
           last_edu: arr[i].last_edu,
           graduation: arr[i].graduation,
-          ijazah: !request.files ? null : request.files[i].path,
+          ijazah: request.files === false ? null : request.files[i].path,
         });
       }
     }
@@ -546,7 +553,7 @@ const createEmployeCertificate = async (request: any, response: Response) => {
         newArrCertificate.push({
           employeeId: arr[i].employeeId,
           certificate_name: arr[i].certificate_name,
-          certificate_img: !request.files ? null : request.files[i].path,
+          certificate_img: request.files[i].path,
           end_date: arr[i].end_date,
         });
       }
