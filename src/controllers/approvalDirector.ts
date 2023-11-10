@@ -72,12 +72,19 @@ const getAllApprove = async (request: Request, response: Response) => {
           contains: pencarian,
           mode: "insensitive",
         },
-        OR: [
+        AND: [
           {
-            status_manager_director: null,
+            status_manager_pr: true,
           },
           {
-            status_manager_director: "revision",
+            OR: [
+              {
+                status_manager_director: null,
+              },
+              {
+                status_manager_director: "revision",
+              },
+            ],
           },
         ],
       },
@@ -245,26 +252,23 @@ const getAllApprove = async (request: Request, response: Response) => {
     let poandsoData;
     poandsoData = await prisma.poandso.findMany({
       where: {
-        OR: [
+        id_so: {
+          contains: pencarian,
+          mode: "insensitive",
+        },
+        AND: [
           {
             status_manager: true,
           },
           {
-            deleted: null,
-          },
-          {
-            status_manager_director: null,
-          },
-          {
-            status_manager_director: "revision",
-          },
-        ],
-        NOT: [
-          {
-            status_manager_director: "reject",
-          },
-          {
-            status_manager_director: "approve",
+            OR: [
+              {
+                status_manager_director: null,
+              },
+              {
+                status_manager_director: "revision",
+              },
+            ],
           },
         ],
       },
