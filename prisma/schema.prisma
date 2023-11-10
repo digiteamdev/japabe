@@ -418,15 +418,16 @@ model SupplierContact {
 }
 
 model SupplierBank {
-  id           String    @id @default(cuid())
-  account_name String?   @db.VarChar(100)
-  bank_name    String?   @db.VarChar(100)
-  rekening     String?   @db.VarChar(100)
-  supplier     Supplier  @relation("supplierbank", fields: [supplierId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  id           String      @id @default(cuid())
+  account_name String?     @db.VarChar(100)
+  bank_name    String?     @db.VarChar(100)
+  rekening     String?     @db.VarChar(100)
+  supplier     Supplier    @relation("supplierbank", fields: [supplierId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   supplierId   String
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
   deleted      DateTime?
+  kontrabon    kontrabon[]
 
   @@index([id, account_name, bank_name])
 }
@@ -1087,20 +1088,22 @@ model term_of_pay_po_so {
 }
 
 model kontrabon {
-  id            String    @id @default(cuid())
-  poandso       poandso   @relation(fields: [poandsoId], references: [id])
-  poandsoId     String    
+  id            String       @id @default(cuid())
+  poandso       poandso      @relation(fields: [poandsoId], references: [id])
+  poandsoId     String
+  SupplierBank  SupplierBank @relation(fields: [account_name], references: [id])
+  account_name  String
   id_kontrabon  String
   date_prepered DateTime
   tax_prepered  DateTime?
   due_date      DateTime?
-  invoice       String?   @db.Text
-  tax_invoice   String?   @db.Text
-  DO            String?   @db.VarChar(200)
-  grandtotal    Int       @default(0)
-  status_valid  Boolean   @default(false)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  invoice       String?      @db.Text
+  tax_invoice   String?      @db.Text
+  DO            String?      @db.VarChar(200)
+  grandtotal    Int          @default(0)
+  status_valid  Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
   deleted       DateTime?
 
   @@index([id, poandsoId, id_kontrabon])

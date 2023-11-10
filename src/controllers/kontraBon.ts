@@ -251,11 +251,12 @@ const createKontraBon = async (request: Request, response: Response) => {
       data: {
         id_kontrabon: request.body.id_kontrabon,
         poandso: { connect: { id: request.body.poandsoId } },
+        SupplierBank: { connect: { id: request.body.account_name } },
         tax_prepered: new Date(request.body.tax_prepered),
         due_date: new Date(request.body.due_date),
         invoice: request.body.invoice,
         tax_invoice: request.body.tax_invoice,
-        DO: "",
+        DO: request.body.DO,
         grandtotal: request.body.grandtotal,
         date_prepered: new Date(),
       },
@@ -279,5 +280,5 @@ const createKontraBon = async (request: Request, response: Response) => {
 
 export default {
   getKontraBon,
-  createKontraBon
+  createKontraBon,
 };
