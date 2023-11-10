@@ -68,32 +68,16 @@ const getAllApprove = async (request: Request, response: Response) => {
     let result;
     result = await prisma.purchase.findMany({
       where: {
+        idPurchase: {
+          contains: pencarian,
+          mode: "insensitive",
+        },
         OR: [
-          {
-            deleted: null,
-          },
-          {
-            idPurchase: {
-              contains: pencarian,
-              mode: "insensitive",
-            },
-          },
-          {
-            status_manager_pr: true,
-          },
           {
             status_manager_director: null,
           },
           {
             status_manager_director: "revision",
-          },
-        ],
-        NOT: [
-          {
-            status_manager_director: "approve",
-          },
-          {
-            status_manager_director: "reject",
           },
         ],
       },
