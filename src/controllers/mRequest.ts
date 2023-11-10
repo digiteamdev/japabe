@@ -1184,71 +1184,147 @@ const updatePr = async (request: Request, response: Response) => {
 const updatedetailPr = async (request: Request, response: Response) => {
   try {
     const id = request.body.id;
-    let result: any;
-    result = await prisma.purchase.update({
+    const selectPurchase = await prisma.purchase.findFirst({
       where: { id: id },
-      data: {
-        note: request.body.note,
+      include: {
+        detailMr: true,
       },
     });
-    const updateVerify = request.body.detailMr.map(
-      (updateByveri: {
-        taxpr: any;
-        akunId: any;
-        supId: any;
-        price: any;
-        note_revision: any;
-        id: any;
-        qtyAppr: any;
-        disc: any;
-        currency: any;
-        total: any;
-      }) => {
-        return {
-          taxpr: updateByveri.taxpr,
-          akunId: updateByveri.akunId,
-          disc: updateByveri.disc,
-          price: updateByveri.price,
-          qtyAppr: updateByveri.qtyAppr,
-          note_revision: updateByveri.note_revision,
-          currency: updateByveri.currency,
-          total: updateByveri.total,
-          supId: updateByveri.supId,
-          id: updateByveri.id,
-        };
-      }
-    );
-    for (let i = 0; i < updateVerify.length; i++) {
-      let upsertDetailMr;
-      upsertDetailMr = await prisma.detailMr.update({
-        where: {
-          id: updateVerify[i].id,
-        },
+    let obj: any = {};
+    const validateMR: any = selectPurchase?.detailMr.map(async (mr: any) => {
+      let jumlah = {
+        mrappr: mr.mrappr,
+      };
+      return Object.assign(obj, jumlah);
+    });
+    if (obj.mrappr === "DP") {
+      let result: any;
+      result = await prisma.purchase.update({
+        where: { id: id },
         data: {
-          taxpr: updateVerify[i].taxpr,
-          coa: { connect: { id: updateVerify[i].akunId } },
-          supplier: { connect: { id: updateVerify[i].supId } },
-          note_revision: updateVerify[i].note_revision,
-          price: updateVerify[i].price,
-          qtyAppr: updateVerify[i].qtyAppr,
-          disc: updateVerify[i].disc,
-          currency: updateVerify[i].currency,
-          total: updateVerify[i].total,
+          note: request.body.note,
         },
-      });      
-      result = [result, upsertDetailMr];
-    }
-    if (result) {
-      response.status(201).json({
-        success: true,
-        massage: "Success Update Data",
-        result: result,
       });
+      const updateVerify = request.body.detailMr.map(
+        (updateByveri: {
+          taxpr: any;
+          akunId: any;
+          supId: any;
+          price: any;
+          note_revision: any;
+          id: any;
+          qtyAppr: any;
+          disc: any;
+          currency: any;
+          total: any;
+        }) => {
+          return {
+            taxpr: updateByveri.taxpr,
+            akunId: updateByveri.akunId,
+            disc: updateByveri.disc,
+            price: updateByveri.price,
+            qtyAppr: updateByveri.qtyAppr,
+            note_revision: updateByveri.note_revision,
+            currency: updateByveri.currency,
+            total: updateByveri.total,
+            supId: updateByveri.supId,
+            id: updateByveri.id,
+          };
+        }
+      );
+      for (let i = 0; i < updateVerify.length; i++) {
+        let upsertDetailMr;
+        upsertDetailMr = await prisma.detailMr.update({
+          where: {
+            id: updateVerify[i].id,
+          },
+          data: {
+            taxpr: updateVerify[i].taxpr,
+            coa: { connect: { id: updateVerify[i].akunId } },
+            supplier: { connect: { id: updateVerify[i].supId } },
+            note_revision: updateVerify[i].note_revision,
+            price: updateVerify[i].price,
+            qtyAppr: updateVerify[i].qtyAppr,
+            disc: updateVerify[i].disc,
+            currency: updateVerify[i].currency,
+            total: updateVerify[i].total,
+          },
+        });
+        result = [result, upsertDetailMr];
+      }
+      if (result) {
+        response.status(201).json({
+          success: true,
+          massage: "Success Update Data",
+          result: result,
+        });
+      } else {
+        response.status(400).json({
+          success: false,
+          massage: "Unsuccess Update Data",
+        });
+      }
     } else {
-      response.status(400).json({
-        success: false,
-        massage: "Unsuccess Update Data",
-      });
+      let result: any;
+      const updateVerify = request.body.detailMr.map(
+        (updateByveri: {
+          taxpr: any;
+          akunId: any;
+          supId: any;
+          price: any;
+          note_revision: any;
+          id: any;
+          qtyAppr: any;
+          disc: any;
+          currency: any;
+          total: any;
+        }) => {
+          return {
+            taxpr: updateByveri.taxpr,
+            akunId: updateByveri.akunId,
+            disc: updateByveri.disc,
+            price: updateByveri.price,
+            qtyAppr: updateByveri.qtyAppr,
+            note_revision: updateByveri.note_revision,
+            currency: updateByveri.currency,
+            total: updateByveri.total,
+            supId: updateByveri.supId,
+            id: updateByveri.id,
+          };
+        }
+      );
+      for (let i = 0; i < updateVerify.length; i++) {
+        let upsertDetailMr;
+        upsertDetailMr = await prisma.detailMr.update({
+          where: {
+            id: updateVerify[i].id,
+          },
+          data: {
+            taxpr: updateVerify[i].taxpr,
+            coa: { connect: { id: updateVerify[i].akunId } },
+            supplier: { connect: { id: updateVerify[i].supId } },
+            note_revision: updateVerify[i].note_revision,
+            price: updateVerify[i].price,
+            qtyAppr: updateVerify[i].qtyAppr,
+            disc: updateVerify[i].disc,
+            currency: updateVerify[i].currency,
+            total: updateVerify[i].total,
+          },
+        });
+        result = [result, upsertDetailMr];
+      }
+      if (result) {
+        response.status(201).json({
+          success: true,
+          massage: "Success Update Data",
+          result: result,
+        });
+      } else {
+        response.status(400).json({
+          success: false,
+          massage: "Unsuccess Update Data",
+        });
+      }
     }
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string

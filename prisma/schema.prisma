@@ -928,9 +928,9 @@ model detailMr {
   updatedAt         DateTime         @updatedAt
   deleted           DateTime?
   note_revision     String?          @db.Text
-  purchase          purchase?        @relation(fields: [idPurchaseR], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  purchase          purchase?        @relation(fields: [idPurchaseR], references: [id])
   idPurchaseR       String?
-  approvedRequest   approvedRequest? @relation(fields: [approvedRequestId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  approvedRequest   approvedRequest? @relation(fields: [approvedRequestId], references: [id])
   approvedRequestId String?
   poandso           poandso?         @relation(fields: [poandsoId], references: [id])
   poandsoId         String?
@@ -1026,9 +1026,9 @@ model SrDetail {
   price             Int              @default(0)
   total             Int              @default(0)
   qty_receive       Int?             @default(0)
-  purchase          purchase?        @relation(fields: [idPurchaseR], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  purchase          purchase?        @relation(fields: [idPurchaseR], references: [id])
   idPurchaseR       String?
-  approvedRequest   approvedRequest? @relation(fields: [approvedRequestId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  approvedRequest   approvedRequest? @relation(fields: [approvedRequestId], references: [id])
   approvedRequestId String?
   qtyAppr           Int              @default(0)
   note_revision     String?          @db.Text
