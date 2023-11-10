@@ -1188,8 +1188,6 @@ const updatedetailPr = async (request: Request, response: Response) => {
     result = await prisma.purchase.update({
       where: { id: id },
       data: {
-        dateOfPurchase: request.body.dateOfPurchase,
-        idPurchase: request.body.idPurchase,
         note: request.body.note,
       },
     });
