@@ -255,7 +255,6 @@ const createKontraBon = async (request: Request, response: Response) => {
         tax_prepered: new Date(request.body.tax_prepered),
         due_date: new Date(request.body.due_date),
         invoice: request.body.invoice,
-        tax_invoice: request.body.tax_invoice,
         DO: request.body.DO,
         grandtotal: request.body.grandtotal,
         date_prepered: new Date(),
