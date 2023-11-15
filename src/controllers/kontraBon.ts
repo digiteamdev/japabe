@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import prisma from "../middleware/kontraBon";
 import pagging from "../utils/paggination";
 import url from "url";
+import { Prisma } from "@prisma/client";
 
 const getKontraBon = async (request: Request, response: Response) => {
   try {
@@ -23,197 +24,197 @@ const getKontraBon = async (request: Request, response: Response) => {
           mode: "insensitive",
         },
       },
-      include: {
-        poandso: {
-          include: {
-            supplier: {
-              include: {
-                SupplierContact: true,
-                SupplierBank: true,
-              },
-            },
-            detailMr: {
-              include: {
-                supplier: {
-                  include: {
-                    SupplierContact: true,
-                    SupplierBank: true,
-                  },
-                },
-                approvedRequest: true,
-                coa: true,
-                mr: {
-                  include: {
-                    wor: {
-                      include: {
-                        Quotations: {
-                          include: {
-                            Quotations_Detail: true,
-                            CustomerContact: true,
-                          },
-                        },
-                      },
-                    },
-                    bom: {
-                      include: {
-                        bom_detail: {
-                          include: {
-                            Material_master: {
-                              include: {
-                                Material_Stock: true,
-                                grup_material: true,
-                              },
-                            },
-                          },
-                        },
-                        srimg: {
-                          include: {
-                            srimgdetail: true,
-                          },
-                        },
-                      },
-                    },
-                    user: {
-                      select: {
-                        id: true,
-                        username: true,
-                        employee: {
-                          select: {
-                            id: true,
-                            employee_name: true,
-                            position: true,
-                            sub_depart: {
-                              select: {
-                                id: true,
-                                name: true,
-                                departement: {
-                                  select: {
-                                    id: true,
-                                    name: true,
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-                Material_Stock: {
-                  include: {
-                    Material_master: {
-                      include: {
-                        grup_material: true,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            SrDetail: {
-              include: {
-                workCenter: true,
-                supplier: {
-                  include: {
-                    SupplierContact: true,
-                    SupplierBank: true,
-                  },
-                },
-                approvedRequest: true,
-                coa: true,
-                sr: {
-                  include: {
-                    wor: {
-                      include: {
-                        Quotations: {
-                          include: {
-                            Quotations_Detail: true,
-                            CustomerContact: true,
-                          },
-                        },
-                      },
-                    },
-                    user: {
-                      select: {
-                        id: true,
-                        username: true,
-                        employee: {
-                          select: {
-                            id: true,
-                            employee_name: true,
-                            position: true,
-                            sub_depart: {
-                              select: {
-                                id: true,
-                                name: true,
-                                departement: {
-                                  select: {
-                                    id: true,
-                                    name: true,
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                    dispacth: {
-                      include: {
-                        dispatchDetail: {
-                          include: {
-                            aktivitas: {
-                              select: {
-                                id: true,
-                                aktivitasId: true,
-                                masterAktivitas: {
-                                  select: {
-                                    id: true,
-                                    name: true,
-                                  },
-                                },
-                              },
-                            },
-                            approve: {
-                              select: {
-                                id: true,
-                                employee_name: true,
-                              },
-                            },
-                            Employee: {
-                              select: {
-                                id: true,
-                                employee_name: true,
-                              },
-                            },
-                            sub_depart: true,
-                            workCenter: true,
-                          },
-                        },
-                        srimg: {
-                          include: {
-                            srimgdetail: true,
-                            timeschedule: {
-                              include: {
-                                aktivitas: {
-                                  include: {
-                                    masterAktivitas: true,
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
+      // include: {
+      //   poandso: {
+      //     include: {
+      //       supplier: {
+      //         include: {
+      //           SupplierContact: true,
+      //           SupplierBank: true,
+      //         },
+      //       },
+      //       detailMr: {
+      //         include: {
+      //           supplier: {
+      //             include: {
+      //               SupplierContact: true,
+      //               SupplierBank: true,
+      //             },
+      //           },
+      //           approvedRequest: true,
+      //           coa: true,
+      //           mr: {
+      //             include: {
+      //               wor: {
+      //                 include: {
+      //                   Quotations: {
+      //                     include: {
+      //                       Quotations_Detail: true,
+      //                       CustomerContact: true,
+      //                     },
+      //                   },
+      //                 },
+      //               },
+      //               bom: {
+      //                 include: {
+      //                   bom_detail: {
+      //                     include: {
+      //                       Material_master: {
+      //                         include: {
+      //                           Material_Stock: true,
+      //                           grup_material: true,
+      //                         },
+      //                       },
+      //                     },
+      //                   },
+      //                   srimg: {
+      //                     include: {
+      //                       srimgdetail: true,
+      //                     },
+      //                   },
+      //                 },
+      //               },
+      //               user: {
+      //                 select: {
+      //                   id: true,
+      //                   username: true,
+      //                   employee: {
+      //                     select: {
+      //                       id: true,
+      //                       employee_name: true,
+      //                       position: true,
+      //                       sub_depart: {
+      //                         select: {
+      //                           id: true,
+      //                           name: true,
+      //                           departement: {
+      //                             select: {
+      //                               id: true,
+      //                               name: true,
+      //                             },
+      //                           },
+      //                         },
+      //                       },
+      //                     },
+      //                   },
+      //                 },
+      //               },
+      //             },
+      //           },
+      //           Material_Stock: {
+      //             include: {
+      //               Material_master: {
+      //                 include: {
+      //                   grup_material: true,
+      //                 },
+      //               },
+      //             },
+      //           },
+      //         },
+      //       },
+      //       SrDetail: {
+      //         include: {
+      //           workCenter: true,
+      //           supplier: {
+      //             include: {
+      //               SupplierContact: true,
+      //               SupplierBank: true,
+      //             },
+      //           },
+      //           approvedRequest: true,
+      //           coa: true,
+      //           sr: {
+      //             include: {
+      //               wor: {
+      //                 include: {
+      //                   Quotations: {
+      //                     include: {
+      //                       Quotations_Detail: true,
+      //                       CustomerContact: true,
+      //                     },
+      //                   },
+      //                 },
+      //               },
+      //               user: {
+      //                 select: {
+      //                   id: true,
+      //                   username: true,
+      //                   employee: {
+      //                     select: {
+      //                       id: true,
+      //                       employee_name: true,
+      //                       position: true,
+      //                       sub_depart: {
+      //                         select: {
+      //                           id: true,
+      //                           name: true,
+      //                           departement: {
+      //                             select: {
+      //                               id: true,
+      //                               name: true,
+      //                             },
+      //                           },
+      //                         },
+      //                       },
+      //                     },
+      //                   },
+      //                 },
+      //               },
+      //               dispacth: {
+      //                 include: {
+      //                   dispatchDetail: {
+      //                     include: {
+      //                       aktivitas: {
+      //                         select: {
+      //                           id: true,
+      //                           aktivitasId: true,
+      //                           masterAktivitas: {
+      //                             select: {
+      //                               id: true,
+      //                               name: true,
+      //                             },
+      //                           },
+      //                         },
+      //                       },
+      //                       approve: {
+      //                         select: {
+      //                           id: true,
+      //                           employee_name: true,
+      //                         },
+      //                       },
+      //                       Employee: {
+      //                         select: {
+      //                           id: true,
+      //                           employee_name: true,
+      //                         },
+      //                       },
+      //                       sub_depart: true,
+      //                       workCenter: true,
+      //                     },
+      //                   },
+      //                   srimg: {
+      //                     include: {
+      //                       srimgdetail: true,
+      //                       timeschedule: {
+      //                         include: {
+      //                           aktivitas: {
+      //                             include: {
+      //                               masterAktivitas: true,
+      //                             },
+      //                           },
+      //                         },
+      //                       },
+      //                     },
+      //                   },
+      //                 },
+      //               },
+      //             },
+      //           },
+      //         },
+      //       },
+      //     },
+      //   },
+      // },
       orderBy: {
         createdAt: "desc",
       },
@@ -247,31 +248,49 @@ const getKontraBon = async (request: Request, response: Response) => {
 
 const createKontraBon = async (request: Request, response: Response) => {
   try {
-    const results = await prisma.kontrabon.create({
-      data: {
-        id_kontrabon: request.body.id_kontrabon,
-        poandso: { connect: { id: request.body.poandsoId } },
-        SupplierBank: { connect: { id: request.body.account_name } },
-        tax_prepered: new Date(request.body.tax_prepered),
-        due_date: new Date(request.body.due_date),
-        invoice: request.body.invoice,
-        DO: request.body.DO,
-        grandtotal: request.body.grandtotal,
-        date_prepered: new Date(),
+    await prisma.$transaction(
+      async (prisma) => {
+        const results = await prisma.kontrabon.create({
+          data: {
+            id_kontrabon: request.body.id_kontrabon,
+            term_of_pay_po_so: { connect: { id: request.body.termId } },
+            SupplierBank: { connect: { id: request.body.account_name } },
+            tax_prepered: new Date(request.body.tax_prepered),
+            due_date: new Date(request.body.due_date),
+            invoice: request.body.invoice,
+            DO: request.body.DO,
+            grandtotal: request.body.grandtotal,
+            date_prepered: new Date(),
+          },
+        });
+        const updateTerm = await prisma.term_of_pay_po_so.update({
+          where: {
+            id: results.termId,
+          },
+          data: {
+            status_kontra: true,
+            tax_invoice: request.body.tax_invoice,
+          },
+        });
+        if (results) {
+          response.status(201).json({
+            success: true,
+            massage: "Success Add Data",
+            results: results,
+          });
+        } else {
+          response.status(400).json({
+            success: false,
+            massage: "Unsuccess Add Data",
+          });
+        }
       },
-    });
-    if (results) {
-      response.status(201).json({
-        success: true,
-        massage: "Success Add Data",
-        results: results,
-      });
-    } else {
-      response.status(400).json({
-        success: false,
-        massage: "Unsuccess Add Data",
-      });
-    }
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable, // optional, default defined by database configuration
+        maxWait: 5000, // default: 2000
+        timeout: 10000, // default: 5000
+      }
+    );
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }

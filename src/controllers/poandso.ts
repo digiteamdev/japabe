@@ -1464,41 +1464,65 @@ const getAllReceive = async (request: Request, response: Response) => {
     if (results.length > 0) {
       let res: any = [];
       let arrTerm: any = [];
-      results.filter(async (a: any) => {
-        let filtered: any = a.term_of_pay_po_so.filter(
-          (c: any) => c.limitpay === "Down_Payment" && c.status_kontra === false
-        );
-        let filterB: any = a.term_of_pay_po_so.filter(
-          (x: any) => x.status_kontra === false
-        );
-        if (filtered.length > 0) {
-          arrTerm.push(...filtered);
-        } else {
-          arrTerm.push(...filterB);
-        }
-        const arrPo: any = {
-          id: a.id,
-          id_so: a.id_so,
-          id_receive: a.id_receive,
-          date_receive: a.date_receive,
-          supplierId: a.supplierId,
-          date_prepared: a.date_prepared,
-          your_reff: a.your_reff,
-          note: a.note,
-          status_manager: a.status_manager,
-          status_manager_director: a.status_manager_director,
-          status_receive: a.status_receive,
-          DP: a.DP,
-          createdAt: a.createdAt,
-          updatedAt: a.updatedAt,
-          deleted: a.deleted,
-          term_of_pay_po_so: arrTerm,
-          supplier: a.supplier,
-          detailMr: a.detailMr,
-          SrDetail: a.SrDetail,
-        };
+      let s: any = {};
+      results.map((a: any) => {
         if (a.term_of_pay_po_so.length > 1) {
-          res.push(arrPo);
+          let filtered: any = a.term_of_pay_po_so.filter(
+            (c: any) =>
+              c.limitpay.includes("Down_Payment") && c.status_kontra == false
+          );
+          arrTerm.push(...filtered);
+          const arrNew = {
+            id: a.id,
+            id_so: a.id_so,
+            id_receive: a.id_receive,
+            date_receive: a.date_receive,
+            supplierId: a.supplierId,
+            date_prepared: a.date_prepared,
+            your_reff: a.your_reff,
+            note: a.note,
+            status_manager: a.status_manager,
+            status_manager_director: a.status_manager_director,
+            status_receive: a.status_receive,
+            DP: a.DP,
+            createdAt: a.createdAt,
+            updatedAt: a.updatedAt,
+            deleted: a.deleted,
+            term_of_pay_po_so: arrTerm,
+            supplier: a.supplier,
+            detailMr: a.detailMr,
+            SrDetail: a.SrDetail,
+          };
+          if (filtered.length === 0) {
+            let filtered: any = a.term_of_pay_po_so.filter(
+              (c: any) => c.status_kontra == false
+            );
+            arrTerm.push(...filtered);
+            const arrNew = {
+              id: a.id,
+              id_so: a.id_so,
+              id_receive: a.id_receive,
+              date_receive: a.date_receive,
+              supplierId: a.supplierId,
+              date_prepared: a.date_prepared,
+              your_reff: a.your_reff,
+              note: a.note,
+              status_manager: a.status_manager,
+              status_manager_director: a.status_manager_director,
+              status_receive: a.status_receive,
+              DP: a.DP,
+              createdAt: a.createdAt,
+              updatedAt: a.updatedAt,
+              deleted: a.deleted,
+              term_of_pay_po_so: arrTerm,
+              supplier: a.supplier,
+              detailMr: a.detailMr,
+              SrDetail: a.SrDetail,
+            };
+            res.push(arrNew);
+          } else {
+            res.push(arrNew);
+          }
         } else {
           res.push(a);
         }
