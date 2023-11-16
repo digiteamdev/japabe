@@ -1080,6 +1080,7 @@ model term_of_pay_po_so {
   invoice       String?     @db.Text
   tax_invoice   Boolean?    @default(false)
   status_kontra Boolean     @default(false)
+  tax_paid      Boolean     @default(false)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   deleted       DateTime?

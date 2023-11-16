@@ -246,7 +246,7 @@ const getKontraBon = async (request: Request, response: Response) => {
   }
 };
 
-const createKontraBon = async (request: Request, response: Response) => {
+const createKontraBon = async (request: any, response: Response) => {
   try {
     await prisma.$transaction(
       async (prisma) => {
@@ -272,6 +272,16 @@ const createKontraBon = async (request: Request, response: Response) => {
             tax_invoice: request.body.tax_invoice,
           },
         });
+        if (updateTerm.tax_invoice === true) {
+          const updateTax = await prisma.term_of_pay_po_so.updateMany({
+            where: {
+              poandsoId: updateTerm.poandsoId,
+            },
+            data: {
+              tax_invoice: true,
+            },
+          });
+        }
         if (results) {
           response.status(201).json({
             success: true,
