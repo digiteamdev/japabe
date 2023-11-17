@@ -276,6 +276,20 @@ const createKontraBon = async (request: any, response: Response) => {
             tax_invoice: request.body.tax_invoice,
           },
         });
+        const selectTerm = await prisma.term_of_pay_po_so.findMany({
+          where: { poandsoId: updateTerm.poandsoId },
+        });
+        const index: any = selectTerm
+          .map((x: any) => {
+            return x.tax_invoice;
+          })
+          .indexOf(false, 0);
+        if (index === 1) {
+          return response.status(400).json({
+            success: false,
+            massage: "Tax must be filled",
+          });
+        }
         if (updateTerm.tax_invoice === true) {
           const updateTax = await prisma.term_of_pay_po_so.updateMany({
             where: {

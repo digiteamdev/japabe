@@ -1042,6 +1042,15 @@ const getAllReceive = async (request: Request, response: Response) => {
               status_receive: true,
             },
           ],
+          NOT: [
+            {
+              term_of_pay_po_so: {
+                every: {
+                  status_kontra: true,
+                },
+              },
+            },
+          ],
         },
         include: {
           term_of_pay_po_so: true,
