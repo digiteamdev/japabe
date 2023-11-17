@@ -139,6 +139,11 @@ const getPo = async (request: Request, response: Response) => {
             },
           },
         ],
+        NOT: [
+          {
+            id_receive: null,
+          }
+        ]
       },
       include: {
         detailMr: {
