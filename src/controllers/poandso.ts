@@ -79,20 +79,6 @@ const getPo = async (request: Request, response: Response) => {
           {
             detailMr: {
               some: {
-                poandsoId: null,
-              },
-            },
-          },
-          {
-            SrDetail: {
-              some: {
-                poandsoId: null,
-              },
-            },
-          },
-          {
-            detailMr: {
-              some: {
                 poandso: {
                   id_so: {
                     contains: pencarian,
@@ -139,7 +125,7 @@ const getPo = async (request: Request, response: Response) => {
             },
           },
         ],
-        NOT: [
+        AND: [
           {
             detailMr: {
               every: {
