@@ -141,9 +141,20 @@ const getPo = async (request: Request, response: Response) => {
         ],
         NOT: [
           {
-            id_receive: null,
-          }
-        ]
+            detailMr: {
+              every: {
+                poandso: null,
+              },
+            },
+          },
+          {
+            SrDetail: {
+              every: {
+                poandso: null,
+              },
+            },
+          },
+        ],
       },
       include: {
         detailMr: {
