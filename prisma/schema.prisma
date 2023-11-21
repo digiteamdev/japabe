@@ -1091,7 +1091,7 @@ model term_of_pay_po_so {
 
 model kontrabon {
   id                String            @id @default(cuid())
-  term_of_pay_po_so term_of_pay_po_so @relation(fields: [termId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  term_of_pay_po_so term_of_pay_po_so @relation(fields: [termId], references: [id])
   termId            String
   SupplierBank      SupplierBank      @relation(fields: [account_name], references: [id])
   account_name      String
