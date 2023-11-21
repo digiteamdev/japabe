@@ -25,6 +25,7 @@ const getKontraBon = async (request: Request, response: Response) => {
         },
       },
       include: {
+        SupplierBank: true,
         term_of_pay_po_so: {
           include: {
             poandso: {
@@ -276,20 +277,6 @@ const createKontraBon = async (request: any, response: Response) => {
             tax_invoice: request.body.tax_invoice,
           },
         });
-        const selectTerm = await prisma.term_of_pay_po_so.findMany({
-          where: { poandsoId: updateTerm.poandsoId },
-        });
-        const index: any = selectTerm
-          .map((x: any) => {
-            return x.tax_invoice;
-          })
-          .indexOf(false, 0);
-        if (index === 1) {
-          return response.status(400).json({
-            success: false,
-            massage: "Tax must be filled",
-          });
-        }
         if (updateTerm.tax_invoice === true) {
           const updateTax = await prisma.term_of_pay_po_so.updateMany({
             where: {
@@ -330,7 +317,121 @@ const createKontraBon = async (request: any, response: Response) => {
   }
 };
 
+const updateKontraBon = async (request: any, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const updateKontraBon = await prisma.kontrabon.update({
+      where: {
+        id: id,
+      },
+      data: {
+        SupplierBank: { connect: { id: request.body.account_name } },
+        due_date: new Date(request.body.due_date),
+        DO: request.body.DO,
+        invoice: request.body.invoice,
+      },
+    });
+    if (updateKontraBon) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: updateKontraBon,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const deleteKontraBon = async (request: any, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const deleteKontraBon = await prisma.kontrabon.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (deleteKontraBon) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: deleteKontraBon,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updateStatusM = async (request: any, response: Response) => {
+  try {
+    const id = request.params.id;
+    const userLogin = await prisma.user.findFirst({
+      where: {
+        username: request.session.userId,
+      },
+    });
+    const a: any = userLogin?.employeeId;
+    const emplo = await prisma.employee.findFirst({
+      where: {
+        id: a,
+      },
+    });
+    const statusPenc = await prisma.kontrabon.findFirst({
+      where: {
+        id: id,
+      },
+    });
+    let result;
+    if (
+      (emplo?.position === "Manager" && statusPenc?.status_valid === null) ||
+      statusPenc?.status_valid === false
+    ) {
+      result = await prisma.kontrabon.update({
+        where: { id: id },
+        data: {
+          status_valid: true,
+        },
+      });
+    } else {
+      result = await prisma.kontrabon.update({
+        where: { id: id },
+        data: {
+          status_valid: false,
+        },
+      });
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getKontraBon,
   createKontraBon,
+  updateKontraBon,
+  deleteKontraBon,
+  updateStatusM,
 };

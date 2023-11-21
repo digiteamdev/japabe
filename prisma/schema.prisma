@@ -1072,7 +1072,7 @@ model poandso {
 
 model term_of_pay_po_so {
   id            String      @id @default(cuid())
-  poandso       poandso     @relation(fields: [poandsoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  poandso       poandso     @relation(fields: [poandsoId], references: [id])
   poandsoId     String
   limitpay      Limit_Pay?
   percent       Int         @default(0)
@@ -1091,7 +1091,7 @@ model term_of_pay_po_so {
 
 model kontrabon {
   id                String            @id @default(cuid())
-  term_of_pay_po_so term_of_pay_po_so @relation(fields: [termId], references: [id])
+  term_of_pay_po_so term_of_pay_po_so @relation(fields: [termId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   termId            String
   SupplierBank      SupplierBank      @relation(fields: [account_name], references: [id])
   account_name      String

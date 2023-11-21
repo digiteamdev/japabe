@@ -1475,7 +1475,6 @@ const getAllReceive = async (request: Request, response: Response) => {
     if (results.length > 0) {
       let res: any = [];
       let arrTerm: any = [];
-      let s: any = {};
       results.map((a: any) => {
         if (a.term_of_pay_po_so.length > 1) {
           let filtered: any = a.term_of_pay_po_so.filter(
@@ -1508,7 +1507,24 @@ const getAllReceive = async (request: Request, response: Response) => {
             let filtered: any = a.term_of_pay_po_so.filter(
               (c: any) => c.status_kontra == false
             );
-            arrTerm.push(...filtered);
+            let filterede: any = a.term_of_pay_po_so.filter(
+              (c: any) => c.tax_invoice == false
+            );
+            let z: any = {};
+            let d: any = filterede
+              .map((s: any) => {
+                let ok = {
+                  massage: "Tax must be filled",
+                };
+                Object.assign(z, ok);
+                return s.tax_invoice;
+              })
+              .lastIndexOf(0, false);
+
+            if (d === 1) {
+              arrTerm.push(z);
+            }
+            arrTerm.push(...filtered, z);
             const arrNew = {
               id: a.id,
               id_so: a.id_so,
