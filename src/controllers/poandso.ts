@@ -1481,7 +1481,18 @@ const getAllReceive = async (request: Request, response: Response) => {
             (c: any) =>
               c.limitpay.includes("Down_Payment") && c.status_kontra == false
           );
+          let z: any = {};
+          let d: any = filtered.map((s: any) => {
+            let ok = {
+              status: false,
+            };
+            Object.assign(z, ok);
+          });
           arrTerm.push(...filtered);
+          const mj = arrTerm.map((k: any) => {
+            const mergeJs = { ...k, ...z };
+            return mergeJs;
+          });
           const arrNew = {
             id: a.id,
             id_so: a.id_so,
@@ -1498,7 +1509,7 @@ const getAllReceive = async (request: Request, response: Response) => {
             createdAt: a.createdAt,
             updatedAt: a.updatedAt,
             deleted: a.deleted,
-            term_of_pay_po_so: arrTerm,
+            term_of_pay_po_so: mj,
             supplier: a.supplier,
             detailMr: a.detailMr,
             SrDetail: a.SrDetail,
@@ -1514,8 +1525,7 @@ const getAllReceive = async (request: Request, response: Response) => {
             let d: any = filterede
               .map((s: any) => {
                 let ok = {
-                  status: false,
-                  massage: "Tax must be filled",
+                  status: true,
                 };
                 Object.assign(z, ok);
                 return s.tax_invoice;
@@ -1551,6 +1561,21 @@ const getAllReceive = async (request: Request, response: Response) => {
               res.push(arrNew);
             } else {
               arrTerm.push(...filtered);
+              let z: any = {};
+              let d: any = filterede
+                .map((s: any) => {
+                  let ok = {
+                    status: true,
+                  };
+                  Object.assign(z, ok);
+                  return s.tax_invoice;
+                })
+                .lastIndexOf(false);
+
+              const mj = arrTerm.map((k: any) => {
+                const mergeJs = { ...k, ...z };
+                return mergeJs;
+              });
               const arrNew = {
                 id: a.id,
                 id_so: a.id_so,
@@ -1567,7 +1592,7 @@ const getAllReceive = async (request: Request, response: Response) => {
                 createdAt: a.createdAt,
                 updatedAt: a.updatedAt,
                 deleted: a.deleted,
-                term_of_pay_po_so: arrTerm,
+                term_of_pay_po_so: mj,
                 supplier: a.supplier,
                 detailMr: a.detailMr,
                 SrDetail: a.SrDetail,
@@ -1578,7 +1603,39 @@ const getAllReceive = async (request: Request, response: Response) => {
             res.push(arrNew);
           }
         } else {
-          res.push(a);
+          let z: any = {};
+          a.term_of_pay_po_so.map((s: any) => {
+            let ok = {
+              status: true,
+            };
+            Object.assign(z, ok);
+          });
+          const mj = a.term_of_pay_po_so.map((k: any) => {
+            const mergeJs = { ...k, ...z };
+            return mergeJs;
+          });
+          const arrNew = {
+            id: a.id,
+            id_so: a.id_so,
+            id_receive: a.id_receive,
+            date_receive: a.date_receive,
+            supplierId: a.supplierId,
+            date_prepared: a.date_prepared,
+            your_reff: a.your_reff,
+            note: a.note,
+            status_manager: a.status_manager,
+            status_manager_director: a.status_manager_director,
+            status_receive: a.status_receive,
+            DP: a.DP,
+            createdAt: a.createdAt,
+            updatedAt: a.updatedAt,
+            deleted: a.deleted,
+            term_of_pay_po_so: mj,
+            supplier: a.supplier,
+            detailMr: a.detailMr,
+            SrDetail: a.SrDetail,
+          };
+          res.push(arrNew);
         }
       });
       return response.status(200).json({
