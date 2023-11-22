@@ -359,7 +359,7 @@ const deleteKontraBon = async (request: any, response: Response) => {
     if (deleteKontraBon) {
       response.status(201).json({
         success: true,
-        massage: "Success Update Data",
+        massage: "Success Delete Data",
         results: deleteKontraBon,
       });
     } else {
