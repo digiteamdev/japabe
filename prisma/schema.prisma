@@ -1049,6 +1049,8 @@ model poandso {
   id                      String                   @id @default(cuid())
   id_so                   String?                  @db.VarChar(20)
   id_receive              String?                  @db.VarChar(20)
+  currency                Currency?
+  taxPsrDmr               TaxPsrDmr?
   date_receive            DateTime?
   supplier                Supplier                 @relation(fields: [supplierId], references: [id])
   supplierId              String

@@ -366,6 +366,8 @@ const createPo = async (request: Request, response: Response) => {
         your_reff: request.body.your_reff,
         note: request.body.note,
         DP: request.body.DP,
+        taxPsrDmr: request.body.taxPsrDmr,
+        currency: request.body.currency,
         term_of_pay_po_so: {
           create: request.body.term_of_pay_po_so,
         },
