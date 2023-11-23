@@ -1164,7 +1164,6 @@ const updatePsr = async (request: Request, response: Response) => {
                 id: updateVerify[i].id,
               },
               data: {
-                taxPsrDmr: updateVerify[i].taxPsrDmr,
                 coa: { connect: { id: updateVerify[i].akunId } },
                 supplier: { connect: { id: updateVerify[i].supId } },
                 disc: updateVerify[i].disc,
@@ -1257,7 +1256,6 @@ const updatedetailPsr = async (request: Request, response: Response) => {
             id: updateVerify[i].id,
           },
           data: {
-            taxPsrDmr: updateVerify[i].taxPsrDmr,
             coa: { connect: { id: updateVerify[i].akunId } },
             supplier: { connect: { id: updateVerify[i].supId } },
             price: updateVerify[i].price,
@@ -1318,7 +1316,6 @@ const updatedetailPsr = async (request: Request, response: Response) => {
             id: updateVerify[i].id,
           },
           data: {
-            taxPsrDmr: updateVerify[i].taxPsrDmr,
             coa: { connect: { id: updateVerify[i].akunId } },
             supplier: { connect: { id: updateVerify[i].supId } },
             price: updateVerify[i].price,

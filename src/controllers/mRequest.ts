@@ -1146,7 +1146,6 @@ const updatePr = async (request: Request, response: Response) => {
                 id: updateVerify[i].id,
               },
               data: {
-                taxpr: updateVerify[i].taxpr,
                 coa: { connect: { id: updateVerify[i].akunId } },
                 supplier: { connect: { id: updateVerify[i].supId } },
                 disc: updateVerify[i].disc,
@@ -1239,7 +1238,6 @@ const updatedetailPr = async (request: Request, response: Response) => {
             id: updateVerify[i].id,
           },
           data: {
-            taxpr: updateVerify[i].taxpr,
             coa: { connect: { id: updateVerify[i].akunId } },
             supplier: { connect: { id: updateVerify[i].supId } },
             note_revision: updateVerify[i].note_revision,
@@ -1300,7 +1298,6 @@ const updatedetailPr = async (request: Request, response: Response) => {
             id: updateVerify[i].id,
           },
           data: {
-            taxpr: updateVerify[i].taxpr,
             coa: { connect: { id: updateVerify[i].akunId } },
             supplier: { connect: { id: updateVerify[i].supId } },
             note_revision: updateVerify[i].note_revision,
