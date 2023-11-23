@@ -97,6 +97,9 @@ const getWor = async (request: Request, response: Response) => {
               },
             },
           ],
+          NOT: {
+            customerPo: null
+          }
         },
         include: {
           customerPo: {

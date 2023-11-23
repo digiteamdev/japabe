@@ -551,13 +551,13 @@ model wor {
   job_no            String?          @db.VarChar(200)
   job_no_mr         String?          @db.VarChar(200)
   date_wor          DateTime?
-  customerPo        CustomerPo       @relation(fields: [cuspoId], references: [id])
-  cuspoId           String
+  customerPo        CustomerPo?      @relation(fields: [cuspoId], references: [id])
+  cuspoId           String?
   subject           String?          @db.VarChar(200)
   job_desk          String?          @db.Text
   contract_no_spk   String?          @db.VarChar(100)
-  employee          Employee         @relation(fields: [employeeId], references: [id])
-  employeeId        String
+  employee          Employee?        @relation(fields: [employeeId], references: [id])
+  employeeId        String?
   value_contract    String?
   priority_status   Priority_Status?
   qty               Int              @default(0)
@@ -866,14 +866,15 @@ enum TaxPsrDmr {
 }
 
 model coa {
-  id        String     @id @default(cuid())
-  coa_code  String     @db.VarChar(20)
-  coa_name  String     @db.VarChar(200)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  deleted   DateTime?
-  detailMr  detailMr[]
-  SrDetail  SrDetail[]
+  id              String            @id @default(cuid())
+  coa_code        String            @db.VarChar(20)
+  coa_name        String            @db.VarChar(200)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deleted         DateTime?
+  detailMr        detailMr[]
+  SrDetail        SrDetail[]
+  journal_cashier journal_cashier[]
 
   @@index([id, coa_code, coa_name])
 }
@@ -915,7 +916,6 @@ model detailMr {
   supplier          Supplier?        @relation(fields: [supId], references: [id])
   supId             String?
   qtyAppr           Int              @default(0)
-  taxpr             TaxPr?
   coa               coa?             @relation(fields: [akunId], references: [id])
   akunId            String?
   disc              Int              @default(0)
@@ -951,6 +951,7 @@ model purchase {
   user                    User?                    @relation(fields: [approveById], references: [id])
   approveById             String?
   note                    String?                  @db.Text
+  taxPsrDmr               TaxPsrDmr?
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @updatedAt
   deleted                 DateTime?
@@ -1018,7 +1019,6 @@ model SrDetail {
   srappr            SrAppr?
   supplier          Supplier?        @relation(fields: [supId], references: [id])
   supId             String?
-  taxPsrDmr         TaxPsrDmr?
   coa               coa?             @relation(fields: [akunId], references: [id])
   akunId            String?
   disc              Int              @default(0)
@@ -1095,7 +1095,7 @@ model kontrabon {
   termId            String
   SupplierBank      SupplierBank      @relation(fields: [account_name], references: [id])
   account_name      String
-  id_kontrabon      String
+  id_kontrabon      String            @db.VarChar(200)
   date_prepered     DateTime
   tax_prepered      DateTime?
   due_date          DateTime?
@@ -1106,6 +1106,49 @@ model kontrabon {
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
   deleted           DateTime?
+  cashier           cashier[]
 
   @@index([id, termId, id_kontrabon])
+}
+
+enum status_payment {
+  Cash
+  Transfer
+}
+
+enum status_transaction {
+  Debet
+  Kredit
+}
+
+model cashier {
+  id              String            @id @default(cuid())
+  id_cashier      String
+  status_payment  status_payment
+  kontrabon       kontrabon         @relation(fields: [kontrabonId], references: [id])
+  kontrabonId     String
+  date_cashier    DateTime
+  note            String            @db.Text
+  total           Int               @default(0)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deleted         DateTime?
+  journal_cashier journal_cashier[]
+
+  @@index([id, id_cashier, kontrabonId])
+}
+
+model journal_cashier {
+  id                 String             @id @default(cuid())
+  cashier            cashier            @relation(fields: [cashier_id], references: [id])
+  cashier_id         String
+  coa                coa                @relation(fields: [coa_id], references: [id])
+  coa_id             String
+  status_transaction status_transaction
+  grandtotal         Int                @default(0)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  deleted            DateTime?
+
+  @@index([id, cashier_id, coa_id])
 }
