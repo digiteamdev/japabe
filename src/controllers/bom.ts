@@ -483,6 +483,7 @@ const getBomMr = async (request: Request, response: Response) => {
     let worData;
     worData = await prisma.wor.findMany({
       where: {
+        Mr: null,
         OR: [
           {
             job_operational: true,
