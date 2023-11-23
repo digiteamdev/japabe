@@ -276,7 +276,7 @@ const createWor = async (request: any, response: Response) => {
         scope_of_work: request.body.scope_of_work,
         file_list: !request.file ? null : request.file.path,
         noted: request.body.noted,
-        status: request.body.status,
+        status: "unvalid",
         job_operational: request.body.job_operational === "true" ? true : false,
       },
     });

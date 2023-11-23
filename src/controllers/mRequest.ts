@@ -1109,7 +1109,8 @@ const updatePr = async (request: Request, response: Response) => {
             dateOfPurchase: request.body.dateOfPurchase,
             idPurchase: request.body.idPurchase,
             note: request.body.note,
-            taxPsrDmr: request.body.taxPsrDmr
+            taxPsrDmr: request.body.taxPsrDmr,
+            currency: request.body.currency
           },
         });
         const updateVerify = request.body.detailMr.map(
@@ -1152,7 +1153,6 @@ const updatePr = async (request: Request, response: Response) => {
                 disc: updateVerify[i].disc,
                 price: updateVerify[i].price,
                 qtyAppr: updateVerify[i].qtyAppr,
-                currency: updateVerify[i].currency,
                 total: updateVerify[i].total,
                 purchase: { connect: { id: result.id } },
               },
@@ -1245,7 +1245,6 @@ const updatedetailPr = async (request: Request, response: Response) => {
             price: updateVerify[i].price,
             qtyAppr: updateVerify[i].qtyAppr,
             disc: updateVerify[i].disc,
-            currency: updateVerify[i].currency,
             total: updateVerify[i].total,
           },
         });
@@ -1305,7 +1304,6 @@ const updatedetailPr = async (request: Request, response: Response) => {
             price: updateVerify[i].price,
             qtyAppr: updateVerify[i].qtyAppr,
             disc: updateVerify[i].disc,
-            currency: updateVerify[i].currency,
             total: updateVerify[i].total,
           },
         });

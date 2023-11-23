@@ -492,43 +492,13 @@ const getBomMr = async (request: Request, response: Response) => {
               deleted: null,
             },
           },
-        ],
-        NOT: [
           {
-            Mr: {
-              deleted: null,
-            },
+            status: "valid",
           },
           {
             status: null,
           },
         ],
-      },
-      include: {
-        customerPo: {
-          include: {
-            quotations: {
-              include: {
-                Quotations_Detail: true,
-                CustomerContact: true,
-                Customer: {
-                  include: {
-                    address: true,
-                  },
-                },
-                eqandpart: {
-                  include: {
-                    equipment: true,
-                    eq_part: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-        timeschedule: true,
-        employee: true,
-        Mr: true,
       },
     });
     const results = [...result, ...worData];

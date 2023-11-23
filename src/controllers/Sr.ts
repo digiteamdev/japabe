@@ -1127,7 +1127,8 @@ const updatePsr = async (request: Request, response: Response) => {
             dateOfPurchase: request.body.dateOfPurchase,
             idPurchase: request.body.idPurchase,
             note: request.body.note,
-            taxPsrDmr: request.body.taxPsrDmr
+            taxPsrDmr: request.body.taxPsrDmr,
+            currency: request.body.currency
           },
         });
         const updateVerify = request.body.srDetail.map(
@@ -1168,7 +1169,6 @@ const updatePsr = async (request: Request, response: Response) => {
                 coa: { connect: { id: updateVerify[i].akunId } },
                 supplier: { connect: { id: updateVerify[i].supId } },
                 disc: updateVerify[i].disc,
-                currency: updateVerify[i].currency,
                 qtyAppr: updateVerify[i].qtyAppr,
                 price: updateVerify[i].price,
                 total: updateVerify[i].total,
@@ -1263,7 +1263,6 @@ const updatedetailPsr = async (request: Request, response: Response) => {
             note_revision: updateVerify[i].note_revision,
             qtyAppr: updateVerify[i].qtyAppr,
             disc: updateVerify[i].disc,
-            currency: updateVerify[i].currency,
             total: updateVerify[i].total,
           },
         });
@@ -1323,7 +1322,6 @@ const updatedetailPsr = async (request: Request, response: Response) => {
             note_revision: updateVerify[i].note_revision,
             qtyAppr: updateVerify[i].qtyAppr,
             disc: updateVerify[i].disc,
-            currency: updateVerify[i].currency,
             total: updateVerify[i].total,
           },
         });
