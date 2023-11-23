@@ -1127,6 +1127,7 @@ const updatePsr = async (request: Request, response: Response) => {
             dateOfPurchase: request.body.dateOfPurchase,
             idPurchase: request.body.idPurchase,
             note: request.body.note,
+            taxPsrDmr: request.body.taxPsrDmr
           },
         });
         const updateVerify = request.body.srDetail.map(
