@@ -1130,6 +1130,7 @@ model cashier {
   kontrabonId     String
   date_cashier    DateTime
   note            String            @db.Text
+  status_valid    Boolean           @default(false)
   total           Int               @default(0)
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt

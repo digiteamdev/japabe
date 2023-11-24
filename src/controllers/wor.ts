@@ -98,8 +98,8 @@ const getWor = async (request: Request, response: Response) => {
             },
           ],
           NOT: {
-            customerPo: null
-          }
+            customerPo: null,
+          },
         },
         include: {
           customerPo: {
@@ -378,7 +378,10 @@ const updateWorStatus = async (request: Request, response: Response) => {
         where: { id: id },
         data: {
           status: "valid",
-          job_no: statusPenc.status === null ? genarate : statusPenc.job_no,
+          job_no:
+            statusPenc.status === null || statusPenc?.status === "unvalid"
+              ? genarate
+              : statusPenc.job_no,
           job_no_mr:
             statusPenc.job_operational === true
               ? genarateMr
