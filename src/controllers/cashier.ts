@@ -23,7 +23,7 @@ const getCashier = async (request: Request, response: Response) => {
         },
         cashier: {
           every: {
-            kontrabonId: undefined,
+            kontrabonId: "null",
           },
         },
       },
@@ -288,7 +288,123 @@ const createCashier = async (request: Request, response: Response) => {
   }
 };
 
+const updateCashier = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    let result: any = [];
+    result = await prisma.cashier.update({
+      where: {
+        id: id,
+      },
+      data: request.body.cashier,
+    });
+    const updateVerify = request.body.journal_cashier.map(
+      (updateByveri: {
+        coa_id: any;
+        status_transaction: any;
+        grandtotal: any;
+        cashier_id: any;
+        id: any;
+      }) => {
+        return {
+          coa_id: updateByveri.coa_id,
+          status_transaction: updateByveri.status_transaction,
+          grandtotal: updateByveri.grandtotal,
+          cashier_id: updateByveri.cashier_id,
+          id: updateByveri.id,
+        };
+      }
+    );
+    for (let i = 0; i < updateVerify.length; i++) {
+      const updateDetail = await prisma.journal_cashier.upsert({
+        where: {
+          id: updateVerify[i].id,
+        },
+        create: {
+          cashier: { connect: { id: updateVerify[i].cashier_id } },
+          coa: { connect: { id: updateVerify[i].coa_id } },
+          status_transaction: updateVerify[i].status_transaction,
+          grandtotal: updateVerify[i].grandtotal,
+        },
+        update: {
+          coa: { connect: { id: updateVerify[i].coa_id } },
+          status_transaction: updateVerify[i].status_transaction,
+          grandtotal: updateVerify[i].grandtotal,
+        },
+      });
+      result = [...result, updateDetail];
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        result: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const deleteCashier = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const deleteCashier = await prisma.cashier.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (deleteCashier) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Delete Data",
+        results: deleteCashier,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Delete Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const deleteDetailCashier = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const deleteDetailCashier = await prisma.journal_cashier.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (deleteDetailCashier) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Delete Data",
+        results: deleteDetailCashier,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Delete Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getCashier,
   createCashier,
+  updateCashier,
+  deleteCashier,
+  deleteDetailCashier,
 };
