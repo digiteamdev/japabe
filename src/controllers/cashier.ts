@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
-import prisma from "../middleware/kontraBon";
+import prisma from "../middleware/cashier";
 import pagging from "../utils/paggination";
 import url from "url";
-import { Prisma } from "@prisma/client";
 
-const getKontraBon = async (request: Request, response: Response) => {
+const getCashier = async (request: Request, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
     const hostname: any = request.headers.host;
@@ -12,19 +11,24 @@ const getKontraBon = async (request: Request, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const kontrabonCount = await prisma.kontrabon.count({
+    const cashieCount = await prisma.cashier.count({
       where: {
         deleted: null,
       },
     });
     const results = await prisma.kontrabon.findMany({
       where: {
-        id_kontrabon: {
-          contains: pencarian,
-          mode: "insensitive",
+        due_date: {
+          gte: new Date(),
+        },
+        cashier: {
+          every: {
+            kontrabonId: undefined,
+          },
         },
       },
       include: {
+        cashier: true,
         SupplierBank: true,
         term_of_pay_po_so: {
           include: {
@@ -223,17 +227,15 @@ const getKontraBon = async (request: Request, response: Response) => {
       orderBy: {
         createdAt: "desc",
       },
-      take: parseInt(pagination.perPage),
-      skip: parseInt(pagination.page) * parseInt(pagination.perPage),
     });
     if (results.length > 0) {
       return response.status(200).json({
         success: true,
-        massage: "Get All Kontra Bon",
+        massage: "Get All Cashier",
         result: results,
         page: pagination.page,
         limit: pagination.perPage,
-        totalData: kontrabonCount,
+        totalData: cashieCount,
         currentPage: pagination.currentPage,
         nextPage: pagination.next(),
         previouspage: pagination.prev(),
@@ -251,176 +253,34 @@ const getKontraBon = async (request: Request, response: Response) => {
   }
 };
 
-const createKontraBon = async (request: any, response: Response) => {
+const createCashier = async (request: Request, response: Response) => {
   try {
-    await prisma.$transaction(
-      async (prisma) => {
-        const results = await prisma.kontrabon.create({
-          data: {
-            id_kontrabon: request.body.id_kontrabon,
-            term_of_pay_po_so: { connect: { id: request.body.termId } },
-            SupplierBank: { connect: { id: request.body.account_name } },
-            tax_prepered: new Date(request.body.tax_prepered),
-            due_date: new Date(request.body.due_date),
-            invoice: request.body.invoice,
-            DO: request.body.DO,
-            grandtotal: request.body.grandtotal,
-            date_prepered: new Date(),
-          },
-        });
-        const updateTerm = await prisma.term_of_pay_po_so.update({
-          where: {
-            id: results.termId,
-          },
-          data: {
-            status_kontra: true,
-            tax_invoice: request.body.tax_invoice,
-          },
-        });
-        if (updateTerm.tax_invoice === true) {
-          const updateTax = await prisma.term_of_pay_po_so.updateMany({
-            where: {
-              poandsoId: updateTerm.poandsoId,
-            },
-            data: {
-              tax_invoice: true,
-            },
-          });
-          const updateTaxPain = await prisma.term_of_pay_po_so.update({
-            where: { id: results.termId },
-            data: {
-              tax_paid: true,
-            },
-          });
-        }
-        if (results) {
-          response.status(201).json({
-            success: true,
-            massage: "Success Add Data",
-            results: results,
-          });
-        } else {
-          response.status(400).json({
-            success: false,
-            massage: "Unsuccess Add Data",
-          });
-        }
-      },
-      {
-        isolationLevel: Prisma.TransactionIsolationLevel.Serializable, // optional, default defined by database configuration
-        maxWait: 5000, // default: 2000
-        timeout: 10000, // default: 5000
-      }
-    );
-  } catch (error) {
-    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
-  }
-};
-
-const updateKontraBon = async (request: any, response: Response) => {
-  try {
-    const id: string = request.params.id;
-    const updateKontraBon = await prisma.kontrabon.update({
-      where: {
-        id: id,
-      },
+    const results = await prisma.cashier.create({
       data: {
-        SupplierBank: { connect: { id: request.body.account_name } },
-        due_date: new Date(request.body.due_date),
-        DO: request.body.DO,
-        invoice: request.body.invoice,
-      },
-    });
-    if (updateKontraBon) {
-      response.status(201).json({
-        success: true,
-        massage: "Success Update Data",
-        results: updateKontraBon,
-      });
-    } else {
-      response.status(400).json({
-        success: false,
-        massage: "Unsuccess Update Data",
-      });
-    }
-  } catch (error) {
-    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
-  }
-};
-
-const deleteKontraBon = async (request: any, response: Response) => {
-  try {
-    const id: string = request.params.id;
-    const deleteKontraBon = await prisma.kontrabon.delete({
-      where: {
-        id: id,
-      },
-    });
-    if (deleteKontraBon) {
-      response.status(201).json({
-        success: true,
-        massage: "Success Delete Data",
-        results: deleteKontraBon,
-      });
-    } else {
-      response.status(400).json({
-        success: false,
-        massage: "Unsuccess Update Data",
-      });
-    }
-  } catch (error) {
-    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
-  }
-};
-
-const updateStatusM = async (request: any, response: Response) => {
-  try {
-    const id = request.params.id;
-    const userLogin = await prisma.user.findFirst({
-      where: {
-        username: request.session.userId,
-      },
-    });
-    const a: any = userLogin?.employeeId;
-    const emplo = await prisma.employee.findFirst({
-      where: {
-        id: a,
-      },
-    });
-    const statusPenc = await prisma.kontrabon.findFirst({
-      where: {
-        id: id,
-      },
-    });
-    let result;
-    if (
-      (emplo?.position === "Manager" && statusPenc?.status_valid === null) ||
-      statusPenc?.status_valid === false
-    ) {
-      result = await prisma.kontrabon.update({
-        where: { id: id },
-        data: {
-          status_valid: true,
+        id_cashier: request.body.id_cashier,
+        status_payment: request.body.status_payment,
+        kontrabon: { connect: { id: request.body.kontrabonId } },
+        date_cashier: request.body.date_cashier,
+        note: request.body.note,
+        total: request.body.total,
+        journal_cashier: {
+          create: request.body.journal_cashier,
         },
-      });
-    } else {
-      result = await prisma.kontrabon.update({
-        where: { id: id },
-        data: {
-          status_valid: false,
-        },
-      });
-    }
-    if (result) {
+      },
+      include: {
+        journal_cashier: true,
+      },
+    });
+    if (results) {
       response.status(201).json({
         success: true,
-        massage: "Success Update Data",
-        results: result,
+        massage: "Success Add Data",
+        results: results,
       });
     } else {
       response.status(400).json({
         success: false,
-        massage: "Unsuccess Update Data",
+        massage: "Unsuccess Add Data",
       });
     }
   } catch (error) {
@@ -429,9 +289,6 @@ const updateStatusM = async (request: any, response: Response) => {
 };
 
 export default {
-  getKontraBon,
-  createKontraBon,
-  updateKontraBon,
-  deleteKontraBon,
-  updateStatusM,
+  getCashier,
+  createCashier,
 };

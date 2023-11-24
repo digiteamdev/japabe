@@ -32,6 +32,7 @@ import director from "../controllers/approvalDirector";
 import approvalRequest from "../controllers/approvalRequest";
 import poandso from "../controllers/poandso";
 import kontraBon from "../controllers/kontraBon";
+import cashier from "../controllers/cashier";
 
 /***************************AUTH********************************* */
 
@@ -2032,5 +2033,41 @@ router.put(
 );
 
 /***************************Kontra Bon**************************************** */
+
+/***************************Cashier**************************************** */
+
+router.get(
+  "/cashier",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  cashier.getCashier
+);
+
+router.post(
+  "/cashier",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  cashier.createCashier
+);
+
+/***************************Cashier**************************************** */
 
 export default router;

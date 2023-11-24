@@ -1109,7 +1109,7 @@ model kontrabon {
   deleted           DateTime?
   cashier           cashier[]
 
-  @@index([id, termId, id_kontrabon])
+  @@index([id, termId, id_kontrabon, due_date])
 }
 
 enum status_payment {
