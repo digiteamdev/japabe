@@ -255,19 +255,38 @@ const createKontraBon = async (request: any, response: Response) => {
   try {
     await prisma.$transaction(
       async (prisma) => {
-        const results = await prisma.kontrabon.create({
-          data: {
-            id_kontrabon: request.body.id_kontrabon,
-            term_of_pay_po_so: { connect: { id: request.body.termId } },
-            SupplierBank: { connect: { id: request.body.account_name } },
-            tax_prepered: new Date(request.body.tax_prepered),
-            due_date: new Date(request.body.due_date),
-            invoice: request.body.invoice,
-            DO: request.body.DO,
-            grandtotal: request.body.grandtotal,
-            date_prepered: new Date(),
-          },
-        });
+        const bodyPurchase = request.body.purchaseID;
+        let results;
+        if (bodyPurchase) {
+          results = await prisma.kontrabon.create({
+            data: {
+              id_kontrabon: request.body.id_kontrabon,
+              term_of_pay_po_so: { connect: { id: request.body.termId } },
+              SupplierBank: { connect: { id: request.body.account_name } },
+              purchase: { connect: { id: request.body.purchaseID } },
+              tax_prepered: new Date(request.body.tax_prepered),
+              due_date: new Date(request.body.due_date),
+              invoice: request.body.invoice,
+              DO: request.body.DO,
+              grandtotal: request.body.grandtotal,
+              date_prepered: new Date(),
+            },
+          });
+        } else {
+          results = await prisma.kontrabon.create({
+            data: {
+              id_kontrabon: request.body.id_kontrabon,
+              term_of_pay_po_so: { connect: { id: request.body.termId } },
+              SupplierBank: { connect: { id: request.body.account_name } },
+              tax_prepered: new Date(request.body.tax_prepered),
+              due_date: new Date(request.body.due_date),
+              invoice: request.body.invoice,
+              DO: request.body.DO,
+              grandtotal: request.body.grandtotal,
+              date_prepered: new Date(),
+            },
+          });
+        }
         const updateTerm = await prisma.term_of_pay_po_so.update({
           where: {
             id: results.termId,

@@ -1251,6 +1251,11 @@ const getAllReceive = async (request: Request, response: Response) => {
       });
       detailDmr = await prisma.purchase.findMany({
         where: {
+          kontrabon: {
+            every: {
+              purchaseID: null,
+            },
+          },
           OR: [
             {
               idPurchase: {
