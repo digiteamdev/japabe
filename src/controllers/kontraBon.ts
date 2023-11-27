@@ -257,7 +257,7 @@ const createKontraBon = async (request: any, response: Response) => {
       async (prisma) => {
         const bodyPurchase = request.body.purchaseID;
         let results;
-        if (bodyPurchase) {
+        if (bodyPurchase === null) {
           results = await prisma.kontrabon.create({
             data: {
               id_kontrabon: request.body.id_kontrabon,
