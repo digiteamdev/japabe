@@ -21,11 +21,15 @@ const getCashier = async (request: Request, response: Response) => {
         due_date: {
           lt: new Date(),
         },
-        cashier: {
-          every: {
-            kontrabonId: "null",
+        OR: [
+          {
+            cashier: {
+              every: {
+                kontrabonId: "null",
+              },
+            },
           },
-        },
+        ],
       },
       include: {
         cashier: true,
