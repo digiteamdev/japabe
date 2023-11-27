@@ -1128,7 +1128,7 @@ const updatePsr = async (request: Request, response: Response) => {
             idPurchase: request.body.idPurchase,
             note: request.body.note,
             taxPsrDmr: request.body.taxPsrDmr,
-            currency: request.body.currency
+            currency: request.body.currency,
           },
         });
         const updateVerify = request.body.srDetail.map(
@@ -1221,6 +1221,8 @@ const updatedetailPsr = async (request: Request, response: Response) => {
         where: { id: id },
         data: {
           note: request.body.note,
+          currency: request.body.currency,
+          taxPsrDmr: request.body.taxPsrDmr,
         },
       });
       const updateVerify = request.body.srDetail.map(

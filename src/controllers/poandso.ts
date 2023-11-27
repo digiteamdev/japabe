@@ -1684,6 +1684,8 @@ const updatePoandSo = async (request: Request, response: Response) => {
           data: {
             id_receive: request.body.id_receive,
             date_receive: request.body.date_receive,
+            currency: request.body.currency,
+            taxPsrDmr: request.body.taxPsrDmr,
           },
         });
         const statusReceive: any = await prisma.detailMr.findFirst({
