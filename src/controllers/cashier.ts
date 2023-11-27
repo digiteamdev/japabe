@@ -19,7 +19,7 @@ const getCashier = async (request: Request, response: Response) => {
     const results = await prisma.kontrabon.findMany({
       where: {
         due_date: {
-          gte: new Date(),
+          lt: new Date(),
         },
         cashier: {
           every: {
@@ -401,10 +401,66 @@ const deleteDetailCashier = async (request: Request, response: Response) => {
   }
 };
 
+const updateStatusM = async (request: any, response: Response) => {
+  try {
+    const id = request.params.id;
+    const userLogin = await prisma.user.findFirst({
+      where: {
+        username: request.session.userId,
+      },
+    });
+    const a: any = userLogin?.employeeId;
+    const emplo = await prisma.employee.findFirst({
+      where: {
+        id: a,
+      },
+    });
+    const statusPenc = await prisma.kontrabon.findFirst({
+      where: {
+        id: id,
+      },
+    });
+    let result;
+    if (
+      (emplo?.position === "Manager" && statusPenc?.status_valid === null) ||
+      statusPenc?.status_valid === false
+    ) {
+      result = await prisma.cashier.update({
+        where: { id: id },
+        data: {
+          status_valid: true,
+        },
+      });
+    } else {
+      result = await prisma.cashier.update({
+        where: { id: id },
+        data: {
+          status_valid: false,
+        },
+      });
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getCashier,
   createCashier,
   updateCashier,
   deleteCashier,
   deleteDetailCashier,
+  updateStatusM,
 };

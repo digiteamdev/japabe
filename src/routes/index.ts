@@ -2116,6 +2116,22 @@ router.delete(
   cashier.deleteDetailCashier
 );
 
+router.put(
+  "/cashierValid/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  cashier.updateStatusM
+);
+
 /***************************Cashier**************************************** */
 
 export default router;
