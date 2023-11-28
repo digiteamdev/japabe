@@ -27,6 +27,12 @@ const getKontraBon = async (request: Request, response: Response) => {
       include: {
         purchase: {
           include: {
+            supplier: {
+              include: {
+                SupplierBank: true,
+                SupplierContact: true,
+              },
+            },
             detailMr: {
               include: {
                 supplier: {
