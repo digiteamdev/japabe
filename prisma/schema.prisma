@@ -399,6 +399,7 @@ model Supplier {
   detailMr        detailMr[]
   SrDetail        SrDetail[]
   poandso         poandso[]
+  purchase        purchase[]
 
   @@index([id, id_sup, supplier_name])
 }
@@ -941,6 +942,8 @@ model purchase {
   id                      String                   @id @default(cuid())
   idPurchase              String?                  @db.VarChar(20)
   id_receive              String?                  @db.VarChar(20)
+  supplier                Supplier?                @relation(fields: [supId], references: [id])
+  supId                   String?
   dateOfPurchase          DateTime
   cashAdv                 String?                  @db.VarChar(200)
   totalAdv                Int                      @default(0)
