@@ -25,6 +25,7 @@ const getKontraBon = async (request: Request, response: Response) => {
         },
       },
       include: {
+        purchase: true,
         SupplierBank: true,
         term_of_pay_po_so: {
           include: {
