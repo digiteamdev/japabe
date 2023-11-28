@@ -1077,8 +1077,8 @@ model poandso {
 
 model term_of_pay_po_so {
   id            String      @id @default(cuid())
-  poandso       poandso     @relation(fields: [poandsoId], references: [id])
-  poandsoId     String
+  poandso       poandso?    @relation(fields: [poandsoId], references: [id])
+  poandsoId     String?
   limitpay      Limit_Pay?
   percent       Int         @default(0)
   price         Int         @default(0)
