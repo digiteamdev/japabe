@@ -960,7 +960,7 @@ model purchase {
   deleted                 DateTime?
   detailMr                detailMr[]
   SrDetail                SrDetail[]
-  kontrabon               kontrabon[]
+  kontrabon               kontrabon?
 
   @@index([id, idPurchase, dateOfPurchase, id_receive])
 }
@@ -1101,7 +1101,7 @@ model kontrabon {
   SupplierBank      SupplierBank       @relation(fields: [account_name], references: [id])
   account_name      String
   purchase          purchase?          @relation(fields: [purchaseID], references: [id])
-  purchaseID        String?
+  purchaseID        String?            @unique
   id_kontrabon      String             @db.VarChar(200)
   date_prepered     DateTime
   tax_prepered      DateTime?
