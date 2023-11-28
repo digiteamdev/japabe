@@ -25,7 +25,189 @@ const getKontraBon = async (request: Request, response: Response) => {
         },
       },
       include: {
-        purchase: true,
+        purchase: {
+          include: {
+            detailMr: {
+              include: {
+                supplier: {
+                  include: {
+                    SupplierContact: true,
+                    SupplierBank: true,
+                  },
+                },
+                approvedRequest: true,
+                coa: true,
+                mr: {
+                  include: {
+                    wor: {
+                      include: {
+                        Quotations: {
+                          include: {
+                            Quotations_Detail: true,
+                            CustomerContact: true,
+                          },
+                        },
+                      },
+                    },
+                    bom: {
+                      include: {
+                        bom_detail: {
+                          include: {
+                            Material_master: {
+                              include: {
+                                Material_Stock: true,
+                                grup_material: true,
+                              },
+                            },
+                          },
+                        },
+                        srimg: {
+                          include: {
+                            srimgdetail: true,
+                          },
+                        },
+                      },
+                    },
+                    user: {
+                      select: {
+                        id: true,
+                        username: true,
+                        employee: {
+                          select: {
+                            id: true,
+                            employee_name: true,
+                            position: true,
+                            sub_depart: {
+                              select: {
+                                id: true,
+                                name: true,
+                                departement: {
+                                  select: {
+                                    id: true,
+                                    name: true,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                Material_Stock: {
+                  include: {
+                    Material_master: {
+                      include: {
+                        grup_material: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            SrDetail: {
+              include: {
+                workCenter: true,
+                supplier: {
+                  include: {
+                    SupplierContact: true,
+                    SupplierBank: true,
+                  },
+                },
+                approvedRequest: true,
+                coa: true,
+                sr: {
+                  include: {
+                    wor: {
+                      include: {
+                        Quotations: {
+                          include: {
+                            Quotations_Detail: true,
+                            CustomerContact: true,
+                          },
+                        },
+                      },
+                    },
+                    user: {
+                      select: {
+                        id: true,
+                        username: true,
+                        employee: {
+                          select: {
+                            id: true,
+                            employee_name: true,
+                            position: true,
+                            sub_depart: {
+                              select: {
+                                id: true,
+                                name: true,
+                                departement: {
+                                  select: {
+                                    id: true,
+                                    name: true,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                    dispacth: {
+                      include: {
+                        dispatchDetail: {
+                          include: {
+                            aktivitas: {
+                              select: {
+                                id: true,
+                                aktivitasId: true,
+                                masterAktivitas: {
+                                  select: {
+                                    id: true,
+                                    name: true,
+                                  },
+                                },
+                              },
+                            },
+                            approve: {
+                              select: {
+                                id: true,
+                                employee_name: true,
+                              },
+                            },
+                            Employee: {
+                              select: {
+                                id: true,
+                                employee_name: true,
+                              },
+                            },
+                            sub_depart: true,
+                            workCenter: true,
+                          },
+                        },
+                        srimg: {
+                          include: {
+                            srimgdetail: true,
+                            timeschedule: {
+                              include: {
+                                aktivitas: {
+                                  include: {
+                                    masterAktivitas: true,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
         SupplierBank: true,
         term_of_pay_po_so: {
           include: {
