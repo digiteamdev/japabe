@@ -1095,23 +1095,23 @@ model term_of_pay_po_so {
 }
 
 model kontrabon {
-  id                String            @id @default(cuid())
-  term_of_pay_po_so term_of_pay_po_so @relation(fields: [termId], references: [id])
-  termId            String
-  SupplierBank      SupplierBank      @relation(fields: [account_name], references: [id])
+  id                String             @id @default(cuid())
+  term_of_pay_po_so term_of_pay_po_so? @relation(fields: [termId], references: [id])
+  termId            String?
+  SupplierBank      SupplierBank       @relation(fields: [account_name], references: [id])
   account_name      String
-  purchase          purchase?         @relation(fields: [purchaseID], references: [id])
+  purchase          purchase?          @relation(fields: [purchaseID], references: [id])
   purchaseID        String?
-  id_kontrabon      String            @db.VarChar(200)
+  id_kontrabon      String             @db.VarChar(200)
   date_prepered     DateTime
   tax_prepered      DateTime?
   due_date          DateTime?
-  invoice           String?           @db.Text
-  DO                String?           @db.VarChar(200)
-  grandtotal        Int               @default(0)
-  status_valid      Boolean           @default(false)
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
+  invoice           String?            @db.Text
+  DO                String?            @db.VarChar(200)
+  grandtotal        Int                @default(0)
+  status_valid      Boolean            @default(false)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
   deleted           DateTime?
   cashier           cashier[]
 
