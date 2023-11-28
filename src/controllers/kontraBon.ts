@@ -262,7 +262,7 @@ const createKontraBon = async (request: any, response: Response) => {
             data: {
               id_kontrabon: request.body.id_kontrabon,
               SupplierBank: { connect: { id: request.body.account_name } },
-              purchase: { connect: { id: request.body.purchaseID } },
+              term_of_pay_po_so: { connect: { id: request.body.termId } },
               tax_prepered: new Date(request.body.tax_prepered),
               due_date: new Date(request.body.due_date),
               invoice: request.body.invoice,
@@ -275,7 +275,7 @@ const createKontraBon = async (request: any, response: Response) => {
           results = await prisma.kontrabon.create({
             data: {
               id_kontrabon: request.body.id_kontrabon,
-              term_of_pay_po_so: { connect: { id: request.body.termId } },
+              purchase: { connect: { id: request.body.purchaseID } },
               SupplierBank: { connect: { id: request.body.account_name } },
               tax_prepered: new Date(request.body.tax_prepered),
               due_date: new Date(request.body.due_date),
