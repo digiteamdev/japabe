@@ -287,30 +287,32 @@ const createKontraBon = async (request: any, response: Response) => {
             },
           });
         }
-        const updateTerm = await prisma.term_of_pay_po_so.update({
-          where: {
-            id: results.termId,
-          },
-          data: {
-            status_kontra: true,
-            tax_invoice: request.body.tax_invoice,
-          },
-        });
-        if (updateTerm.tax_invoice === true) {
-          const updateTax = await prisma.term_of_pay_po_so.updateMany({
+        if (results.termId) {
+          const updateTerm = await prisma.term_of_pay_po_so.update({
             where: {
-              poandsoId: updateTerm.poandsoId,
+              id: results.termId,
             },
             data: {
-              tax_invoice: true,
+              status_kontra: true,
+              tax_invoice: request.body.tax_invoice,
             },
           });
-          const updateTaxPain = await prisma.term_of_pay_po_so.update({
-            where: { id: results.termId },
-            data: {
-              tax_paid: true,
-            },
-          });
+          if (updateTerm.tax_invoice === true) {
+            const updateTax = await prisma.term_of_pay_po_so.updateMany({
+              where: {
+                poandsoId: updateTerm.poandsoId,
+              },
+              data: {
+                tax_invoice: true,
+              },
+            });
+            const updateTaxPain = await prisma.term_of_pay_po_so.update({
+              where: { id: results.termId },
+              data: {
+                tax_paid: true,
+              },
+            });
+          }
         }
         if (results) {
           response.status(201).json({
