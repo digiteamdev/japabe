@@ -501,6 +501,9 @@ const getBomMr = async (request: Request, response: Response) => {
           },
         ],
       },
+      include: {
+        Mr: true,
+      },
     });
     const results = [...result, ...worData];
 

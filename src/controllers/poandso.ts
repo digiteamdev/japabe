@@ -1271,6 +1271,7 @@ const getAllReceive = async (request: Request, response: Response) => {
           ],
         },
         include: {
+          supplier: true,
           detailMr: {
             include: {
               coa: true,
