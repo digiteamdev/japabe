@@ -287,7 +287,7 @@ const createKontraBon = async (request: any, response: Response) => {
             },
           });
         }
-        if (results.termId) {
+        if (results.termId !== null) {
           const updateTerm = await prisma.term_of_pay_po_so.update({
             where: {
               id: results.termId,
