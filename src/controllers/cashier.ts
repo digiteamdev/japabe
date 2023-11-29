@@ -20,10 +20,10 @@ const getCashier = async (request: Request, response: Response) => {
     if (request.query.page === undefined) {
       results = await prisma.kontrabon.findMany({
         where: {
-          due_date: {
-            lt: new Date(),
-          },
-          OR: [
+          AND: [
+            {
+              purchaseID: null
+            },
             {
               cashier: {
                 every: {
@@ -239,8 +239,8 @@ const getCashier = async (request: Request, response: Response) => {
         where: {
           id_cashier: {
             contains: pencarian,
-            mode: "insensitive"
-          }
+            mode: "insensitive",
+          },
         },
         include: {
           kontrabon: {
