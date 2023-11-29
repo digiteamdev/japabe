@@ -276,8 +276,8 @@ const createWor = async (request: any, response: Response) => {
         scope_of_work: request.body.scope_of_work,
         file_list: !request.file ? null : request.file.path,
         noted: request.body.noted,
-        status: "unvalid",
-        job_operational: request.body.job_operational === "true" ? true : false,
+        status: request.body.status,
+        job_operational: request.body.job_operational === "true" ? false : true,
       },
     });
     if (results) {
@@ -372,16 +372,13 @@ const updateWorStatus = async (request: Request, response: Response) => {
     });
 
     let result;
-    if (statusPenc?.status === null || statusPenc?.status === "unvalid") {
+    if (statusPenc?.status === null) {
       const id = request.params.id;
       result = await prisma.wor.update({
         where: { id: id },
         data: {
           status: "valid",
-          job_no:
-            statusPenc.status === null || statusPenc?.status === "unvalid"
-              ? genarate
-              : statusPenc.job_no,
+          job_no: statusPenc.status === null ? genarate : statusPenc.job_no,
           job_no_mr:
             statusPenc.job_operational === true
               ? genarateMr
