@@ -22,6 +22,9 @@ const getCashier = async (request: Request, response: Response) => {
         where: {
           AND: [
             {
+              status_valid: true
+            },
+            {
               purchaseID: null
             },
             {
