@@ -22,7 +22,7 @@ const getCashier = async (request: Request, response: Response) => {
         where: {
           AND: [
             {
-              status_valid: true
+              status_valid: true,
             },
             {
               cashier: {
@@ -34,6 +34,7 @@ const getCashier = async (request: Request, response: Response) => {
           ],
         },
         include: {
+          purchase: true,
           cashier: true,
           SupplierBank: true,
           term_of_pay_po_so: {
@@ -243,8 +244,10 @@ const getCashier = async (request: Request, response: Response) => {
           },
         },
         include: {
+          journal_cashier: true,
           kontrabon: {
             include: {
+              purchase: true,
               SupplierBank: true,
               term_of_pay_po_so: {
                 include: {
