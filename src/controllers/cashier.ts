@@ -25,9 +25,6 @@ const getCashier = async (request: Request, response: Response) => {
               status_valid: true
             },
             {
-              purchaseID: null
-            },
-            {
               cashier: {
                 every: {
                   kontrabonId: "null",
