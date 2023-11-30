@@ -440,7 +440,11 @@ const getCashier = async (request: Request, response: Response) => {
           },
         },
         include: {
-          journal_cashier: true,
+          journal_cashier: {
+            include: {
+              coa: true,
+            },
+          },
           kontrabon: {
             include: {
               purchase: {
