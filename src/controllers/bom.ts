@@ -25,7 +25,7 @@ const getBom = async (request: Request, response: Response) => {
           status_manager: status,
         },
         orderBy: {
-          id: "desc",
+          createdAt: "desc",
         },
         include: {
           bom_detail: {
@@ -263,7 +263,7 @@ const getBom = async (request: Request, response: Response) => {
           },
         },
         orderBy: {
-          id: "desc",
+          createdAt: "desc",
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
@@ -483,7 +483,6 @@ const getBomMr = async (request: Request, response: Response) => {
     let worData;
     worData = await prisma.wor.findMany({
       where: {
-        Mr: null,
         OR: [
           {
             job_operational: true,
@@ -493,8 +492,12 @@ const getBomMr = async (request: Request, response: Response) => {
               deleted: null,
             },
           },
+        ],
+        NOT: [
           {
-            status: "valid",
+            Mr: {
+              deleted: null,
+            },
           },
           {
             status: null,
@@ -502,27 +505,33 @@ const getBomMr = async (request: Request, response: Response) => {
         ],
       },
       include: {
-        Mr: true,
-        timeschedule: {
+        customerPo: {
           include: {
-            drawing: true,
-            srimg: {
+            quotations: {
               include: {
-                srimgdetail: true,
-                bom: {
+                Quotations_Detail: true,
+                CustomerContact: true,
+                Customer: {
                   include: {
-                    bom_detail: true,
+                    address: true,
                   },
                 },
-                dispacth: {
+                eqandpart: {
                   include: {
-                    dispatchDetail: true,
+                    equipment: true,
+                    eq_part: true,
                   },
                 },
               },
             },
           },
         },
+        timeschedule: true,
+        employee: true,
+        Mr: true,
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
     const results = [...result, ...worData];

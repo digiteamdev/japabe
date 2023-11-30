@@ -38,7 +38,7 @@ const getTimeschedule = async (request: Request, response: Response) => {
           },
         },
         orderBy: {
-          id: "desc",
+          createdAt: "desc",
         },
         include: {
           srimg: {
