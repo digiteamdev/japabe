@@ -34,8 +34,24 @@ const getCashier = async (request: Request, response: Response) => {
           ],
         },
         include: {
+          cashier: true,
+          SupplierBank: {
+            include: {
+              supplier: {
+                include: {
+                  SupplierContact: true,
+                },
+              },
+            },
+          },
           purchase: {
             include: {
+              supplier: {
+                include: {
+                  SupplierBank: true,
+                  SupplierContact: true,
+                },
+              },
               detailMr: {
                 include: {
                   supplier: {
@@ -217,8 +233,6 @@ const getCashier = async (request: Request, response: Response) => {
               },
             },
           },
-          cashier: true,
-          SupplierBank: true,
           term_of_pay_po_so: {
             include: {
               poandso: {
@@ -431,6 +445,12 @@ const getCashier = async (request: Request, response: Response) => {
             include: {
               purchase: {
                 include: {
+                  supplier: {
+                    include: {
+                      SupplierBank: true,
+                      SupplierContact: true,
+                    },
+                  },
                   detailMr: {
                     include: {
                       supplier: {
