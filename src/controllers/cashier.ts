@@ -1027,7 +1027,7 @@ const updateStatusM = async (request: any, response: Response) => {
         id: a,
       },
     });
-    const statusPenc = await prisma.kontrabon.findFirst({
+    const statusPenc = await prisma.cashier.findFirst({
       where: {
         id: id,
       },
