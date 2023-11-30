@@ -908,7 +908,9 @@ const updateCashier = async (request: Request, response: Response) => {
       where: {
         id: id,
       },
-      data: request.body.cashier,
+      data: {
+        status_payment: request.body.status_payment,
+      },
     });
     const updateVerify = request.body.journal_cashier.map(
       (updateByveri: {
