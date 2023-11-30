@@ -503,6 +503,26 @@ const getBomMr = async (request: Request, response: Response) => {
       },
       include: {
         Mr: true,
+        timeschedule: {
+          include: {
+            drawing: true,
+            srimg: {
+              include: {
+                srimgdetail: true,
+                bom: {
+                  include: {
+                    bom_detail: true,
+                  },
+                },
+                dispacth: {
+                  include: {
+                    dispatchDetail: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
     const results = [...result, ...worData];
