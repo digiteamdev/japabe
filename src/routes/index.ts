@@ -33,6 +33,7 @@ import approvalRequest from "../controllers/approvalRequest";
 import poandso from "../controllers/poandso";
 import kontraBon from "../controllers/kontraBon";
 import cashier from "../controllers/cashier";
+import cashAdv from "../controllers/cashAdvance";
 
 /***************************AUTH********************************* */
 
@@ -2133,5 +2134,57 @@ router.put(
 );
 
 /***************************Cashier**************************************** */
+
+/***************************Cash Advance**************************************** */
+
+router.get(
+  "/cashAdvEmployee",
+  // jwt.authToken({
+  //   administrator: "ADMINISTRATOR",
+  //   marketing: "MARKETING",
+  //   HRandGA: "HR & GA",
+  //   finance: "FINANCE & ACC",
+  //   QAandEng: "QA & ENG",
+  //   purchasing: "PURCHASING",
+  //   drafter: "DRAFTER",
+  //   ppic: "Ppic",
+  //   utility: "Utility/ty",
+  // }),
+  cashAdv.getEmployeeCdv
+);
+
+router.get(
+  "/cashAdvWor",
+  // jwt.authToken({
+  //   administrator: "ADMINISTRATOR",
+  //   marketing: "MARKETING",
+  //   HRandGA: "HR & GA",
+  //   finance: "FINANCE & ACC",
+  //   QAandEng: "QA & ENG",
+  //   purchasing: "PURCHASING",
+  //   drafter: "DRAFTER",
+  //   ppic: "Ppic",
+  //   utility: "Utility/ty",
+  // }),
+  cashAdv.getWorCdv
+);
+
+router.post(
+  "/cashAdv",
+  // jwt.authToken({
+  //   administrator: "ADMINISTRATOR",
+  //   marketing: "MARKETING",
+  //   HRandGA: "HR & GA",
+  //   finance: "FINANCE & ACC",
+  //   QAandEng: "QA & ENG",
+  //   purchasing: "PURCHASING",
+  //   drafter: "DRAFTER",
+  //   ppic: "Ppic",
+  //   utility: "Utility/ty",
+  // }),
+  cashAdv.createCdv
+);
+
+/***************************Cash Advance**************************************** */
 
 export default router;
