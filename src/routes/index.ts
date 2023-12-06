@@ -2139,50 +2139,82 @@ router.put(
 
 router.get(
   "/cashAdvEmployee",
-  // jwt.authToken({
-  //   administrator: "ADMINISTRATOR",
-  //   marketing: "MARKETING",
-  //   HRandGA: "HR & GA",
-  //   finance: "FINANCE & ACC",
-  //   QAandEng: "QA & ENG",
-  //   purchasing: "PURCHASING",
-  //   drafter: "DRAFTER",
-  //   ppic: "Ppic",
-  //   utility: "Utility/ty",
-  // }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   cashAdv.getEmployeeCdv
 );
 
 router.get(
   "/cashAdvWor",
-  // jwt.authToken({
-  //   administrator: "ADMINISTRATOR",
-  //   marketing: "MARKETING",
-  //   HRandGA: "HR & GA",
-  //   finance: "FINANCE & ACC",
-  //   QAandEng: "QA & ENG",
-  //   purchasing: "PURCHASING",
-  //   drafter: "DRAFTER",
-  //   ppic: "Ppic",
-  //   utility: "Utility/ty",
-  // }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   cashAdv.getWorCdv
 );
 
 router.post(
   "/cashAdv",
-  // jwt.authToken({
-  //   administrator: "ADMINISTRATOR",
-  //   marketing: "MARKETING",
-  //   HRandGA: "HR & GA",
-  //   finance: "FINANCE & ACC",
-  //   QAandEng: "QA & ENG",
-  //   purchasing: "PURCHASING",
-  //   drafter: "DRAFTER",
-  //   ppic: "Ppic",
-  //   utility: "Utility/ty",
-  // }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   cashAdv.createCdv
+);
+
+router.put(
+  "/cashAdvStatusSpv/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  cashAdv.updateStatusSpv
+);
+
+router.put(
+  "/cashAdvStatusMgr/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  cashAdv.updateStatusM
 );
 
 /***************************Cash Advance**************************************** */
