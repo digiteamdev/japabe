@@ -2138,6 +2138,22 @@ router.put(
 /***************************Cash Advance**************************************** */
 
 router.get(
+  "/cashAdv",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  cashAdv.getCdv
+);
+
+router.get(
   "/cashAdvEmployee",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
