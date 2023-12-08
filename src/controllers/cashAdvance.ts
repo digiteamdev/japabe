@@ -39,11 +39,12 @@ const getCdv = async (request: Request, response: Response) => {
         },
         wor: {
           include: {
-            Quotations: {
+            customerPo: {
               include: {
-                Customer: {
+                quotations: {
                   include: {
-                    contact: true,
+                    Customer: true,
+                    CustomerContact: true,
                   },
                 },
               },
