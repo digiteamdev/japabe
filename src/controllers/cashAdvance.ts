@@ -23,7 +23,7 @@ const getCdv = async (request: Request, response: Response) => {
         },
       },
       include: {
-       employee: true,
+        employee: true,
         user: {
           select: {
             id: true,
@@ -32,12 +32,24 @@ const getCdv = async (request: Request, response: Response) => {
               select: {
                 id: true,
                 employee_name: true,
-                position: true
-              }
-            }
+                position: true,
+              },
+            },
           },
         },
-        wor: true,
+        wor: {
+          include: {
+            Quotations: {
+              include: {
+                Customer: {
+                  include: {
+                    contact: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
