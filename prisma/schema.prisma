@@ -142,7 +142,7 @@ model Customer {
 model CustomerContact {
   id             String       @id @default(cuid())
   contact_person String?      @db.VarChar(100)
-  email_person   String?      @unique @db.VarChar(100)
+  email_person   String?      @db.VarChar(100)
   phone          String?      @db.VarChar(50)
   customer       Customer     @relation("contact", fields: [customerId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   customerId     String

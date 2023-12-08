@@ -23,8 +23,16 @@ const getCdv = async (request: Request, response: Response) => {
         },
       },
       include: {
-        employee: true,
-        user: true,
+        employee: {
+          select: {
+            user: {
+              select: {
+                id: true,
+                username: true
+              }
+            }
+          }
+        },
         wor: true,
       },
       orderBy: {
@@ -103,6 +111,7 @@ const getWorCdv = async (request: Request, response: Response) => {
     const results = await prisma.wor.findMany({
       select: {
         id: true,
+        job_no_mr: true,
         job_no: true,
         subject: true,
         customerPo: {
