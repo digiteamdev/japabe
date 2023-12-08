@@ -23,15 +23,12 @@ const getCdv = async (request: Request, response: Response) => {
         },
       },
       include: {
-        employee: {
+        employee: true,
+        user: {
           select: {
-            user: {
-              select: {
-                id: true,
-                username: true
-              }
-            }
-          }
+            id: true,
+            username: true,
+          },
         },
         wor: true,
       },
@@ -271,7 +268,7 @@ const updateStatusM = async (request: any, response: Response) => {
         where: { id: id },
         data: {
           status_valid_manager: true,
-          status_valid_spv: true
+          status_valid_spv: true,
         },
       });
     } else {
@@ -279,7 +276,7 @@ const updateStatusM = async (request: any, response: Response) => {
         where: { id: id },
         data: {
           status_valid_manager: false,
-          status_valid_spv: false
+          status_valid_spv: false,
         },
       });
     }
