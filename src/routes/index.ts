@@ -2233,6 +2233,38 @@ router.put(
   cashAdv.updateStatusM
 );
 
+router.put(
+  "/cashAdv/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  cashAdv.updateCdv
+);
+
+router.delete(
+  "/cashAdv/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  cashAdv.deleteCdv
+);
+
 /***************************Cash Advance**************************************** */
 
 export default router;

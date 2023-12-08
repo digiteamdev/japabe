@@ -433,7 +433,66 @@ const getAllApprove = async (request: Request, response: Response) => {
       take: parseInt(pagination.perPage),
       skip: parseInt(pagination.page) * parseInt(pagination.perPage),
     });
-    const results = [...result, ...poandsoData];
+    let cdv;
+    cdv = await prisma.cash_advance.findMany({
+      where: {
+        id_cash_advance: {
+          contains: pencarian,
+          mode: "insensitive",
+        },
+        AND: [
+          {
+            status_valid_manager: true,
+          },
+          {
+            OR: [
+              {
+                status_manager_director: null,
+              },
+              {
+                status_manager_director: "revision",
+              },
+            ],
+          },
+        ],
+      },
+      include: {
+        employee: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            employee: {
+              select: {
+                id: true,
+                employee_name: true,
+                position: true,
+              },
+            },
+          },
+        },
+        wor: {
+          include: {
+            customerPo: {
+              include: {
+                quotations: {
+                  include: {
+                    Customer: true,
+                    CustomerContact: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: parseInt(pagination.perPage),
+      skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+    });    
+    const results = [...result, ...poandsoData, ...cdv];
     if (results.length > 0) {
       return response.status(200).json({
         success: true,
@@ -475,14 +534,27 @@ const updateStatusDpoandso = async (request: any, response: Response) => {
     });
     let result;
     let error_position: boolean = false;
+    const cdv = await prisma.cash_advance.findFirst({
+      where: {
+        id: id,
+      },
+    });
     if (
-      emplo?.position === "Director" &&
-      request.body.statusApprove.status_manager_director !== undefined
+      (emplo?.position === "Director" &&
+        request.body.statusApprove.status_manager_director !== undefined) ||
+      cdv?.id === id
     ) {
-      result = await prisma.poandso.update({
-        where: { id: id },
-        data: request.body.statusApprove,
-      });
+      if (cdv?.id === id) {
+        result = await prisma.cash_advance.update({
+          where: { id: id },
+          data: request.body.statusApprove,
+        });
+      } else {
+        result = await prisma.poandso.update({
+          where: { id: id },
+          data: request.body.statusApprove,
+        });
+      }
       if (request.body.revision !== undefined) {
         const updateVerify = request.body.revision.map(
           (updateByveri: { note_revision: any; id: any }) => {
@@ -517,6 +589,24 @@ const updateStatusDpoandso = async (request: any, response: Response) => {
             where: { id: updateVerify[i].id },
             data: {
               note_revision: updateVerify[i].note_revision,
+            },
+          });
+        }
+      }
+      if (request.body.cdvRevision !== undefined) {
+        const updateVerify = request.body.cdvRevision.map(
+          (updateByveri: { note: any }) => {
+            return {
+              note: updateByveri.note,
+            };
+          }
+        );
+        let result: any = [];
+        for (let i = 0; i < updateVerify.length; i++) {
+          result = await prisma.cash_advance.update({
+            where: { id: id },
+            data: {
+              note: updateVerify[i].note,
             },
           });
         }

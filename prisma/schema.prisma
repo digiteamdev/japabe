@@ -1165,24 +1165,25 @@ model journal_cashier {
 }
 
 model cash_advance {
-  id                   String         @id @default(cuid())
-  id_cash_advance      String
-  employee             Employee?      @relation(fields: [employeeId], references: [id])
-  employeeId           String?
-  wor                  wor?           @relation(fields: [worId], references: [id])
-  worId                String?
-  user                 User?          @relation(fields: [userId], references: [id])
-  userId               String?
-  status_payment       status_payment
-  total                Int            @default(0)
-  description          String?        @db.Text
-  note                 String?        @db.Text
-  status_valid_manager Boolean        @default(false)
-  status_valid_spv     Boolean        @default(false)
-  date_cash_advance    DateTime
-  createdAt            DateTime       @default(now())
-  updatedAt            DateTime       @updatedAt
-  deleted              DateTime?
+  id                      String                   @id @default(cuid())
+  id_cash_advance         String
+  employee                Employee?                @relation(fields: [employeeId], references: [id])
+  employeeId              String?
+  wor                     wor?                     @relation(fields: [worId], references: [id])
+  worId                   String?
+  user                    User?                    @relation(fields: [userId], references: [id])
+  userId                  String?
+  status_payment          status_payment
+  total                   Int                      @default(0)
+  description             String?                  @db.Text
+  note                    String?                  @db.Text
+  status_valid_manager    Boolean                  @default(false)
+  status_valid_spv        Boolean                  @default(false)
+  status_manager_director status_manager_director?
+  date_cash_advance       DateTime
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  deleted                 DateTime?
 
   @@index([id, employeeId, worId, userId, id_cash_advance])
 }

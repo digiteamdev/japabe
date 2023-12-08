@@ -203,6 +203,57 @@ const createCdv = async (request: Request, response: Response) => {
   }
 };
 
+const updateCdv = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const updateCdv = await prisma.cash_advance.update({
+      where: {
+        id: id,
+      },
+      data: request.body,
+    });
+    if (updateCdv) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: updateCdv,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const deleteCdv = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const deleteCdv = await prisma.cash_advance.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (deleteCdv) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Delete Data",
+        results: deleteCdv,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Delete Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const updateStatusSpv = async (request: any, response: Response) => {
   try {
     const id = request.params.id;
@@ -324,4 +375,6 @@ export default {
   createCdv,
   updateStatusSpv,
   updateStatusM,
+  updateCdv,
+  deleteCdv,
 };
