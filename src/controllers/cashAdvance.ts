@@ -23,11 +23,18 @@ const getCdv = async (request: Request, response: Response) => {
         },
       },
       include: {
-        employee: true,
+       employee: true,
         user: {
           select: {
             id: true,
             username: true,
+            employee: {
+              select: {
+                id: true,
+                employee_name: true,
+                position: true
+              }
+            }
           },
         },
         wor: true,
