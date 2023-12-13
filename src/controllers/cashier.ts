@@ -435,6 +435,11 @@ const getCashier = async (request: Request, response: Response) => {
       cdv = await prisma.cash_advance.findMany({
         where: {
           status_manager_director: "approve",
+          cashier: {
+            every: {
+              cdvId: null,
+            },
+          },
         },
         include: {
           employee: true,
@@ -868,6 +873,38 @@ const getCashier = async (request: Request, response: Response) => {
               },
             },
           },
+          cash_advance: {
+            include: {
+              employee: true,
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                  employee: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                      position: true,
+                    },
+                  },
+                },
+              },
+              wor: {
+                include: {
+                  customerPo: {
+                    include: {
+                      quotations: {
+                        include: {
+                          Customer: true,
+                          CustomerContact: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
         orderBy: {
           createdAt: "desc",
@@ -908,22 +945,43 @@ const getCashier = async (request: Request, response: Response) => {
 
 const createCashier = async (request: Request, response: Response) => {
   try {
-    const results = await prisma.cashier.create({
-      data: {
-        id_cashier: request.body.id_cashier,
-        status_payment: request.body.status_payment,
-        kontrabon: { connect: { id: request.body.kontrabonId } },
-        date_cashier: request.body.date_cashier,
-        note: request.body.note,
-        total: request.body.total,
-        journal_cashier: {
-          create: request.body.journal_cashier,
+    let results: any;
+    if (request.body.cdvId) {
+      results = await prisma.cashier.create({
+        data: {
+          id_cashier: request.body.id_cashier,
+          status_payment: request.body.status_payment,
+          cash_advance: { connect: { id: request.body.cdvId } },
+          date_cashier: request.body.date_cashier,
+          note: request.body.note,
+          total: request.body.total,
+          journal_cashier: {
+            create: request.body.journal_cashier,
+          },
         },
-      },
-      include: {
-        journal_cashier: true,
-      },
-    });
+        include: {
+          journal_cashier: true,
+        },
+      });
+    } else {
+      results = await prisma.cashier.create({
+        data: {
+          id_cashier: request.body.id_cashier,
+          status_payment: request.body.status_payment,
+          kontrabon: { connect: { id: request.body.kontrabonId } },
+          date_cashier: request.body.date_cashier,
+          note: request.body.note,
+          total: request.body.total,
+          journal_cashier: {
+            create: request.body.journal_cashier,
+          },
+        },
+        include: {
+          journal_cashier: true,
+        },
+      });
+    }
+
     if (results) {
       response.status(201).json({
         success: true,

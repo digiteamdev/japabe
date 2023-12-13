@@ -1135,8 +1135,10 @@ model cashier {
   id              String            @id @default(cuid())
   id_cashier      String
   status_payment  status_payment
-  kontrabon       kontrabon         @relation(fields: [kontrabonId], references: [id])
-  kontrabonId     String
+  cash_advance    cash_advance?     @relation(fields: [cdvId], references: [id])
+  cdvId           String?
+  kontrabon       kontrabon?        @relation(fields: [kontrabonId], references: [id])
+  kontrabonId     String?
   date_cashier    DateTime
   note            String            @db.Text
   status_valid    Boolean           @default(false)
@@ -1184,6 +1186,7 @@ model cash_advance {
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @updatedAt
   deleted                 DateTime?
+  cashier                 cashier[]
 
   @@index([id, employeeId, worId, userId, id_cash_advance])
 }
