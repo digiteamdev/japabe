@@ -1036,8 +1036,9 @@ const getAllReceive = async (request: Request, response: Response) => {
     });
     let results: any;
     let detailDmr: any;
+    let resultnopage: any;
     if (request.query.page === undefined) {
-      results = await prisma.poandso.findMany({
+      resultnopage = await prisma.poandso.findMany({
         where: {
           AND: [
             {
@@ -1270,8 +1271,8 @@ const getAllReceive = async (request: Request, response: Response) => {
           supplier: {
             include: {
               SupplierBank: true,
-              SupplierContact: true
-            }
+              SupplierContact: true,
+            },
           },
           detailMr: {
             include: {
@@ -1653,11 +1654,25 @@ const getAllReceive = async (request: Request, response: Response) => {
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
     }
-    const dmr: any = [...detailDmr];
-    if (results.length > 0 || dmr.length > 0) {
+    let result: any = [];
+    const resultPage: any = [results];
+    resultPage.map((p: any) => {
+      result.push(...p);
+    });
+    let noPage: any = [];
+    const resultNoPage: any = [resultnopage];
+    resultNoPage.map((r: any) => {
+      noPage.push(...r);
+    });
+    let obj: any = [];
+    const detailDm: any = [detailDmr];
+    detailDm.map((d: any) => {
+      obj.push(...d);
+    });
+    if (result.length > 0 || obj.length > 0 || noPage.length > 0) {
       let res: any = [];
       let arrTerm: any = [];
-      results.map((a: any) => {
+      noPage.map((a: any) => {
         if (a.term_of_pay_po_so.length > 1) {
           let filtered: any = a.term_of_pay_po_so.filter(
             (c: any) =>
@@ -1831,7 +1846,7 @@ const getAllReceive = async (request: Request, response: Response) => {
       return response.status(200).json({
         success: true,
         massage: "Get All Receive PO and SO",
-        result: [...res, ...dmr],
+        result: [...result, ...obj, ...res],
         page: pagination.page,
         limit: pagination.perPage,
         totalData: poandsoCount,
