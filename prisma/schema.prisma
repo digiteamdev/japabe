@@ -25,48 +25,49 @@ model Role {
 }
 
 model Employee {
-  id                   String                 @id @default(cuid())
-  user                 User[]
-  NIP                  String?                @db.VarChar(200)
-  NIK                  String?                @unique @db.VarChar(200)
-  NPWP                 String?                @db.VarChar(200)
-  id_card              String?                @unique
-  employee_name        String?                @db.VarChar(200)
-  nick_name            String?                @db.VarChar(50)
-  email                String?                @unique @db.VarChar(100)
-  birth_place          String?                @db.VarChar(100)
-  birth_date           DateTime?
-  address              String?                @db.Text
-  photo                String?                @db.Text
-  province             String?                @db.VarChar(100)
-  city                 String?                @db.VarChar(100)
-  districts            String?                @db.VarChar(100)
-  sub_districts        String?                @db.VarChar(100)
-  ec_postalcode        Int?                   @default(0)
-  phone_number         String?                @db.VarChar(50)
-  start_join           DateTime?
-  remaining_days_of    Int?                   @default(0)
-  gender               Gender?
-  marital_status       Maritial?
-  position             Position?
-  sub_depart           sub_depart             @relation(fields: [subdepartId], references: [id])
-  subdepartId          String
-  employee_status      Employee_Status?
-  spouse_name          String?                @db.VarChar(200)
-  gender_spouse        Spouse_Gender?
-  spouse_birth_place   String?                @db.VarChar(100)
-  spouse_birth_date    DateTime?
-  status_user          Boolean?               @default(false)
-  createdAt            DateTime               @default(now())
-  updatedAt            DateTime               @updatedAt
-  deleted              DateTime?
-  Educational_Employee Educational_Employee[] @relation("education")
-  Certificate_Employee Certificate_Employee[] @relation("certificate")
-  Employee_Child       Employee_Child[]       @relation("child")
-  wor                  wor[]
-  dispatchDetail       dispatchDetail[]
-  approve              dispatchDetail[]       @relation(name: "approves")
-  cash_advance         cash_advance[]
+  id                      String                    @id @default(cuid())
+  user                    User[]
+  NIP                     String?                   @db.VarChar(200)
+  NIK                     String?                   @unique @db.VarChar(200)
+  NPWP                    String?                   @db.VarChar(200)
+  id_card                 String?                   @unique
+  employee_name           String?                   @db.VarChar(200)
+  nick_name               String?                   @db.VarChar(50)
+  email                   String?                   @unique @db.VarChar(100)
+  birth_place             String?                   @db.VarChar(100)
+  birth_date              DateTime?
+  address                 String?                   @db.Text
+  photo                   String?                   @db.Text
+  province                String?                   @db.VarChar(100)
+  city                    String?                   @db.VarChar(100)
+  districts               String?                   @db.VarChar(100)
+  sub_districts           String?                   @db.VarChar(100)
+  ec_postalcode           Int?                      @default(0)
+  phone_number            String?                   @db.VarChar(50)
+  start_join              DateTime?
+  remaining_days_of       Int?                      @default(0)
+  gender                  Gender?
+  marital_status          Maritial?
+  position                Position?
+  sub_depart              sub_depart                @relation(fields: [subdepartId], references: [id])
+  subdepartId             String
+  employee_status         Employee_Status?
+  spouse_name             String?                   @db.VarChar(200)
+  gender_spouse           Spouse_Gender?
+  spouse_birth_place      String?                   @db.VarChar(100)
+  spouse_birth_date       DateTime?
+  status_user             Boolean?                  @default(false)
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  deleted                 DateTime?
+  Educational_Employee    Educational_Employee[]    @relation("education")
+  Certificate_Employee    Certificate_Employee[]    @relation("certificate")
+  Employee_Child          Employee_Child[]          @relation("child")
+  wor                     wor[]
+  dispatchDetail          dispatchDetail[]
+  approve                 dispatchDetail[]          @relation(name: "approves")
+  cash_advance            cash_advance[]
+  stock_outgoing_material stock_outgoing_material[]
 
   @@index([id, nick_name, NIK, id_card, NIP, employee_name])
 }
@@ -364,16 +365,17 @@ model Material_master {
 }
 
 model Material_Stock {
-  id              String           @id @default(cuid())
-  Material_master Material_master? @relation(fields: [materialId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  materialId      String?
-  spesifikasi     String           @db.Text
-  jumlah_Stock    Int              @default(0)
-  harga           Int              @default(0)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  deleted         DateTime?
-  detailMr        detailMr[]
+  id                      String                    @id @default(cuid())
+  Material_master         Material_master?          @relation(fields: [materialId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  materialId              String?
+  spesifikasi             String                    @db.Text
+  jumlah_Stock            Int                       @default(0)
+  harga                   Int                       @default(0)
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  deleted                 DateTime?
+  detailMr                detailMr[]
+  stock_outgoing_material stock_outgoing_material[]
 
   @@index([id, materialId, spesifikasi])
 }
@@ -550,45 +552,46 @@ enum Limit_Pay {
 }
 
 model wor {
-  id                String           @id @default(cuid())
-  job_no            String?          @db.VarChar(200)
-  job_no_mr         String?          @db.VarChar(200)
-  date_wor          DateTime?
-  customerPo        CustomerPo?      @relation(fields: [cuspoId], references: [id])
-  cuspoId           String?
-  subject           String?          @db.VarChar(200)
-  job_desk          String?          @db.Text
-  contract_no_spk   String?          @db.VarChar(100)
-  employee          Employee?        @relation(fields: [employeeId], references: [id])
-  employeeId        String?
-  value_contract    String?
-  priority_status   Priority_Status?
-  qty               Int              @default(0)
-  unit              String?          @db.VarChar(20)
-  date_of_order     DateTime?
-  delivery_date     DateTime?
-  shipping_address  String?          @db.Text
-  job_operational   Boolean?         @default(false)
-  estimated_man_our Int              @default(0)
-  eq_model          String?          @db.VarChar(100)
-  eq_mfg            String?          @db.VarChar(100)
-  eq_rotation       String?          @db.VarChar(200)
-  eq_power          String?          @db.VarChar(200)
-  scope_of_work     String?          @db.Text
-  file_list         String?          @db.Text
-  noted             String?          @db.Text
-  status            String?          @db.VarChar(20)
-  refivision        String?          @db.VarChar(20)
-  refevision_desc   String?          @db.Text
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-  deleted           DateTime?
-  Quotations        Quotations?      @relation(fields: [quotationsId], references: [id])
-  quotationsId      String?
-  timeschedule      timeschedule?
-  Mr                Mr?
-  Sr                Sr?
-  cash_advance      cash_advance[]
+  id                      String                    @id @default(cuid())
+  job_no                  String?                   @db.VarChar(200)
+  job_no_mr               String?                   @db.VarChar(200)
+  date_wor                DateTime?
+  customerPo              CustomerPo?               @relation(fields: [cuspoId], references: [id])
+  cuspoId                 String?
+  subject                 String?                   @db.VarChar(200)
+  job_desk                String?                   @db.Text
+  contract_no_spk         String?                   @db.VarChar(100)
+  employee                Employee?                 @relation(fields: [employeeId], references: [id])
+  employeeId              String?
+  value_contract          String?
+  priority_status         Priority_Status?
+  qty                     Int                       @default(0)
+  unit                    String?                   @db.VarChar(20)
+  date_of_order           DateTime?
+  delivery_date           DateTime?
+  shipping_address        String?                   @db.Text
+  job_operational         Boolean?                  @default(false)
+  estimated_man_our       Int                       @default(0)
+  eq_model                String?                   @db.VarChar(100)
+  eq_mfg                  String?                   @db.VarChar(100)
+  eq_rotation             String?                   @db.VarChar(200)
+  eq_power                String?                   @db.VarChar(200)
+  scope_of_work           String?                   @db.Text
+  file_list               String?                   @db.Text
+  noted                   String?                   @db.Text
+  status                  String?                   @db.VarChar(20)
+  refivision              String?                   @db.VarChar(20)
+  refevision_desc         String?                   @db.Text
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  deleted                 DateTime?
+  Quotations              Quotations?               @relation(fields: [quotationsId], references: [id])
+  quotationsId            String?
+  timeschedule            timeschedule?
+  Mr                      Mr?
+  Sr                      Sr?
+  cash_advance            cash_advance[]
+  stock_outgoing_material stock_outgoing_material[]
 
   @@index([id, job_no])
 }
@@ -870,15 +873,16 @@ enum TaxPsrDmr {
 }
 
 model coa {
-  id              String            @id @default(cuid())
-  coa_code        String            @db.VarChar(20)
-  coa_name        String            @db.VarChar(200)
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  deleted         DateTime?
-  detailMr        detailMr[]
-  SrDetail        SrDetail[]
-  journal_cashier journal_cashier[]
+  id                      String                    @id @default(cuid())
+  coa_code                String                    @db.VarChar(20)
+  coa_name                String                    @db.VarChar(200)
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  deleted                 DateTime?
+  detailMr                detailMr[]
+  SrDetail                SrDetail[]
+  journal_cashier         journal_cashier[]
+  stock_outgoing_material stock_outgoing_material[]
 
   @@index([id, coa_code, coa_name])
 }
@@ -975,18 +979,19 @@ enum status_manager_director {
 }
 
 model approvedRequest {
-  id                String     @id @default(cuid())
-  idApprove         String     @db.VarChar(200)
+  id                String              @id @default(cuid())
+  idApprove         String              @db.VarChar(200)
   dateApprove       DateTime
-  status_spv_pr     Boolean?   @default(false)
-  status_manager_pr Boolean?   @default(false)
-  user              User?      @relation(fields: [approveById], references: [id])
+  status_spv_pr     Boolean?            @default(false)
+  status_manager_pr Boolean?            @default(false)
+  user              User?               @relation(fields: [approveById], references: [id])
   approveById       String?
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime   @updatedAt
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
   deleted           DateTime?
   detailMr          detailMr[]
   SrDetail          SrDetail[]
+  outgoing_material outgoing_material[]
 }
 
 model Sr {
@@ -1189,4 +1194,33 @@ model cash_advance {
   cashier                 cashier[]
 
   @@index([id, employeeId, worId, userId, id_cash_advance])
+}
+
+model outgoing_material {
+  id                      String                    @id @default(cuid())
+  date_outgoing_material  DateTime
+  id_outgoing_material    String
+  approvedRequest         approvedRequest           @relation(fields: [approveReqId], references: [id])
+  approveReqId            String
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  deleted                 DateTime?
+  stock_outgoing_material stock_outgoing_material[]
+}
+
+model stock_outgoing_material {
+  id                String            @id @default(cuid())
+  outgoing_material outgoing_material @relation(fields: [outgoingId], references: [id])
+  outgoingId        String
+  coa               coa?              @relation(fields: [coa_id], references: [id])
+  coa_id            String?
+  employee          Employee          @relation(fields: [employeeId], references: [id])
+  employeeId        String
+  wor               wor               @relation(fields: [worId], references: [id])
+  worId             String
+  Material_Stock    Material_Stock    @relation(fields: [materialStockId], references: [id])
+  materialStockId   String
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  deleted           DateTime?
 }

@@ -34,6 +34,7 @@ import poandso from "../controllers/poandso";
 import kontraBon from "../controllers/kontraBon";
 import cashier from "../controllers/cashier";
 import cashAdv from "../controllers/cashAdvance";
+import outgoing from "../controllers/outgoingMaterial";
 
 /***************************AUTH********************************* */
 
@@ -2266,5 +2267,57 @@ router.delete(
 );
 
 /***************************Cash Advance**************************************** */
+
+/***************************Outgoing Material**************************************** */
+
+router.get(
+  "/outgoingMaterial",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  approvalRequest.getOutgoingMaterial
+);
+
+router.get(
+  "/outgoingMaterialAll",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  outgoing.getOutgoingMaterial
+);
+
+router.post(
+  "/outgoingMaterial",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  outgoing.createOutgoingMaterial
+);
+
+/***************************Outgoing Material**************************************** */
 
 export default router;

@@ -462,6 +462,232 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
   }
 };
 
+const getOutgoingMaterial = async (request: Request, response: Response) => {
+  try {
+    const results = await prisma.approvedRequest.findMany({
+      where: {
+        detailMr: {
+          some: {
+            mrappr: "Stock",
+          },
+        },
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+            employee: {
+              select: {
+                id: true,
+                employee_name: true,
+                position: true,
+                sub_depart: {
+                  select: {
+                    id: true,
+                    name: true,
+                    departement: {
+                      select: {
+                        id: true,
+                        name: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        detailMr: {
+          include: {
+            supplier: true,
+            mr: {
+              include: {
+                wor: true,
+                bom: {
+                  include: {
+                    bom_detail: {
+                      include: {
+                        Material_master: {
+                          include: {
+                            Material_Stock: true,
+                            grup_material: true,
+                          },
+                        },
+                      },
+                    },
+                    srimg: {
+                      include: {
+                        srimgdetail: true,
+                      },
+                    },
+                  },
+                },
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    employee: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                        position: true,
+                        sub_depart: {
+                          select: {
+                            id: true,
+                            name: true,
+                            departement: {
+                              select: {
+                                id: true,
+                                name: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            Material_Stock: {
+              include: {
+                Material_master: {
+                  include: {
+                    grup_material: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        SrDetail: {
+          include: {
+            supplier: true,
+            workCenter: true,
+            sr: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    employee: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                        position: true,
+                        sub_depart: {
+                          select: {
+                            id: true,
+                            name: true,
+                            departement: {
+                              select: {
+                                id: true,
+                                name: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                wor: {
+                  include: {
+                    customerPo: {
+                      include: {
+                        quotations: {
+                          include: {
+                            Customer: true,
+                            eqandpart: {
+                              include: {
+                                equipment: true,
+                                eq_part: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            dispatchDetail: {
+              include: {
+                dispacth: {
+                  include: {
+                    srimg: {
+                      include: {
+                        srimgdetail: true,
+                        timeschedule: {
+                          include: {
+                            aktivitas: {
+                              include: {
+                                masterAktivitas: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                aktivitas: {
+                  select: {
+                    id: true,
+                    aktivitasId: true,
+                    masterAktivitas: {
+                      select: {
+                        id: true,
+                        name: true,
+                      },
+                    },
+                  },
+                },
+                approve: {
+                  select: {
+                    id: true,
+                    employee_name: true,
+                  },
+                },
+                Employee: {
+                  select: {
+                    id: true,
+                    employee_name: true,
+                  },
+                },
+                sub_depart: true,
+                workCenter: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    if (results.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All ApprovalRequest Stock",
+        result: results,
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getAllApproveRequest,
+  getOutgoingMaterial,
 };
