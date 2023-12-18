@@ -26,29 +26,75 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
       include: {
         stock_outgoing_material: {
           include: {
-            employee: true,
-            Material_Stock: true,
-            outgoing_material: {
+            poandso: {
               include: {
-                approvedRequest: {
+                term_of_pay_po_so: true,
+                supplier: {
                   include: {
-                    user: {
-                      select: {
-                        id: true,
-                        username: true,
-                        employee: {
+                    SupplierContact: true,
+                    SupplierBank: true,
+                  },
+                },
+                detailMr: {
+                  include: {
+                    supplier: {
+                      include: {
+                        SupplierContact: true,
+                        SupplierBank: true,
+                      },
+                    },
+                    approvedRequest: true,
+                    coa: true,
+                    mr: {
+                      include: {
+                        wor: {
+                          include: {
+                            Quotations: {
+                              include: {
+                                Quotations_Detail: true,
+                                CustomerContact: true,
+                              },
+                            },
+                          },
+                        },
+                        bom: {
+                          include: {
+                            bom_detail: {
+                              include: {
+                                Material_master: {
+                                  include: {
+                                    Material_Stock: true,
+                                    grup_material: true,
+                                  },
+                                },
+                              },
+                            },
+                            srimg: {
+                              include: {
+                                srimgdetail: true,
+                              },
+                            },
+                          },
+                        },
+                        user: {
                           select: {
                             id: true,
-                            employee_name: true,
-                            position: true,
-                            sub_depart: {
+                            username: true,
+                            employee: {
                               select: {
                                 id: true,
-                                name: true,
-                                departement: {
+                                employee_name: true,
+                                position: true,
+                                sub_depart: {
                                   select: {
                                     id: true,
                                     name: true,
+                                    departement: {
+                                      select: {
+                                        id: true,
+                                        name: true,
+                                      },
+                                    },
                                   },
                                 },
                               },
@@ -57,65 +103,11 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
                         },
                       },
                     },
-                    detailMr: {
+                    Material_Stock: {
                       include: {
-                        supplier: true,
-                        mr: {
+                        Material_master: {
                           include: {
-                            wor: true,
-                            bom: {
-                              include: {
-                                bom_detail: {
-                                  include: {
-                                    Material_master: {
-                                      include: {
-                                        Material_Stock: true,
-                                        grup_material: true,
-                                      },
-                                    },
-                                  },
-                                },
-                                srimg: {
-                                  include: {
-                                    srimgdetail: true,
-                                  },
-                                },
-                              },
-                            },
-                            user: {
-                              select: {
-                                id: true,
-                                username: true,
-                                employee: {
-                                  select: {
-                                    id: true,
-                                    employee_name: true,
-                                    position: true,
-                                    sub_depart: {
-                                      select: {
-                                        id: true,
-                                        name: true,
-                                        departement: {
-                                          select: {
-                                            id: true,
-                                            name: true,
-                                          },
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                        Material_Stock: {
-                          include: {
-                            Material_master: {
-                              include: {
-                                grup_material: true,
-                              },
-                            },
+                            grup_material: true,
                           },
                         },
                       },
@@ -133,11 +125,10 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
       take: parseInt(pagination.perPage),
       skip: parseInt(pagination.page) * parseInt(pagination.perPage),
     });
-
     if (results.length > 0) {
       return response.status(200).json({
         success: true,
-        massage: "Get All Customer",
+        massage: "Get All Out Material",
         result: results,
         page: pagination.page,
         limit: pagination.perPage,
@@ -161,9 +152,9 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
 
 const createOutgoingMaterial = async (request: Request, response: Response) => {
   try {
-    const getStok: any = await prisma.approvedRequest.findFirst({
+    const getStok: any = await prisma.poandso.findFirst({
       where: {
-        id: request.body.approveReqId,
+        id: request.body.poandsoId,
       },
       include: {
         detailMr: {
@@ -181,19 +172,36 @@ const createOutgoingMaterial = async (request: Request, response: Response) => {
         },
       },
     });
-    const results = await prisma.outgoing_material.create({
-      data: {
-        approvedRequest: { connect: { id: request.body.approveReqId } },
-        id_outgoing_material: request.body.id_outgoing_material,
-        date_outgoing_material: new Date(request.body.date_outgoing_material),
-        stock_outgoing_material: {
-          create: request.body.stock_outgoing_material,
+    console.log(request.body.mr);
+    console.log(request.body.pb);
+    let results: any;
+    if (request.body.mr) {
+      results = await prisma.outgoing_material.create({
+        data: {
+          id_outgoing_material: request.body.id_outgoing_material,
+          date_outgoing_material: new Date(request.body.date_outgoing_material),
+          stock_outgoing_material: {
+            create: request.body.mr,
+          },
         },
-      },
-      include: {
-        stock_outgoing_material: true,
-      },
-    });
+        include: {
+          stock_outgoing_material: true,
+        },
+      });
+    } else {
+      results = await prisma.outgoing_material.create({
+        data: {
+          id_outgoing_material: request.body.id_outgoing_material,
+          date_outgoing_material: new Date(request.body.date_outgoing_material),
+          stock_outgoing_material: {
+            create: request.body.pb,
+          },
+        },
+        include: {
+          stock_outgoing_material: true,
+        },
+      });
+    }
     if (results) {
       response.status(201).json({
         success: true,

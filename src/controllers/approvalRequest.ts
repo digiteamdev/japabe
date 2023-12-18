@@ -464,46 +464,54 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
 
 const getOutgoingMaterial = async (request: Request, response: Response) => {
   try {
-    const results = await prisma.approvedRequest.findMany({
+    const results = await prisma.poandso.findMany({
       where: {
-        detailMr: {
-          some: {
-            mrappr: "Stock",
+        AND: [
+          {
+            status_receive: true,
+          },
+          {
+            status_manager_director: "approve",
+          },
+        ],
+        NOT: {
+          detailMr: {
+            every: {
+              id: "null",
+            },
           },
         },
       },
       include: {
-        user: {
-          select: {
-            id: true,
-            username: true,
-            employee: {
-              select: {
-                id: true,
-                employee_name: true,
-                position: true,
-                sub_depart: {
-                  select: {
-                    id: true,
-                    name: true,
-                    departement: {
-                      select: {
-                        id: true,
-                        name: true,
-                      },
-                    },
-                  },
-                },
-              },
-            },
+        term_of_pay_po_so: true,
+        supplier: {
+          include: {
+            SupplierContact: true,
+            SupplierBank: true,
           },
         },
         detailMr: {
           include: {
-            supplier: true,
+            supplier: {
+              include: {
+                SupplierContact: true,
+                SupplierBank: true,
+              },
+            },
+            approvedRequest: true,
+            coa: true,
             mr: {
               include: {
-                wor: true,
+                wor: {
+                  include: {
+                    Quotations: {
+                      include: {
+                        Quotations_Detail: true,
+                        CustomerContact: true,
+                      },
+                    },
+                  },
+                },
                 bom: {
                   include: {
                     bom_detail: {
@@ -557,108 +565,6 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
                     grup_material: true,
                   },
                 },
-              },
-            },
-          },
-        },
-        SrDetail: {
-          include: {
-            supplier: true,
-            workCenter: true,
-            sr: {
-              include: {
-                user: {
-                  select: {
-                    id: true,
-                    username: true,
-                    employee: {
-                      select: {
-                        id: true,
-                        employee_name: true,
-                        position: true,
-                        sub_depart: {
-                          select: {
-                            id: true,
-                            name: true,
-                            departement: {
-                              select: {
-                                id: true,
-                                name: true,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-                wor: {
-                  include: {
-                    customerPo: {
-                      include: {
-                        quotations: {
-                          include: {
-                            Customer: true,
-                            eqandpart: {
-                              include: {
-                                equipment: true,
-                                eq_part: true,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            dispatchDetail: {
-              include: {
-                dispacth: {
-                  include: {
-                    srimg: {
-                      include: {
-                        srimgdetail: true,
-                        timeschedule: {
-                          include: {
-                            aktivitas: {
-                              include: {
-                                masterAktivitas: true,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-                aktivitas: {
-                  select: {
-                    id: true,
-                    aktivitasId: true,
-                    masterAktivitas: {
-                      select: {
-                        id: true,
-                        name: true,
-                      },
-                    },
-                  },
-                },
-                approve: {
-                  select: {
-                    id: true,
-                    employee_name: true,
-                  },
-                },
-                Employee: {
-                  select: {
-                    id: true,
-                    employee_name: true,
-                  },
-                },
-                sub_depart: true,
-                workCenter: true,
               },
             },
           },
