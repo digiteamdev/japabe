@@ -26,6 +26,9 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
       include: {
         stock_outgoing_material: {
           include: {
+            employee: true,
+            coa: true,
+            Material_Stock: true,
             poandso: {
               include: {
                 term_of_pay_po_so: true,

@@ -365,16 +365,17 @@ model Material_master {
 }
 
 model Material_Stock {
-  id              String           @id @default(cuid())
-  Material_master Material_master? @relation(fields: [materialId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  materialId      String?
-  spesifikasi     String           @db.Text
-  jumlah_Stock    Int              @default(0)
-  harga           Int              @default(0)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  deleted         DateTime?
-  detailMr        detailMr[]
+  id                      String                    @id @default(cuid())
+  Material_master         Material_master?          @relation(fields: [materialId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  materialId              String?
+  spesifikasi             String                    @db.Text
+  jumlah_Stock            Int                       @default(0)
+  harga                   Int                       @default(0)
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  deleted                 DateTime?
+  detailMr                detailMr[]
+  stock_outgoing_material stock_outgoing_material[]
 
   @@index([id, materialId, spesifikasi])
 }
@@ -1202,15 +1203,18 @@ model outgoing_material {
   updatedAt               DateTime                  @updatedAt
   deleted                 DateTime?
   stock_outgoing_material stock_outgoing_material[]
+
+  @@index([id, id_outgoing_material])
 }
 
 model stock_outgoing_material {
   id                String            @id @default(cuid())
   outgoing_material outgoing_material @relation(fields: [outgoingId], references: [id])
   outgoingId        String
+  Material_Stock    Material_Stock?   @relation(fields: [materialStockId], references: [id])
+  materialStockId   String?
   coa               coa?              @relation(fields: [coa_id], references: [id])
   coa_id            String?
-  material_name     String?
   employee          Employee?         @relation(fields: [employeeId], references: [id])
   employeeId        String?
   poandso           poandso?          @relation(fields: [poandsoId], references: [id])
@@ -1219,4 +1223,6 @@ model stock_outgoing_material {
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
   deleted           DateTime?
+
+  @@index([id, materialStockId, employeeId, outgoingId])
 }
