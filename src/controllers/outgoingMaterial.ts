@@ -175,21 +175,28 @@ const createOutgoingMaterial = async (request: Request, response: Response) => {
         },
       },
     });
-    console.log(request.body.mr);
-    console.log(request.body.pb);
+    // const obj: any = {};
+    // getStok.detailMr.map((e: any) => {
+    //   Object.assign(obj, e)
+    // });
+    // console.log(obj);
+
+    // console.log(obj.materialStockId);
+
+    // console.log(request.body.pb);
     let results: any;
     if (request.body.mr) {
       results = await prisma.outgoing_material.create({
         data: {
-          id_outgoing_material: request.body.id_outgoing_material,
+          id_outgoing_material: request.body.id_outgoing_materia,
           date_outgoing_material: new Date(request.body.date_outgoing_material),
           stock_outgoing_material: {
-            create: request.body.mr,
+            create: request.body.c,
           },
         },
-        include: {
-          stock_outgoing_material: true,
-        },
+        // include: {
+        //   stock_outgoing_material: true,
+        // },
       });
     } else {
       results = await prisma.outgoing_material.create({
