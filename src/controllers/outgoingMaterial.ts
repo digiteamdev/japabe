@@ -191,12 +191,12 @@ const createOutgoingMaterial = async (request: Request, response: Response) => {
           id_outgoing_material: request.body.id_outgoing_materia,
           date_outgoing_material: new Date(request.body.date_outgoing_material),
           stock_outgoing_material: {
-            create: request.body.c,
+            create: request.body.mr,
           },
         },
-        // include: {
-        //   stock_outgoing_material: true,
-        // },
+        include: {
+          stock_outgoing_material: true,
+        },
       });
     } else {
       results = await prisma.outgoing_material.create({
