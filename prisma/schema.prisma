@@ -1170,6 +1170,14 @@ model journal_cashier {
   @@index([id, cashier_id, coa_id])
 }
 
+enum type_cdv {
+  Consumable
+  Investasi
+  Service
+  Operasional
+  SDM
+}
+
 model cash_advance {
   id                      String                   @id @default(cuid())
   id_cash_advance         String
@@ -1180,8 +1188,6 @@ model cash_advance {
   user                    User?                    @relation(fields: [userId], references: [id])
   userId                  String?
   status_payment          status_payment
-  total                   Int                      @default(0)
-  description             String?                  @db.Text
   note                    String?                  @db.Text
   status_valid_manager    Boolean                  @default(false)
   status_valid_spv        Boolean                  @default(false)
@@ -1191,8 +1197,23 @@ model cash_advance {
   updatedAt               DateTime                 @updatedAt
   deleted                 DateTime?
   cashier                 cashier[]
+  cdv_detail              cdv_detail[]
 
   @@index([id, employeeId, worId, userId, id_cash_advance])
+}
+
+model cdv_detail {
+  id           String       @id @default(cuid())
+  cash_advance cash_advance @relation(fields: [cdvId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  cdvId        String
+  type_cdv     type_cdv?
+  total        Int          @default(0)
+  description  String?      @db.Text
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  deleted      DateTime?
+
+  @@index([id, cdvId, type_cdv])
 }
 
 model outgoing_material {

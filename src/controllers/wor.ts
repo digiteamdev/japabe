@@ -252,34 +252,67 @@ const getWorTimes = async (request: any, response: Response) => {
 
 const createWor = async (request: any, response: Response) => {
   try {
-    const results = await prisma.wor.create({
-      data: {
-        job_no: request.body.job_no,
-        date_wor: new Date(request.body.date_wor),
-        customerPo: { connect: { id: request.body.cuspoId } },
-        subject: request.body.subject,
-        job_desk: request.body.job_desk,
-        contract_no_spk: request.body.contract_no_spk,
-        employee: { connect: { id: request.body.employeeId } },
-        value_contract: request.body.value_contract,
-        priority_status: request.body.priority_status,
-        qty: parseInt(request.body.qty),
-        unit: request.body.unit,
-        date_of_order: new Date(request.body.date_of_order),
-        delivery_date: new Date(request.body.delivery_date),
-        shipping_address: request.body.shipping_address,
-        estimated_man_our: parseInt(request.body.estimated_man_our),
-        eq_model: request.body.eq_model,
-        eq_mfg: request.body.eq_mfg,
-        eq_rotation: request.body.eq_rotation,
-        eq_power: request.body.eq_power,
-        scope_of_work: request.body.scope_of_work,
-        file_list: !request.file ? null : request.file.path,
-        noted: request.body.noted,
-        status: request.body.status,
-        job_operational: request.body.job_operational === "true" ? false : true,
-      },
-    });
+    let results;
+    if (request.body.cuspoId === null) {
+      results = await prisma.wor.create({
+        data: {
+          job_no: request.body.job_no,
+          date_wor: new Date(request.body.date_wor),
+          subject: request.body.subject,
+          job_desk: request.body.job_desk,
+          contract_no_spk: request.body.contract_no_spk,
+          employee: { connect: { id: request.body.employeeId } },
+          value_contract: request.body.value_contract,
+          priority_status: request.body.priority_status,
+          qty: parseInt(request.body.qty),
+          unit: request.body.unit,
+          date_of_order: new Date(request.body.date_of_order),
+          delivery_date: new Date(request.body.delivery_date),
+          shipping_address: request.body.shipping_address,
+          estimated_man_our: parseInt(request.body.estimated_man_our),
+          eq_model: request.body.eq_model,
+          eq_mfg: request.body.eq_mfg,
+          eq_rotation: request.body.eq_rotation,
+          eq_power: request.body.eq_power,
+          scope_of_work: request.body.scope_of_work,
+          file_list: !request.file ? null : request.file.path,
+          noted: request.body.noted,
+          status: request.body.status,
+          job_operational:
+            request.body.job_operational === "true" ? false : true,
+        },
+      });
+    } else {
+      results = await prisma.wor.create({
+        data: {
+          job_no: request.body.job_no,
+          date_wor: new Date(request.body.date_wor),
+          customerPo: { connect: { id: request.body.cuspoId } },
+          subject: request.body.subject,
+          job_desk: request.body.job_desk,
+          contract_no_spk: request.body.contract_no_spk,
+          employee: { connect: { id: request.body.employeeId } },
+          value_contract: request.body.value_contract,
+          priority_status: request.body.priority_status,
+          qty: parseInt(request.body.qty),
+          unit: request.body.unit,
+          date_of_order: new Date(request.body.date_of_order),
+          delivery_date: new Date(request.body.delivery_date),
+          shipping_address: request.body.shipping_address,
+          estimated_man_our: parseInt(request.body.estimated_man_our),
+          eq_model: request.body.eq_model,
+          eq_mfg: request.body.eq_mfg,
+          eq_rotation: request.body.eq_rotation,
+          eq_power: request.body.eq_power,
+          scope_of_work: request.body.scope_of_work,
+          file_list: !request.file ? null : request.file.path,
+          noted: request.body.noted,
+          status: request.body.status,
+          job_operational:
+            request.body.job_operational === "true" ? false : true,
+        },
+      });
+    }
     if (results) {
       response.status(201).json({
         success: true,
@@ -300,38 +333,73 @@ const createWor = async (request: any, response: Response) => {
 const updateWor = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
-    const updateWor = await prisma.wor.update({
-      where: {
-        id: id,
-      },
-      data: {
-        job_no: request.body.job_no,
-        date_wor: new Date(request.body.date_wor),
-        customerPo: { connect: { id: request.body.cuspoId } },
-        subject: request.body.subject,
-        job_desk: request.body.job_desk,
-        contract_no_spk: request.body.contract_no_spk,
-        employee: { connect: { id: request.body.employeeId } },
-        value_contract: request.body.value_contract,
-        priority_status: request.body.priority_status,
-        qty: parseInt(request.body.qty),
-        unit: request.body.unit,
-        date_of_order: new Date(request.body.date_of_order),
-        delivery_date: new Date(request.body.delivery_date),
-        shipping_address: request.body.shipping_address,
-        estimated_man_our: parseInt(request.body.estimated_man_our),
-        eq_mfg: request.body.eeq_mfg,
-        eq_model: request.body.eq_model,
-        eq_rotation: request.body.eq_rotation,
-        eq_power: request.body.eq_power,
-        scope_of_work: request.body.scope_of_work,
-        file_list: !request.file ? request.body.file_list : request.file.path,
-        noted: request.body.noted,
-        status: request.body.status,
-        refivision: request.body.refivision,
-        refevision_desc: request.body.refevision_desc,
-      },
-    });
+    let updateWor;
+    if (request.body.cuspoId === null) {
+      updateWor = await prisma.wor.update({
+        where: {
+          id: id,
+        },
+        data: {
+          job_no: request.body.job_no,
+          date_wor: new Date(request.body.date_wor),
+          subject: request.body.subject,
+          job_desk: request.body.job_desk,
+          contract_no_spk: request.body.contract_no_spk,
+          employee: { connect: { id: request.body.employeeId } },
+          value_contract: request.body.value_contract,
+          priority_status: request.body.priority_status,
+          qty: parseInt(request.body.qty),
+          unit: request.body.unit,
+          date_of_order: new Date(request.body.date_of_order),
+          delivery_date: new Date(request.body.delivery_date),
+          shipping_address: request.body.shipping_address,
+          estimated_man_our: parseInt(request.body.estimated_man_our),
+          eq_mfg: request.body.eeq_mfg,
+          eq_model: request.body.eq_model,
+          eq_rotation: request.body.eq_rotation,
+          eq_power: request.body.eq_power,
+          scope_of_work: request.body.scope_of_work,
+          file_list: !request.file ? request.body.file_list : request.file.path,
+          noted: request.body.noted,
+          status: request.body.status,
+          refivision: request.body.refivision,
+          refevision_desc: request.body.refevision_desc,
+        },
+      });
+    } else {
+      updateWor = await prisma.wor.update({
+        where: {
+          id: id,
+        },
+        data: {
+          job_no: request.body.job_no,
+          date_wor: new Date(request.body.date_wor),
+          customerPo: { connect: { id: request.body.cuspoId } },
+          subject: request.body.subject,
+          job_desk: request.body.job_desk,
+          contract_no_spk: request.body.contract_no_spk,
+          employee: { connect: { id: request.body.employeeId } },
+          value_contract: request.body.value_contract,
+          priority_status: request.body.priority_status,
+          qty: parseInt(request.body.qty),
+          unit: request.body.unit,
+          date_of_order: new Date(request.body.date_of_order),
+          delivery_date: new Date(request.body.delivery_date),
+          shipping_address: request.body.shipping_address,
+          estimated_man_our: parseInt(request.body.estimated_man_our),
+          eq_mfg: request.body.eeq_mfg,
+          eq_model: request.body.eq_model,
+          eq_rotation: request.body.eq_rotation,
+          eq_power: request.body.eq_power,
+          scope_of_work: request.body.scope_of_work,
+          file_list: !request.file ? request.body.file_list : request.file.path,
+          noted: request.body.noted,
+          status: request.body.status,
+          refivision: request.body.refivision,
+          refevision_desc: request.body.refevision_desc,
+        },
+      });
+    }
     if (updateWor) {
       response.status(201).json({
         success: true,

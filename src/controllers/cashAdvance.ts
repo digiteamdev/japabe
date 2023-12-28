@@ -23,6 +23,7 @@ const getCdv = async (request: Request, response: Response) => {
         },
       },
       include: {
+        cdv_detail: true,
         employee: true,
         user: {
           select: {
@@ -180,10 +181,14 @@ const createCdv = async (request: Request, response: Response) => {
         wor: { connect: { id: request.body.worId } },
         user: { connect: { id: request.body.userId } },
         status_payment: request.body.status_payment,
-        total: request.body.total,
-        description: request.body.description,
         note: request.body.note,
         date_cash_advance: request.body.date_cash_advance,
+        cdv_detail: {
+          create: request.body.cdv_detail,
+        },
+      },
+      include: {
+        cdv_detail: true,
       },
     });
     if (results) {
