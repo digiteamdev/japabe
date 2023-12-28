@@ -2054,6 +2054,22 @@ router.get(
   cashier.getCashier
 );
 
+router.get(
+  "/duedate",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  cashier.getDueDate
+);
+
 router.post(
   "/cashier",
   jwt.authToken({

@@ -1157,7 +1157,7 @@ model cashier {
 
 model journal_cashier {
   id                 String             @id @default(cuid())
-  cashier            cashier            @relation(fields: [cashier_id], references: [id])
+  cashier            cashier            @relation(fields: [cashier_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   cashier_id         String
   coa                coa                @relation(fields: [coa_id], references: [id])
   coa_id             String
