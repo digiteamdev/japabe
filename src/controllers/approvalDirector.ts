@@ -64,7 +64,27 @@ const getAllApprove = async (request: Request, response: Response) => {
         ],
       },
     });
-    let total: any = totalCount + totalCuntPoandSo;
+    let totalCountCdv;
+    totalCountCdv = await prisma.cash_advance.count({
+      where: {
+        AND: [
+          {
+            status_valid_manager: true,
+          },
+          {
+            OR: [
+              {
+                status_manager_director: null,
+              },
+              {
+                status_manager_director: "revision",
+              },
+            ],
+          },
+        ],
+      },
+    });
+    let total: any = totalCount + totalCuntPoandSo + totalCountCdv
     let result;
     result = await prisma.purchase.findMany({
       where: {
