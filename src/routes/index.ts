@@ -2102,6 +2102,22 @@ router.put(
   cashier.updateCashier
 );
 
+router.put(
+  "/duedate/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  cashier.updateDuedate
+);
+
 router.delete(
   "/cashier/:id",
   jwt.authToken({

@@ -1508,6 +1508,47 @@ const updateCashier = async (request: Request, response: Response) => {
   }
 };
 
+const updateDuedate = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    let result: any = [];
+    if (request.body.status_duedate === true) {
+      result = await prisma.kontrabon.update({
+        where: {
+          id: id,
+        },
+        data: {
+          status_duedate: true,
+        },
+      });
+    } else {
+      result = await prisma.kontrabon.update({
+        where: {
+          id: id,
+        },
+        data: {
+          status_duedate: false,
+          due_date: new Date(request.body.due_date),
+        },
+      });
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        result: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const deleteCashier = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
@@ -1618,6 +1659,7 @@ export default {
   getDueDate,
   createCashier,
   updateCashier,
+  updateDuedate,
   deleteCashier,
   deleteDetailCashier,
   updateStatusM,
