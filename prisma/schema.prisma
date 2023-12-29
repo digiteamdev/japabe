@@ -1117,7 +1117,6 @@ model kontrabon {
   DO                String?            @db.VarChar(200)
   grandtotal        Int                @default(0)
   status_valid      Boolean            @default(false)
-  status_duedate    Boolean            @default(false)
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
   deleted           DateTime?

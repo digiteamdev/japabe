@@ -1512,26 +1512,14 @@ const updateDuedate = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
     let result: any = [];
-    if (request.body.status_duedate === true) {
-      result = await prisma.kontrabon.update({
-        where: {
-          id: id,
-        },
-        data: {
-          status_duedate: true,
-        },
-      });
-    } else {
-      result = await prisma.kontrabon.update({
-        where: {
-          id: id,
-        },
-        data: {
-          status_duedate: false,
-          due_date: new Date(request.body.due_date),
-        },
-      });
-    }
+    result = await prisma.kontrabon.update({
+      where: {
+        id: id,
+      },
+      data: {
+        due_date: new Date(request.body.due_date),
+      },
+    });
     if (result) {
       response.status(201).json({
         success: true,
