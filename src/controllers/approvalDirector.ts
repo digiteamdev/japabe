@@ -457,6 +457,7 @@ const getAllApprove = async (request: Request, response: Response) => {
         ],
       },
       include: {
+        cdv_detail: true,
         employee: true,
         user: {
           select: {
@@ -491,7 +492,7 @@ const getAllApprove = async (request: Request, response: Response) => {
       },
       take: parseInt(pagination.perPage),
       skip: parseInt(pagination.page) * parseInt(pagination.perPage),
-    });    
+    });
     const results = [...result, ...poandsoData, ...cdv];
     if (results.length > 0) {
       return response.status(200).json({
