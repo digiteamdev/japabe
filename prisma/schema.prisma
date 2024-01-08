@@ -195,6 +195,8 @@ model sub_depart {
   deleted        DateTime?
   Employee       Employee[]
   dispatchDetail dispatchDetail[]
+
+  @@index([id, name])
 }
 
 enum Gender {
@@ -580,7 +582,7 @@ model wor {
   file_list         String?          @db.Text
   noted             String?          @db.Text
   status            String?          @db.VarChar(20)
-  refivision        String?          @db.VarChar(20)
+  refivision        String?          @default("0")
   refevision_desc   String?          @db.Text
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
@@ -597,10 +599,9 @@ model wor {
 
 enum Priority_Status {
   ST
-  XT
-  XXT
-  XTASREQ  @map("XT As Req")
-  XXTASREQ @map("XXT As Req")
+  OT
+  TM @map("T&M")
+  Q
 }
 
 model workCenter {
@@ -1117,6 +1118,7 @@ model kontrabon {
   DO                String?            @db.VarChar(200)
   grandtotal        Int                @default(0)
   status_valid      Boolean            @default(false)
+  status_duedate    Boolean            @default(false)
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
   deleted           DateTime?
