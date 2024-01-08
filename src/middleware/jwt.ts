@@ -36,20 +36,15 @@ function authToken(roles: any) {
               let a = result.userRole.filter((s: any) => {
                 return (
                   s.role.role_name === roles.administrator ||
-                  s.role.role_name === roles.hr ||
+                  s.role.role_name === roles.HRandGA ||
                   s.role.role_name === roles.master ||
                   s.role.role_name === roles.finance ||
                   s.role.role_name === roles.QAandEng ||
                   s.role.role_name === roles.purchasing ||
                   s.role.role_name === roles.drafter ||
+                  s.role.role_name === roles.utility ||
                   s.role.role_name === roles.ppic ||
-                  s.role.role_name === roles.marketing ||
-                  s.role.role_id === roles.engineer ||
-                  s.role.role_id === roles.ga ||
-                  s.role.role_id === roles.gm ||
-                  s.role.role_id === roles.QCandQA ||
-                  s.role.role_id === roles.bod ||
-                  s.role.role_id === roles.utility
+                  s.role.role_name === roles.marketing
                 );
               });
               req.session.token = token;
