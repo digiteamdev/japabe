@@ -13,7 +13,15 @@ const getJobStatus = async (request: Request, response: Response) => {
     const pagination: any = new pagging(page, perPage, hostname, pathname);
     const worCount = await prisma.wor.count({
       where: {
-        deleted: null,
+        AND: [
+          {
+            status: "valid",
+          },
+          {
+            job_operational: false,
+          },
+          { deleted: null },
+        ],
       },
     });
     const results = await prisma.wor.findMany({
