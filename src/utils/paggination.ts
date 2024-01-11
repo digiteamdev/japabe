@@ -26,7 +26,7 @@ class Pagination {
         this.pathName +
         "?page=" +
         next +
-        "&perPage=" +
+        "&limit=" +
         this.perPage
       );
     }
@@ -44,7 +44,7 @@ class Pagination {
         this.pathName +
         "?page=" +
         prev +
-        "&perPage=" +
+        "&limit=" +
         this.perPage
       );
     }

@@ -605,6 +605,22 @@ router.delete(
 /***************************WOR********************************* */
 
 router.get(
+  "/jobStatus",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  wor.getJobStatus
+);
+
+router.get(
   "/wor",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
