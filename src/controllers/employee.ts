@@ -9,7 +9,7 @@ const getEmployee = async (request: Request, response: Response) => {
     const hostname: any = request.headers.host;
     const pathname = url.parse(request.url).pathname;
     const page: any = request.query.page;
-    const perPage: any = request.query.perPagee;
+    const perPage: any = request.query.limit;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
     const employeeCount = await prisma.employee.count({
       where: {
@@ -163,8 +163,8 @@ const getEmployee = async (request: Request, response: Response) => {
         success: true,
         massage: "Get All Employee",
         result: results,
-        page: pagination.page,
-        limit: pagination.perPage,
+        page: page,
+        limit: perPage,
         totalData: employeeCount,
         currentPage: pagination.currentPage,
         nextPage: pagination.next(),
@@ -467,17 +467,17 @@ const deleteEmployee = async (request: Request, response: Response) => {
         id: id,
       },
     });
-    const getEmployee = await prisma.employee.findFirst({
+    const getEmployee = await prisma.user.findFirst({
       where: {
-        id: id,
+        employeeId: id,
         deleted: null,
       },
-      include: {
-        user: true
-      }
     });
-    console.log(getEmployee);
-    
+    await prisma.user.delete({
+      where: {
+        id: getEmployee?.id,
+      },
+    });
     if (deleteEmployee) {
       response.status(201).json({
         success: true,
