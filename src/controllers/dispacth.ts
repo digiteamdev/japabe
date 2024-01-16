@@ -121,9 +121,6 @@ const getDispatch = async (request: Request, response: Response) => {
         where: {
           OR: [
             {
-              job_operational: true,
-            },
-            {
               Sr: {
                 deleted: null,
               },

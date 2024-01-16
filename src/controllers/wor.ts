@@ -17,9 +17,6 @@ const getJobStatus = async (request: Request, response: Response) => {
           {
             status: "valid",
           },
-          {
-            job_operational: false,
-          },
           { deleted: null },
         ],
       },
@@ -29,9 +26,6 @@ const getJobStatus = async (request: Request, response: Response) => {
         AND: [
           {
             status: "valid",
-          },
-          {
-            job_operational: false,
           },
         ],
         job_no: {
@@ -180,12 +174,6 @@ const getWor = async (request: Request, response: Response) => {
               },
             },
             {
-              job_no_mr: {
-                contains: pencarian,
-                mode: "insensitive",
-              },
-            },
-            {
               customerPo: {
                 quotations: {
                   Customer: {
@@ -280,9 +268,6 @@ const getWorTimes = async (request: any, response: Response) => {
             timeschedule: null,
           },
           {
-            job_operational: false,
-          },
-          {
             timeschedule: {
               deleted: null,
             },
@@ -293,9 +278,6 @@ const getWorTimes = async (request: any, response: Response) => {
             timeschedule: {
               deleted: null,
             },
-          },
-          {
-            job_operational: true,
           },
           {
             status: null,
@@ -379,8 +361,7 @@ const createWor = async (request: any, response: Response) => {
           file_list: !request.file ? null : request.file.path,
           noted: request.body.noted,
           status: request.body.status,
-          job_operational:
-            request.body.job_operational === "true" ? false : true,
+          job_operational: request.body.job_operational,
         },
       });
     } else {
@@ -409,8 +390,7 @@ const createWor = async (request: any, response: Response) => {
           file_list: !request.file ? null : request.file.path,
           noted: request.body.noted,
           status: request.body.status,
-          job_operational:
-            request.body.job_operational === "true" ? false : true,
+          job_operational: request.body.job_operational,
         },
       });
     }
@@ -525,13 +505,13 @@ const updateWorStatus = async (request: Request, response: Response) => {
     const d = new Date();
     let year = d.getUTCFullYear().toString().substring(2);
 
-    const genarate = year + "." + r;
+    const genarateS = "S" + year + "." + r;
 
     const m = Math.floor(Math.random() * 10000);
     const a = new Date();
     let tahun = a.getUTCFullYear().toString().substring(2);
 
-    const genarateMr = "WOR" + tahun + "." + m;
+    const genarateMr = "B" + tahun + "." + m;
 
     const id = request.params.id;
     const statusPenc = await prisma.wor.findFirst({
@@ -540,25 +520,23 @@ const updateWorStatus = async (request: Request, response: Response) => {
       },
     });
     let result;
-    if (statusPenc?.status === null) {
+    if (statusPenc?.job_operational === "S") {
       const id = request.params.id;
       result = await prisma.wor.update({
         where: { id: id },
         data: {
           status: "valid",
           job_no:
-            statusPenc.job_operational === false ? genarate : statusPenc.job_no,
-          job_no_mr:
-            statusPenc.job_operational === true
-              ? genarateMr
-              : statusPenc.job_no_mr,
+            statusPenc.job_operational === "S" ? genarateS : statusPenc.job_no,
         },
       });
-    } else {
+    } else if (statusPenc?.job_operational === "B") {
       result = await prisma.wor.update({
         where: { id: id },
         data: {
-          status: "unvalid",
+          status: "valid",
+          job_no:
+            statusPenc.job_operational === "B" ? genarateMr : statusPenc.job_no,
         },
       });
     }

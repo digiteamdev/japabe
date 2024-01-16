@@ -129,7 +129,6 @@ const getWorCdv = async (request: Request, response: Response) => {
     const results = await prisma.wor.findMany({
       select: {
         id: true,
-        job_no_mr: true,
         job_no: true,
         subject: true,
         customerPo: {

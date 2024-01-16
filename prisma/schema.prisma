@@ -49,8 +49,8 @@ model Employee {
   gender                  Gender?
   marital_status          Maritial?
   position                Position?
-  sub_depart              sub_depart                @relation(fields: [subdepartId], references: [id])
-  subdepartId             String
+  sub_depart              sub_depart?               @relation(fields: [subdepartId], references: [id])
+  subdepartId             String?
   employee_status         Employee_Status?
   spouse_name             String?                   @db.VarChar(200)
   gender_spouse           Spouse_Gender?
@@ -88,6 +88,7 @@ model User {
   purchase        purchase[]
   approvedRequest approvedRequest[]
   cash_advance    cash_advance[]
+  wor             wor[]
 
   @@index([id, employeeId])
   @@map("user")
@@ -492,6 +493,7 @@ model CustomerPo {
   grand_tot         String
   total             String
   date_of_po        DateTime
+  date_delivery     DateTime
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
   deleted           DateTime?
@@ -553,10 +555,14 @@ enum Limit_Pay {
   Repayment
 }
 
+enum job_operational {
+  S
+  B
+}
+
 model wor {
   id                String           @id @default(cuid())
   job_no            String?          @db.VarChar(200)
-  job_no_mr         String?          @db.VarChar(200)
   date_wor          DateTime?
   customerPo        CustomerPo?      @relation(fields: [cuspoId], references: [id])
   cuspoId           String?
@@ -572,7 +578,7 @@ model wor {
   date_of_order     DateTime?
   delivery_date     DateTime?
   shipping_address  String?          @db.Text
-  job_operational   Boolean?         @default(false)
+  job_operational   job_operational?
   estimated_man_our Int              @default(0)
   eq_model          String?          @db.VarChar(100)
   eq_mfg            String?          @db.VarChar(100)
@@ -593,8 +599,10 @@ model wor {
   Mr                Mr?
   Sr                Sr?
   cash_advance      cash_advance[]
+  user              User?            @relation(fields: [userId], references: [id])
+  userId            String?
 
-  @@index([id, job_no])
+  @@index([id, job_no, userId])
 }
 
 enum Priority_Status {

@@ -485,9 +485,6 @@ const getBomMr = async (request: Request, response: Response) => {
       where: {
         OR: [
           {
-            job_operational: true,
-          },
-          {
             Mr: {
               deleted: null,
             },

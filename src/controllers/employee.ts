@@ -467,6 +467,17 @@ const deleteEmployee = async (request: Request, response: Response) => {
         id: id,
       },
     });
+    const getEmployee = await prisma.employee.findFirst({
+      where: {
+        id: id,
+        deleted: null,
+      },
+      include: {
+        user: true
+      }
+    });
+    console.log(getEmployee);
+    
     if (deleteEmployee) {
       response.status(201).json({
         success: true,

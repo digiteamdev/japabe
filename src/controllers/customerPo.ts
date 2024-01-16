@@ -47,8 +47,8 @@ const getcusPo = async (request: Request, response: Response) => {
       results = await prisma.customerPo.findMany({
         where: {
           po_num_auto: {
-            contains:  pencarian,
-            mode: 'insensitive',
+            contains: pencarian,
+            mode: "insensitive",
           },
         },
         include: {
@@ -114,6 +114,7 @@ const createcusPo = async (request: Request, response: Response) => {
         tax: request.body.tax,
         noted: request.body.noted,
         date_of_po: new Date(request.body.date_of_po),
+        date_delivery: new Date(request.body.date_delivery),
         vat: request.body.vat,
         grand_tot: request.body.grand_tot,
         total: request.body.total,

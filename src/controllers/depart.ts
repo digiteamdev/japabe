@@ -291,27 +291,11 @@ const createSubMany = async (request: Request, response: Response) => {
           deleted: null,
         },
         {
-          id: "cli8fn8rf002arswm72hltl3y",
-          deptId: "cli8dpelx0001rsb80sts1959",
-          name: "FINANCE & ACCOUNTING",
-          createdAt: "2023-05-29T05:52:16.155Z",
-          updatedAt: "2023-05-29T05:52:16.155Z",
-          deleted: null,
-        },
-        {
           id: "cli8fmb2g001urswmi5rhwmai",
           deptId: "cli8dpelx0001rsb80sts1958",
           name: "GENERAL AFFAIR",
           createdAt: "2023-05-29T05:51:32.489Z",
           updatedAt: "2023-05-29T05:51:32.489Z",
-          deleted: null,
-        },
-        {
-          id: "cli8fmb45001wrswmo7u5ttas",
-          deptId: "cli8dpelx0001rsb80sts1958",
-          name: "GENERAL AFFAIR & HRD",
-          createdAt: "2023-05-29T05:51:32.550Z",
-          updatedAt: "2023-05-29T05:51:32.550Z",
           deleted: null,
         },
         {
@@ -341,7 +325,7 @@ const createSubMany = async (request: Request, response: Response) => {
         {
           id: "cli8fijp50010rswm7il5niiw",
           deptId: "cli8dpelx0001rsb80sts1954",
-          name: "MACHINIST AND WELDER",
+          name: "GENERAL MANAGER",
           createdAt: "2023-05-29T05:48:37.049Z",
           updatedAt: "2023-05-29T05:48:37.049Z",
           deleted: null,
@@ -357,7 +341,7 @@ const createSubMany = async (request: Request, response: Response) => {
         {
           id: "cli8fijso0014rswmsrgb95ql",
           deptId: "cli8dpelx0001rsb80sts1954",
-          name: "MECHANIC",
+          name: "ENGINEER",
           createdAt: "2023-05-29T05:48:37.176Z",
           updatedAt: "2023-05-29T05:48:37.176Z",
           deleted: null,
@@ -365,7 +349,7 @@ const createSubMany = async (request: Request, response: Response) => {
         {
           id: "cli8fjx88001grswm7iaou1tu",
           deptId: "cli8dpelx0001rsb80sts1956",
-          name: "NDT INSPECTOR",
+          name: "PRODUCTION",
           createdAt: "2023-05-29T05:49:41.240Z",
           updatedAt: "2023-05-29T05:49:41.240Z",
           deleted: null,
@@ -405,7 +389,7 @@ const createSubMany = async (request: Request, response: Response) => {
         {
           id: "cli8fgdks000urswm0ouptqfp",
           deptId: "cli8dpelx0001rsb80sts1953",
-          name: "QA & HSE",
+          name: "QA ENGINEER",
           createdAt: "2023-05-29T05:46:55.563Z",
           updatedAt: "2023-05-29T05:46:55.563Z",
           deleted: null,
@@ -413,7 +397,7 @@ const createSubMany = async (request: Request, response: Response) => {
         {
           id: "cli8fjx9u001irswmaclnkxlf",
           deptId: "cli8dpelx0001rsb80sts1956",
-          name: "QC ADMINISTRATOR",
+          name: "QA & QC",
           createdAt: "2023-05-29T05:49:41.299Z",
           updatedAt: "2023-05-29T05:49:41.299Z",
           deleted: null,
@@ -421,7 +405,7 @@ const createSubMany = async (request: Request, response: Response) => {
         {
           id: "cli8fjxbk001krswmp3btnhpf",
           deptId: "cli8dpelx0001rsb80sts1956",
-          name: "QC INSPECTOR",
+          name: "SECURITY",
           createdAt: "2023-05-29T05:49:41.360Z",
           updatedAt: "2023-05-29T05:49:41.360Z",
           deleted: null,
@@ -429,7 +413,7 @@ const createSubMany = async (request: Request, response: Response) => {
         {
           id: "cli8fmb9a0022rswmqnjhmx0n",
           deptId: "cli8dpelx0001rsb80sts1958",
-          name: "RECEPTIONIST",
+          name: "OPERATOR",
           createdAt: "2023-05-29T05:51:32.735Z",
           updatedAt: "2023-05-29T05:51:32.735Z",
           deleted: null,
@@ -445,7 +429,7 @@ const createSubMany = async (request: Request, response: Response) => {
         {
           id: "cli8fkhot001qrswm019nr3ak",
           deptId: "cli8dpelx0001rsb80sts1957",
-          name: "TOOL KEEPER",
+          name: "WELDER",
           createdAt: "2023-05-29T05:50:07.757Z",
           updatedAt: "2023-05-29T05:50:07.757Z",
           deleted: null,
