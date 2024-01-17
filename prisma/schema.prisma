@@ -900,6 +900,7 @@ model Mr {
   wor            wor?       @relation(fields: [worId], references: [id])
   worId          String?    @unique
   no_mr          String?    @db.VarChar(50)
+  no_job         String?    @db.VarChar(50)
   bom            bom?       @relation(fields: [bomIdU], references: [id])
   bomIdU         String?    @unique
   date_mr        DateTime
