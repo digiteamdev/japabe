@@ -2062,6 +2062,15 @@ router.put(
   cashier.updateDuedate
 );
 
+router.put(
+  "/duedatevalid/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    finance: "FINANCE & ACC",
+  }),
+  cashier.updateDuedateStatus
+);
+
 router.delete(
   "/cashier/:id",
   jwt.authToken({

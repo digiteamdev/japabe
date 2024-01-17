@@ -26,6 +26,9 @@ const getCashier = async (request: Request, response: Response) => {
               status_valid: true,
             },
             {
+              status_duedate: true,
+            },
+            {
               cashier: {
                 every: {
                   kontrabonId: "null",
@@ -1537,6 +1540,35 @@ const updateDuedate = async (request: Request, response: Response) => {
   }
 };
 
+const updateDuedateStatus = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    let result: any = [];
+    result = await prisma.kontrabon.update({
+      where: {
+        id: id,
+      },
+      data: {
+        status_duedate: request.body.status_duedate,
+      },
+    });
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        result: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const deleteCashier = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
@@ -1648,6 +1680,7 @@ export default {
   createCashier,
   updateCashier,
   updateDuedate,
+  updateDuedateStatus,
   deleteCashier,
   deleteDetailCashier,
   updateStatusM,
