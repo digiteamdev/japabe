@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import prisma from "../middleware/cashAdvance";
 import pagging from "../utils/paggination";
 import url from "url";
+import { Prisma } from "@prisma/client";
 
 const getCdv = async (request: Request, response: Response) => {
   try {
@@ -16,49 +17,94 @@ const getCdv = async (request: Request, response: Response) => {
         deleted: null,
       },
     });
-    const results = await prisma.cash_advance.findMany({
-      where: {
-        id_cash_advance: {
-          contains: pencarian,
+    let results: any;
+    if (request.query.page === undefined) {
+      results = await prisma.cash_advance.findMany({
+        where: {
+          id_cash_advance: {
+            contains: pencarian,
+          },
         },
-      },
-      include: {
-        cdv_detail: true,
-        employee: true,
-        user: {
-          select: {
-            id: true,
-            username: true,
-            employee: {
-              select: {
-                id: true,
-                employee_name: true,
-                position: true,
+        include: {
+          cdv_detail: true,
+          employee: true,
+          user: {
+            select: {
+              id: true,
+              username: true,
+              employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                  position: true,
+                },
               },
             },
           },
-        },
-        wor: {
-          include: {
-            customerPo: {
-              include: {
-                quotations: {
-                  include: {
-                    Customer: true,
-                    CustomerContact: true,
+          wor: {
+            include: {
+              customerPo: {
+                include: {
+                  quotations: {
+                    include: {
+                      Customer: true,
+                      CustomerContact: true,
+                    },
                   },
                 },
               },
             },
           },
         },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      take: parseInt(pagination.perPage),
-      skip: parseInt(pagination.page) * parseInt(pagination.perPage),
-    });
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+    } else {
+      results = await prisma.cash_advance.findMany({
+        where: {
+          id_cash_advance: {
+            contains: pencarian,
+          },
+        },
+        include: {
+          cdv_detail: true,
+          employee: true,
+          user: {
+            select: {
+              id: true,
+              username: true,
+              employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                  position: true,
+                },
+              },
+            },
+          },
+          wor: {
+            include: {
+              customerPo: {
+                include: {
+                  quotations: {
+                    include: {
+                      Customer: true,
+                      CustomerContact: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: parseInt(pagination.perPage),
+        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+      });
+    }
     if (results.length > 0) {
       return response.status(200).json({
         success: true,
@@ -233,6 +279,72 @@ const updateCdv = async (request: Request, response: Response) => {
   }
 };
 
+const createSpjCdv = async (request: Request, response: Response) => {
+  try {
+    await prisma.$transaction(
+      async (prisma) => {
+        let result: any = [];
+        const id: string = request.params.id;
+        result = await prisma.cash_advance.update({
+          where: {
+            id: id,
+          },
+          data: {
+            id_spj: request.body.id_spj,
+          },
+        });
+        const updateVerify = request.body.cdv_detail.map(
+          (updateByveri: {
+            actual: any;
+            balance: any;
+            cdvId: any;
+            id: any;
+          }) => {
+            return {
+              actual: updateByveri.actual,
+              balance: updateByveri.balance,
+              cdvId: updateByveri.cdvId,
+              id: updateByveri.id,
+            };
+          }
+        );
+        let upsertDetailCdv: any;
+        if (result) {
+          for (let i = 0; i < updateVerify.length; i++) {
+            upsertDetailCdv = await prisma.cdv_detail.update({
+              where: {
+                id: updateVerify[i].id,
+              },
+              data: {
+                actual: new Date(updateVerify[i].actual),
+                balance: updateVerify[i].price,
+                cash_advance: { connect: { id: updateVerify[i].cdvId } },
+              },
+            });
+          }
+          response.status(201).json({
+            success: true,
+            massage: "Success Update Data",
+            results: upsertDetailCdv,
+          });
+        } else {
+          response.status(400).json({
+            success: false,
+            massage: "Unsuccess Update Data",
+          });
+        }
+      },
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable, // optional, default defined by database configuration
+        maxWait: 5000, // default: 2000
+        timeout: 10000, // default: 5000
+      }
+    );
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const deleteCdv = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
@@ -377,6 +489,7 @@ export default {
   getEmployeeCdv,
   getWorCdv,
   createCdv,
+  createSpjCdv,
   updateStatusSpv,
   updateStatusM,
   updateCdv,

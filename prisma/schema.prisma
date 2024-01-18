@@ -1192,6 +1192,7 @@ enum type_cdv {
 model cash_advance {
   id                      String                   @id @default(cuid())
   id_cash_advance         String
+  id_spj                  String?
   employee                Employee?                @relation(fields: [employeeId], references: [id])
   employeeId              String?
   wor                     wor?                     @relation(fields: [worId], references: [id])
@@ -1220,6 +1221,8 @@ model cdv_detail {
   type_cdv     type_cdv?
   total        Int          @default(0)
   description  String?      @db.Text
+  actual       DateTime?
+  balance      Int          @default(0)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   deleted      DateTime?

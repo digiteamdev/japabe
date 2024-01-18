@@ -9,7 +9,7 @@ const getEmployee = async (request: Request, response: Response) => {
     const hostname: any = request.headers.host;
     const pathname = url.parse(request.url).pathname;
     const page: any = request.query.page;
-    const perPage: any = request.query.perPage;
+    const perPage: any = request.query.limit;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
     const employeeCount = await prisma.employee.count({
       where: {
