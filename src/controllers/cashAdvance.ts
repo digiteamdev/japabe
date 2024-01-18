@@ -24,6 +24,7 @@ const getCdv = async (request: Request, response: Response) => {
           id_cash_advance: {
             contains: pencarian,
           },
+          id_spj: null,
         },
         include: {
           cdv_detail: true,
@@ -66,6 +67,7 @@ const getCdv = async (request: Request, response: Response) => {
           id_cash_advance: {
             contains: pencarian,
           },
+          id_spj: null
         },
         include: {
           cdv_detail: true,
@@ -156,6 +158,135 @@ const getEmployeeCdv = async (request: Request, response: Response) => {
         success: true,
         massage: "Get All Employee Cash Adv",
         result: results,
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const getSPJCdv = async (request: Request, response: Response) => {
+  try {
+    const pencarian: any = request.query.search || "";
+    const hostname: any = request.headers.host;
+    const pathname = url.parse(request.url).pathname;
+    const page: any = request.query.page;
+    const perPage: any = request.query.perPage;
+    const pagination: any = new pagging(page, perPage, hostname, pathname);
+    const cdvCount = await prisma.cash_advance.count({
+      where: {
+        deleted: null,
+      },
+    });
+    let results: any;
+    if (request.query.page === undefined) {
+      results = await prisma.cash_advance.findMany({
+        where: {
+          id_cash_advance: {
+            contains: pencarian,
+          },
+        },
+        include: {
+          cdv_detail: true,
+          employee: true,
+          user: {
+            select: {
+              id: true,
+              username: true,
+              employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                  position: true,
+                },
+              },
+            },
+          },
+          wor: {
+            include: {
+              customerPo: {
+                include: {
+                  quotations: {
+                    include: {
+                      Customer: true,
+                      CustomerContact: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+    } else {
+      results = await prisma.cash_advance.findMany({
+        where: {
+          id_cash_advance: {
+            contains: pencarian,
+          },
+          NOT: {
+            id_spj: null,
+          },
+        },
+        include: {
+          cdv_detail: true,
+          employee: true,
+          user: {
+            select: {
+              id: true,
+              username: true,
+              employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                  position: true,
+                },
+              },
+            },
+          },
+          wor: {
+            include: {
+              customerPo: {
+                include: {
+                  quotations: {
+                    include: {
+                      Customer: true,
+                      CustomerContact: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: parseInt(pagination.perPage),
+        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+      });
+    }
+    if (results.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All SPJ Cash Advance",
+        result: results,
+        page: pagination.page,
+        limit: pagination.perPage,
+        totalData: cdvCount,
+        currentPage: pagination.currentPage,
+        nextPage: pagination.next(),
+        previouspage: pagination.prev(),
       });
     } else {
       return response.status(200).json({
@@ -294,16 +425,10 @@ const createSpjCdv = async (request: Request, response: Response) => {
           },
         });
         const updateVerify = request.body.cdv_detail.map(
-          (updateByveri: {
-            actual: any;
-            balance: any;
-            cdvId: any;
-            id: any;
-          }) => {
+          (updateByveri: { actual: any; balance: any; id: any }) => {
             return {
               actual: updateByveri.actual,
               balance: updateByveri.balance,
-              cdvId: updateByveri.cdvId,
               id: updateByveri.id,
             };
           }
@@ -317,8 +442,7 @@ const createSpjCdv = async (request: Request, response: Response) => {
               },
               data: {
                 actual: new Date(updateVerify[i].actual),
-                balance: updateVerify[i].price,
-                cash_advance: { connect: { id: updateVerify[i].cdvId } },
+                balance: updateVerify[i].balance,
               },
             });
           }
@@ -487,6 +611,7 @@ const updateStatusM = async (request: any, response: Response) => {
 export default {
   getCdv,
   getEmployeeCdv,
+  getSPJCdv,
   getWorCdv,
   createCdv,
   createSpjCdv,

@@ -2150,6 +2150,22 @@ router.get(
   cashAdv.getWorCdv
 );
 
+router.get(
+  "/SPJ",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  cashAdv.getSPJCdv
+);
+
 router.post(
   "/cashAdv",
   jwt.authToken({
