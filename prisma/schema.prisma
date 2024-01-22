@@ -1205,11 +1205,12 @@ model cash_advance {
   status_valid_spv        Boolean                  @default(false)
   status_manager_director status_manager_director?
   date_cash_advance       DateTime
-  createdAt               DateTime                 @default(now())
-  updatedAt               DateTime                 @updatedAt
-  deleted                 DateTime?
-  cashier                 cashier[]
-  cdv_detail              cdv_detail[]
+  grand_tot               Int                      @default(0)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  deleted    DateTime?
+  cashier    cashier[]
+  cdv_detail cdv_detail[]
 
   @@index([id, employeeId, worId, userId, id_cash_advance])
 }
@@ -1221,7 +1222,7 @@ model cdv_detail {
   type_cdv     type_cdv?
   total        Int          @default(0)
   description  String?      @db.Text
-  actual       DateTime?
+  actual       Int          @default(0)
   balance      Int          @default(0)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt

@@ -67,7 +67,7 @@ const getCdv = async (request: Request, response: Response) => {
           id_cash_advance: {
             contains: pencarian,
           },
-          id_spj: null
+          id_spj: null,
         },
         include: {
           cdv_detail: true,
@@ -422,6 +422,7 @@ const createSpjCdv = async (request: Request, response: Response) => {
           },
           data: {
             id_spj: request.body.id_spj,
+            grand_tot: request.body.grand_tot,
           },
         });
         const updateVerify = request.body.cdv_detail.map(
@@ -441,7 +442,7 @@ const createSpjCdv = async (request: Request, response: Response) => {
                 id: updateVerify[i].id,
               },
               data: {
-                actual: new Date(updateVerify[i].actual),
+                actual: updateVerify[i].actual,
                 balance: updateVerify[i].balance,
               },
             });
@@ -473,6 +474,31 @@ const deleteCdv = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
     const deleteCdv = await prisma.cash_advance.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (deleteCdv) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Delete Data",
+        results: deleteCdv,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Delete Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const deleteCdvDetail = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const deleteCdv = await prisma.cdv_detail.delete({
       where: {
         id: id,
       },
@@ -619,4 +645,5 @@ export default {
   updateStatusM,
   updateCdv,
   deleteCdv,
+  deleteCdvDetail,
 };

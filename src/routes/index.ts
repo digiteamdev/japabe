@@ -2262,6 +2262,22 @@ router.delete(
   cashAdv.deleteCdv
 );
 
+router.delete(
+  "/SPJ/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  cashAdv.deleteCdvDetail
+);
+
 /***************************Cash Advance**************************************** */
 
 /***************************Outgoing Material**************************************** */
