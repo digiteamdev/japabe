@@ -426,22 +426,33 @@ const createSpjCdv = async (request: Request, response: Response) => {
           },
         });
         const updateVerify = request.body.cdv_detail.map(
-          (updateByveri: { actual: any; balance: any; id: any }) => {
+          (updateByveri: {
+            actual: any;
+            balance: any;
+            id: any;
+            cdvId: any;
+          }) => {
             return {
               actual: updateByveri.actual,
               balance: updateByveri.balance,
               id: updateByveri.id,
+              cdvId: updateByveri.cdvId,
             };
           }
         );
         let upsertDetailCdv: any;
-        if (result) {
+        if (result) {          
           for (let i = 0; i < updateVerify.length; i++) {
-            upsertDetailCdv = await prisma.cdv_detail.update({
+            upsertDetailCdv = await prisma.cdv_detail.upsert({
               where: {
                 id: updateVerify[i].id,
               },
-              data: {
+              create: {
+                cash_advance: { connect: { id: updateVerify[i].cdvId } },
+                actual: updateVerify[i].actual,
+                balance: updateVerify[i].balance,
+              },
+              update: {
                 actual: updateVerify[i].actual,
                 balance: updateVerify[i].balance,
               },
