@@ -77,6 +77,7 @@ const createCustomer = async (request: Request, response: Response) => {
         email: request.body.email,
         ppn: request.body.ppn,
         pph: request.body.pph,
+        fax: request.body.fax,
         contact: {
           create: request.body.contact,
         },
