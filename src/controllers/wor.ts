@@ -500,18 +500,29 @@ const updateWor = async (request: Request, response: Response) => {
 
 const updateWorStatus = async (request: Request, response: Response) => {
   try {
-    const r = Math.floor(Math.random() * 10000);
-
+    const setNum = (num: any) => {
+      return "00" + num;
+    };
+    const lastRes = await prisma.wor.findFirst({
+      where: {
+        status: "valid",
+      },
+      take: 1,
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
     const d = new Date();
     let year = d.getUTCFullYear().toString().substring(2);
 
-    const genarateS = "S" + year + "." + r;
+    const count = lastRes?.job_no;
+    const i: any = count?.substring(4);
+    const autoIn: any = parseInt(i) + 1;
 
-    const m = Math.floor(Math.random() * 10000);
-    const a = new Date();
-    let tahun = a.getUTCFullYear().toString().substring(2);
-
-    const genarateMr = "B" + tahun + "." + m;
+    const genarateS = "S" + year + setNum(0 + autoIn);
+    const genarateMr = "B" + year + setNum(0 + autoIn);
+    const generatJobS = "S" + year + setNum(0);
+    const generatJobB = "B" + year + setNum(0);
 
     const id = request.params.id;
     const statusPenc = await prisma.wor.findFirst({
@@ -520,7 +531,33 @@ const updateWorStatus = async (request: Request, response: Response) => {
       },
     });
     let result;
-    if (statusPenc?.job_operational === "S") {
+    if (statusPenc?.job_no === "" && statusPenc?.job_operational === "S") {
+      const id = request.params.id;
+      result = await prisma.wor.update({
+        where: { id: id },
+        data: {
+          status: "valid",
+          job_no:
+            statusPenc.job_operational === "S"
+              ? generatJobS
+              : statusPenc.job_no,
+        },
+      });
+    }
+    if (statusPenc?.job_no === "" && statusPenc?.job_operational === "B") {
+      const id = request.params.id;
+      result = await prisma.wor.update({
+        where: { id: id },
+        data: {
+          status: "valid",
+          job_no:
+            statusPenc.job_operational === "B"
+              ? generatJobB
+              : statusPenc.job_no,
+        },
+      });
+    }
+    if (statusPenc?.job_operational === "S" && lastRes) {
       const id = request.params.id;
       result = await prisma.wor.update({
         where: { id: id },
@@ -530,7 +567,7 @@ const updateWorStatus = async (request: Request, response: Response) => {
             statusPenc.job_operational === "S" ? genarateS : statusPenc.job_no,
         },
       });
-    } else if (statusPenc?.job_operational === "B") {
+    } else if (statusPenc?.job_operational === "B" && lastRes) {
       result = await prisma.wor.update({
         where: { id: id },
         data: {

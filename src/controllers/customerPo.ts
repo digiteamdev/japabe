@@ -19,6 +19,13 @@ const getcusPo = async (request: Request, response: Response) => {
     let results;
     if (request.query.page === undefined) {
       results = await prisma.customerPo.findMany({
+        where: {
+          wor: {
+            every: {
+              customerPo: null,
+            },
+          },
+        },
         include: {
           quotations: {
             include: {
