@@ -271,13 +271,13 @@ const createMr = async (request: Request, response: Response) => {
     const r = Math.floor(Math.random() * 1000) + 1;
     const genarate = "MR" + r;
     const bomNull = request.body.bomIdU;
+    const worNull = request.body.worId;
     let results;
-    if (bomNull === null) {
+    if (bomNull === null && worNull === null) {
       results = await prisma.mr.create({
         data: {
           no_mr: genarate,
           user: { connect: { id: request.body.userId } },
-          wor: { connect: { id: request.body.worId } },
           no_job: request.body.no_job,
           date_mr: new Date(request.body.date_mr),
           detailMr: {
