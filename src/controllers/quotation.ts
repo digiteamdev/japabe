@@ -59,7 +59,7 @@ const getQuotation = async (request: Request, response: Response) => {
           Customer: {
             name: {
               contains: pencarian,
-              mode: 'insensitive',
+              mode: "insensitive",
             },
           },
         },
@@ -167,7 +167,7 @@ const createQuotation = async (request: any, response: Response) => {
         quo_auto: request.body.quo_auto,
         Customer: { connect: { id: request.body.customerId } },
         CustomerContact: { connect: { id: request.body.customercontactId } },
-        deskription: request.body.deskription,
+        subject: request.body.subject,
         date: new Date(request.body.date),
         quo_img: !request.file ? null : request.file.path,
         Quotations_Detail: {
@@ -211,7 +211,7 @@ const updateQuotation = async (request: any, response: Response) => {
         quo_auto: request.body.quo_auto,
         Customer: { connect: { id: request.body.customerId } },
         CustomerContact: { connect: { id: request.body.customercontactId } },
-        deskription: request.body.deskription,
+        subject: request.body.subject,
         date: new Date(request.body.date),
         quo_img: !request.file ? request.body.quo_img : request.file.path,
       },
@@ -260,14 +260,10 @@ const updateQuotationDetail = async (request: Request, response: Response) => {
         },
         create: {
           item_of_work: updateVerify[i].item_of_work,
-          volume: updateVerify[i].volume,
-          unit: updateVerify[i].unit,
           quotations: { connect: { id: updateVerify[i].quo_id } },
         },
         update: {
           item_of_work: updateVerify[i].item_of_work,
-          volume: updateVerify[i].volume,
-          unit: updateVerify[i].unit,
           quotations: { connect: { id: updateVerify[i].quo_id } },
         },
       });

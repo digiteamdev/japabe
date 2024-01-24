@@ -453,7 +453,7 @@ model Quotations {
   quo_auto          String?             @db.VarChar(200)
   customerId        String
   date              DateTime
-  deskription       String?             @db.Text
+  subject           String?             @db.Text
   quo_img           String?             @db.Text
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
@@ -472,8 +472,6 @@ model Quotations {
 model Quotations_Detail {
   id           String     @id @default(cuid())
   item_of_work String?    @db.VarChar(200)
-  volume       Int        @default(0)
-  unit         String?    @db.VarChar(20)
   quotations   Quotations @relation(fields: [quo_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   quo_id       String
   createdAt    DateTime   @default(now())
