@@ -303,14 +303,16 @@ const createSr = async (request: Request, response: Response) => {
     const r = Math.floor(Math.random() * 1000) + 1;
     const genarate = "SR" + r;
     const dispatchNull = request.body.dispacthIDS;
+    const worNull = request.body.worId;
+
     let results;
-    if (dispatchNull === null) {
+    if (dispatchNull === null && worNull === null) {
       results = await prisma.sr.create({
         data: {
           no_sr: genarate,
           user: { connect: { id: request.body.userId } },
           date_sr: new Date(request.body.date_sr),
-          wor: { connect: { id: request.body.worId } },
+          job_no: request.body.job_no,
           SrDetail: {
             create: request.body.SrDetail,
           },

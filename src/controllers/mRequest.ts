@@ -278,7 +278,7 @@ const createMr = async (request: Request, response: Response) => {
         data: {
           no_mr: genarate,
           user: { connect: { id: request.body.userId } },
-          no_job: request.body.no_job,
+          job_no: request.body.job_no,
           date_mr: new Date(request.body.date_mr),
           detailMr: {
             create: request.body.detailMr,
