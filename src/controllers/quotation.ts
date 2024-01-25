@@ -42,7 +42,11 @@ const getQuotation = async (request: Request, response: Response) => {
             },
           },
           CustomerContact: true,
-          Quotations_Detail: true,
+          Quotations_Detail: {
+            include: {
+              Child_QuDet: true,
+            }
+          },
           eqandpart: {
             include: {
               equipment: true,
@@ -72,7 +76,11 @@ const getQuotation = async (request: Request, response: Response) => {
             },
           },
           CustomerContact: true,
-          Quotations_Detail: true,
+          Quotations_Detail: {
+            include: {
+              Child_QuDet: true,
+            },
+          },
           eqandpart: {
             include: {
               equipment: true,
@@ -254,11 +262,7 @@ const updateQuotation = async (request: any, response: Response) => {
 const updateQuotationDetail = async (request: Request, response: Response) => {
   try {
     const updateVerify = request.body.map(
-      (updateByveri: {
-        item_of_work: any;
-        quo_id: any;
-        id: any;
-      }) => {
+      (updateByveri: { item_of_work: any; quo_id: any; id: any }) => {
         return {
           item_of_work: updateByveri.item_of_work,
           quo_id: updateByveri.quo_id,
@@ -456,7 +460,10 @@ const deleteQuotationDetail = async (request: Request, response: Response) => {
   }
 };
 
-const deleteQuotationDetailChild = async (request: Request, response: Response) => {
+const deleteQuotationDetailChild = async (
+  request: Request,
+  response: Response
+) => {
   try {
     const id: string = request.params.id;
     const deleteQuotationDetailChild = await prisma.child_QuDet.delete({
