@@ -173,6 +173,7 @@ const createQuotation = async (request: any, response: Response) => {
         estimated_delivery: request.body.estimated_delivery,
         date: new Date(request.body.date),
         quo_img: !request.files ? null : request.files.path,
+        warranty: request.body.warranty,
         Quotations_Detail: {
           create: {
             item_of_work: request.body.item_of_work,
@@ -230,6 +231,7 @@ const updateQuotation = async (request: any, response: Response) => {
         estimated_delivery: request.body.estimated_delivery,
         date: new Date(request.body.date),
         quo_img: !request.files ? request.body.quo_img : request.files.path,
+        warranty: request.body.warranty,
       },
     });
     if (updateQuotation) {

@@ -451,14 +451,15 @@ model Quotations {
   id                 String              @id @default(cuid())
   quo_num            String?             @db.VarChar(200)
   quo_auto           String?             @db.VarChar(200)
-  revision         String?             @default("0")
-  revision_desc    String?             @db.Text
+  revision           String?             @default("0")
+  revision_desc      String?             @db.Text
   customerId         String
   date               DateTime
   subject            String?             @db.Text
   attention          String?             @db.Text
   estimated_delivery String?             @db.Text
   quo_img            String?             @db.Text
+  warranty           String?             @db.Text
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   deleted            DateTime?
