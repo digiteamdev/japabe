@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import prisma from "../middleware/quotation";
 import pagging from "../utils/paggination";
 import url from "url";
-import { create } from "domain";
 
 const getQuotation = async (request: Request, response: Response) => {
   try {
