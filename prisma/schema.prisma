@@ -456,6 +456,7 @@ model Quotations {
   customerId         String
   date               DateTime
   subject            String?             @db.Text
+  send_by            String?             @db.Text
   attention          String?             @db.Text
   estimated_delivery String?             @db.Text
   quo_img            String?             @db.Text
