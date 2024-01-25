@@ -44,7 +44,7 @@ const getQuotation = async (request: Request, response: Response) => {
           Quotations_Detail: {
             include: {
               Child_QuDet: true,
-            }
+            },
           },
           eqandpart: {
             include: {
@@ -263,10 +263,20 @@ const updateQuotation = async (request: any, response: Response) => {
 const updateQuotationDetail = async (request: Request, response: Response) => {
   try {
     const updateVerify = request.body.map(
-      (updateByveri: { item_of_work: any; quo_id: any; id: any }) => {
+      (updateByveri: {
+        item_of_work: any;
+        quo_id: any;
+        qty: any;
+        unit: any;
+        price: any;
+        id: any;
+      }) => {
         return {
           item_of_work: updateByveri.item_of_work,
           quo_id: updateByveri.quo_id,
+          qty: updateByveri.qty,
+          unit: updateByveri.unit,
+          price: updateByveri.price,
           id: updateByveri.id,
         };
       }
@@ -280,10 +290,16 @@ const updateQuotationDetail = async (request: Request, response: Response) => {
         create: {
           item_of_work: updateVerify[i].item_of_work,
           quotations: { connect: { id: updateVerify[i].quo_id } },
+          qty: updateVerify[i].qty,
+          unit: updateVerify[i].unit,
+          price: updateVerify[i].price,
         },
         update: {
           item_of_work: updateVerify[i].item_of_work,
           quotations: { connect: { id: updateVerify[i].quo_id } },
+          qty: updateVerify[i].qty,
+          unit: updateVerify[i].unit,
+          price: updateVerify[i].price,
         },
       });
       result = [...result, updateQuotationDetail];
