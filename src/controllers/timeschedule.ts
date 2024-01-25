@@ -167,6 +167,7 @@ const createTimeschedule = async (request: Request, response: Response) => {
         idTs: request.body.idTs,
         wor: { connect: { id: request.body.worId } },
         timesch: new Date(request.body.timesch),
+        job_priority: request.body.job_priority,
         holiday: request.body.holiday,
         aktivitas: {
           create: request.body.aktivitas,

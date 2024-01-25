@@ -665,16 +665,17 @@ model masterAktivitas {
 }
 
 model timeschedule {
-  id             String      @id @default(cuid())
-  idTs           String?     @db.VarChar(100)
+  id             String       @id @default(cuid())
+  idTs           String?      @db.VarChar(100)
   timesch        DateTime
-  wor            wor?        @relation(fields: [worId], references: [id])
-  worId          String?     @unique
-  status_spv     String?     @db.VarChar(20)
-  status_manager String?     @db.VarChar(20)
-  holiday        Boolean?    @default(false)
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
+  wor            wor?         @relation(fields: [worId], references: [id])
+  worId          String?      @unique
+  job_priority   job_priority
+  status_spv     String?      @db.VarChar(20)
+  status_manager String?      @db.VarChar(20)
+  holiday        Boolean?     @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
   deleted        DateTime?
   aktivitas      aktivitas[]
   drawing        drawing?

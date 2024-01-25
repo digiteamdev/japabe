@@ -15,8 +15,9 @@ function importXlsx(file: any) {
     // console.log('email',data[1][1]);
      
     results.push({
-      name: data[index][0],
-      email: data[index][1],
+      NIK: data[index][0],
+      employee_name: data[index][1],
+      employee_status: data[index][2]
     });
   }
   return results;
