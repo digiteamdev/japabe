@@ -510,19 +510,24 @@ router.get(
 router.post(
   "/quotation",
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
-  upload.single("quo_img", 1),
+  upload.array("quo_img", 1000),
   quotation.createQuotation
 );
 router.put(
   "/quotation/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
-  upload.single("quo_img", 1),
+  upload.array("quo_img", 1000),
   quotation.updateQuotation
 );
 router.put(
   "/quotationDetail",
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   quotation.updateQuotationDetail
+);
+router.put(
+  "/quotationDetailChild",
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  quotation.updateQuoDetChild
 );
 router.put(
   "/quotationEqPart",
@@ -543,6 +548,11 @@ router.delete(
   "/quotationEqPart/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   quotation.deleteQuotationEqPart
+);
+router.delete(
+  "/quotationDetailChild/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  quotation.deleteQuotationDetailChild
 );
 
 /***************************QUOTATION********************************* */

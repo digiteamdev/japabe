@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import prisma from "../middleware/quotation";
 import pagging from "../utils/paggination";
 import url from "url";
+import { create } from "domain";
 
 const getQuotation = async (request: Request, response: Response) => {
   try {
@@ -168,17 +169,28 @@ const createQuotation = async (request: any, response: Response) => {
         Customer: { connect: { id: request.body.customerId } },
         CustomerContact: { connect: { id: request.body.customercontactId } },
         subject: request.body.subject,
+        attention: request.body.attention,
+        estimated_delivery: request.body.estimated_delivery,
         date: new Date(request.body.date),
-        quo_img: !request.file ? null : request.file.path,
+        quo_img: !request.files ? null : request.files.path,
         Quotations_Detail: {
-          create: JSON.parse(request.body.Quotations_Detail),
+          create: {
+            item_of_work: request.body.item_of_work,
+            Child_QuDet: {
+              create: request.body.Child_QuDet,
+            },
+          },
         },
         eqandpart: {
-          create: JSON.parse(request.body.eqandpart),
+          create: request.body.eqandpart,
         },
       },
       include: {
-        Quotations_Detail: true,
+        Quotations_Detail: {
+          include: {
+            Child_QuDet: true,
+          },
+        },
         eqandpart: true,
       },
     });
@@ -209,11 +221,15 @@ const updateQuotation = async (request: any, response: Response) => {
       data: {
         quo_num: request.body.quo_num,
         quo_auto: request.body.quo_auto,
+        revision: request.body.revision,
+        revision_desc: request.body.revision_desc,
         Customer: { connect: { id: request.body.customerId } },
         CustomerContact: { connect: { id: request.body.customercontactId } },
         subject: request.body.subject,
+        attention: request.body.attention,
+        estimated_delivery: request.body.estimated_delivery,
         date: new Date(request.body.date),
-        quo_img: !request.file ? request.body.quo_img : request.file.path,
+        quo_img: !request.files ? request.body.quo_img : request.files.path,
       },
     });
     if (updateQuotation) {
@@ -238,15 +254,11 @@ const updateQuotationDetail = async (request: Request, response: Response) => {
     const updateVerify = request.body.map(
       (updateByveri: {
         item_of_work: any;
-        volume: any;
-        unit: any;
         quo_id: any;
         id: any;
       }) => {
         return {
           item_of_work: updateByveri.item_of_work,
-          volume: updateByveri.volume,
-          unit: updateByveri.unit,
           quo_id: updateByveri.quo_id,
           id: updateByveri.id,
         };
@@ -265,6 +277,51 @@ const updateQuotationDetail = async (request: Request, response: Response) => {
         update: {
           item_of_work: updateVerify[i].item_of_work,
           quotations: { connect: { id: updateVerify[i].quo_id } },
+        },
+      });
+      result = [...result, updateQuotationDetail];
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        result: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updateQuoDetChild = async (request: Request, response: Response) => {
+  try {
+    const updateVerify = request.body.map(
+      (updateByveri: { item_of_work: any; quoDetId: any; id: any }) => {
+        return {
+          item_of_work: updateByveri.item_of_work,
+          quoDetId: updateByveri.quoDetId,
+          id: updateByveri.id,
+        };
+      }
+    );
+    let result: any = [];
+    for (let i = 0; i < updateVerify.length; i++) {
+      const updateQuotationDetail = await prisma.child_QuDet.upsert({
+        where: {
+          id: updateVerify[i].id,
+        },
+        create: {
+          item_of_work: updateVerify[i].item_of_work,
+          Quotations_Detail: { connect: { id: updateVerify[i].quoDetId } },
+        },
+        update: {
+          item_of_work: updateVerify[i].item_of_work,
+          Quotations_Detail: { connect: { id: updateVerify[i].quoDetId } },
         },
       });
       result = [...result, updateQuotationDetail];
@@ -397,6 +454,31 @@ const deleteQuotationDetail = async (request: Request, response: Response) => {
   }
 };
 
+const deleteQuotationDetailChild = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const deleteQuotationDetailChild = await prisma.child_QuDet.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (deleteQuotationDetailChild) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Delete Data",
+        results: deleteQuotationDetailChild,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Delete Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const deleteQuotationEqPart = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
@@ -432,4 +514,6 @@ export default {
   deleteQuotationDetail,
   deleteQuotationEqPart,
   getEditPoQuotation,
+  deleteQuotationDetailChild,
+  updateQuoDetChild,
 };
