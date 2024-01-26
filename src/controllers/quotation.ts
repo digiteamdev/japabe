@@ -202,9 +202,12 @@ const createQuotation = async (request: any, response: Response) => {
             qty: request.body.qty,
             unit: request.body.unit,
             price: request.body.price,
+            Child_QuDet: {
+              create: JSON.parse(request.body.child_QuDet)
+            }
           },
           include: {
-            Child_QuDet: JSON.parse(request.body.Child_QuDet),
+            Child_QuDet: true
           },
         });
         if (results) {
