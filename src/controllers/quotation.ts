@@ -185,7 +185,7 @@ const createQuotation = async (request: any, response: Response) => {
             send_by: request.body.send_by,
             estimated_delivery: request.body.estimated_delivery,
             date: new Date(request.body.date),
-            quo_img: !request.files ? null : request.files.path,
+            quo_img: !request.file ? null : request.file.path,
             warranty: request.body.warranty,
             eqandpart: {
               create: JSON.parse(request.body.eqandpart),
@@ -195,21 +195,29 @@ const createQuotation = async (request: any, response: Response) => {
             eqandpart: true,
           },
         });
-        results = await prisma.quotations_Detail.create({
-          data: {
-            quo_id: results.id,
-            item_of_work: request.body.item_of_work,
-            qty: request.body.qty,
-            unit: request.body.unit,
-            price: request.body.price,
-            Child_QuDet: {
-              create: JSON.parse(request.body.child_QuDet)
+        let details = JSON.parse(request.body.Quotations_Detail);
+        for (let i = 0; i < details.length; i++) {
+          let detail = await prisma.quotations_Detail.create({
+            data: {
+              quotations: { connect: { id: results.id } },
+              item_of_work: details[i].item_of_work,
+            },
+          });
+          if (details[i].Child_QuDet.length > 0) {
+            for (
+              let index = 0;
+              index < details[i].Child_QuDet.length;
+              index++
+            ) {
+              await prisma.child_QuDet.create({
+                data: {
+                  Quotations_Detail: { connect: { id: detail.id } },
+                  item_of_work: details[i].Child_QuDet[index].item_of_work,
+                },
+              });
             }
-          },
-          include: {
-            Child_QuDet: true
-          },
-        });
+          }
+        }
         if (results) {
           return response.status(204).json({
             success: true,

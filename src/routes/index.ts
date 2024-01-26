@@ -510,13 +510,13 @@ router.get(
 router.post(
   "/quotation",
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
-  upload.array("quo_img", 1000),
+  upload.single("quo_img", 1000),
   quotation.createQuotation
 );
 router.put(
   "/quotation/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
-  upload.array("quo_img", 1000),
+  upload.single("quo_img", 1000),
   quotation.updateQuotation
 );
 router.put(
