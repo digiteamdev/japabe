@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import prisma from "../middleware/quotation";
 import pagging from "../utils/paggination";
 import url from "url";
+import { Prisma } from "@prisma/client";
 
 const getQuotation = async (request: Request, response: Response) => {
   try {
@@ -168,53 +169,63 @@ const getEditPoQuotation = async (request: Request, response: Response) => {
 
 const createQuotation = async (request: any, response: Response) => {
   try {
-    let results;
-    results = await prisma.quotations.create({
-      data: {
-        quo_num: request.body.quo_num,
-        quo_auto: request.body.quo_auto,
-        Customer: { connect: { id: request.body.customerId } },
-        CustomerContact: { connect: { id: request.body.customercontactId } },
-        subject: request.body.subject,
-        attention: request.body.attention,
-        send_by: request.body.send_by,
-        estimated_delivery: request.body.estimated_delivery,
-        date: new Date(request.body.date),
-        quo_img: !request.files ? null : request.files.path,
-        warranty: request.body.warranty,
-        Quotations_Detail: {
-          create: {
-            item_of_work: request.body.item_of_work,
-            Child_QuDet: {
-              create: request.body.Child_QuDet,
+    await prisma.$transaction(
+      async (prisma) => {
+        let results: any;
+        results = await prisma.quotations.create({
+          data: {
+            quo_num: request.body.quo_num,
+            quo_auto: request.body.quo_auto,
+            Customer: { connect: { id: request.body.customerId } },
+            CustomerContact: {
+              connect: { id: request.body.customercontactId },
+            },
+            subject: request.body.subject,
+            attention: request.body.attention,
+            send_by: request.body.send_by,
+            estimated_delivery: request.body.estimated_delivery,
+            date: new Date(request.body.date),
+            quo_img: !request.files ? null : request.files.path,
+            warranty: request.body.warranty,
+            eqandpart: {
+              create: JSON.parse(request.body.eqandpart),
             },
           },
-        },
-        eqandpart: {
-          create: request.body.eqandpart,
-        },
-      },
-      include: {
-        Quotations_Detail: {
           include: {
-            Child_QuDet: true,
+            eqandpart: true,
           },
-        },
-        eqandpart: true,
+        });
+        results = await prisma.quotations_Detail.create({
+          data: {
+            quo_id: results.id,
+            item_of_work: request.body.item_of_work,
+            qty: request.body.qty,
+            unit: request.body.unit,
+            price: request.body.price,
+          },
+          include: {
+            Child_QuDet: JSON.parse(request.body.Child_QuDet),
+          },
+        });
+        if (results) {
+          return response.status(204).json({
+            success: true,
+            massage: "Success Add Data",
+            result: results,
+          });
+        } else {
+          return response.status(200).json({
+            success: false,
+            result: "Not Succes",
+          });
+        }
       },
-    });
-    if (results) {
-      return response.status(204).json({
-        success: true,
-        massage: "Success Add Data",
-        result: results,
-      });
-    } else {
-      return response.status(200).json({
-        success: false,
-        result: "Not Succes",
-      });
-    }
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable, // optional, default defined by database configuration
+        maxWait: 5000, // default: 2000
+        timeout: 10000, // default: 5000
+      }
+    );
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
