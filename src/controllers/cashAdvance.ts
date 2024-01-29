@@ -15,6 +15,7 @@ const getCdv = async (request: Request, response: Response) => {
     const cdvCount = await prisma.cash_advance.count({
       where: {
         deleted: null,
+        id_spj: null,
       },
     });
     let results: any;
