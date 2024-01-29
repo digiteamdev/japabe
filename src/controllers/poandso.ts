@@ -1037,6 +1037,7 @@ const getAllReceive = async (request: Request, response: Response) => {
     let results: any;
     let detailDmr: any;
     let resultnopage: any;
+    let spjCdv: any;
     if (request.query.page === undefined) {
       resultnopage = await prisma.poandso.findMany({
         where: {
@@ -1428,6 +1429,53 @@ const getAllReceive = async (request: Request, response: Response) => {
           createdAt: "desc",
         },
       });
+      spjCdv = await prisma.cash_advance.findMany({
+        where: {
+          id_cash_advance: {
+            contains: pencarian,
+          },
+          NOT: {
+            id_spj: null,
+          },
+          grand_tot: {
+            lte: 300000,
+          },
+        },
+        include: {
+          cdv_detail: true,
+          employee: true,
+          user: {
+            select: {
+              id: true,
+              username: true,
+              employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                  position: true,
+                },
+              },
+            },
+          },
+          wor: {
+            include: {
+              customerPo: {
+                include: {
+                  quotations: {
+                    include: {
+                      Customer: true,
+                      CustomerContact: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
     } else {
       results = await prisma.poandso.findMany({
         where: {
@@ -1669,7 +1717,12 @@ const getAllReceive = async (request: Request, response: Response) => {
     detailDm.map((d: any) => {
       obj.push(...d);
     });
-    if (result.length > 0 || obj.length > 0 || noPage.length > 0) {
+    let cdvSpj: any = [];
+    const spj: any = [spjCdv];
+    spj.map((c: any)=>{
+      cdvSpj.push(...c)
+    })
+    if (result.length > 0 || obj.length > 0 || noPage.length > 0 || cdvSpj.length > 0) {
       let res: any = [];
       let arrTerm: any = [];
       noPage.map((a: any) => {
@@ -1846,7 +1899,7 @@ const getAllReceive = async (request: Request, response: Response) => {
       return response.status(200).json({
         success: true,
         massage: "Get All Receive PO and SO",
-        result: [...result, ...obj, ...res],
+        result: [...result, ...obj, ...res, ...cdvSpj],
         page: pagination.page,
         limit: pagination.perPage,
         totalData: poandsoCount,
