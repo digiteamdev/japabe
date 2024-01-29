@@ -64,7 +64,7 @@ const getAllApprove = async (request: Request, response: Response) => {
         ],
       },
     });
-    let totalCountCdv;
+    let totalCountCdv: any = 0;
     totalCountCdv = await prisma.cash_advance.count({
       where: {
         AND: [
@@ -84,7 +84,56 @@ const getAllApprove = async (request: Request, response: Response) => {
         ],
       },
     });
-    let total: any = totalCount + totalCuntPoandSo + totalCountCdv
+    let totalCOuntSpj: any = 0;
+    totalCOuntSpj = await prisma.cash_advance.findMany({
+      where: {
+        id_cash_advance: {
+          contains: pencarian,
+        },
+        NOT: {
+          id_spj: null,
+        },
+        grand_tot: {
+          gte: 300000,
+        },
+      },
+      include: {
+        cdv_detail: true,
+        employee: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            employee: {
+              select: {
+                id: true,
+                employee_name: true,
+                position: true,
+              },
+            },
+          },
+        },
+        wor: {
+          include: {
+            customerPo: {
+              include: {
+                quotations: {
+                  include: {
+                    Customer: true,
+                    CustomerContact: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    let total: any =
+      totalCount + totalCuntPoandSo + totalCountCdv + totalCOuntSpj;
     let result;
     result = await prisma.purchase.findMany({
       where: {
@@ -513,7 +562,55 @@ const getAllApprove = async (request: Request, response: Response) => {
       take: parseInt(pagination.perPage),
       skip: parseInt(pagination.page) * parseInt(pagination.perPage),
     });
-    const results = [...result, ...poandsoData, ...cdv];
+    let spjCdv;
+    spjCdv = await prisma.cash_advance.findMany({
+      where: {
+        id_cash_advance: {
+          contains: pencarian,
+        },
+        NOT: {
+          id_spj: null,
+        },
+        grand_tot: {
+          gte: 300000,
+        },
+      },
+      include: {
+        cdv_detail: true,
+        employee: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            employee: {
+              select: {
+                id: true,
+                employee_name: true,
+                position: true,
+              },
+            },
+          },
+        },
+        wor: {
+          include: {
+            customerPo: {
+              include: {
+                quotations: {
+                  include: {
+                    Customer: true,
+                    CustomerContact: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    const results = [...result, ...poandsoData, ...cdv, ...spjCdv];
     if (results.length > 0) {
       return response.status(200).json({
         success: true,
