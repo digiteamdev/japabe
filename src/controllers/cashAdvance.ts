@@ -183,6 +183,9 @@ const getSPJCdv = async (request: Request, response: Response) => {
     const cdvCount = await prisma.cash_advance.count({
       where: {
         deleted: null,
+        NOT: {
+          id_spj: null,
+        },
       },
     });
     let results: any;
