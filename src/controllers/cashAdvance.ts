@@ -350,23 +350,46 @@ const getWorCdv = async (request: Request, response: Response) => {
 
 const createCdv = async (request: Request, response: Response) => {
   try {
-    const results = await prisma.cash_advance.create({
-      data: {
-        id_cash_advance: request.body.id_cash_advance,
-        employee: { connect: { id: request.body.employeeId } },
-        wor: { connect: { id: request.body.worId } },
-        user: { connect: { id: request.body.userId } },
-        status_payment: request.body.status_payment,
-        note: request.body.note,
-        date_cash_advance: request.body.date_cash_advance,
-        cdv_detail: {
-          create: request.body.cdv_detail,
+    const worNull = request.body.worId;
+    let results;
+    if (worNull === null) {
+      results = await prisma.cash_advance.create({
+        data: {
+          id_cash_advance: request.body.id_cash_advance,
+          employee: { connect: { id: request.body.employeeId } },
+          job_no: request.body.job_no,
+          user: { connect: { id: request.body.userId } },
+          status_payment: request.body.status_payment,
+          note: request.body.note,
+          date_cash_advance: request.body.date_cash_advance,
+          cdv_detail: {
+            create: request.body.cdv_detail,
+          },
         },
-      },
-      include: {
-        cdv_detail: true,
-      },
-    });
+        include: {
+          cdv_detail: true,
+        },
+      });
+    } else {
+      results = await prisma.cash_advance.create({
+        data: {
+          id_cash_advance: request.body.id_cash_advance,
+          employee: { connect: { id: request.body.employeeId } },
+          wor: { connect: { id: request.body.worId } },
+          user: { connect: { id: request.body.userId } },
+          status_payment: request.body.status_payment,
+          note: request.body.note,
+          date_cash_advance: request.body.date_cash_advance,
+          cdv_detail: {
+            create: request.body.cdv_detail,
+          },
+        },
+        include: {
+          cdv_detail: true,
+        },
+      });
+    }
+
     if (results) {
       response.status(201).json({
         success: true,
@@ -441,7 +464,7 @@ const createSpjCdv = async (request: Request, response: Response) => {
           }
         );
         let upsertDetailCdv: any;
-        if (result) {          
+        if (result) {
           for (let i = 0; i < updateVerify.length; i++) {
             upsertDetailCdv = await prisma.cdv_detail.upsert({
               where: {

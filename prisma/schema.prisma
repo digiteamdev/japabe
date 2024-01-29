@@ -1223,6 +1223,7 @@ enum type_cdv {
 model cash_advance {
   id                      String                   @id @default(cuid())
   id_cash_advance         String
+  job_no                  String?                  @db.VarChar(200)
   id_spj                  String?
   employee                Employee?                @relation(fields: [employeeId], references: [id])
   employeeId              String?
