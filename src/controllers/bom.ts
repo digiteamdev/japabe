@@ -485,21 +485,27 @@ const getBomMr = async (request: Request, response: Response) => {
       where: {
         OR: [
           {
+            NOT: {
+              Mr: {
+                deleted: null,
+              },
+              status: null
+            },
             Mr: {
               deleted: null,
             },
           },
         ],
-        NOT: [
-          {
-            Mr: {
-              deleted: null,
-            },
-          },
-          {
-            status: null,
-          },
-        ],
+        // NOT: [
+        //   {
+        //     Mr: {
+        //       deleted: null,
+        //     },
+        //   },
+        //   {
+        //     status: null,
+        //   },
+        // ],
       },
       include: {
         customerPo: {
