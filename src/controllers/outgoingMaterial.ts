@@ -188,7 +188,7 @@ const createOutgoingMaterial = async (request: Request, response: Response) => {
     if (request.body.mr) {
       results = await prisma.outgoing_material.create({
         data: {
-          id_outgoing_material: request.body.id_outgoing_materia,
+          id_outgoing_material: request.body.id_outgoing_material,
           date_outgoing_material: new Date(request.body.date_outgoing_material),
           stock_outgoing_material: {
             create: request.body.mr,
