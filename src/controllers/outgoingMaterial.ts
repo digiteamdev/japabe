@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import prisma from "../middleware/outgoingMaterial";
 import pagging from "../utils/paggination";
 import url from "url";
+import { Prisma } from "@prisma/client";
 
 const getOutgoingMaterial = async (request: Request, response: Response) => {
   try {
@@ -155,75 +156,128 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
 
 const createOutgoingMaterial = async (request: Request, response: Response) => {
   try {
-    const getStok: any = await prisma.poandso.findFirst({
-      where: {
-        id: request.body.poandsoId,
-      },
-      include: {
-        detailMr: {
-          include: {
-            Material_Stock: {
+    await prisma.$transaction(
+      async (prisma) => {
+        let results: any = [];
+        if (request.body.pb === undefined) {
+          const arra: any = request.body.mr;
+          for (let i = 0; i < arra.length; i++) {
+            const getStok: any = await prisma.poandso.findFirst({
+              where: {
+                id: request.body.mr[i].poandsoId,
+              },
               include: {
-                Material_master: {
+                detailMr: {
                   include: {
-                    grup_material: true,
+                    Material_Stock: {
+                      include: {
+                        Material_master: {
+                          include: {
+                            grup_material: true,
+                          },
+                        },
+                      },
+                    },
                   },
                 },
               },
+            });
+            for (let index = 0; index < getStok.detailMr.length; index++) {
+              if (
+                getStok.detailMr[index].Material_Stock.jumlah_Stock <= 0 ||
+                arra[i].qty_out >
+                  getStok.detailMr[index].Material_Stock.jumlah_Stock
+              )
+                return response.status(400).json({
+                  msg: "stok abis",
+                });
+              await prisma.material_Stock.update({
+                where: {
+                  id: getStok.detailMr[index].Material_Stock.id,
+                },
+                data: {
+                  jumlah_Stock:
+                    getStok.detailMr[index].Material_Stock.jumlah_Stock -
+                    arra[i].qty_out,
+                },
+              });
+            }
+          }
+        } else {
+          const pbb: any = request.body.pb;
+          for (let a = 0; a < pbb.length; a++) {
+            const getStok: any = await prisma.material_Stock.findFirst({
+              where: {
+                id: request.body.pb[a].materialStockId,
+              },
+            });
+            if (
+              getStok.jumlah_Stock <= 0 ||
+              pbb[a].qty_out > getStok.jumlah_Stock
+            )
+              return response.status(400).json({
+                msg: "stok abis",
+              });
+            await prisma.material_Stock.update({
+              where: {
+                id: getStok.id,
+              },
+              data: {
+                jumlah_Stock: getStok.jumlah_Stock - pbb[a].qty_out,
+              },
+            });
+          }
+        }
+        if (request.body.mr) {
+          results = await prisma.outgoing_material.create({
+            data: {
+              id_outgoing_material: request.body.id_outgoing_material,
+              date_outgoing_material: new Date(
+                request.body.date_outgoing_material
+              ),
+              stock_outgoing_material: {
+                create: request.body.mr,
+              },
             },
-          },
-        },
+            include: {
+              stock_outgoing_material: true,
+            },
+          });
+        } else {
+          results = await prisma.outgoing_material.create({
+            data: {
+              id_outgoing_material: request.body.id_outgoing_material,
+              date_outgoing_material: new Date(
+                request.body.date_outgoing_material
+              ),
+              stock_outgoing_material: {
+                create: request.body.pb,
+              },
+            },
+            include: {
+              stock_outgoing_material: true,
+            },
+          });
+        }
+        if (results) {
+          response.status(201).json({
+            success: true,
+            massage: "Success Add Data",
+            results: results,
+          });
+        } else {
+          response.status(400).json({
+            success: false,
+            massage: "Unsuccess Add Data",
+          });
+        }
       },
-    });
-    // const obj: any = {};
-    // getStok.detailMr.map((e: any) => {
-    //   Object.assign(obj, e)
-    // });
-    // console.log(obj);
-
-    // console.log(obj.materialStockId);
-
-    // console.log(request.body.pb);
-    let results: any;
-    if (request.body.mr) {
-      results = await prisma.outgoing_material.create({
-        data: {
-          id_outgoing_material: request.body.id_outgoing_material,
-          date_outgoing_material: new Date(request.body.date_outgoing_material),
-          stock_outgoing_material: {
-            create: request.body.mr,
-          },
-        },
-        include: {
-          stock_outgoing_material: true,
-        },
-      });
-    } else {
-      results = await prisma.outgoing_material.create({
-        data: {
-          id_outgoing_material: request.body.id_outgoing_material,
-          date_outgoing_material: new Date(request.body.date_outgoing_material),
-          stock_outgoing_material: {
-            create: request.body.pb,
-          },
-        },
-        include: {
-          stock_outgoing_material: true,
-        },
-      });
-    }
-    if (results) {
-      response.status(201).json({
-        success: true,
-        massage: "Success Add Data",
-        results: results,
-      });
-    } else {
-      response.status(400).json({
-        success: false,
-        massage: "Unsuccess Add Data",
-      });
-    }
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable, // optional, default defined by database configuration
+        maxWait: 5000, // default: 2000
+        timeout: 10000, // default: 5000
+      }
+    );
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }

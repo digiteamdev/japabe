@@ -1277,7 +1277,7 @@ model outgoing_material {
 
 model stock_outgoing_material {
   id                String            @id @default(cuid())
-  outgoing_material outgoing_material @relation(fields: [outgoingId], references: [id])
+  outgoing_material outgoing_material @relation(fields: [outgoingId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   outgoingId        String
   Material_Stock    Material_Stock?   @relation(fields: [materialStockId], references: [id])
   materialStockId   String?
