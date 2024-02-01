@@ -305,9 +305,16 @@ const createSr = async (request: Request, response: Response) => {
     const dispatchNull = request.body.dispacthIDS;
     const worNull = request.body.worId;
     const dispatchNullId = request.body.dispacthdetailId;
+    const descripnull = request.body.description;
+    console.log(dispatchNullId);
 
     let results;
-    if (dispatchNull === null || worNull === null || dispatchNullId === null) {
+    if (
+      dispatchNull === null ||
+      worNull === null ||
+      dispatchNullId === null ||
+      descripnull === null
+    ) {
       results = await prisma.sr.create({
         data: {
           no_sr: genarate,
@@ -316,7 +323,6 @@ const createSr = async (request: Request, response: Response) => {
           job_no: request.body.job_no,
           SrDetail: {
             create: {
-              description: request.body.description,
               note: request.body.note,
               part: request.body.part,
               qty: request.body.qty,
