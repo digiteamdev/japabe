@@ -312,6 +312,7 @@ const createSr = async (request: Request, response: Response) => {
       for (let i = 0; i < arr.length; i++) {
         newArr.push({
           description: arr[i].description,
+          part: arr[i].part,
           srId: arr[i].srId,
           note: arr[i].note,
           unit: arr[i].unit,
