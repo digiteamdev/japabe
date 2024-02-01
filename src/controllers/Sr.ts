@@ -311,6 +311,7 @@ const createSr = async (request: Request, response: Response) => {
       const arr = request.body.SrDetail;
       for (let i = 0; i < arr.length; i++) {
         newArr.push({
+          description: arr[i].description,
           srId: arr[i].srId,
           note: arr[i].note,
           unit: arr[i].unit,
@@ -318,12 +319,7 @@ const createSr = async (request: Request, response: Response) => {
       }
     }
     let results;
-    if (
-      dispatchNull === null ||
-      worNull === null ||
-      dispatchNullId === null ||
-      descripnull === null
-    ) {
+    if (dispatchNull === null || worNull === null || dispatchNullId === null) {
       results = await prisma.sr.create({
         data: {
           no_sr: genarate,
