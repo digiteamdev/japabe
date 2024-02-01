@@ -306,8 +306,17 @@ const createSr = async (request: Request, response: Response) => {
     const worNull = request.body.worId;
     const dispatchNullId = request.body.dispacthdetailId;
     const descripnull = request.body.description;
-    console.log(dispatchNullId);
-
+    const newArr = [];
+    if (request.body.SrDetail) {
+      const arr = request.body.SrDetail;
+      for (let i = 0; i < arr.length; i++) {
+        newArr.push({
+          srId: arr[i].srId,
+          note: arr[i].note,
+          unit: arr[i].unit,
+        });
+      }
+    }
     let results;
     if (
       dispatchNull === null ||
@@ -322,12 +331,7 @@ const createSr = async (request: Request, response: Response) => {
           date_sr: new Date(request.body.date_sr),
           job_no: request.body.job_no,
           SrDetail: {
-            create: {
-              note: request.body.note,
-              part: request.body.part,
-              qty: request.body.qty,
-              unit: request.body.unit,
-            },
+            create: newArr,
           },
         },
         include: {
