@@ -410,7 +410,17 @@ router.get(
 );
 router.post(
   "/equipment",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   upload.single("eq_image", 1),
   equipment.createEquipment
 );
@@ -457,7 +467,17 @@ router.get(
 );
 router.post(
   "/part",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   upload.array("part_img", 1000),
   equipment.createPart
 );
@@ -734,22 +754,62 @@ router.get(
 );
 router.post(
   "/stockMaterial",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   typeMr.createMasterSpesifikasi
 );
 router.post(
   "/stock",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   typeMr.createMasterOne
 );
 router.post(
   "/groupMaterial",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   typeMr.createTypeMr
 );
 router.post(
   "/masterMaterial",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   typeMr.createMaster
 );
 router.put(
@@ -878,7 +938,17 @@ router.get(
 );
 router.post(
   "/workcenter",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   workcenter.createWorkCenter
 );
 router.post(
@@ -982,7 +1052,17 @@ router.get(
 );
 router.post(
   "/masterAktivitas",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   masterAktivitas.createMasterAktivitas
 );
 router.put(
@@ -1651,7 +1731,17 @@ router.get(
 );
 router.post(
   "/coa",
-  jwt.authToken({ administrator: "ADMINISTRATOR", utility: "Utility/ty" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   coa.createCoa
 );
 router.put(
