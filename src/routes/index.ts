@@ -2073,7 +2073,7 @@ router.put(
 );
 
 router.put(
-  "/duedatevalid/:id",
+  "/duedatevalid",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
     finance: "FINANCE & ACC",

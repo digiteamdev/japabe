@@ -1143,6 +1143,8 @@ const updatePsr = async (request: Request, response: Response) => {
         result = await prisma.purchase.create({
           data: {
             dateOfPurchase: request.body.dateOfPurchase,
+            supplier: { connect: { id: request.body.supId } },
+            note: request.body.note,
             idPurchase: request.body.idPurchase,
             taxPsrDmr: request.body.taxPsrDmr,
             currency: request.body.currency,

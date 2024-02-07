@@ -637,7 +637,8 @@ model wor {
 enum Priority_Status {
   ST
   OT
-  TM @map("T&M")
+  TM  @map("T&M")
+  XXT
   Q
 }
 
@@ -665,17 +666,17 @@ model masterAktivitas {
 }
 
 model timeschedule {
-  id             String       @id @default(cuid())
-  idTs           String?      @db.VarChar(100)
+  id             String        @id @default(cuid())
+  idTs           String?       @db.VarChar(100)
   timesch        DateTime
-  wor            wor?         @relation(fields: [worId], references: [id])
-  worId          String?      @unique
-  job_priority   job_priority
-  status_spv     String?      @db.VarChar(20)
-  status_manager String?      @db.VarChar(20)
-  holiday        Boolean?     @default(false)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  wor            wor?          @relation(fields: [worId], references: [id])
+  worId          String?       @unique
+  job_priority   job_priority?
+  status_spv     String?       @db.VarChar(20)
+  status_manager String?       @db.VarChar(20)
+  holiday        Boolean?      @default(false)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
   deleted        DateTime?
   aktivitas      aktivitas[]
   drawing        drawing?
@@ -906,8 +907,8 @@ enum TaxPr {
 enum TaxPsrDmr {
   ppn
   pph
-  ppn_and_pph @map("ppn and pph")
-  nontax      @map("non tax")
+  ppn_and_pph
+  non_tax      
 }
 
 model coa {
@@ -925,8 +926,16 @@ model coa {
   @@index([id, coa_code, coa_name])
 }
 
+enum statusMr {
+  Request
+  Approval
+  Warehouse
+  Receive
+}
+
 model Mr {
   id             String     @id @default(cuid())
+  statusMr       statusMr?
   wor            wor?       @relation(fields: [worId], references: [id])
   worId          String?    @unique
   no_mr          String?    @db.VarChar(50)
@@ -1144,10 +1153,12 @@ model term_of_pay_po_so {
 
 model kontrabon {
   id                String             @id @default(cuid())
+  cash_advance      cash_advance?      @relation(fields: [cdvId], references: [id])
+  cdvId             String?
   term_of_pay_po_so term_of_pay_po_so? @relation(fields: [termId], references: [id])
   termId            String?
-  SupplierBank      SupplierBank       @relation(fields: [account_name], references: [id])
-  account_name      String
+  SupplierBank      SupplierBank?      @relation(fields: [account_name], references: [id])
+  account_name      String?
   purchase          purchase?          @relation(fields: [purchaseID], references: [id])
   purchaseID        String?            @unique
   id_kontrabon      String             @db.VarChar(200)
@@ -1179,15 +1190,15 @@ enum status_transaction {
 
 model cashier {
   id              String            @id @default(cuid())
-  id_cashier      String
-  status_payment  status_payment
+  id_cashier      String?
+  status_payment  status_payment?
   cash_advance    cash_advance?     @relation(fields: [cdvId], references: [id])
   cdvId           String?
   kontrabon       kontrabon?        @relation(fields: [kontrabonId], references: [id])
   kontrabonId     String?
-  date_cashier    DateTime
-  note            String            @db.Text
-  status_valid    Boolean           @default(false)
+  date_cashier    DateTime?
+  note            String?           @db.Text
+  status_valid    Boolean?          @default(false)
   total           Int               @default(0)
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
@@ -1243,6 +1254,7 @@ model cash_advance {
   deleted                 DateTime?
   cashier                 cashier[]
   cdv_detail              cdv_detail[]
+  kontrabon               kontrabon[]
 
   @@index([id, employeeId, worId, userId, id_cash_advance])
 }

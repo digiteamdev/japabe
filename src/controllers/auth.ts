@@ -85,7 +85,7 @@ const registerUser = async (req: Request, res: Response) => {
   }
 };
 
-const loginUser = async (request: Request, response: Response) => {
+const loginUser = async (request: any, response: Response) => {
   try {
     const { username, hashed_password } = request.body;
 
@@ -159,6 +159,7 @@ const loginUser = async (request: Request, response: Response) => {
           .json({ msg: "Login Not Succes", status: false });
       }
     } else if (token !== cekUserSession.acces_token) {
+      request.session.destroy();
       const updateToken = await prisma.session.update({
         where: {
           username: cekUserSession.username,

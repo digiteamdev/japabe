@@ -306,43 +306,6 @@ const createMr = async (request: Request, response: Response) => {
         },
       });
     }
-    // let obj: any = {};
-    // let stok = request.body.detailMr;
-    // stok.map((e: any) => {
-    //   let jumlah = {
-    //     idMaterialStok: e.materialStockId,
-    //     qty: e.qty,
-    //   };
-    //   return Object.assign(obj, jumlah);
-    // });
-    // let cekStokMaterial: any = await prisma.material_Stock.findFirst({
-    //   where: {
-    //     id: obj.idMaterialStok,
-    //   },
-    // });
-    // if (
-    //   obj.qty > cekStokMaterial.jumlah_Stock ||
-    //   cekStokMaterial.jumlah_Stock <= 0
-    // ) {
-    //   return response.status(400).json({
-    //     msg: "stok abis",
-    //   });
-    // } else {
-    //   request.body.detailMr.map(async (e: any) => {
-    //     const getStock: any = await prisma.material_Stock.findFirst({
-    //       where: {
-    //         id: e.materialStockId,
-    //       },
-    //     });
-    //     await prisma.material_Stock.update({
-    //       where: {
-    //         id: e.materialStockId,
-    //       },
-    //       data: {
-    //         jumlah_Stock: getStock.jumlah_Stock - e.qty,
-    //       },
-    //     });
-    //   });
     if (results) {
       response.status(201).json({
         success: true,

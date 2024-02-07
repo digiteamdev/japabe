@@ -25,6 +25,39 @@ const getKontraBon = async (request: Request, response: Response) => {
         },
       },
       include: {
+        cash_advance: {
+          include: {
+            cdv_detail: true,
+            employee: true,
+            user: {
+              select: {
+                id: true,
+                username: true,
+                employee: {
+                  select: {
+                    id: true,
+                    employee_name: true,
+                    position: true,
+                  },
+                },
+              },
+            },
+            wor: {
+              include: {
+                customerPo: {
+                  include: {
+                    quotations: {
+                      include: {
+                        Customer: true,
+                        CustomerContact: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          }
+        },
         purchase: {
           include: {
             supplier: {
@@ -445,8 +478,8 @@ const createKontraBon = async (request: any, response: Response) => {
     await prisma.$transaction(
       async (prisma) => {
         const bodyPurchase = request.body.purchaseID;
-        let results;
-        if (bodyPurchase === null) {
+        let results: any;
+        if (bodyPurchase === null && request.body.cdvId === null) {
           results = await prisma.kontrabon.create({
             data: {
               id_kontrabon: request.body.id_kontrabon,
@@ -460,7 +493,7 @@ const createKontraBon = async (request: any, response: Response) => {
               date_prepered: new Date(),
             },
           });
-        } else {
+        } else if (bodyPurchase !== null && request.body.cdvId === null) {
           results = await prisma.kontrabon.create({
             data: {
               id_kontrabon: request.body.id_kontrabon,
@@ -474,7 +507,19 @@ const createKontraBon = async (request: any, response: Response) => {
               date_prepered: new Date(),
             },
           });
-        }
+        } else if (request.body.cdvId)
+          results = await prisma.kontrabon.create({
+            data: {
+              id_kontrabon: request.body.id_kontrabon,
+              cash_advance: { connect: { id: request.body.cdvId } },
+              tax_prepered: new Date(request.body.tax_prepered),
+              due_date: new Date(request.body.due_date),
+              invoice: request.body.invoice,
+              DO: request.body.DO,
+              grandtotal: request.body.grandtotal,
+              date_prepered: new Date(),
+            },
+          });
         if (results.termId !== null) {
           const updateTerm = await prisma.term_of_pay_po_so.update({
             where: {
