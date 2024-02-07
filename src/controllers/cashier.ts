@@ -1918,6 +1918,7 @@ const createCashier = async (request: Request, response: Response) => {
               status_payment: request.body.status_payment,
               kontrabon: { connect: { id: request.body.kontrabonId } },
               date_cashier: request.body.date_cashier,
+              pay_to: request.body.pay_to,
               note: request.body.note,
               total: request.body.total,
               journal_cashier: {

@@ -908,7 +908,7 @@ enum TaxPsrDmr {
   ppn
   pph
   ppn_and_pph
-  non_tax      
+  non_tax
 }
 
 model coa {
@@ -1196,6 +1196,7 @@ model cashier {
   cdvId           String?
   kontrabon       kontrabon?        @relation(fields: [kontrabonId], references: [id])
   kontrabonId     String?
+  pay_to          String?           @db.VarChar(200)
   date_cashier    DateTime?
   note            String?           @db.Text
   status_valid    Boolean?          @default(false)
