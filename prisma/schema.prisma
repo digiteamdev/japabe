@@ -933,6 +933,13 @@ enum statusMr {
   Receive
 }
 
+enum statusSr {
+  Request
+  Approval
+  Warehouse
+  Receive
+}
+
 model Mr {
   id             String     @id @default(cuid())
   statusMr       statusMr?
@@ -1043,6 +1050,7 @@ model approvedRequest {
 
 model Sr {
   id             String     @id @default(cuid())
+  statusSr       statusSr?
   wor            wor?       @relation(fields: [worId], references: [id])
   worId          String?    @unique
   no_sr          String?    @db.VarChar(50)
@@ -1200,6 +1208,9 @@ model cashier {
   date_cashier    DateTime?
   note            String?           @db.Text
   status_valid    Boolean?          @default(false)
+  account_name    String?           @db.VarChar(100)
+  bank_name       String?           @db.VarChar(100)
+  rekening        String?           @db.VarChar(100)
   total           Int               @default(0)
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt

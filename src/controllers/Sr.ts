@@ -696,6 +696,27 @@ const updateApprovalSr = async (request: Request, response: Response) => {
           },
         });
       }
+      const getIdsr = await prisma.approvedRequest.findFirst({
+        where: { id: result.id },
+        include: {
+          SrDetail: {
+            include: {
+              sr: true,
+            },
+          },
+        },
+      });
+      const updateStatus: any = getIdsr?.SrDetail;
+      for (let index = 0; index < updateStatus.length; index++) {
+        await prisma.sr.update({
+          where: {
+            id: updateStatus[index].sr.id,
+          },
+          data: {
+            statusSr: "Request",
+          },
+        });
+      }
       response.status(201).json({
         success: true,
         massage: "Success Update Data",

@@ -1905,6 +1905,9 @@ const createCashier = async (request: Request, response: Response) => {
               pay_to: request.body.pay_to,
               note: request.body.note,
               total: request.body.total,
+              account_name: request.body.account_name,
+              bank_name: request.body.bank_name,
+              rekening: request.body.rekening,
               journal_cashier: {
                 create: request.body.journal_cashier,
               },
