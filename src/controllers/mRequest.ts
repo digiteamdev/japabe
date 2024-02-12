@@ -306,6 +306,14 @@ const createMr = async (request: Request, response: Response) => {
         },
       });
     }
+    await prisma.mr.update({
+      where: {
+        id: results.id,
+      },
+      data: {
+        statusMr: "Request"
+      }
+    })
     if (results) {
       response.status(201).json({
         success: true,
@@ -785,7 +793,7 @@ const updateApproval = async (request: any, response: Response) => {
                 id: updateStatus[index].mr.id,
               },
               data: {
-                statusMr: "Request",
+                statusMr: "Approval",
               },
             });
           }
