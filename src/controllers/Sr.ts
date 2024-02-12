@@ -663,6 +663,85 @@ const deleteDetailSr = async (request: Request, response: Response) => {
 
 const updateApprovalSr = async (request: Request, response: Response) => {
   try {
+    await prisma.$transaction(
+      async (prisma) => {
+        let result: any = [];
+        result = await prisma.approvedRequest.create({
+          data: {
+            idApprove: request.body.idApprove,
+            dateApprove: new Date(request.body.dateApprove),
+            user: { connect: { id: request.body.approveById } },
+          },
+        });
+        const updateVerify = request.body.srDetail.map(
+          (updateByveri: {
+            srappr: any;
+            supId: any;
+            qtyAppr: any;
+            id: any;
+          }) => {
+            return {
+              srappr: updateByveri.srappr,
+              supId: updateByveri.supId,
+              qtyAppr: updateByveri.qtyAppr,
+              id: updateByveri.id,
+            };
+          }
+        );
+        if (result) {
+          for (let i = 0; i < updateVerify.length; i++) {
+            let upsertDetailSr;
+            upsertDetailSr = await prisma.srDetail.update({
+              where: {
+                id: updateVerify[i].id,
+              },
+              data: {
+                srappr: updateVerify[i].srappr,
+                supplier: { connect: { id: updateVerify[i].supId } },
+                approvedRequest: { connect: { id: result.id } },
+                qtyAppr: parseInt(updateVerify[i].qtyAppr),
+              },
+            });
+          }
+          const getIdsr = await prisma.approvedRequest.findFirst({
+            where: { id: result.id },
+            include: {
+              SrDetail: {
+                include: {
+                  sr: true,
+                },
+              },
+            },
+          });
+          const updateStatus: any = getIdsr?.SrDetail;
+          for (let index = 0; index < updateStatus.length; index++) {
+            await prisma.sr.update({
+              where: {
+                id: updateStatus[index].sr.id,
+              },
+              data: {
+                statusSr: "Request",
+              },
+            });
+          }
+          response.status(201).json({
+            success: true,
+            massage: "Success Update Data",
+            results: result,
+          });
+        } else {
+          response.status(400).json({
+            success: false,
+            massage: "Unsuccess Update Data",
+          });
+        }
+      },
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable, // optional, default defined by database configuration
+        maxWait: 5000, // default: 2000
+        timeout: 10000, // default: 5000
+      }
+    );
     let result: any = [];
     result = await prisma.approvedRequest.create({
       data: {
