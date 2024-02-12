@@ -1886,6 +1886,9 @@ const createCashier = async (request: Request, response: Response) => {
               date_cashier: request.body.date_cashier,
               note: request.body.note,
               pay_to: request.body.pay_to,
+              account_name: request.body.account_name,
+              bank_name: request.body.bank_name,
+              rekening: request.body.rekening,
               total: request.body.total,
               journal_cashier: {
                 create: request.body.journal_cashier,
@@ -1902,12 +1905,8 @@ const createCashier = async (request: Request, response: Response) => {
               status_payment: request.body.status_payment,
               cash_advance: { connect: { id: request.body.cdvId } },
               date_cashier: request.body.date_cashier,
-              pay_to: request.body.pay_to,
               note: request.body.note,
               total: request.body.total,
-              account_name: request.body.account_name,
-              bank_name: request.body.bank_name,
-              rekening: request.body.rekening,
               journal_cashier: {
                 create: request.body.journal_cashier,
               },
