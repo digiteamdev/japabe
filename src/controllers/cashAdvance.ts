@@ -28,6 +28,7 @@ const getCdv = async (request: Request, response: Response) => {
           id_spj: null,
         },
         include: {
+          cashier: true,
           cdv_detail: true,
           employee: true,
           user: {
