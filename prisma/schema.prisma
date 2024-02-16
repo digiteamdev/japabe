@@ -918,8 +918,6 @@ model coa {
   createdAt               DateTime                  @default(now())
   updatedAt               DateTime                  @updatedAt
   deleted                 DateTime?
-  detailMr                detailMr[]
-  SrDetail                SrDetail[]
   journal_cashier         journal_cashier[]
   stock_outgoing_material stock_outgoing_material[]
 
@@ -929,14 +927,18 @@ model coa {
 enum statusMr {
   Request
   Approval
-  Warehouse
+  Purchase
+  Finish
+  Reject
   Receive
 }
 
 enum statusSr {
   Request
   Approval
-  Warehouse
+  Purchase
+  Finish
+  Reject
   Receive
 }
 
@@ -979,8 +981,6 @@ model detailMr {
   supplier          Supplier?        @relation(fields: [supId], references: [id])
   supId             String?
   qtyAppr           Int              @default(0)
-  coa               coa?             @relation(fields: [akunId], references: [id])
-  akunId            String?
   disc              Int              @default(0)
   price             Int              @default(0)
   total             Int              @default(0)
@@ -1087,8 +1087,6 @@ model SrDetail {
   srappr            SrAppr?
   supplier          Supplier?        @relation(fields: [supId], references: [id])
   supId             String?
-  coa               coa?             @relation(fields: [akunId], references: [id])
-  akunId            String?
   disc              Int              @default(0)
   price             Int              @default(0)
   total             Int              @default(0)
@@ -1136,6 +1134,7 @@ model poandso {
   detailMr                detailMr[]
   term_of_pay_po_so       term_of_pay_po_so[]
   stock_outgoing_material stock_outgoing_material[]
+  journal_cashier         journal_cashier[]
 
   @@index([id, id_so, id_receive])
 }
@@ -1222,10 +1221,12 @@ model cashier {
 
 model journal_cashier {
   id                 String             @id @default(cuid())
-  cashier            cashier            @relation(fields: [cashier_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  cashier_id         String
+  cashier            cashier?           @relation(fields: [cashier_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  cashier_id         String?
   coa                coa                @relation(fields: [coa_id], references: [id])
   coa_id             String
+  poandso            poandso?           @relation(fields: [poandsoId], references: [id])
+  poandsoId          String?
   status_transaction status_transaction
   grandtotal         Int                @default(0)
   createdAt          DateTime           @default(now())

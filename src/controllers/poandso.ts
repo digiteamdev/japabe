@@ -152,7 +152,6 @@ const getPo = async (request: Request, response: Response) => {
               },
             },
             approvedRequest: true,
-            coa: true,
             mr: {
               include: {
                 wor: {
@@ -236,7 +235,6 @@ const getPo = async (request: Request, response: Response) => {
               },
             },
             approvedRequest: true,
-            coa: true,
             sr: {
               include: {
                 wor: {
@@ -378,13 +376,29 @@ const createPo = async (request: Request, response: Response) => {
     });
     if (request.body.detailMrID !== null) {
       request.body.detailMrID.map(async (dataId: any) => {
-        console.log(results.id);
         await prisma.detailMr.update({
           where: {
             id: dataId.id,
           },
           data: {
             poandsoId: results.id,
+          },
+        });
+        const getMrId: any = await prisma.detailMr.findFirst({
+          where: {
+            id: dataId.id,
+          },
+          include: {
+            mr: true,
+          },
+        });
+        const updateStatus: any = getMrId;
+        await prisma.mr.update({
+          where: {
+            id: updateStatus.mr.id,
+          },
+          data: {
+            statusMr: "Purchase",
           },
         });
       });
@@ -397,6 +411,23 @@ const createPo = async (request: Request, response: Response) => {
           },
           data: {
             poandsoId: results.id,
+          },
+        });
+        const getMrId: any = await prisma.srDetail.findFirst({
+          where: {
+            id: dataId.id,
+          },
+          include: {
+            sr: true,
+          },
+        });
+        const updateStatus: any = getMrId;
+        await prisma.sr.update({
+          where: {
+            id: updateStatus.sr.id,
+          },
+          data: {
+            statusSr: "Purchase",
           },
         });
       });
@@ -470,7 +501,6 @@ const getPoandSo = async (request: Request, response: Response) => {
                 },
               },
               approvedRequest: true,
-              coa: true,
               mr: {
                 include: {
                   wor: {
@@ -550,7 +580,6 @@ const getPoandSo = async (request: Request, response: Response) => {
                 },
               },
               approvedRequest: true,
-              coa: true,
               sr: {
                 include: {
                   wor: {
@@ -677,7 +706,6 @@ const getPoandSo = async (request: Request, response: Response) => {
                 },
               },
               approvedRequest: true,
-              coa: true,
               mr: {
                 include: {
                   wor: {
@@ -757,7 +785,6 @@ const getPoandSo = async (request: Request, response: Response) => {
                 },
               },
               approvedRequest: true,
-              coa: true,
               sr: {
                 include: {
                   wor: {
@@ -1076,7 +1103,6 @@ const getAllReceive = async (request: Request, response: Response) => {
                 },
               },
               approvedRequest: true,
-              coa: true,
               mr: {
                 include: {
                   wor: {
@@ -1156,7 +1182,7 @@ const getAllReceive = async (request: Request, response: Response) => {
                 },
               },
               approvedRequest: true,
-              coa: true,
+
               sr: {
                 include: {
                   wor: {
@@ -1277,7 +1303,6 @@ const getAllReceive = async (request: Request, response: Response) => {
           },
           detailMr: {
             include: {
-              coa: true,
               supplier: true,
               mr: {
                 include: {
@@ -1341,7 +1366,6 @@ const getAllReceive = async (request: Request, response: Response) => {
           },
           SrDetail: {
             include: {
-              coa: true,
               supplier: true,
               workCenter: true,
               sr: {
@@ -1524,7 +1548,7 @@ const getAllReceive = async (request: Request, response: Response) => {
                 },
               },
               approvedRequest: true,
-              coa: true,
+
               mr: {
                 include: {
                   wor: {
@@ -1604,7 +1628,7 @@ const getAllReceive = async (request: Request, response: Response) => {
                 },
               },
               approvedRequest: true,
-              coa: true,
+
               sr: {
                 include: {
                   wor: {
@@ -1719,10 +1743,15 @@ const getAllReceive = async (request: Request, response: Response) => {
     });
     let cdvSpj: any = [];
     const spj: any = [spjCdv];
-    spj.map((c: any)=>{
-      cdvSpj.push(...c)
-    })
-    if (result.length > 0 || obj.length > 0 || noPage.length > 0 || cdvSpj.length > 0) {
+    spj.map((c: any) => {
+      cdvSpj.push(...c);
+    });
+    if (
+      result.length > 0 ||
+      obj.length > 0 ||
+      noPage.length > 0 ||
+      cdvSpj.length > 0
+    ) {
       let res: any = [];
       let arrTerm: any = [];
       noPage.map((a: any) => {
@@ -1983,6 +2012,22 @@ const updatePoandSo = async (request: Request, response: Response) => {
                   status_receive: true,
                 },
               });
+              const statusMr: any = await prisma.detailMr.findFirst({
+                where: {
+                  poandsoId: result.id,
+                },
+                include: {
+                  mr: true,
+                },
+              });
+              await prisma.mr.update({
+                where: {
+                  id: statusMr.mr.id,
+                },
+                data: {
+                  statusMr: "Receive",
+                },
+              });
             } else {
               result = await prisma.poandso.update({
                 where: {
@@ -2016,6 +2061,22 @@ const updatePoandSo = async (request: Request, response: Response) => {
             },
             data: {
               status_receive: true,
+            },
+          });
+          const statusSR: any = await prisma.srDetail.findFirst({
+            where: {
+              poandsoId: result.id,
+            },
+            include: {
+              sr: true,
+            },
+          });
+          await prisma.sr.update({
+            where: {
+              id: statusSR.sr.id,
+            },
+            data: {
+              statusSr: "Receive",
             },
           });
           response.status(201).json({

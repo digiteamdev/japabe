@@ -66,7 +66,6 @@ const getCashier = async (request: Request, response: Response) => {
                     },
                   },
                   approvedRequest: true,
-                  coa: true,
                   mr: {
                     include: {
                       wor: {
@@ -146,7 +145,7 @@ const getCashier = async (request: Request, response: Response) => {
                     },
                   },
                   approvedRequest: true,
-                  coa: true,
+                  
                   sr: {
                     include: {
                       wor: {
@@ -257,7 +256,7 @@ const getCashier = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-                      coa: true,
+                      
                       mr: {
                         include: {
                           wor: {
@@ -337,7 +336,7 @@ const getCashier = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-                      coa: true,
+                      
                       sr: {
                         include: {
                           wor: {
@@ -487,7 +486,7 @@ const getCashier = async (request: Request, response: Response) => {
         include: {
           journal_cashier: {
             include: {
-              coa: true,
+              
             },
           },
           kontrabon: {
@@ -509,7 +508,7 @@ const getCashier = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-                      coa: true,
+                      
                       mr: {
                         include: {
                           wor: {
@@ -589,7 +588,7 @@ const getCashier = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-                      coa: true,
+                      
                       sr: {
                         include: {
                           wor: {
@@ -701,7 +700,7 @@ const getCashier = async (request: Request, response: Response) => {
                             },
                           },
                           approvedRequest: true,
-                          coa: true,
+                          
                           mr: {
                             include: {
                               wor: {
@@ -781,7 +780,7 @@ const getCashier = async (request: Request, response: Response) => {
                             },
                           },
                           approvedRequest: true,
-                          coa: true,
+                          
                           sr: {
                             include: {
                               wor: {
@@ -1030,7 +1029,7 @@ const getDueDate = async (request: Request, response: Response) => {
                     },
                   },
                   approvedRequest: true,
-                  coa: true,
+                  
                   mr: {
                     include: {
                       wor: {
@@ -1110,7 +1109,7 @@ const getDueDate = async (request: Request, response: Response) => {
                     },
                   },
                   approvedRequest: true,
-                  coa: true,
+                  
                   sr: {
                     include: {
                       wor: {
@@ -1221,7 +1220,7 @@ const getDueDate = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-                      coa: true,
+                      
                       mr: {
                         include: {
                           wor: {
@@ -1301,7 +1300,7 @@ const getDueDate = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-                      coa: true,
+                      
                       sr: {
                         include: {
                           wor: {
@@ -1475,7 +1474,7 @@ const getDueDate = async (request: Request, response: Response) => {
                     },
                   },
                   approvedRequest: true,
-                  coa: true,
+                  
                   mr: {
                     include: {
                       wor: {
@@ -1555,7 +1554,7 @@ const getDueDate = async (request: Request, response: Response) => {
                     },
                   },
                   approvedRequest: true,
-                  coa: true,
+                  
                   sr: {
                     include: {
                       wor: {
@@ -1666,7 +1665,7 @@ const getDueDate = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-                      coa: true,
+                      
                       mr: {
                         include: {
                           wor: {
@@ -1746,7 +1745,7 @@ const getDueDate = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-                      coa: true,
+                      
                       sr: {
                         include: {
                           wor: {

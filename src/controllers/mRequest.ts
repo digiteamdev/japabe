@@ -311,9 +311,9 @@ const createMr = async (request: Request, response: Response) => {
         id: results.id,
       },
       data: {
-        statusMr: "Request"
-      }
-    })
+        statusMr: "Request",
+      },
+    });
     if (results) {
       response.status(201).json({
         success: true,
@@ -1013,7 +1013,6 @@ const getPrM = async (request: Request, response: Response) => {
         include: {
           detailMr: {
             include: {
-              coa: true,
               supplier: true,
               mr: {
                 include: {
@@ -1156,13 +1155,33 @@ const updatePr = async (request: Request, response: Response) => {
                 id: updateVerify[i].id,
               },
               data: {
-                coa: { connect: { id: updateVerify[i].akunId } },
                 supplier: { connect: { id: updateVerify[i].supId } },
                 disc: updateVerify[i].disc,
                 price: updateVerify[i].price,
                 qtyAppr: updateVerify[i].qtyAppr,
                 total: updateVerify[i].total,
                 purchase: { connect: { id: result.id } },
+              },
+            });
+          }
+          const getIdmr = await prisma.purchase.findFirst({
+            where: { id: result.id },
+            include: {
+              detailMr: {
+                include: {
+                  mr: true,
+                },
+              },
+            },
+          });
+          const updateStatus: any = getIdmr?.detailMr;
+          for (let index = 0; index < updateStatus.length; index++) {
+            await prisma.mr.update({
+              where: {
+                id: updateStatus[index].mr.id,
+              },
+              data: {
+                statusMr: "Approval",
               },
             });
           }
@@ -1249,7 +1268,6 @@ const updatedetailPr = async (request: Request, response: Response) => {
             id: updateVerify[i].id,
           },
           data: {
-            coa: { connect: { id: updateVerify[i].akunId } },
             supplier: { connect: { id: updateVerify[i].supId } },
             note_revision: updateVerify[i].note_revision,
             price: updateVerify[i].price,
@@ -1308,7 +1326,6 @@ const updatedetailPr = async (request: Request, response: Response) => {
             id: updateVerify[i].id,
           },
           data: {
-            coa: { connect: { id: updateVerify[i].akunId } },
             supplier: { connect: { id: updateVerify[i].supId } },
             note_revision: updateVerify[i].note_revision,
             price: updateVerify[i].price,

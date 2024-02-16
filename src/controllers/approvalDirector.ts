@@ -163,7 +163,6 @@ const getAllApprove = async (request: Request, response: Response) => {
             supplier: true,
             approvedRequest: true,
             poandso: true,
-            coa: true,
             mr: {
               include: {
                 wor: true,
@@ -230,7 +229,6 @@ const getAllApprove = async (request: Request, response: Response) => {
             supplier: true,
             approvedRequest: true,
             poandso: true,
-            coa: true,
             sr: {
               include: {
                 wor: true,
@@ -347,7 +345,6 @@ const getAllApprove = async (request: Request, response: Response) => {
             supplier: true,
             approvedRequest: true,
             poandso: true,
-            coa: true,
             mr: {
               include: {
                 wor: true,
@@ -414,7 +411,6 @@ const getAllApprove = async (request: Request, response: Response) => {
             supplier: true,
             approvedRequest: true,
             poandso: true,
-            coa: true,
             sr: {
               include: {
                 wor: true,

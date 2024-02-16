@@ -499,7 +499,6 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
               },
             },
             approvedRequest: true,
-            coa: true,
             mr: {
               include: {
                 wor: {

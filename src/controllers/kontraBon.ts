@@ -75,7 +75,6 @@ const getKontraBon = async (request: Request, response: Response) => {
                   },
                 },
                 approvedRequest: true,
-                coa: true,
                 mr: {
                   include: {
                     wor: {
@@ -155,7 +154,6 @@ const getKontraBon = async (request: Request, response: Response) => {
                   },
                 },
                 approvedRequest: true,
-                coa: true,
                 sr: {
                   include: {
                     wor: {
@@ -267,7 +265,6 @@ const getKontraBon = async (request: Request, response: Response) => {
                       },
                     },
                     approvedRequest: true,
-                    coa: true,
                     mr: {
                       include: {
                         wor: {
@@ -347,7 +344,6 @@ const getKontraBon = async (request: Request, response: Response) => {
                       },
                     },
                     approvedRequest: true,
-                    coa: true,
                     sr: {
                       include: {
                         wor: {

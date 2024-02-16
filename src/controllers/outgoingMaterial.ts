@@ -48,7 +48,6 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
                       },
                     },
                     approvedRequest: true,
-                    coa: true,
                     mr: {
                       include: {
                         wor: {
@@ -241,6 +240,22 @@ const createOutgoingMaterial = async (request: Request, response: Response) => {
             },
             include: {
               stock_outgoing_material: true,
+            },
+          });
+          const getMrStatus = await prisma.detailMr.findFirst({
+            where: {
+              poandsoId: request.body.mr.id,
+            },
+            include: {
+              mr: true,
+            },
+          });
+          await prisma.mr.update({
+            where: {
+              id: getMrStatus?.mr.id,
+            },
+            data: {
+              statusMr: "Finish",
             },
           });
         } else {
