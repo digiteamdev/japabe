@@ -47,12 +47,7 @@ const getQuotation = async (request: Request, response: Response) => {
               Child_QuDet: true,
             },
           },
-          eqandpart: {
-            include: {
-              equipment: true,
-              eq_part: true,
-            },
-          },
+          price_quotation: true,
         },
         orderBy: {
           createdAt: "desc",
@@ -81,12 +76,7 @@ const getQuotation = async (request: Request, response: Response) => {
               Child_QuDet: true,
             },
           },
-          eqandpart: {
-            include: {
-              equipment: true,
-              eq_part: true,
-            },
-          },
+          price_quotation: true,
         },
         orderBy: {
           createdAt: "desc",
@@ -140,12 +130,7 @@ const getEditPoQuotation = async (request: Request, response: Response) => {
         },
         CustomerContact: true,
         Quotations_Detail: true,
-        eqandpart: {
-          include: {
-            equipment: true,
-            eq_part: true,
-          },
-        },
+        price_quotation: true,
       },
     });
     if (results.length > 0) {
@@ -187,12 +172,12 @@ const createQuotation = async (request: any, response: Response) => {
             date: new Date(request.body.date),
             quo_img: !request.file ? null : request.file.path,
             warranty: request.body.warranty,
-            eqandpart: {
-              create: JSON.parse(request.body.eqandpart),
+            price_quotation: {
+              create: JSON.parse(request.body.price_quotation),
             },
           },
           include: {
-            eqandpart: true,
+            price_quotation: true,
           },
         });
         let details = JSON.parse(request.body.Quotations_Detail);
@@ -392,42 +377,44 @@ const updateQuotationEqPart = async (request: Request, response: Response) => {
   try {
     const updateVerify = request.body.map(
       (updateByveri: {
-        id_equipment: any;
-        id_part: any;
-        id_quotation: any;
+        quo_id: any;
         qty: any;
-        keterangan: any;
+        description: any;
+        unit_price: any;
+        total_price: any;
         id: any;
       }) => {
         return {
-          id_equipment: updateByveri.id_equipment,
-          id_part: updateByveri.id_part,
-          id_quotation: updateByveri.id_quotation,
+          quo_id: updateByveri.quo_id,
+          description: updateByveri.description,
           qty: updateByveri.qty,
-          keterangan: updateByveri.keterangan,
+          unit_price: updateByveri.unit_price,
+          total_price: updateByveri.total_price,
           id: updateByveri.id,
         };
       }
     );
     let result: any = [];
     for (let i = 0; i < updateVerify.length; i++) {
-      const updateQuotationEqPart = await prisma.eqandpart.upsert({
+      const updateQuotationEqPart = await prisma.price_quotation.upsert({
         where: {
           id: updateVerify[i].id,
         },
         create: {
-          equipment: { connect: { id: updateVerify[i].id_equipment } },
-          eq_part: { connect: { id: updateVerify[i].id_part } },
-          quotations: { connect: { id: updateVerify[i].id_quotation } },
+          unit: updateVerify[i].unit,
+          quotations: { connect: { id: updateVerify[i].quo_id } },
+          description: updateVerify[i].description,
+          unit_price: updateVerify[i].unit_price,
           qty: updateVerify[i].qty,
-          keterangan: updateVerify[i].keterangan,
+          total_price: updateVerify[i].total_price,
         },
         update: {
-          equipment: { connect: { id: updateVerify[i].id_equipment } },
-          eq_part: { connect: { id: updateVerify[i].id_part } },
-          quotations: { connect: { id: updateVerify[i].id_quotation } },
+          unit: updateVerify[i].unit,
+          quotations: { connect: { id: updateVerify[i].quo_id } },
+          description: updateVerify[i].description,
+          unit_price: updateVerify[i].unit_price,
           qty: updateVerify[i].qty,
-          keterangan: updateVerify[i].keterangan,
+          total_price: updateVerify[i].total_price,
         },
       });
       result = [...result, updateQuotationEqPart];

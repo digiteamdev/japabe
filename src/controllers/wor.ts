@@ -45,12 +45,7 @@ const getJobStatus = async (request: Request, response: Response) => {
                     address: true,
                   },
                 },
-                eqandpart: {
-                  include: {
-                    equipment: true,
-                    eq_part: true,
-                  },
-                },
+                price_quotation: true,
               },
             },
           },
@@ -146,12 +141,7 @@ const getWor = async (request: Request, response: Response) => {
                       address: true,
                     },
                   },
-                  eqandpart: {
-                    include: {
-                      equipment: true,
-                      eq_part: true,
-                    },
-                  },
+                  price_quotation: true,
                 },
               },
             },
@@ -202,12 +192,7 @@ const getWor = async (request: Request, response: Response) => {
                       address: true,
                     },
                   },
-                  eqandpart: {
-                    include: {
-                      equipment: true,
-                      eq_part: true,
-                    },
-                  },
+                  price_quotation: true,
                 },
               },
             },
@@ -296,12 +281,7 @@ const getWorTimes = async (request: any, response: Response) => {
                     address: true,
                   },
                 },
-                eqandpart: {
-                  include: {
-                    equipment: true,
-                    eq_part: true,
-                  },
-                },
+                price_quotation: true,
               },
             },
           },

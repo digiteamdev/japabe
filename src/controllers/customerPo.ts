@@ -35,12 +35,7 @@ const getcusPo = async (request: Request, response: Response) => {
                 },
               },
               CustomerContact: true,
-              eqandpart: {
-                include: {
-                  equipment: true,
-                  eq_part: true,
-                },
-              },
+              price_quotation: true,
             },
           },
           Deskription_CusPo: true,
@@ -68,12 +63,7 @@ const getcusPo = async (request: Request, response: Response) => {
                 },
               },
               CustomerContact: true,
-              eqandpart: {
-                include: {
-                  equipment: true,
-                  eq_part: true,
-                },
-              },
+              price_quotation: true,
             },
           },
           Deskription_CusPo: true,

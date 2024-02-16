@@ -60,12 +60,7 @@ const getDrawing = async (request: Request, response: Response) => {
                               address: true,
                             },
                           },
-                          eqandpart: {
-                            include: {
-                              equipment: true,
-                              eq_part: true,
-                            },
-                          },
+                          price_quotation: true,
                         },
                       },
                     },
@@ -136,12 +131,7 @@ const getDrawingTms = async (request: Request, response: Response) => {
                         address: true,
                       },
                     },
-                    eqandpart: {
-                      include: {
-                        equipment: true,
-                        eq_part: true,
-                      },
-                    },
+                    price_quotation: true,
                   },
                 },
               },

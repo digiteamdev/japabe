@@ -155,12 +155,7 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
                           quotations: {
                             include: {
                               Customer: true,
-                              eqandpart: {
-                                include: {
-                                  equipment: true,
-                                  eq_part: true,
-                                },
-                              },
+                              price_quotation: true,
                             },
                           },
                         },
@@ -365,12 +360,7 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
                           quotations: {
                             include: {
                               Customer: true,
-                              eqandpart: {
-                                include: {
-                                  equipment: true,
-                                  eq_part: true,
-                                },
-                              },
+                              price_quotation: true,
                             },
                           },
                         },

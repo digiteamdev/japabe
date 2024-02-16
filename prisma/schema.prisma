@@ -314,23 +314,18 @@ model eq_part {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   deleted         DateTime?
-  eqandpart       eqandpart[]
 
   @@index([id, nama_part])
 }
 
 model eqandpart {
-  id           String     @id @default(cuid())
-  equipment    Equipment  @relation(fields: [id_equipment], references: [id])
+  id           String    @id @default(cuid())
+  equipment    Equipment @relation(fields: [id_equipment], references: [id])
   id_equipment String
-  eq_part      eq_part    @relation(fields: [id_part], references: [id])
-  id_part      String
-  quotations   Quotations @relation(fields: [id_quotation], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  id_quotation String
-  qty          Int        @default(0)
-  keterangan   String     @db.Text
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  qty          Int       @default(0)
+  keterangan   String    @db.Text
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
   deleted      DateTime?
 }
 
@@ -461,6 +456,8 @@ model Quotations {
   estimated_delivery String?             @db.Text
   quo_img            String?             @db.Text
   warranty           String?             @db.Text
+  note_payment       String?             @db.Text
+  term_payment       String?             @db.Text
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   deleted            DateTime?
@@ -470,9 +467,23 @@ model Quotations {
   Customer           Customer            @relation(fields: [customerId], references: [id])
   CustomerContact    CustomerContact?    @relation(fields: [customerContactId], references: [id])
   customerContactId  String
-  eqandpart          eqandpart[]
+  price_quotation    price_quotation[]
 
   @@index([id, quo_num])
+}
+
+model price_quotation {
+  id          String     @id @default(cuid())
+  quotations  Quotations @relation(fields: [quo_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  quo_id      String
+  qty         Int        @default(0)
+  description String     @db.Text
+  unit        String     @db.Text
+  unit_price  Int        @default(0)
+  total_price Int        @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deleted     DateTime?
 }
 
 model Quotations_Detail {
@@ -1023,6 +1034,7 @@ model purchase {
   detailMr                detailMr[]
   SrDetail                SrDetail[]
   kontrabon               kontrabon?
+  journal_cashier         journal_cashier[]
 
   @@index([id, idPurchase, dateOfPurchase, id_receive])
 }
@@ -1227,6 +1239,8 @@ model journal_cashier {
   coa_id             String
   poandso            poandso?           @relation(fields: [poandsoId], references: [id])
   poandsoId          String?
+  purchase           purchase?          @relation(fields: [purchaseID], references: [id])
+  purchaseID         String?
   status_transaction status_transaction
   grandtotal         Int                @default(0)
   createdAt          DateTime           @default(now())

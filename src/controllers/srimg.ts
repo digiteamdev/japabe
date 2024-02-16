@@ -60,12 +60,7 @@ const getSrimg = async (request: Request, response: Response) => {
                               address: true,
                             },
                           },
-                          eqandpart: {
-                            include: {
-                              equipment: true,
-                              eq_part: true,
-                            },
-                          },
+                          price_quotation: true,
                         },
                       },
                     },
@@ -132,12 +127,7 @@ const getSrimg = async (request: Request, response: Response) => {
                               address: true,
                             },
                           },
-                          eqandpart: {
-                            include: {
-                              equipment: true,
-                              eq_part: true,
-                            },
-                          },
+                          price_quotation: true,
                         },
                       },
                     },
@@ -221,12 +211,7 @@ const getSumaryTms = async (request: Request, response: Response) => {
                         address: true,
                       },
                     },
-                    eqandpart: {
-                      include: {
-                        equipment: true,
-                        eq_part: true,
-                      },
-                    },
+                    price_quotation: true,
                   },
                 },
               },
@@ -291,12 +276,7 @@ const getSrimBom = async (request: Request, response: Response) => {
                             address: true,
                           },
                         },
-                        eqandpart: {
-                          include: {
-                            equipment: true,
-                            eq_part: true,
-                          },
-                        },
+                        price_quotation: true,
                       },
                     },
                   },

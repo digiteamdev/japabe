@@ -1120,6 +1120,17 @@ const updatePr = async (request: Request, response: Response) => {
             currency: request.body.currency,
           },
         });
+        const pr = await prisma.purchase.findFirst({
+          where: {
+            id: result.id,
+            idPurchase: {
+              startsWith: "DMR",
+            },
+          },
+        });
+        // if (pr) {
+
+        // }
         const updateVerify = request.body.detailMr.map(
           (updateByveri: {
             taxpr: any;
