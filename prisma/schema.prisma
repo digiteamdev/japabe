@@ -468,6 +468,7 @@ model Quotations {
   CustomerContact    CustomerContact?    @relation(fields: [customerContactId], references: [id])
   customerContactId  String
   price_quotation    price_quotation[]
+  term_of_pay        term_of_pay[]
 
   @@index([id, quo_num])
 }
@@ -565,6 +566,8 @@ model term_of_pay {
   id         String      @id @default(cuid())
   customerPo CustomerPo? @relation(fields: [cuspoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   cuspoId    String?
+  quotations Quotations? @relation(fields: [quo_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  quo_id     String?
   limitpay   Limit_Pay?
   percent    Int         @default(0)
   price      Int         @default(0)

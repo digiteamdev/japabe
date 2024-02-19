@@ -484,11 +484,7 @@ const getCashier = async (request: Request, response: Response) => {
           },
         },
         include: {
-          journal_cashier: {
-            include: {
-              
-            },
-          },
+          journal_cashier:true,
           kontrabon: {
             include: {
               purchase: {

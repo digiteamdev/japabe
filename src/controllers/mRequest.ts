@@ -1120,17 +1120,6 @@ const updatePr = async (request: Request, response: Response) => {
             currency: request.body.currency,
           },
         });
-        const pr = await prisma.purchase.findFirst({
-          where: {
-            id: result.id,
-            idPurchase: {
-              startsWith: "DMR",
-            },
-          },
-        });
-        // if (pr) {
-
-        // }
         const updateVerify = request.body.detailMr.map(
           (updateByveri: {
             taxpr: any;
@@ -1195,6 +1184,57 @@ const updatePr = async (request: Request, response: Response) => {
                 statusMr: "Approval",
               },
             });
+            const getDmr = await prisma.purchase.findFirst({
+              where: {
+                id: result.id,
+                idPurchase: {
+                  startsWith: "DMR",
+                },
+              },
+            });
+            const getPRr = await prisma.purchase.findFirst({
+              where: {
+                id: result.id,
+                idPurchase: {
+                  startsWith: "PR",
+                },
+              },
+            });
+            if (getDmr) {
+              await prisma.journal_cashier.createMany({
+                data: [
+                  {
+                    coa_id: "clsijsq3s0003cz5ih2fa64xv",
+                    status_transaction: "Debet",
+                    purchaseID: result.id,
+                    grandtotal: updateStatus[index].mr.total,
+                  },
+                  {
+                    coa_id: "cls172hpp000fczze86zfh7yn",
+                    status_transaction: "Kredit",
+                    purchaseID: result.id,
+                    grandtotal: updateStatus[index].mr.total,
+                  },
+                ],
+              });
+            } else if (getPRr) {
+              await prisma.journal_cashier.createMany({
+                data: [
+                  {
+                    coa_id: "clsijsq3s0003cz5ih2fa64xv",
+                    status_transaction: "Debet",
+                    purchaseID: result.id,
+                    grandtotal: updateStatus[index].mr.total,
+                  },
+                  {
+                    coa_id: "cls172hpp000fczze86zfh7yn",
+                    purchaseID: result.id,
+                    status_transaction: "Kredit",
+                    grandtotal: updateStatus[index].mr.total,
+                  },
+                ],
+              });
+            }
           }
           response.status(201).json({
             success: true,

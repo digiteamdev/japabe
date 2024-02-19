@@ -172,6 +172,8 @@ const createQuotation = async (request: any, response: Response) => {
             date: new Date(request.body.date),
             quo_img: !request.file ? null : request.file.path,
             warranty: request.body.warranty,
+            note_payment: request.body.note_payment,
+            term_payment: request.body.term_payment,
             price_quotation: {
               create: JSON.parse(request.body.price_quotation),
             },
