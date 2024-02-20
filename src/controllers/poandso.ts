@@ -127,6 +127,12 @@ const getPo = async (request: Request, response: Response) => {
         ],
         AND: [
           {
+            status_manager_pr: true,
+          },
+          {
+            status_spv_pr: true,
+          },
+          {
             detailMr: {
               every: {
                 poandso: null,
@@ -160,7 +166,6 @@ const getPo = async (request: Request, response: Response) => {
                       include: {
                         quotations: {
                           include: {
-                            Quotations_Detail: true,
                             CustomerContact: true,
                           },
                         },
@@ -241,7 +246,6 @@ const getPo = async (request: Request, response: Response) => {
                   include: {
                     Quotations: {
                       include: {
-                        Quotations_Detail: true,
                         CustomerContact: true,
                       },
                     },
@@ -353,6 +357,7 @@ const getPo = async (request: Request, response: Response) => {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
 };
+
 
 const createPo = async (request: Request, response: Response) => {
   try {
@@ -507,7 +512,6 @@ const getPoandSo = async (request: Request, response: Response) => {
                     include: {
                       Quotations: {
                         include: {
-                          Quotations_Detail: true,
                           CustomerContact: true,
                         },
                       },
@@ -586,7 +590,6 @@ const getPoandSo = async (request: Request, response: Response) => {
                     include: {
                       Quotations: {
                         include: {
-                          Quotations_Detail: true,
                           CustomerContact: true,
                         },
                       },
@@ -712,7 +715,6 @@ const getPoandSo = async (request: Request, response: Response) => {
                     include: {
                       Quotations: {
                         include: {
-                          Quotations_Detail: true,
                           CustomerContact: true,
                         },
                       },
@@ -791,7 +793,6 @@ const getPoandSo = async (request: Request, response: Response) => {
                     include: {
                       Quotations: {
                         include: {
-                          Quotations_Detail: true,
                           CustomerContact: true,
                         },
                       },
@@ -1109,7 +1110,6 @@ const getAllReceive = async (request: Request, response: Response) => {
                     include: {
                       Quotations: {
                         include: {
-                          Quotations_Detail: true,
                           CustomerContact: true,
                         },
                       },
@@ -1189,7 +1189,6 @@ const getAllReceive = async (request: Request, response: Response) => {
                     include: {
                       Quotations: {
                         include: {
-                          Quotations_Detail: true,
                           CustomerContact: true,
                         },
                       },
@@ -1555,7 +1554,6 @@ const getAllReceive = async (request: Request, response: Response) => {
                     include: {
                       Quotations: {
                         include: {
-                          Quotations_Detail: true,
                           CustomerContact: true,
                         },
                       },
@@ -1635,7 +1633,6 @@ const getAllReceive = async (request: Request, response: Response) => {
                     include: {
                       Quotations: {
                         include: {
-                          Quotations_Detail: true,
                           CustomerContact: true,
                         },
                       },

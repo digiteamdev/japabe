@@ -38,14 +38,12 @@ const getJobStatus = async (request: Request, response: Response) => {
           include: {
             quotations: {
               include: {
-                Quotations_Detail: true,
                 CustomerContact: true,
                 Customer: {
                   include: {
                     address: true,
                   },
                 },
-                price_quotation: true,
               },
             },
           },
@@ -134,14 +132,13 @@ const getWor = async (request: Request, response: Response) => {
             include: {
               quotations: {
                 include: {
-                  Quotations_Detail: true,
+                  price_quotation: true,
                   CustomerContact: true,
                   Customer: {
                     include: {
                       address: true,
                     },
                   },
-                  price_quotation: true,
                 },
               },
             },
@@ -185,14 +182,13 @@ const getWor = async (request: Request, response: Response) => {
             include: {
               quotations: {
                 include: {
-                  Quotations_Detail: true,
+                  price_quotation: true,
                   CustomerContact: true,
                   Customer: {
                     include: {
                       address: true,
                     },
                   },
-                  price_quotation: true,
                 },
               },
             },
@@ -274,14 +270,12 @@ const getWorTimes = async (request: any, response: Response) => {
           include: {
             quotations: {
               include: {
-                Quotations_Detail: true,
                 CustomerContact: true,
                 Customer: {
                   include: {
                     address: true,
                   },
                 },
-                price_quotation: true,
               },
             },
           },
@@ -394,6 +388,20 @@ const createWor = async (request: any, response: Response) => {
 const updateWor = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
+    const lastRes = await prisma.wor.findFirst({
+      where: { id: id },
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+
+    const count = lastRes?.refivision;
+
+    const i: any = count;
+
+    const autoIn: any = parseInt(i) + 1;
+
+    const genarate: string = autoIn.toString();
     let updateWor;
     if (request.body.cuspoId === null) {
       updateWor = await prisma.wor.update({
@@ -423,7 +431,7 @@ const updateWor = async (request: Request, response: Response) => {
           file_list: !request.file ? request.body.file_list : request.file.path,
           noted: request.body.noted,
           status: request.body.status,
-          refivision: request.body.refivision,
+          refivision: genarate,
           refevision_desc: request.body.refevision_desc,
         },
       });

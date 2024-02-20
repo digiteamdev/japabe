@@ -35,6 +35,7 @@ const getQuotation = async (request: Request, response: Response) => {
           ],
         },
         include: {
+          price_quotation: true,
           CustomerPo: true,
           Customer: {
             include: {
@@ -42,12 +43,6 @@ const getQuotation = async (request: Request, response: Response) => {
             },
           },
           CustomerContact: true,
-          Quotations_Detail: {
-            include: {
-              Child_QuDet: true,
-            },
-          },
-          price_quotation: true,
         },
         orderBy: {
           createdAt: "desc",
@@ -64,6 +59,7 @@ const getQuotation = async (request: Request, response: Response) => {
           },
         },
         include: {
+          price_quotation: true,
           CustomerPo: true,
           Customer: {
             include: {
@@ -71,12 +67,6 @@ const getQuotation = async (request: Request, response: Response) => {
             },
           },
           CustomerContact: true,
-          Quotations_Detail: {
-            include: {
-              Child_QuDet: true,
-            },
-          },
-          price_quotation: true,
         },
         orderBy: {
           createdAt: "desc",
@@ -129,8 +119,6 @@ const getEditPoQuotation = async (request: Request, response: Response) => {
           },
         },
         CustomerContact: true,
-        Quotations_Detail: true,
-        price_quotation: true,
       },
     });
     if (results.length > 0) {
@@ -174,6 +162,7 @@ const createQuotation = async (request: any, response: Response) => {
             warranty: request.body.warranty,
             note_payment: request.body.note_payment,
             term_payment: request.body.term_payment,
+            Quotations_Detail: request.body.Quotations_Detail,
             price_quotation: {
               create: JSON.parse(request.body.price_quotation),
             },
@@ -182,29 +171,29 @@ const createQuotation = async (request: any, response: Response) => {
             price_quotation: true,
           },
         });
-        let details = JSON.parse(request.body.Quotations_Detail);
-        for (let i = 0; i < details.length; i++) {
-          let detail = await prisma.quotations_Detail.create({
-            data: {
-              quotations: { connect: { id: results.id } },
-              item_of_work: details[i].item_of_work,
-            },
-          });
-          if (details[i].Child_QuDet.length > 0) {
-            for (
-              let index = 0;
-              index < details[i].Child_QuDet.length;
-              index++
-            ) {
-              await prisma.child_QuDet.create({
-                data: {
-                  Quotations_Detail: { connect: { id: detail.id } },
-                  item_of_work: details[i].Child_QuDet[index].item_of_work,
-                },
-              });
-            }
-          }
-        }
+        // let details = JSON.parse(request.body.Quotations_Detail);
+        // for (let i = 0; i < details.length; i++) {
+        //   let detail = await prisma.quotations_Detail.create({
+        //     data: {
+        //       quotations: { connect: { id: results.id } },
+        //       item_of_work: details[i].item_of_work,
+        //     },
+        //   });
+        //   if (details[i].Child_QuDet.length > 0) {
+        //     for (
+        //       let index = 0;
+        //       index < details[i].Child_QuDet.length;
+        //       index++
+        //     ) {
+        //       await prisma.child_QuDet.create({
+        //         data: {
+        //           Quotations_Detail: { connect: { id: detail.id } },
+        //           item_of_work: details[i].Child_QuDet[index].item_of_work,
+        //         },
+        //       });
+        //     }
+        //   }
+        // }
         if (results) {
           return response.status(204).json({
             success: true,
@@ -232,6 +221,21 @@ const createQuotation = async (request: any, response: Response) => {
 const updateQuotation = async (request: any, response: Response) => {
   try {
     const id: string = request.params.id;
+    const lastRes = await prisma.quotations.findFirst({
+      where: { id: id },
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+
+    const count = lastRes?.revision;
+
+    const i: any = count;
+
+    const autoIn: any = parseInt(i) + 1;
+
+    const genarate: string = autoIn.toString();
+
     const updateQuotation = await prisma.quotations.update({
       where: {
         id: id,
@@ -239,7 +243,7 @@ const updateQuotation = async (request: any, response: Response) => {
       data: {
         quo_num: request.body.quo_num,
         quo_auto: request.body.quo_auto,
-        revision: request.body.revision,
+        revision: genarate,
         send_by: request.body.send_by,
         revision_desc: request.body.revision_desc,
         Customer: { connect: { id: request.body.customerId } },
@@ -250,6 +254,9 @@ const updateQuotation = async (request: any, response: Response) => {
         date: new Date(request.body.date),
         quo_img: !request.files ? request.body.quo_img : request.files.path,
         warranty: request.body.warranty,
+        Quotations_Detail: request.body.Quotations_Detail,
+        note_payment: request.body.note_payment,
+        term_payment: request.body.term_payment,
       },
     });
     if (updateQuotation) {
@@ -257,112 +264,6 @@ const updateQuotation = async (request: any, response: Response) => {
         success: true,
         massage: "Success Update Data",
         results: updateQuotation,
-      });
-    } else {
-      response.status(400).json({
-        success: false,
-        massage: "Unsuccess Update Data",
-      });
-    }
-  } catch (error) {
-    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
-  }
-};
-
-const updateQuotationDetail = async (request: Request, response: Response) => {
-  try {
-    const updateVerify = request.body.map(
-      (updateByveri: {
-        item_of_work: any;
-        quo_id: any;
-        qty: any;
-        unit: any;
-        price: any;
-        id: any;
-      }) => {
-        return {
-          item_of_work: updateByveri.item_of_work,
-          quo_id: updateByveri.quo_id,
-          qty: updateByveri.qty,
-          unit: updateByveri.unit,
-          price: updateByveri.price,
-          id: updateByveri.id,
-        };
-      }
-    );
-    let result: any = [];
-    for (let i = 0; i < updateVerify.length; i++) {
-      const updateQuotationDetail = await prisma.quotations_Detail.upsert({
-        where: {
-          id: updateVerify[i].id,
-        },
-        create: {
-          item_of_work: updateVerify[i].item_of_work,
-          quotations: { connect: { id: updateVerify[i].quo_id } },
-          qty: updateVerify[i].qty,
-          unit: updateVerify[i].unit,
-          price: updateVerify[i].price,
-        },
-        update: {
-          item_of_work: updateVerify[i].item_of_work,
-          quotations: { connect: { id: updateVerify[i].quo_id } },
-          qty: updateVerify[i].qty,
-          unit: updateVerify[i].unit,
-          price: updateVerify[i].price,
-        },
-      });
-      result = [...result, updateQuotationDetail];
-    }
-    if (result) {
-      response.status(201).json({
-        success: true,
-        massage: "Success Update Data",
-        result: result,
-      });
-    } else {
-      response.status(400).json({
-        success: false,
-        massage: "Unsuccess Update Data",
-      });
-    }
-  } catch (error) {
-    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
-  }
-};
-
-const updateQuoDetChild = async (request: Request, response: Response) => {
-  try {
-    const updateVerify = request.body.map(
-      (updateByveri: { item_of_work: any; quoDetId: any; id: any }) => {
-        return {
-          item_of_work: updateByveri.item_of_work,
-          quoDetId: updateByveri.quoDetId,
-          id: updateByveri.id,
-        };
-      }
-    );
-    let result: any = [];
-    for (let i = 0; i < updateVerify.length; i++) {
-      const updateQuotationDetail = await prisma.child_QuDet.upsert({
-        where: {
-          id: updateVerify[i].id,
-        },
-        create: {
-          item_of_work: updateVerify[i].item_of_work,
-          Quotations_Detail: { connect: { id: updateVerify[i].quoDetId } },
-        },
-        update: {
-          item_of_work: updateVerify[i].item_of_work,
-          Quotations_Detail: { connect: { id: updateVerify[i].quoDetId } },
-        },
-      });
-      result = [...result, updateQuotationDetail];
-    }
-    if (result) {
-      response.status(201).json({
-        success: true,
-        massage: "Success Update Data",
-        result: result,
       });
     } else {
       response.status(400).json({
@@ -438,6 +339,175 @@ const updateQuotationEqPart = async (request: Request, response: Response) => {
   }
 };
 
+// const updateQuotationDetail = async (request: Request, response: Response) => {
+//   try {
+//     const updateVerify = request.body.map(
+//       (updateByveri: {
+//         item_of_work: any;
+//         quo_id: any;
+//         qty: any;
+//         unit: any;
+//         price: any;
+//         id: any;
+//       }) => {
+//         return {
+//           item_of_work: updateByveri.item_of_work,
+//           quo_id: updateByveri.quo_id,
+//           qty: updateByveri.qty,
+//           unit: updateByveri.unit,
+//           price: updateByveri.price,
+//           id: updateByveri.id,
+//         };
+//       }
+//     );
+//     let result: any = [];
+//     for (let i = 0; i < updateVerify.length; i++) {
+//       const updateQuotationDetail = await prisma.quotations_Detail.upsert({
+//         where: {
+//           id: updateVerify[i].id,
+//         },
+//         create: {
+//           item_of_work: updateVerify[i].item_of_work,
+//           quotations: { connect: { id: updateVerify[i].quo_id } },
+//           qty: updateVerify[i].qty,
+//           unit: updateVerify[i].unit,
+//           price: updateVerify[i].price,
+//         },
+//         update: {
+//           item_of_work: updateVerify[i].item_of_work,
+//           quotations: { connect: { id: updateVerify[i].quo_id } },
+//           qty: updateVerify[i].qty,
+//           unit: updateVerify[i].unit,
+//           price: updateVerify[i].price,
+//         },
+//       });
+//       result = [...result, updateQuotationDetail];
+//     }
+//     if (result) {
+//       response.status(201).json({
+//         success: true,
+//         massage: "Success Update Data",
+//         result: result,
+//       });
+//     } else {
+//       response.status(400).json({
+//         success: false,
+//         massage: "Unsuccess Update Data",
+//       });
+//     }
+//   } catch (error) {
+//     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+//   }
+// };
+
+// const updateQuoDetChild = async (request: Request, response: Response) => {
+//   try {
+//     const updateVerify = request.body.map(
+//       (updateByveri: { item_of_work: any; quoDetId: any; id: any }) => {
+//         return {
+//           item_of_work: updateByveri.item_of_work,
+//           quoDetId: updateByveri.quoDetId,
+//           id: updateByveri.id,
+//         };
+//       }
+//     );
+//     let result: any = [];
+//     for (let i = 0; i < updateVerify.length; i++) {
+//       const updateQuotationDetail = await prisma.child_QuDet.upsert({
+//         where: {
+//           id: updateVerify[i].id,
+//         },
+//         create: {
+//           item_of_work: updateVerify[i].item_of_work,
+//           Quotations_Detail: { connect: { id: updateVerify[i].quoDetId } },
+//         },
+//         update: {
+//           item_of_work: updateVerify[i].item_of_work,
+//           Quotations_Detail: { connect: { id: updateVerify[i].quoDetId } },
+//         },
+//       });
+//       result = [...result, updateQuotationDetail];
+//     }
+//     if (result) {
+//       response.status(201).json({
+//         success: true,
+//         massage: "Success Update Data",
+//         result: result,
+//       });
+//     } else {
+//       response.status(400).json({
+//         success: false,
+//         massage: "Unsuccess Update Data",
+//       });
+//     }
+//   } catch (error) {
+//     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+//   }
+// };
+
+// const updateQuotationEqPart = async (request: Request, response: Response) => {
+//   try {
+//     const updateVerify = request.body.map(
+//       (updateByveri: {
+//         quo_id: any;
+//         qty: any;
+//         description: any;
+//         unit_price: any;
+//         total_price: any;
+//         id: any;
+//       }) => {
+//         return {
+//           quo_id: updateByveri.quo_id,
+//           description: updateByveri.description,
+//           qty: updateByveri.qty,
+//           unit_price: updateByveri.unit_price,
+//           total_price: updateByveri.total_price,
+//           id: updateByveri.id,
+//         };
+//       }
+//     );
+//     let result: any = [];
+//     for (let i = 0; i < updateVerify.length; i++) {
+//       const updateQuotationEqPart = await prisma.price_quotation.upsert({
+//         where: {
+//           id: updateVerify[i].id,
+//         },
+//         create: {
+//           unit: updateVerify[i].unit,
+//           quotations: { connect: { id: updateVerify[i].quo_id } },
+//           description: updateVerify[i].description,
+//           unit_price: updateVerify[i].unit_price,
+//           qty: updateVerify[i].qty,
+//           total_price: updateVerify[i].total_price,
+//         },
+//         update: {
+//           unit: updateVerify[i].unit,
+//           quotations: { connect: { id: updateVerify[i].quo_id } },
+//           description: updateVerify[i].description,
+//           unit_price: updateVerify[i].unit_price,
+//           qty: updateVerify[i].qty,
+//           total_price: updateVerify[i].total_price,
+//         },
+//       });
+//       result = [...result, updateQuotationEqPart];
+//     }
+//     if (result) {
+//       response.status(201).json({
+//         success: true,
+//         massage: "Success Update Data",
+//         result: result,
+//       });
+//     } else {
+//       response.status(400).json({
+//         success: false,
+//         massage: "Unsuccess Update Data",
+//       });
+//     }
+//   } catch (error) {
+//     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+//   }
+// };
+
 const deleteQuotation = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
@@ -463,63 +533,63 @@ const deleteQuotation = async (request: Request, response: Response) => {
   }
 };
 
-const deleteQuotationDetail = async (request: Request, response: Response) => {
-  try {
-    const id: string = request.params.id;
-    const deleteQuotationDetail = await prisma.quotations_Detail.delete({
-      where: {
-        id: id,
-      },
-    });
-    if (deleteQuotationDetail) {
-      response.status(201).json({
-        success: true,
-        massage: "Success Delete Data",
-        results: deleteQuotationDetail,
-      });
-    } else {
-      response.status(400).json({
-        success: false,
-        massage: "Unsuccess Delete Data",
-      });
-    }
-  } catch (error) {
-    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
-  }
-};
+// const deleteQuotationDetail = async (request: Request, response: Response) => {
+//   try {
+//     const id: string = request.params.id;
+//     const deleteQuotationDetail = await prisma.quotations_Detail.delete({
+//       where: {
+//         id: id,
+//       },
+//     });
+//     if (deleteQuotationDetail) {
+//       response.status(201).json({
+//         success: true,
+//         massage: "Success Delete Data",
+//         results: deleteQuotationDetail,
+//       });
+//     } else {
+//       response.status(400).json({
+//         success: false,
+//         massage: "Unsuccess Delete Data",
+//       });
+//     }
+//   } catch (error) {
+//     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+//   }
+// };
 
-const deleteQuotationDetailChild = async (
-  request: Request,
-  response: Response
-) => {
-  try {
-    const id: string = request.params.id;
-    const deleteQuotationDetailChild = await prisma.child_QuDet.delete({
-      where: {
-        id: id,
-      },
-    });
-    if (deleteQuotationDetailChild) {
-      response.status(201).json({
-        success: true,
-        massage: "Success Delete Data",
-        results: deleteQuotationDetailChild,
-      });
-    } else {
-      response.status(400).json({
-        success: false,
-        massage: "Unsuccess Delete Data",
-      });
-    }
-  } catch (error) {
-    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
-  }
-};
+// const deleteQuotationDetailChild = async (
+//   request: Request,
+//   response: Response
+// ) => {
+//   try {
+//     const id: string = request.params.id;
+//     const deleteQuotationDetailChild = await prisma.child_QuDet.delete({
+//       where: {
+//         id: id,
+//       },
+//     });
+//     if (deleteQuotationDetailChild) {
+//       response.status(201).json({
+//         success: true,
+//         massage: "Success Delete Data",
+//         results: deleteQuotationDetailChild,
+//       });
+//     } else {
+//       response.status(400).json({
+//         success: false,
+//         massage: "Unsuccess Delete Data",
+//       });
+//     }
+//   } catch (error) {
+//     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+//   }
+// };
 
 const deleteQuotationEqPart = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
-    const deleteQuotationEqPart = await prisma.eqandpart.delete({
+    const deleteQuotationEqPart = await prisma.price_quotation.delete({
       where: {
         id: id,
       },
@@ -546,11 +616,11 @@ export default {
   createQuotation,
   updateQuotation,
   deleteQuotation,
-  updateQuotationDetail,
+  // updateQuotationDetail,
   updateQuotationEqPart,
-  deleteQuotationDetail,
+  // deleteQuotationDetail,
   deleteQuotationEqPart,
   getEditPoQuotation,
-  deleteQuotationDetailChild,
-  updateQuoDetChild,
+  // deleteQuotationDetailChild,
+  // updateQuoDetChild,
 };

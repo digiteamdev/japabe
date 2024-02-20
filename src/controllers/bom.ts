@@ -45,14 +45,12 @@ const getBom = async (request: Request, response: Response) => {
                         include: {
                           quotations: {
                             include: {
-                              Quotations_Detail: true,
                               CustomerContact: true,
                               Customer: {
                                 include: {
                                   address: true,
                                 },
                               },
-                              price_quotation: true,
                             },
                           },
                         },
@@ -176,14 +174,12 @@ const getBom = async (request: Request, response: Response) => {
                         include: {
                           quotations: {
                             include: {
-                              Quotations_Detail: true,
                               CustomerContact: true,
                               Customer: {
                                 include: {
                                   address: true,
                                 },
                               },
-                              price_quotation: true,
                             },
                           },
                         },
@@ -322,14 +318,12 @@ const getSumaryBom = async (request: Request, response: Response) => {
                       include: {
                         quotations: {
                           include: {
-                            Quotations_Detail: true,
                             CustomerContact: true,
                             Customer: {
                               include: {
                                 address: true,
                               },
                             },
-                            price_quotation: true,
                           },
                         },
                       },
@@ -497,14 +491,12 @@ const getBomMr = async (request: Request, response: Response) => {
           include: {
             quotations: {
               include: {
-                Quotations_Detail: true,
                 CustomerContact: true,
                 Customer: {
                   include: {
                     address: true,
                   },
                 },
-                price_quotation: true,
               },
             },
           },

@@ -81,7 +81,6 @@ const getKontraBon = async (request: Request, response: Response) => {
                       include: {
                         Quotations: {
                           include: {
-                            Quotations_Detail: true,
                             CustomerContact: true,
                           },
                         },
@@ -160,7 +159,6 @@ const getKontraBon = async (request: Request, response: Response) => {
                       include: {
                         Quotations: {
                           include: {
-                            Quotations_Detail: true,
                             CustomerContact: true,
                           },
                         },
@@ -271,7 +269,6 @@ const getKontraBon = async (request: Request, response: Response) => {
                           include: {
                             Quotations: {
                               include: {
-                                Quotations_Detail: true,
                                 CustomerContact: true,
                               },
                             },
@@ -350,7 +347,6 @@ const getKontraBon = async (request: Request, response: Response) => {
                           include: {
                             Quotations: {
                               include: {
-                                Quotations_Detail: true,
                                 CustomerContact: true,
                               },
                             },

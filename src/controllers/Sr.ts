@@ -58,7 +58,6 @@ const getSr = async (request: any, response: Response) => {
                     quotations: {
                       include: {
                         Customer: true,
-                        price_quotation: true,
                       },
                     },
                   },
@@ -169,7 +168,6 @@ const getSr = async (request: any, response: Response) => {
                     quotations: {
                       include: {
                         Customer: true,
-                        price_quotation: true,
                       },
                     },
                   },

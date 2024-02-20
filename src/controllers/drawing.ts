@@ -53,14 +53,12 @@ const getDrawing = async (request: Request, response: Response) => {
                       Deskription_CusPo: true,
                       quotations: {
                         include: {
-                          Quotations_Detail: true,
                           CustomerContact: true,
                           Customer: {
                             include: {
                               address: true,
                             },
                           },
-                          price_quotation: true,
                         },
                       },
                     },
@@ -124,14 +122,12 @@ const getDrawingTms = async (request: Request, response: Response) => {
               include: {
                 quotations: {
                   include: {
-                    Quotations_Detail: true,
                     CustomerContact: true,
                     Customer: {
                       include: {
                         address: true,
                       },
                     },
-                    price_quotation: true,
                   },
                 },
               },

@@ -35,7 +35,6 @@ const getcusPo = async (request: Request, response: Response) => {
                 },
               },
               CustomerContact: true,
-              price_quotation: true,
             },
           },
           Deskription_CusPo: true,
@@ -57,13 +56,13 @@ const getcusPo = async (request: Request, response: Response) => {
           wor: true,
           quotations: {
             include: {
+              price_quotation: true,
               Customer: {
                 include: {
                   address: true,
                 },
               },
               CustomerContact: true,
-              price_quotation: true,
             },
           },
           Deskription_CusPo: true,
@@ -112,18 +111,15 @@ const createcusPo = async (request: Request, response: Response) => {
         noted: request.body.noted,
         date_of_po: new Date(request.body.date_of_po),
         date_delivery: new Date(request.body.date_delivery),
-        vat: request.body.vat,
-        grand_tot: request.body.grand_tot,
-        total: request.body.total,
-        Deskription_CusPo: {
-          create: request.body.Deskription_CusPo,
-        },
+        vat: parseInt(request.body.vat),
+        grand_tot: parseInt(request.body.grand_tot),
+        total: parseInt(request.body.total),
+        upload_doc: !request.file ? null : request.file.path,
         term_of_pay: {
-          create: request.body.term_of_pay,
+          create: JSON.parse(request.body.term_of_pay),
         },
       },
       include: {
-        Deskription_CusPo: true,
         term_of_pay: true,
       },
     });
@@ -157,6 +153,7 @@ const updatecusPo = async (request: Request, response: Response) => {
         quotations: { connect: { id: request.body.quo_id } },
         tax: request.body.tax,
         noted: request.body.noted,
+        upload_doc: !request.file ? null : request.file.path,
         vat: request.body.vat,
         grand_tot: request.body.grand_tot,
         total: request.body.total,

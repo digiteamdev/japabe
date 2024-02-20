@@ -51,6 +51,7 @@ const getCashier = async (request: Request, response: Response) => {
           },
           purchase: {
             include: {
+              journal_cashier: true,
               supplier: {
                 include: {
                   SupplierBank: true,
@@ -72,7 +73,6 @@ const getCashier = async (request: Request, response: Response) => {
                         include: {
                           Quotations: {
                             include: {
-                              Quotations_Detail: true,
                               CustomerContact: true,
                             },
                           },
@@ -152,7 +152,6 @@ const getCashier = async (request: Request, response: Response) => {
                         include: {
                           Quotations: {
                             include: {
-                              Quotations_Detail: true,
                               CustomerContact: true,
                             },
                           },
@@ -263,7 +262,6 @@ const getCashier = async (request: Request, response: Response) => {
                             include: {
                               Quotations: {
                                 include: {
-                                  Quotations_Detail: true,
                                   CustomerContact: true,
                                 },
                               },
@@ -343,7 +341,6 @@ const getCashier = async (request: Request, response: Response) => {
                             include: {
                               Quotations: {
                                 include: {
-                                  Quotations_Detail: true,
                                   CustomerContact: true,
                                 },
                               },
@@ -511,7 +508,6 @@ const getCashier = async (request: Request, response: Response) => {
                             include: {
                               Quotations: {
                                 include: {
-                                  Quotations_Detail: true,
                                   CustomerContact: true,
                                 },
                               },
@@ -591,7 +587,6 @@ const getCashier = async (request: Request, response: Response) => {
                             include: {
                               Quotations: {
                                 include: {
-                                  Quotations_Detail: true,
                                   CustomerContact: true,
                                 },
                               },
@@ -703,7 +698,6 @@ const getCashier = async (request: Request, response: Response) => {
                                 include: {
                                   Quotations: {
                                     include: {
-                                      Quotations_Detail: true,
                                       CustomerContact: true,
                                     },
                                   },
@@ -783,7 +777,6 @@ const getCashier = async (request: Request, response: Response) => {
                                 include: {
                                   Quotations: {
                                     include: {
-                                      Quotations_Detail: true,
                                       CustomerContact: true,
                                     },
                                   },
@@ -1032,7 +1025,6 @@ const getDueDate = async (request: Request, response: Response) => {
                         include: {
                           Quotations: {
                             include: {
-                              Quotations_Detail: true,
                               CustomerContact: true,
                             },
                           },
@@ -1112,7 +1104,6 @@ const getDueDate = async (request: Request, response: Response) => {
                         include: {
                           Quotations: {
                             include: {
-                              Quotations_Detail: true,
                               CustomerContact: true,
                             },
                           },
@@ -1223,7 +1214,6 @@ const getDueDate = async (request: Request, response: Response) => {
                             include: {
                               Quotations: {
                                 include: {
-                                  Quotations_Detail: true,
                                   CustomerContact: true,
                                 },
                               },
@@ -1303,7 +1293,6 @@ const getDueDate = async (request: Request, response: Response) => {
                             include: {
                               Quotations: {
                                 include: {
-                                  Quotations_Detail: true,
                                   CustomerContact: true,
                                 },
                               },
@@ -1477,7 +1466,6 @@ const getDueDate = async (request: Request, response: Response) => {
                         include: {
                           Quotations: {
                             include: {
-                              Quotations_Detail: true,
                               CustomerContact: true,
                             },
                           },
@@ -1557,7 +1545,6 @@ const getDueDate = async (request: Request, response: Response) => {
                         include: {
                           Quotations: {
                             include: {
-                              Quotations_Detail: true,
                               CustomerContact: true,
                             },
                           },
@@ -1668,7 +1655,6 @@ const getDueDate = async (request: Request, response: Response) => {
                             include: {
                               Quotations: {
                                 include: {
-                                  Quotations_Detail: true,
                                   CustomerContact: true,
                                 },
                               },
@@ -1748,7 +1734,6 @@ const getDueDate = async (request: Request, response: Response) => {
                             include: {
                               Quotations: {
                                 include: {
-                                  Quotations_Detail: true,
                                   CustomerContact: true,
                                 },
                               },

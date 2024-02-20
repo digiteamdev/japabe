@@ -443,32 +443,32 @@ enum type_sup {
 }
 
 model Quotations {
-  id                 String              @id @default(cuid())
-  quo_num            String?             @db.VarChar(200)
-  quo_auto           String?             @db.VarChar(200)
-  revision           String?             @default("0")
-  revision_desc      String?             @db.Text
+  id                 String            @id @default(cuid())
+  quo_num            String?           @db.VarChar(200)
+  quo_auto           String?           @db.VarChar(200)
+  revision           String?           @default("0")
+  revision_desc      String?           @db.Text
   customerId         String
   date               DateTime
-  subject            String?             @db.Text
-  send_by            String?             @db.Text
-  attention          String?             @db.Text
-  estimated_delivery String?             @db.Text
-  quo_img            String?             @db.Text
-  warranty           String?             @db.Text
-  note_payment       String?             @db.Text
-  term_payment       String?             @db.Text
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
+  subject            String?           @db.Text
+  send_by            String?           @db.Text
+  attention          String?           @db.Text
+  estimated_delivery String?           @db.Text
+  quo_img            String?           @db.Text
+  warranty           String?           @db.Text
+  note_payment       String?           @db.Text
+  term_payment       String?           @db.Text
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
   deleted            DateTime?
-  Quotations_Detail  Quotations_Detail[]
+  Quotations_Detail  String            @db.Text
   wor                wor[]
   CustomerPo         CustomerPo?
-  Customer           Customer            @relation(fields: [customerId], references: [id])
-  CustomerContact    CustomerContact?    @relation(fields: [customerContactId], references: [id])
+  Customer           Customer          @relation(fields: [customerId], references: [id])
+  CustomerContact    CustomerContact?  @relation(fields: [customerContactId], references: [id])
   customerContactId  String
-  price_quotation    price_quotation[]
   term_of_pay        term_of_pay[]
+  price_quotation    price_quotation[]
 
   @@index([id, quo_num])
 }
@@ -487,34 +487,6 @@ model price_quotation {
   deleted     DateTime?
 }
 
-model Quotations_Detail {
-  id           String        @id @default(cuid())
-  item_of_work String?       @db.VarChar(200)
-  quotations   Quotations    @relation(fields: [quo_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  quo_id       String
-  qty          Int           @default(0)
-  unit         String?       @db.VarChar(50)
-  price        Int           @default(0)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  deleted      DateTime?
-  Child_QuDet  Child_QuDet[]
-
-  @@index([id, item_of_work])
-}
-
-model Child_QuDet {
-  id                String             @id @default(cuid())
-  item_of_work      String?            @db.VarChar(200)
-  Quotations_Detail Quotations_Detail? @relation(fields: [quoDetId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  quoDetId          String?
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  deleted           DateTime?
-
-  @@index([id, item_of_work, quoDetId])
-}
-
 model CustomerPo {
   id                String              @id @default(cuid())
   id_po             String?             @db.VarChar(100)
@@ -523,6 +495,7 @@ model CustomerPo {
   quo_id            String              @unique
   tax               Tax?
   noted             String?             @db.Text
+  upload_doc        String?             @db.Text
   vat               Int                 @default(0)
   grand_tot         Int                 @default(0)
   total             Int                 @default(0)
@@ -546,17 +519,17 @@ enum Tax {
 }
 
 model Deskription_CusPo {
-  id          String     @id @default(cuid())
-  customerPo  CustomerPo @relation(fields: [cuspoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  cuspoId     String
-  qty         Int        @default(0)
-  unit        String?    @db.VarChar(50)
-  price       Int        @default(0)
-  discount    Int        @default(0)
-  total       Int        @default(0)
-  description String?    @db.Text
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id          String      @id @default(cuid())
+  customerPo  CustomerPo? @relation(fields: [cuspoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  cuspoId     String?
+  qty         Int         @default(0)
+  unit        String?     @db.VarChar(50)
+  price       Int         @default(0)
+  discount    Int         @default(0)
+  total       Int         @default(0)
+  description String?     @db.Text
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
   deleted     DateTime?
 
   @@index([id, cuspoId])

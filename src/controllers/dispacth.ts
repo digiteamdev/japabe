@@ -95,7 +95,6 @@ const getDispatch = async (request: Request, response: Response) => {
                           quotations: {
                             include: {
                               Customer: true,
-                              price_quotation: true,
                             },
                           },
                         },
@@ -137,14 +136,12 @@ const getDispatch = async (request: Request, response: Response) => {
             include: {
               quotations: {
                 include: {
-                  Quotations_Detail: true,
                   CustomerContact: true,
                   Customer: {
                     include: {
                       address: true,
                     },
                   },
-                  price_quotation: true,
                 },
               },
             },
@@ -274,7 +271,6 @@ const getDispatch = async (request: Request, response: Response) => {
                           quotations: {
                             include: {
                               Customer: true,
-                              price_quotation: true,
                             },
                           },
                         },
@@ -351,14 +347,12 @@ const getSumaryDispacth = async (request: Request, response: Response) => {
                   include: {
                     quotations: {
                       include: {
-                        Quotations_Detail: true,
                         CustomerContact: true,
                         Customer: {
                           include: {
                             address: true,
                           },
                         },
-                        price_quotation: true,
                       },
                     },
                   },

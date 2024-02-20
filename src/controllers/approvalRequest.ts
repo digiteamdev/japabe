@@ -155,7 +155,6 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
                           quotations: {
                             include: {
                               Customer: true,
-                              price_quotation: true,
                             },
                           },
                         },
@@ -360,7 +359,6 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
                           quotations: {
                             include: {
                               Customer: true,
-                              price_quotation: true,
                             },
                           },
                         },
@@ -495,7 +493,6 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
                   include: {
                     Quotations: {
                       include: {
-                        Quotations_Detail: true,
                         CustomerContact: true,
                       },
                     },

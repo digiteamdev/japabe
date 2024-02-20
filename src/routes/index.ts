@@ -539,16 +539,16 @@ router.put(
   upload.single("quo_img", 1000),
   quotation.updateQuotation
 );
-router.put(
-  "/quotationDetail",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
-  quotation.updateQuotationDetail
-);
-router.put(
-  "/quotationDetailChild",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
-  quotation.updateQuoDetChild
-);
+// router.put(
+//   "/quotationDetail",
+//   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+//   quotation.updateQuotationDetail
+// );
+// router.put(
+//   "/quotationDetailChild",
+//   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+//   quotation.updateQuoDetChild
+// );
 router.put(
   "/quotationEqPart",
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
@@ -559,21 +559,21 @@ router.delete(
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   quotation.deleteQuotation
 );
-router.delete(
-  "/quotationDetail/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
-  quotation.deleteQuotationDetail
-);
-router.delete(
-  "/quotationEqPart/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
-  quotation.deleteQuotationEqPart
-);
-router.delete(
-  "/quotationDetailChild/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
-  quotation.deleteQuotationDetailChild
-);
+// router.delete(
+//   "/quotationDetail/:id",
+//   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+//   quotation.deleteQuotationDetail
+// );
+// router.delete(
+//   "/quotationEqPart/:id",
+//   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+//   quotation.deleteQuotationEqPart
+// );
+// router.delete(
+//   "/quotationDetailChild/:id",
+//   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+//   quotation.deleteQuotationDetailChild
+// );
 
 /***************************QUOTATION********************************* */
 
@@ -597,6 +597,7 @@ router.get(
 router.post(
   "/customerPo",
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  upload.single("upload_doc", 1000),
   customerPo.createcusPo
 );
 router.put(

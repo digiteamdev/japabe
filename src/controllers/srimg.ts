@@ -53,14 +53,12 @@ const getSrimg = async (request: Request, response: Response) => {
                     include: {
                       quotations: {
                         include: {
-                          Quotations_Detail: true,
                           CustomerContact: true,
                           Customer: {
                             include: {
                               address: true,
                             },
                           },
-                          price_quotation: true,
                         },
                       },
                     },
@@ -120,14 +118,12 @@ const getSrimg = async (request: Request, response: Response) => {
                     include: {
                       quotations: {
                         include: {
-                          Quotations_Detail: true,
                           CustomerContact: true,
                           Customer: {
                             include: {
                               address: true,
                             },
                           },
-                          price_quotation: true,
                         },
                       },
                     },
@@ -204,14 +200,12 @@ const getSumaryTms = async (request: Request, response: Response) => {
               include: {
                 quotations: {
                   include: {
-                    Quotations_Detail: true,
                     CustomerContact: true,
                     Customer: {
                       include: {
                         address: true,
                       },
                     },
-                    price_quotation: true,
                   },
                 },
               },
@@ -269,14 +263,12 @@ const getSrimBom = async (request: Request, response: Response) => {
                   include: {
                     quotations: {
                       include: {
-                        Quotations_Detail: true,
                         CustomerContact: true,
                         Customer: {
                           include: {
                             address: true,
                           },
                         },
-                        price_quotation: true,
                       },
                     },
                   },
