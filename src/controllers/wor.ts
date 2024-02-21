@@ -319,6 +319,7 @@ const createWor = async (request: any, response: Response) => {
           job_desk: request.body.job_desk,
           contract_no_spk: request.body.contract_no_spk,
           employee: { connect: { id: request.body.employeeId } },
+          estimator: { connect: { id: request.body.estimatorId }},
           value_contract: request.body.value_contract,
           priority_status: request.body.priority_status,
           qty: parseInt(request.body.qty),

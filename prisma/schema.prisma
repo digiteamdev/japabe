@@ -68,6 +68,7 @@ model Employee {
   approve                 dispatchDetail[]          @relation(name: "approves")
   cash_advance            cash_advance[]
   stock_outgoing_material stock_outgoing_material[]
+  estimator               wor[]                     @relation("estimator")
 
   @@index([id, nick_name, NIK, id_card, NIP, employee_name])
 }
@@ -587,6 +588,8 @@ model wor {
   contract_no_spk   String?          @db.VarChar(100)
   employee          Employee?        @relation(fields: [employeeId], references: [id])
   employeeId        String?
+  estimator         Employee?        @relation(fields: [estimatorId], references: [id], name: "estimator")
+  estimatorId       String?
   value_contract    String?
   priority_status   Priority_Status?
   qty               Int              @default(0)
