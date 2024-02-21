@@ -578,48 +578,43 @@ enum job_priority {
 }
 
 model wor {
-  id                String           @id @default(cuid())
-  job_no            String?          @db.VarChar(200)
+  id                String            @id @default(cuid())
+  job_no            String?           @db.VarChar(200)
   date_wor          DateTime?
-  customerPo        CustomerPo?      @relation(fields: [cuspoId], references: [id])
+  customerPo        CustomerPo?       @relation(fields: [cuspoId], references: [id])
   cuspoId           String?
-  subject           String?          @db.VarChar(200)
-  job_desk          String?          @db.Text
-  contract_no_spk   String?          @db.VarChar(100)
-  employee          Employee?        @relation(fields: [employeeId], references: [id])
+  employee          Employee?         @relation(fields: [employeeId], references: [id])
   employeeId        String?
-  estimator         Employee?        @relation(fields: [estimatorId], references: [id], name: "estimator")
+  estimator         Employee?         @relation(fields: [estimatorId], references: [id], name: "estimator")
   estimatorId       String?
-  value_contract    String?
   priority_status   Priority_Status?
-  qty               Int              @default(0)
-  unit              String?          @db.VarChar(20)
   date_of_order     DateTime?
   delivery_date     DateTime?
-  shipping_address  String?          @db.Text
+  shipping_address  String?           @db.Text
   job_operational   job_operational?
-  estimated_man_our Int              @default(0)
-  eq_model          String?          @db.VarChar(100)
-  eq_mfg            String?          @db.VarChar(100)
-  eq_rotation       String?          @db.VarChar(200)
-  eq_power          String?          @db.VarChar(200)
-  scope_of_work     String?          @db.Text
-  file_list         String?          @db.Text
-  noted             String?          @db.Text
-  status            String?          @db.VarChar(20)
-  revision          String?          @default("0")
-  revision_desc     String?          @db.Text
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
+  qty               Int               @default(0)
+  estimated_man_our Int               @default(0)
+  eq_model          String?           @db.VarChar(100)
+  eq_mfg            String?           @db.VarChar(100)
+  eq_rotation       String?           @db.VarChar(200)
+  eq_power          String?           @db.VarChar(200)
+  file_list         String?           @db.Text
+  noted             String?           @db.Text
+  status            String?           @db.VarChar(20)
+  revision          String?           @default("0")
+  revision_desc     String?           @db.Text
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
   deleted           DateTime?
-  Quotations        Quotations?      @relation(fields: [quotationsId], references: [id])
+  Quotations        Quotations?       @relation(fields: [quotationsId], references: [id])
   quotationsId      String?
   timeschedule      timeschedule?
   Mr                Mr?
   Sr                Sr?
   cash_advance      cash_advance[]
-  user              User?            @relation(fields: [userId], references: [id])
+  user              User?             @relation(fields: [userId], references: [id])
   userId            String?
+  work_scope_item   work_scope_item[]
 
   @@index([id, job_no, userId])
 }
@@ -630,6 +625,17 @@ enum Priority_Status {
   TM  @map("T&M")
   XXT
   Q
+}
+
+model work_scope_item {
+  id        String    @id @default(cuid())
+  wor       wor       @relation(fields: [worId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  worId     String
+  qty       Int       @default(0)
+  item      String?   @db.VarChar(200)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
 }
 
 model workCenter {

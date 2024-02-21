@@ -312,7 +312,6 @@ const getWorCdv = async (request: Request, response: Response) => {
       select: {
         id: true,
         job_no: true,
-        subject: true,
         customerPo: {
           select: {
             quotations: {

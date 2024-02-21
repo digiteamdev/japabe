@@ -512,6 +512,7 @@ router.get(
   }),
   quotation.getQuotation
 );
+
 router.get(
   "/quotation/:id",
   jwt.authToken({
@@ -527,12 +528,14 @@ router.get(
   }),
   quotation.getEditPoQuotation
 );
+
 router.post(
   "/quotation",
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   upload.single("quo_img", 1000),
   quotation.createQuotation
 );
+
 router.put(
   "/quotation/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
@@ -554,6 +557,7 @@ router.put(
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   quotation.updateQuotationEqPart
 );
+
 router.delete(
   "/quotation/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
@@ -693,15 +697,29 @@ router.put(
   upload.single("file_list", 1),
   wor.updateWor
 );
+
+router.put(
+  "/worScope",
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  wor.updateWorkscope
+);
+
 router.put(
   "/worStatus/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   wor.updateWorStatus
 );
+
 router.delete(
   "/wor/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
   wor.deleteWor
+);
+
+router.delete(
+  "/worScope/:id",
+  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  wor.deleteWork
 );
 
 /***************************WOR********************************* */

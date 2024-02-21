@@ -128,6 +128,7 @@ const getWor = async (request: Request, response: Response) => {
           },
         },
         include: {
+          work_scope_item: true,
           customerPo: {
             include: {
               quotations: {
@@ -178,6 +179,7 @@ const getWor = async (request: Request, response: Response) => {
           },
         },
         include: {
+          work_scope_item: true,
           customerPo: {
             include: {
               quotations: {
@@ -266,6 +268,7 @@ const getWorTimes = async (request: any, response: Response) => {
         ],
       },
       include: {
+        work_scope_item: true,
         customerPo: {
           include: {
             quotations: {
@@ -315,15 +318,10 @@ const createWor = async (request: any, response: Response) => {
         data: {
           job_no: request.body.job_no,
           date_wor: new Date(request.body.date_wor),
-          subject: request.body.subject,
-          job_desk: request.body.job_desk,
-          contract_no_spk: request.body.contract_no_spk,
           employee: { connect: { id: request.body.employeeId } },
-          estimator: { connect: { id: request.body.estimatorId }},
-          value_contract: request.body.value_contract,
+          estimator: { connect: { id: request.body.estimatorId } },
           priority_status: request.body.priority_status,
           qty: parseInt(request.body.qty),
-          unit: request.body.unit,
           date_of_order: new Date(request.body.date_of_order),
           delivery_date: new Date(request.body.delivery_date),
           shipping_address: request.body.shipping_address,
@@ -332,7 +330,6 @@ const createWor = async (request: any, response: Response) => {
           eq_mfg: request.body.eq_mfg,
           eq_rotation: request.body.eq_rotation,
           eq_power: request.body.eq_power,
-          scope_of_work: request.body.scope_of_work,
           file_list: !request.file ? null : request.file.path,
           noted: request.body.noted,
           status: request.body.status,
@@ -345,14 +342,9 @@ const createWor = async (request: any, response: Response) => {
           job_no: request.body.job_no,
           date_wor: new Date(request.body.date_wor),
           customerPo: { connect: { id: request.body.cuspoId } },
-          subject: request.body.subject,
-          job_desk: request.body.job_desk,
-          contract_no_spk: request.body.contract_no_spk,
           employee: { connect: { id: request.body.employeeId } },
-          value_contract: request.body.value_contract,
           priority_status: request.body.priority_status,
           qty: parseInt(request.body.qty),
-          unit: request.body.unit,
           date_of_order: new Date(request.body.date_of_order),
           delivery_date: new Date(request.body.delivery_date),
           shipping_address: request.body.shipping_address,
@@ -361,11 +353,13 @@ const createWor = async (request: any, response: Response) => {
           eq_mfg: request.body.eq_mfg,
           eq_rotation: request.body.eq_rotation,
           eq_power: request.body.eq_power,
-          scope_of_work: request.body.scope_of_work,
           file_list: !request.file ? null : request.file.path,
           noted: request.body.noted,
           status: request.body.status,
           job_operational: request.body.job_operational,
+          work_scope_item: {
+            create: JSON.parse(request.body.work_scope_item),
+          },
         },
       });
     }
@@ -412,14 +406,9 @@ const updateWor = async (request: Request, response: Response) => {
         data: {
           job_no: request.body.job_no,
           date_wor: new Date(request.body.date_wor),
-          subject: request.body.subject,
-          job_desk: request.body.job_desk,
-          contract_no_spk: request.body.contract_no_spk,
           employee: { connect: { id: request.body.employeeId } },
-          value_contract: request.body.value_contract,
           priority_status: request.body.priority_status,
           qty: parseInt(request.body.qty),
-          unit: request.body.unit,
           date_of_order: new Date(request.body.date_of_order),
           delivery_date: new Date(request.body.delivery_date),
           shipping_address: request.body.shipping_address,
@@ -428,7 +417,6 @@ const updateWor = async (request: Request, response: Response) => {
           eq_model: request.body.eq_model,
           eq_rotation: request.body.eq_rotation,
           eq_power: request.body.eq_power,
-          scope_of_work: request.body.scope_of_work,
           file_list: !request.file ? request.body.file_list : request.file.path,
           noted: request.body.noted,
           status: request.body.status,
@@ -445,14 +433,9 @@ const updateWor = async (request: Request, response: Response) => {
           job_no: request.body.job_no,
           date_wor: new Date(request.body.date_wor),
           customerPo: { connect: { id: request.body.cuspoId } },
-          subject: request.body.subject,
-          job_desk: request.body.job_desk,
-          contract_no_spk: request.body.contract_no_spk,
           employee: { connect: { id: request.body.employeeId } },
-          value_contract: request.body.value_contract,
           priority_status: request.body.priority_status,
           qty: parseInt(request.body.qty),
-          unit: request.body.unit,
           date_of_order: new Date(request.body.date_of_order),
           delivery_date: new Date(request.body.delivery_date),
           shipping_address: request.body.shipping_address,
@@ -461,11 +444,10 @@ const updateWor = async (request: Request, response: Response) => {
           eq_model: request.body.eq_model,
           eq_rotation: request.body.eq_rotation,
           eq_power: request.body.eq_power,
-          scope_of_work: request.body.scope_of_work,
           file_list: !request.file ? request.body.file_list : request.file.path,
           noted: request.body.noted,
           status: request.body.status,
-          revision: request.body.refivision,
+          revision: genarate,
           revision_desc: request.body.refevision_desc,
         },
       });
@@ -475,6 +457,54 @@ const updateWor = async (request: Request, response: Response) => {
         success: true,
         massage: "Success Update Data",
         results: updateWor,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updateWorkscope = async (request: Request, response: Response) => {
+  try {
+    const updateVerify = request.body.map(
+      (updateByveri: { worId: any; qty: any; item: any; id: any }) => {
+        return {
+          worId: updateByveri.worId,
+          qty: updateByveri.qty,
+          item: updateByveri.item,
+          id: updateByveri.id,
+        };
+      }
+    );
+    let result: any = [];
+    for (let i = 0; i < updateVerify.length; i++) {
+      const updatePoDetail = await prisma.work_scope_item.upsert({
+        where: {
+          id: updateVerify[i].id,
+        },
+        create: {
+          qty: updateVerify[i].qty,
+          item: updateVerify[i].item,
+          wor: { connect: { id: updateVerify[i].worId } },
+        },
+        update: {
+          qty: updateVerify[i].qty,
+          item: updateVerify[i].item,
+          wor: { connect: { id: updateVerify[i].worId } },
+        },
+      });
+      result = [...result, updatePoDetail];
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        result: result,
       });
     } else {
       response.status(400).json({
@@ -608,12 +638,39 @@ const deleteWor = async (request: Request, response: Response) => {
   }
 };
 
+const deleteWork = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const deleteWork = await prisma.work_scope_item.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (deleteWork) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Delete Data",
+        results: deleteWork,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Delete Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getWor,
   getJobStatus,
   getWorTimes,
   createWor,
   updateWor,
+  updateWorkscope,
   updateWorStatus,
   deleteWor,
+  deleteWork,
 };
