@@ -607,8 +607,8 @@ model wor {
   file_list         String?          @db.Text
   noted             String?          @db.Text
   status            String?          @db.VarChar(20)
-  refivision        String?          @default("0")
-  refevision_desc   String?          @db.Text
+  revision          String?          @default("0")
+  revision_desc     String?          @db.Text
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
   deleted           DateTime?

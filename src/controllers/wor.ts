@@ -396,7 +396,7 @@ const updateWor = async (request: Request, response: Response) => {
       },
     });
 
-    const count = lastRes?.refivision;
+    const count = lastRes?.revision;
 
     const i: any = count;
 
@@ -432,8 +432,8 @@ const updateWor = async (request: Request, response: Response) => {
           file_list: !request.file ? request.body.file_list : request.file.path,
           noted: request.body.noted,
           status: request.body.status,
-          refivision: genarate,
-          refevision_desc: request.body.refevision_desc,
+          revision: genarate,
+          revision_desc: request.body.refevision_desc,
         },
       });
     } else {
@@ -465,8 +465,8 @@ const updateWor = async (request: Request, response: Response) => {
           file_list: !request.file ? request.body.file_list : request.file.path,
           noted: request.body.noted,
           status: request.body.status,
-          refivision: request.body.refivision,
-          refevision_desc: request.body.refevision_desc,
+          revision: request.body.refivision,
+          revision_desc: request.body.refevision_desc,
         },
       });
     }
