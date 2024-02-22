@@ -312,6 +312,17 @@ const getWorTimes = async (request: any, response: Response) => {
 
 const createWor = async (request: any, response: Response) => {
   try {
+    const newArrEdu = [];
+    if (request.body.work_scope_item) {
+      const arr = JSON.parse(request.body.work_scope_item);
+      for (let i = 0; i < arr.length; i++) {
+        newArrEdu.push({
+          worId: arr[i].worId,
+          qty: parseInt(arr[i].qty),
+          item: arr[i].item,
+        });
+      }
+    }
     let results;
     if (request.body.cuspoId === null) {
       results = await prisma.wor.create({
@@ -334,6 +345,9 @@ const createWor = async (request: any, response: Response) => {
           noted: request.body.noted,
           status: request.body.status,
           job_operational: request.body.job_operational,
+          work_scope_item: {
+            create: newArrEdu
+          }
         },
       });
     } else {
@@ -358,7 +372,7 @@ const createWor = async (request: any, response: Response) => {
           status: request.body.status,
           job_operational: request.body.job_operational,
           work_scope_item: {
-            create: JSON.parse(request.body.work_scope_item),
+            create: newArrEdu,
           },
         },
       });

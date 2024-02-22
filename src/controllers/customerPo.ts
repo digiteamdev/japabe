@@ -143,6 +143,7 @@ const createcusPo = async (request: Request, response: Response) => {
 const updatecusPo = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
+    let result: any = [];
     const updatecusPo = await prisma.customerPo.update({
       where: {
         id: id,
@@ -160,11 +161,74 @@ const updatecusPo = async (request: Request, response: Response) => {
         date_of_po: new Date(request.body.date_of_po),
       },
     });
-    if (updatecusPo) {
+    const termPo = request.body.term_of_pay;
+    const updateVerify = termPo.map(
+      (updateByveri: {
+        cuspoId: any;
+        limitpay: any;
+        percent: any;
+        price: any;
+        date_limit: any;
+        note: any;
+        id: any;
+      }) => {
+        return {
+          cuspoId: updateByveri.cuspoId,
+          limitpay: updateByveri.limitpay,
+          percent: updateByveri.percent,
+          price: updateByveri.price,
+          date_limit: updateByveri.date_limit,
+          note: updateByveri.note,
+          id: updateByveri.id,
+        };
+      }
+    );
+    const parsedDelete = request.body.delete;
+    const deletePo = parsedDelete.map((deleteByveri: { id: any }) => {
+      return {
+        id: deleteByveri.id,
+      };
+    });
+    if (updateVerify) {
+      for (let i = 0; i < updateVerify.length; i++) {
+        const updatePoMany = await prisma.term_of_pay.upsert({
+          where: {
+            id: updateVerify[i].id,
+          },
+          create: {
+            customerPo: { connect: { id: updateVerify[i].cuspoId } },
+            limitpay: updateVerify[i].limitpay,
+            percent: parseInt(updateVerify[i].percent),
+            price: parseInt(updateVerify[i].price),
+            date_limit: new Date(updateVerify[i].date_limit),
+            note: updateVerify[i].note,
+          },
+          update: {
+            customerPo: { connect: { id: updateVerify[i].cuspoId } },
+            limitpay: updateVerify[i].limitpay,
+            percent: parseInt(updateVerify[i].percent),
+            price: parseInt(updateVerify[i].price),
+            date_limit: new Date(updateVerify[i].date_limit),
+            note: updateVerify[i].note,
+          },
+        });
+        result = [...result, updatePoMany];
+      }
+    }
+    if (deletePo) {
+      for (let i = 0; i < deletePo.length; i++) {
+        await prisma.term_of_pay.delete({
+          where: {
+            id: deletePo[i].id,
+          },
+        });
+      }
+    }
+    if (result || updatecusPo || !updateVerify) {
       response.status(201).json({
         success: true,
         massage: "Success Update Data",
-        results: updatecusPo,
+        results: result,
       });
     } else {
       response.status(400).json({

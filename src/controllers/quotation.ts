@@ -235,8 +235,8 @@ const updateQuotation = async (request: any, response: Response) => {
     const autoIn: any = parseInt(i) + 1;
 
     const genarate: string = autoIn.toString();
-
-    const updateQuotation = await prisma.quotations.update({
+    let result: any = [];
+    const updateOne = await prisma.quotations.update({
       where: {
         id: id,
       },
@@ -259,11 +259,74 @@ const updateQuotation = async (request: any, response: Response) => {
         term_payment: request.body.term_payment,
       },
     });
-    if (updateQuotation) {
+    const parsePrice = JSON.parse(request.body.price_quotation);
+    const updateVerify = parsePrice.map(
+      (updateByveri: {
+        quo_id: any;
+        qty: any;
+        description: any;
+        unit_price: any;
+        total_price: any;
+        unit: any;
+        id: any;
+      }) => {
+        return {
+          quo_id: updateByveri.quo_id,
+          description: updateByveri.description,
+          unit: updateByveri.unit,
+          qty: updateByveri.qty,
+          unit_price: updateByveri.unit_price,
+          total_price: updateByveri.total_price,
+          id: updateByveri.id,
+        };
+      }
+    );
+    const parsedDelete = JSON.parse(request.body.delete);
+    const deleteQu = parsedDelete.map((deleteByveri: { id: any }) => {
+      return {
+        id: deleteByveri.id,
+      };
+    });
+    if (updateVerify) {
+      for (let i = 0; i < updateVerify.length; i++) {
+        const updateQuotationEqPart = await prisma.price_quotation.upsert({
+          where: {
+            id: updateVerify[i].id,
+          },
+          create: {
+            unit: updateVerify[i].unit,
+            quotations: { connect: { id: updateVerify[i].quo_id } },
+            description: updateVerify[i].description,
+            unit_price: parseInt(updateVerify[i].unit_price),
+            qty: parseInt(updateVerify[i].qty),
+            total_price: parseInt(updateVerify[i].total_price),
+          },
+          update: {
+            unit: updateVerify[i].unit,
+            quotations: { connect: { id: updateVerify[i].quo_id } },
+            description: updateVerify[i].description,
+            unit_price: parseInt(updateVerify[i].unit_price),
+            qty: parseInt(updateVerify[i].qty),
+            total_price: parseInt(updateVerify[i].total_price),
+          },
+        });
+        result = [...result, updateQuotationEqPart];
+      }
+    }
+    if (deleteQu) {
+      for (let i = 0; i < deleteQu.length; i++) {
+        await prisma.price_quotation.delete({
+          where: {
+            id: deleteQu[i].id,
+          },
+        });
+      }
+    }
+    if (result || updateOne || !updateVerify) {
       response.status(201).json({
         success: true,
         massage: "Success Update Data",
-        results: updateQuotation,
+        results: result,
       });
     } else {
       response.status(400).json({

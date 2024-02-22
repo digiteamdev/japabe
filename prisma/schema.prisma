@@ -475,16 +475,16 @@ model Quotations {
 }
 
 model price_quotation {
-  id          String     @id @default(cuid())
-  quotations  Quotations @relation(fields: [quo_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  quo_id      String
-  qty         Int        @default(0)
-  description String     @db.Text
-  unit        String     @db.Text
-  unit_price  Int        @default(0)
-  total_price Int        @default(0)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id          String      @id @default(cuid())
+  quotations  Quotations? @relation(fields: [quo_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  quo_id      String?
+  qty         Int         @default(0)
+  description String?     @db.Text
+  unit        String?     @db.Text
+  unit_price  Int         @default(0)
+  total_price Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
   deleted     DateTime?
 }
 
@@ -629,8 +629,8 @@ enum Priority_Status {
 
 model work_scope_item {
   id        String    @id @default(cuid())
-  wor       wor       @relation(fields: [worId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  worId     String
+  wor       wor?      @relation(fields: [worId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  worId     String?
   qty       Int       @default(0)
   item      String?   @db.VarChar(200)
   createdAt DateTime  @default(now())
