@@ -161,7 +161,7 @@ const updatecusPo = async (request: Request, response: Response) => {
         date_of_po: new Date(request.body.date_of_po),
       },
     });
-    const termPo = request.body.term_of_pay;
+    const termPo = JSON.parse(request.body.term_of_pay);
     const updateVerify = termPo.map(
       (updateByveri: {
         cuspoId: any;
@@ -183,7 +183,7 @@ const updatecusPo = async (request: Request, response: Response) => {
         };
       }
     );
-    const parsedDelete = request.body.delete;
+    const parsedDelete = JSON.parse(request.body.delete);
     const deletePo = parsedDelete.map((deleteByveri: { id: any }) => {
       return {
         id: deleteByveri.id,

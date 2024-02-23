@@ -252,7 +252,7 @@ const updateQuotation = async (request: any, response: Response) => {
         attention: request.body.attention,
         estimated_delivery: request.body.estimated_delivery,
         date: new Date(request.body.date),
-        quo_img: !request.files ? request.body.quo_img : request.files.path,
+        quo_img: !request.file ? request.body.quo_img : request.file.path,
         warranty: request.body.warranty,
         Quotations_Detail: request.body.Quotations_Detail,
         note_payment: request.body.note_payment,

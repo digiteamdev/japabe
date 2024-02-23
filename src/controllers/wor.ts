@@ -346,8 +346,8 @@ const createWor = async (request: any, response: Response) => {
           status: request.body.status,
           job_operational: request.body.job_operational,
           work_scope_item: {
-            create: newArrEdu
-          }
+            create: newArrEdu,
+          },
         },
       });
     } else {
@@ -412,6 +412,7 @@ const updateWor = async (request: Request, response: Response) => {
 
     const genarate: string = autoIn.toString();
     let updateWor;
+    let result: any = [];
     if (request.body.cuspoId === null) {
       updateWor = await prisma.wor.update({
         where: {
@@ -466,7 +467,53 @@ const updateWor = async (request: Request, response: Response) => {
         },
       });
     }
-    if (updateWor) {
+    const workScope = JSON.parse(request.body.work_scope_item);
+    const updateVerify = workScope.map(
+      (updateByveri: { worId: any; qty: any; item: any; id: any }) => {
+        return {
+          worId: updateByveri.worId,
+          qty: updateByveri.qty,
+          item: updateByveri.item,
+          id: updateByveri.id,
+        };
+      }
+    );
+    const parsedDelete = JSON.parse(request.body.delete);
+    const deleteWor = parsedDelete.map((deleteByveri: { id: any }) => {
+      return {
+        id: deleteByveri.id,
+      };
+    });
+    if (updateVerify || updateWor) {
+      for (let i = 0; i < updateVerify.length; i++) {
+        const updateWorMany = await prisma.work_scope_item.upsert({
+          where: {
+            id: updateVerify[i].id,
+          },
+          create: {
+            wor: { connect: { id: updateVerify[i].worId } },
+            qty: parseInt(updateVerify[i].qty),
+            item: updateVerify[i].item,
+          },
+          update: {
+            wor: { connect: { id: updateVerify[i].worId } },
+            qty: parseInt(updateVerify[i].qty),
+            item: updateVerify[i].item,
+          },
+        });
+        result = [...result, updateWorMany];
+      }
+    }
+    if (deleteWor || !updateVerify) {
+      for (let i = 0; i < deleteWor.length; i++) {
+        await prisma.work_scope_item.delete({
+          where: {
+            id: deleteWor[i].id,
+          },
+        });
+      }
+    }
+    if (updateWor || result || !updateVerify || deleteWor) {
       response.status(201).json({
         success: true,
         massage: "Success Update Data",
