@@ -607,6 +607,7 @@ router.post(
 router.put(
   "/customerPo/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  upload.single("upload_doc", 1000),
   customerPo.updatecusPo
 );
 router.put(

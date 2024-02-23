@@ -155,9 +155,9 @@ const updatecusPo = async (request: Request, response: Response) => {
         tax: request.body.tax,
         noted: request.body.noted,
         upload_doc: !request.file ? null : request.file.path,
-        vat: request.body.vat,
-        grand_tot: request.body.grand_tot,
-        total: request.body.total,
+        vat: parseInt(request.body.vat),
+        grand_tot: parseInt(request.body.grand_tot),
+        total: parseInt(request.body.total),
         date_of_po: new Date(request.body.date_of_po),
       },
     });
