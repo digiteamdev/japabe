@@ -147,6 +147,9 @@ const getWor = async (request: Request, response: Response) => {
           timeschedule: true,
           employee: true,
         },
+        orderBy: {
+          no: "asc",
+        },
       });
     } else {
       results = await prisma.wor.findMany({
@@ -204,6 +207,9 @@ const getWor = async (request: Request, response: Response) => {
           },
           employee: true,
           estimator: true,
+        },
+        orderBy: {
+          no: "asc",
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
@@ -328,6 +334,7 @@ const createWor = async (request: any, response: Response) => {
           estimator: { connect: { id: request.body.estimatorId } },
           job_description: request.body.job_description,
           priority_status: request.body.priority_status,
+          no: request.body.no,
           qty: parseInt(request.body.qty),
           date_of_order: new Date(request.body.date_of_order),
           delivery_date: new Date(request.body.delivery_date),
@@ -354,6 +361,7 @@ const createWor = async (request: any, response: Response) => {
           employee: { connect: { id: request.body.employeeId } },
           estimator: { connect: { id: request.body.estimatorId } },
           job_description: request.body.job_description,
+          no: request.body.no,
           priority_status: request.body.priority_status,
           qty: parseInt(request.body.qty),
           date_of_order: new Date(request.body.date_of_order),
@@ -422,6 +430,7 @@ const updateWor = async (request: Request, response: Response) => {
           job_description: request.body.job_description,
           priority_status: request.body.priority_status,
           qty: parseInt(request.body.qty),
+          no: request.body.no,
           date_of_order: new Date(request.body.date_of_order),
           delivery_date: new Date(request.body.delivery_date),
           shipping_address: request.body.shipping_address,
@@ -449,6 +458,7 @@ const updateWor = async (request: Request, response: Response) => {
           estimator: { connect: { id: request.body.estimatorId } },
           job_description: request.body.job_description,
           priority_status: request.body.priority_status,
+          no: request.body.no,
           qty: parseInt(request.body.qty),
           date_of_order: new Date(request.body.date_of_order),
           delivery_date: new Date(request.body.delivery_date),
