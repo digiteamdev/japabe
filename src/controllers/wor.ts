@@ -147,9 +147,6 @@ const getWor = async (request: Request, response: Response) => {
           timeschedule: true,
           employee: true,
         },
-        orderBy: {
-          createdAt: "desc",
-        },
       });
     } else {
       results = await prisma.wor.findMany({
@@ -207,9 +204,6 @@ const getWor = async (request: Request, response: Response) => {
           },
           employee: true,
           estimator: true,
-        },
-        orderBy: {
-          createdAt: "desc",
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
