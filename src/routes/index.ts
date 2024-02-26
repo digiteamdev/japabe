@@ -689,13 +689,13 @@ router.get(
 router.post(
   "/wor",
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
-  upload.single("file_list", 1),
+  upload.single("file_list", 1000),
   wor.createWor
 );
 router.put(
   "/wor/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
-  upload.single("file_list", 1),
+  upload.single("file_list", 1000),
   wor.updateWor
 );
 

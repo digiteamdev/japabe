@@ -206,6 +206,7 @@ const getWor = async (request: Request, response: Response) => {
             },
           },
           employee: true,
+          estimator: true,
         },
         orderBy: {
           createdAt: "desc",
@@ -455,6 +456,7 @@ const updateWor = async (request: Request, response: Response) => {
           customerPo: { connect: { id: request.body.cuspoId } },
           employee: { connect: { id: request.body.employeeId } },
           estimator: { connect: { id: request.body.estimatorId } },
+          job_description: request.body.job_description,
           priority_status: request.body.priority_status,
           qty: parseInt(request.body.qty),
           date_of_order: new Date(request.body.date_of_order),
