@@ -634,6 +634,7 @@ model work_scope_item {
   worId     String?
   qty       Int       @default(0)
   item      String?   @db.VarChar(200)
+  unit      String?   @db.Text
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deleted   DateTime?

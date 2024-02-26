@@ -321,6 +321,7 @@ const createWor = async (request: any, response: Response) => {
           worId: arr[i].worId,
           qty: parseInt(arr[i].qty),
           item: arr[i].item,
+          unit: arr[i].unit,
         });
       }
     }
@@ -477,9 +478,16 @@ const updateWor = async (request: Request, response: Response) => {
     }
     const workScope = JSON.parse(request.body.work_scope_item);
     const updateVerify = workScope.map(
-      (updateByveri: { worId: any; qty: any; item: any; id: any }) => {
+      (updateByveri: {
+        worId: any;
+        qty: any;
+        item: any;
+        unit: any;
+        id: any;
+      }) => {
         return {
           worId: updateByveri.worId,
+          unit: updateByveri.unit,
           qty: updateByveri.qty,
           item: updateByveri.item,
           id: updateByveri.id,
@@ -502,11 +510,13 @@ const updateWor = async (request: Request, response: Response) => {
             wor: { connect: { id: updateVerify[i].worId } },
             qty: parseInt(updateVerify[i].qty),
             item: updateVerify[i].item,
+            unit: updateVerify[i].unit,
           },
           update: {
             wor: { connect: { id: updateVerify[i].worId } },
             qty: parseInt(updateVerify[i].qty),
             item: updateVerify[i].item,
+            unit: updateVerify[i].unit,
           },
         });
         result = [...result, updateWorMany];
