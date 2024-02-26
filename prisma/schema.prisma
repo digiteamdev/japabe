@@ -591,6 +591,7 @@ model wor {
   date_of_order     DateTime?
   delivery_date     DateTime?
   shipping_address  String?           @db.Text
+  job_description   String?           @db.Text
   job_operational   job_operational?
   qty               Int               @default(0)
   estimated_man_our Int               @default(0)
