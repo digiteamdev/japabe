@@ -619,7 +619,7 @@ const updateWorStatus = async (request: Request, response: Response) => {
       },
     });
     let result;
-    if (statusPenc?.job_no === "" && statusPenc?.job_operational === "S") {
+    if (statusPenc?.job_no === "" || statusPenc?.job_operational === "S") {
       const id = request.params.id;
       result = await prisma.wor.update({
         where: { id: id },
@@ -632,7 +632,7 @@ const updateWorStatus = async (request: Request, response: Response) => {
         },
       });
     }
-    if (statusPenc?.job_no === "" && statusPenc?.job_operational === "B") {
+    if (statusPenc?.job_no === "" || statusPenc?.job_operational === "B") {
       const id = request.params.id;
       result = await prisma.wor.update({
         where: { id: id },
