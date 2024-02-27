@@ -94,24 +94,8 @@ const getBom = async (request: Request, response: Response) => {
                           },
                         },
                       },
-                      workCenter: {
-                        select: {
-                          id: true,
-                          name: true,
-                        },
-                      },
-                      aktivitas: {
-                        select: {
-                          id: true,
-                          aktivitasId: true,
-                          masterAktivitas: {
-                            select: {
-                              id: true,
-                              name: true,
-                            },
-                          },
-                        },
-                      },
+
+                      aktivitas: true,
                     },
                   },
                 },
@@ -223,24 +207,7 @@ const getBom = async (request: Request, response: Response) => {
                           },
                         },
                       },
-                      workCenter: {
-                        select: {
-                          id: true,
-                          name: true,
-                        },
-                      },
-                      aktivitas: {
-                        select: {
-                          id: true,
-                          aktivitasId: true,
-                          masterAktivitas: {
-                            select: {
-                              id: true,
-                              name: true,
-                            },
-                          },
-                        },
-                      },
+                      aktivitas: true,
                     },
                   },
                 },
@@ -367,24 +334,7 @@ const getSumaryBom = async (request: Request, response: Response) => {
                         },
                       },
                     },
-                    workCenter: {
-                      select: {
-                        id: true,
-                        name: true,
-                      },
-                    },
-                    aktivitas: {
-                      select: {
-                        id: true,
-                        aktivitasId: true,
-                        masterAktivitas: {
-                          select: {
-                            id: true,
-                            name: true,
-                          },
-                        },
-                      },
-                    },
+                    aktivitas: true,
                   },
                 },
               },
@@ -468,7 +418,7 @@ const getBomMr = async (request: Request, response: Response) => {
               Mr: {
                 deleted: null,
               },
-              status: null
+              status: null,
             },
             Mr: {
               deleted: null,

@@ -598,22 +598,44 @@ const updateWorkscope = async (request: Request, response: Response) => {
 
 const updateWorStatus = async (request: Request, response: Response) => {
   try {
+    const id = request.params.id;
     const setNum = (num: any) => {
       return "00" + num;
     };
-    const lastRes = await prisma.wor.findFirst({
+    const statusPenc = await prisma.wor.findFirst({
       where: {
-        status: "valid",
+        id: id,
       },
-      take: 1,
       orderBy: {
-        updatedAt: "desc",
+        createdAt: "desc",
       },
     });
+    const lastRes = await prisma.wor.findFirst({
+      where: {
+        id: id,
+        NOT: [
+          {
+            status: "valid",
+          },
+          {
+            status: "unvalid",
+          },
+        ],
+      },
+      take: 1,
+      orderBy: [{ updatedAt: "desc" }],
+    });
+    const lastResCount = await prisma.wor.findFirst({
+      where: {
+        id: id,
+      },
+      take: 1,
+      orderBy: [{ updatedAt: "desc" }],
+    });
+
     const d = new Date();
     let year = d.getUTCFullYear().toString().substring(2);
-
-    const count = lastRes?.job_no;
+    const count: any = lastResCount?.job_no;
     const i: any = count?.substring(4);
     const autoIn: any = parseInt(i) + 1;
 
@@ -622,56 +644,62 @@ const updateWorStatus = async (request: Request, response: Response) => {
     const generatJobS = "S" + year + setNum(0);
     const generatJobB = "B" + year + setNum(0);
 
-    const id = request.params.id;
-    const statusPenc = await prisma.wor.findFirst({
-      where: {
-        id: id,
-      },
-    });
     let result;
-    if (statusPenc?.job_no === "" || statusPenc?.job_operational === "S") {
-      const id = request.params.id;
+    if (
+      statusPenc?.job_no === "" &&
+      statusPenc?.job_operational === "S" &&
+      statusPenc?.status === ""
+    ) {
       result = await prisma.wor.update({
         where: { id: id },
         data: {
           status: "valid",
-          job_no:
-            statusPenc.job_operational === "S"
-              ? generatJobS
-              : statusPenc.job_no,
+          job_no: generatJobS,
+        },
+      });
+    } else if (
+      statusPenc?.job_no === "" &&
+      statusPenc?.job_operational === "B" &&
+      statusPenc?.status === ""
+    ) {
+      result = await prisma.wor.update({
+        where: { id: id },
+        data: {
+          status: "valid",
+          job_no: generatJobB,
         },
       });
     }
-    if (statusPenc?.job_no === "" || statusPenc?.job_operational === "B") {
-      const id = request.params.id;
+    // if (
+    //   statusPenc?.status === "valid" &&
+    //   statusPenc?.job_no === statusPenc?.job_no
+    // ) {
+    //   result = await prisma.wor.update({
+    //     where: { id: id },
+    //     data: {
+    //       status: "unvalid",
+    //     },
+    //   });
+    // } else {
+    //   result = await prisma.wor.update({
+    //     where: { id: id },
+    //     data: {
+    //       status: "valid",
+    //     },
+    //   });
+    // }
+    if (lastResCount?.job_operational === "B") {
       result = await prisma.wor.update({
         where: { id: id },
         data: {
-          status: "valid",
-          job_no:
-            statusPenc.job_operational === "B"
-              ? generatJobB
-              : statusPenc.job_no,
+          job_no: genarateMr,
         },
       });
-    }
-    if (statusPenc?.job_operational === "S" && lastRes) {
-      const id = request.params.id;
+    } else if (lastResCount?.job_operational === "S") {
       result = await prisma.wor.update({
         where: { id: id },
         data: {
-          status: "valid",
-          job_no:
-            statusPenc.job_operational === "S" ? genarateS : statusPenc.job_no,
-        },
-      });
-    } else if (statusPenc?.job_operational === "B" && lastRes) {
-      result = await prisma.wor.update({
-        where: { id: id },
-        data: {
-          status: "valid",
-          job_no:
-            statusPenc.job_operational === "B" ? genarateMr : statusPenc.job_no,
+          job_no: genarateS,
         },
       });
     }

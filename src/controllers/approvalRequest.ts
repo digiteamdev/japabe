@@ -170,31 +170,12 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
                       srimg: {
                         include: {
                           srimgdetail: true,
-                          timeschedule: {
-                            include: {
-                              aktivitas: {
-                                include: {
-                                  masterAktivitas: true,
-                                },
-                              },
-                            },
-                          },
+                          timeschedule: true,
                         },
                       },
                     },
                   },
-                  aktivitas: {
-                    select: {
-                      id: true,
-                      aktivitasId: true,
-                      masterAktivitas: {
-                        select: {
-                          id: true,
-                          name: true,
-                        },
-                      },
-                    },
-                  },
+                  aktivitas: true,
                   approve: {
                     select: {
                       id: true,
@@ -208,7 +189,6 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
                     },
                   },
                   sub_depart: true,
-                  workCenter: true,
                 },
               },
             },
@@ -374,31 +354,12 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
                       srimg: {
                         include: {
                           srimgdetail: true,
-                          timeschedule: {
-                            include: {
-                              aktivitas: {
-                                include: {
-                                  masterAktivitas: true,
-                                },
-                              },
-                            },
-                          },
+                          timeschedule: true,
                         },
                       },
                     },
                   },
-                  aktivitas: {
-                    select: {
-                      id: true,
-                      aktivitasId: true,
-                      masterAktivitas: {
-                        select: {
-                          id: true,
-                          name: true,
-                        },
-                      },
-                    },
-                  },
+                  aktivitas: true,
                   approve: {
                     select: {
                       id: true,
@@ -412,7 +373,6 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
                     },
                   },
                   sub_depart: true,
-                  workCenter: true,
                 },
               },
             },

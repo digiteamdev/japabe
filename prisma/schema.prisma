@@ -629,36 +629,35 @@ enum Priority_Status {
 }
 
 model work_scope_item {
-  id        String    @id @default(cuid())
-  wor       wor?      @relation(fields: [worId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  id        String      @id @default(cuid())
+  wor       wor?        @relation(fields: [worId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   worId     String?
-  qty       Int       @default(0)
-  item      String?   @db.VarChar(200)
-  unit      String?   @db.Text
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  qty       Int         @default(0)
+  item      String?     @db.VarChar(200)
+  unit      String?     @db.Text
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
   deleted   DateTime?
+  aktivitas aktivitas[]
 }
 
 model workCenter {
-  id             String           @id @default(cuid())
-  name           String?          @db.VarChar(20)
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  deleted        DateTime?
-  dispatchDetail dispatchDetail[]
-  SrDetail       SrDetail[]
+  id        String     @id @default(cuid())
+  name      String?    @db.VarChar(20)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  deleted   DateTime?
+  SrDetail  SrDetail[]
 
   @@index([id, name])
 }
 
 model masterAktivitas {
-  id        String      @id @default(cuid())
-  name      String      @db.VarChar(200)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  id        String    @id @default(cuid())
+  name      String    @db.VarChar(200)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   deleted   DateTime?
-  aktivitas aktivitas[]
 
   @@index([id, name])
 }
@@ -746,8 +745,8 @@ model aktivitas {
   id              String           @id @default(cuid())
   timeschedule    timeschedule     @relation(fields: [timeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   timeId          String
-  masterAktivitas masterAktivitas  @relation(fields: [aktivitasId], references: [id])
-  aktivitasId     String
+  work_scope_item work_scope_item  @relation(fields: [workId], references: [id])
+  workId          String
   days            Int              @default(0)
   startday        DateTime
   endday          DateTime
@@ -758,7 +757,7 @@ model aktivitas {
   deleted         DateTime?
   dispatchDetail  dispatchDetail[]
 
-  @@index([id, timeId, aktivitasId])
+  @@index([id, timeId, workId])
 }
 
 model holidayTms {
@@ -792,12 +791,8 @@ model dispatchDetail {
   id          String     @id @default(cuid())
   dispacth    dispacth   @relation(fields: [dispacthID], references: [id], onUpdate: Cascade, onDelete: Cascade)
   dispacthID  String
-  workCenter  workCenter @relation(fields: [workId], references: [id])
-  workId      String
   sub_depart  sub_depart @relation(fields: [subdepId], references: [id])
   subdepId    String
-  aktivitas   aktivitas  @relation(fields: [aktivitasID], references: [id])
-  aktivitasID String
   part        String?    @db.VarChar(100)
   start       DateTime?
   finish      DateTime?
@@ -812,8 +807,10 @@ model dispatchDetail {
   updatedAt   DateTime   @updatedAt
   deleted     DateTime?
   SrDetail    SrDetail[]
+  aktivitas   aktivitas? @relation(fields: [aktivitasId], references: [id])
+  aktivitasId String?
 
-  @@index([id, part, dispacthID, aktivitasID, workId])
+  @@index([id, dispacthID])
 }
 
 model drawing {

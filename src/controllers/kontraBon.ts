@@ -56,7 +56,7 @@ const getKontraBon = async (request: Request, response: Response) => {
                 },
               },
             },
-          }
+          },
         },
         purchase: {
           include: {
@@ -193,18 +193,7 @@ const getKontraBon = async (request: Request, response: Response) => {
                       include: {
                         dispatchDetail: {
                           include: {
-                            aktivitas: {
-                              select: {
-                                id: true,
-                                aktivitasId: true,
-                                masterAktivitas: {
-                                  select: {
-                                    id: true,
-                                    name: true,
-                                  },
-                                },
-                              },
-                            },
+                            aktivitas: true,
                             approve: {
                               select: {
                                 id: true,
@@ -218,21 +207,12 @@ const getKontraBon = async (request: Request, response: Response) => {
                               },
                             },
                             sub_depart: true,
-                            workCenter: true,
                           },
                         },
                         srimg: {
                           include: {
                             srimgdetail: true,
-                            timeschedule: {
-                              include: {
-                                aktivitas: {
-                                  include: {
-                                    masterAktivitas: true,
-                                  },
-                                },
-                              },
-                            },
+                            timeschedule: true,
                           },
                         },
                       },
@@ -381,18 +361,7 @@ const getKontraBon = async (request: Request, response: Response) => {
                           include: {
                             dispatchDetail: {
                               include: {
-                                aktivitas: {
-                                  select: {
-                                    id: true,
-                                    aktivitasId: true,
-                                    masterAktivitas: {
-                                      select: {
-                                        id: true,
-                                        name: true,
-                                      },
-                                    },
-                                  },
-                                },
+                                aktivitas: true,
                                 approve: {
                                   select: {
                                     id: true,
@@ -406,21 +375,12 @@ const getKontraBon = async (request: Request, response: Response) => {
                                   },
                                 },
                                 sub_depart: true,
-                                workCenter: true,
                               },
                             },
                             srimg: {
                               include: {
                                 srimgdetail: true,
-                                timeschedule: {
-                                  include: {
-                                    aktivitas: {
-                                      include: {
-                                        masterAktivitas: true,
-                                      },
-                                    },
-                                  },
-                                },
+                                timeschedule: true,
                               },
                             },
                           },

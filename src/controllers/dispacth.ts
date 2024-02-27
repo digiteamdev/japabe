@@ -50,18 +50,6 @@ const getDispatch = async (request: Request, response: Response) => {
           Sr: true,
           dispatchDetail: {
             include: {
-              aktivitas: {
-                select: {
-                  id: true,
-                  aktivitasId: true,
-                  masterAktivitas: {
-                    select: {
-                      id: true,
-                      name: true,
-                    },
-                  },
-                },
-              },
               approve: {
                 select: {
                   id: true,
@@ -75,7 +63,6 @@ const getDispatch = async (request: Request, response: Response) => {
                 },
               },
               sub_depart: true,
-              workCenter: true,
             },
           },
           srimg: {
@@ -83,11 +70,7 @@ const getDispatch = async (request: Request, response: Response) => {
               srimgdetail: true,
               timeschedule: {
                 include: {
-                  aktivitas: {
-                    include: {
-                      masterAktivitas: true,
-                    },
-                  },
+                  aktivitas: true,
                   wor: {
                     include: {
                       customerPo: {
@@ -226,18 +209,7 @@ const getDispatch = async (request: Request, response: Response) => {
           Sr: true,
           dispatchDetail: {
             include: {
-              aktivitas: {
-                select: {
-                  id: true,
-                  aktivitasId: true,
-                  masterAktivitas: {
-                    select: {
-                      id: true,
-                      name: true,
-                    },
-                  },
-                },
-              },
+              aktivitas: true,
               approve: {
                 select: {
                   id: true,
@@ -251,7 +223,6 @@ const getDispatch = async (request: Request, response: Response) => {
                 },
               },
               sub_depart: true,
-              workCenter: true,
             },
           },
           srimg: {
@@ -259,11 +230,7 @@ const getDispatch = async (request: Request, response: Response) => {
               srimgdetail: true,
               timeschedule: {
                 include: {
-                  aktivitas: {
-                    include: {
-                      masterAktivitas: true,
-                    },
-                  },
+                  aktivitas: true,
                   wor: {
                     include: {
                       customerPo: {
@@ -359,11 +326,7 @@ const getSumaryDispacth = async (request: Request, response: Response) => {
                 },
               },
             },
-            aktivitas: {
-              include: {
-                masterAktivitas: true,
-              },
-            },
+            aktivitas: true,
           },
         },
       },
@@ -489,7 +452,6 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
           },
           create: {
             dispacth: { connect: { id: updateVerify[i].dispacthID } },
-            workCenter: { connect: { id: updateVerify[i].workId } },
             sub_depart: { connect: { id: updateVerify[i].subdepId } },
             aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
             part: updateVerify[i].part,
@@ -497,7 +459,6 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
           },
           update: {
             dispacth: { connect: { id: updateVerify[i].dispacthID } },
-            workCenter: { connect: { id: updateVerify[i].workId } },
             sub_depart: { connect: { id: updateVerify[i].subdepId } },
             aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
             part: updateVerify[i].part,
@@ -513,7 +474,6 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
             },
             create: {
               dispacth: { connect: { id: updateVerify[i].dispacthID } },
-              workCenter: { connect: { id: updateVerify[i].workId } },
               sub_depart: { connect: { id: updateVerify[i].subdepId } },
               aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
               part: updateVerify[i].part,
@@ -522,7 +482,6 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
             },
             update: {
               dispacth: { connect: { id: updateVerify[i].dispacthID } },
-              workCenter: { connect: { id: updateVerify[i].workId } },
               sub_depart: { connect: { id: updateVerify[i].subdepId } },
               aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
               part: updateVerify[i].part,
@@ -611,7 +570,7 @@ const updateFinish = async (request: Request, response: Response) => {
     });
     const totalfinish = await prisma.dispatchDetail.count({
       where: {
-        aktivitasID: selectDispact?.aktivitasID,
+        // aktivitasID: selectDispact?.aktivitasID,
         finish: {
           not: null,
         },
@@ -619,20 +578,20 @@ const updateFinish = async (request: Request, response: Response) => {
     });
     const totalfinishnot = await prisma.dispatchDetail.count({
       where: {
-        aktivitasID: selectDispact?.aktivitasID,
+        // aktivitasID: selectDispact?.aktivitasID,
       },
     });
     const aktivityId = await prisma.dispatchDetail.findFirst({
       where: { id: id },
     });
 
-    const aktifitasId = aktivityId?.aktivitasID;
+    // const aktifitasId = aktivityId?.aktivitasID;
 
     const percentase = (totalfinish / totalfinishnot) * 100;
 
     await prisma.aktivitas.update({
       where: {
-        id: aktifitasId,
+        id: id,
       },
       data: {
         progress: Math.floor(percentase),

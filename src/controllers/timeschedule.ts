@@ -67,7 +67,6 @@ const getTimeschedule = async (request: Request, response: Response) => {
 
           aktivitas: {
             include: {
-              masterAktivitas: true,
               dispatchDetail: true,
             },
           },
@@ -109,7 +108,6 @@ const getTimeschedule = async (request: Request, response: Response) => {
           },
           aktivitas: {
             include: {
-              masterAktivitas: true,
               dispatchDetail: true,
             },
           },
@@ -212,7 +210,7 @@ const updateTimeAktivity = async (request: any, response: Response) => {
     const updateVerify = newArr.map(
       (updateByveri: {
         timeId: any;
-        aktivitasId: any;
+        workId: any;
         days: any;
         startday: any;
         endday: any;
@@ -222,7 +220,7 @@ const updateTimeAktivity = async (request: any, response: Response) => {
       }) => {
         return {
           timeId: updateByveri.timeId,
-          aktivitasId: updateByveri.aktivitasId,
+          workId: updateByveri.workId,
           days: updateByveri.days,
           startday: updateByveri.startday,
           endday: updateByveri.endday,
@@ -240,7 +238,7 @@ const updateTimeAktivity = async (request: any, response: Response) => {
         },
         create: {
           timeschedule: { connect: { id: updateVerify[i].timeId } },
-          masterAktivitas: { connect: { id: updateVerify[i].aktivitasId } },
+          work_scope_item: { connect: { id: updateVerify[i].workId } },
           days: updateVerify[i].days,
           startday: new Date(updateVerify[i].startday),
           endday: new Date(updateVerify[i].endday),
@@ -249,7 +247,7 @@ const updateTimeAktivity = async (request: any, response: Response) => {
         },
         update: {
           timeschedule: { connect: { id: updateVerify[i].timeId } },
-          masterAktivitas: { connect: { id: updateVerify[i].aktivitasId } },
+          work_scope_item: { connect: { id: updateVerify[i].workId } },
           days: updateVerify[i].days,
           startday: new Date(updateVerify[i].startday),
           endday: new Date(updateVerify[i].endday),

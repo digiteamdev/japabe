@@ -212,11 +212,7 @@ const getSumaryTms = async (request: Request, response: Response) => {
             },
           },
         },
-        aktivitas: {
-          include: {
-            masterAktivitas: true,
-          },
-        },
+        aktivitas: true,
       },
     });
     if (result.length > 0) {

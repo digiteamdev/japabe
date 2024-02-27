@@ -280,18 +280,7 @@ const getPo = async (request: Request, response: Response) => {
                   include: {
                     dispatchDetail: {
                       include: {
-                        aktivitas: {
-                          select: {
-                            id: true,
-                            aktivitasId: true,
-                            masterAktivitas: {
-                              select: {
-                                id: true,
-                                name: true,
-                              },
-                            },
-                          },
-                        },
+                        aktivitas: true,
                         approve: {
                           select: {
                             id: true,
@@ -305,21 +294,12 @@ const getPo = async (request: Request, response: Response) => {
                           },
                         },
                         sub_depart: true,
-                        workCenter: true,
                       },
                     },
                     srimg: {
                       include: {
                         srimgdetail: true,
-                        timeschedule: {
-                          include: {
-                            aktivitas: {
-                              include: {
-                                masterAktivitas: true,
-                              },
-                            },
-                          },
-                        },
+                        timeschedule: true,
                       },
                     },
                   },
@@ -357,7 +337,6 @@ const getPo = async (request: Request, response: Response) => {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
 };
-
 
 const createPo = async (request: Request, response: Response) => {
   try {
@@ -624,18 +603,7 @@ const getPoandSo = async (request: Request, response: Response) => {
                     include: {
                       dispatchDetail: {
                         include: {
-                          aktivitas: {
-                            select: {
-                              id: true,
-                              aktivitasId: true,
-                              masterAktivitas: {
-                                select: {
-                                  id: true,
-                                  name: true,
-                                },
-                              },
-                            },
-                          },
+                          aktivitas: true,
                           approve: {
                             select: {
                               id: true,
@@ -649,21 +617,12 @@ const getPoandSo = async (request: Request, response: Response) => {
                             },
                           },
                           sub_depart: true,
-                          workCenter: true,
                         },
                       },
                       srimg: {
                         include: {
                           srimgdetail: true,
-                          timeschedule: {
-                            include: {
-                              aktivitas: {
-                                include: {
-                                  masterAktivitas: true,
-                                },
-                              },
-                            },
-                          },
+                          timeschedule: true,
                         },
                       },
                     },
@@ -827,18 +786,7 @@ const getPoandSo = async (request: Request, response: Response) => {
                     include: {
                       dispatchDetail: {
                         include: {
-                          aktivitas: {
-                            select: {
-                              id: true,
-                              aktivitasId: true,
-                              masterAktivitas: {
-                                select: {
-                                  id: true,
-                                  name: true,
-                                },
-                              },
-                            },
-                          },
+                          aktivitas: true,
                           approve: {
                             select: {
                               id: true,
@@ -852,21 +800,12 @@ const getPoandSo = async (request: Request, response: Response) => {
                             },
                           },
                           sub_depart: true,
-                          workCenter: true,
                         },
                       },
                       srimg: {
                         include: {
                           srimgdetail: true,
-                          timeschedule: {
-                            include: {
-                              aktivitas: {
-                                include: {
-                                  masterAktivitas: true,
-                                },
-                              },
-                            },
-                          },
+                          timeschedule: true,
                         },
                       },
                     },
@@ -1223,18 +1162,7 @@ const getAllReceive = async (request: Request, response: Response) => {
                     include: {
                       dispatchDetail: {
                         include: {
-                          aktivitas: {
-                            select: {
-                              id: true,
-                              aktivitasId: true,
-                              masterAktivitas: {
-                                select: {
-                                  id: true,
-                                  name: true,
-                                },
-                              },
-                            },
-                          },
+                          aktivitas: true,
                           approve: {
                             select: {
                               id: true,
@@ -1248,21 +1176,12 @@ const getAllReceive = async (request: Request, response: Response) => {
                             },
                           },
                           sub_depart: true,
-                          workCenter: true,
                         },
                       },
                       srimg: {
                         include: {
                           srimgdetail: true,
-                          timeschedule: {
-                            include: {
-                              aktivitas: {
-                                include: {
-                                  masterAktivitas: true,
-                                },
-                              },
-                            },
-                          },
+                          timeschedule: true,
                         },
                       },
                     },
@@ -1399,18 +1318,7 @@ const getAllReceive = async (request: Request, response: Response) => {
                     include: {
                       dispatchDetail: {
                         include: {
-                          aktivitas: {
-                            select: {
-                              id: true,
-                              aktivitasId: true,
-                              masterAktivitas: {
-                                select: {
-                                  id: true,
-                                  name: true,
-                                },
-                              },
-                            },
-                          },
+                          aktivitas: true,
                           approve: {
                             select: {
                               id: true,
@@ -1424,21 +1332,12 @@ const getAllReceive = async (request: Request, response: Response) => {
                             },
                           },
                           sub_depart: true,
-                          workCenter: true,
                         },
                       },
                       srimg: {
                         include: {
                           srimgdetail: true,
-                          timeschedule: {
-                            include: {
-                              aktivitas: {
-                                include: {
-                                  masterAktivitas: true,
-                                },
-                              },
-                            },
-                          },
+                          timeschedule: true,
                         },
                       },
                     },
@@ -1667,18 +1566,7 @@ const getAllReceive = async (request: Request, response: Response) => {
                     include: {
                       dispatchDetail: {
                         include: {
-                          aktivitas: {
-                            select: {
-                              id: true,
-                              aktivitasId: true,
-                              masterAktivitas: {
-                                select: {
-                                  id: true,
-                                  name: true,
-                                },
-                              },
-                            },
-                          },
+                          aktivitas: true,
                           approve: {
                             select: {
                               id: true,
@@ -1692,21 +1580,12 @@ const getAllReceive = async (request: Request, response: Response) => {
                             },
                           },
                           sub_depart: true,
-                          workCenter: true,
                         },
                       },
                       srimg: {
                         include: {
                           srimgdetail: true,
-                          timeschedule: {
-                            include: {
-                              aktivitas: {
-                                include: {
-                                  masterAktivitas: true,
-                                },
-                              },
-                            },
-                          },
+                          timeschedule: true,
                         },
                       },
                     },

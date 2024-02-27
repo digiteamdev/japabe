@@ -145,7 +145,7 @@ const getCashier = async (request: Request, response: Response) => {
                     },
                   },
                   approvedRequest: true,
-                  
+
                   sr: {
                     include: {
                       wor: {
@@ -186,18 +186,7 @@ const getCashier = async (request: Request, response: Response) => {
                         include: {
                           dispatchDetail: {
                             include: {
-                              aktivitas: {
-                                select: {
-                                  id: true,
-                                  aktivitasId: true,
-                                  masterAktivitas: {
-                                    select: {
-                                      id: true,
-                                      name: true,
-                                    },
-                                  },
-                                },
-                              },
+                              aktivitas: true,
                               approve: {
                                 select: {
                                   id: true,
@@ -211,21 +200,12 @@ const getCashier = async (request: Request, response: Response) => {
                                 },
                               },
                               sub_depart: true,
-                              workCenter: true,
                             },
                           },
                           srimg: {
                             include: {
                               srimgdetail: true,
-                              timeschedule: {
-                                include: {
-                                  aktivitas: {
-                                    include: {
-                                      masterAktivitas: true,
-                                    },
-                                  },
-                                },
-                              },
+                              timeschedule: true,
                             },
                           },
                         },
@@ -255,7 +235,7 @@ const getCashier = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-                      
+
                       mr: {
                         include: {
                           wor: {
@@ -334,7 +314,7 @@ const getCashier = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-                      
+
                       sr: {
                         include: {
                           wor: {
@@ -375,18 +355,7 @@ const getCashier = async (request: Request, response: Response) => {
                             include: {
                               dispatchDetail: {
                                 include: {
-                                  aktivitas: {
-                                    select: {
-                                      id: true,
-                                      aktivitasId: true,
-                                      masterAktivitas: {
-                                        select: {
-                                          id: true,
-                                          name: true,
-                                        },
-                                      },
-                                    },
-                                  },
+                                  aktivitas: true,
                                   approve: {
                                     select: {
                                       id: true,
@@ -400,21 +369,12 @@ const getCashier = async (request: Request, response: Response) => {
                                     },
                                   },
                                   sub_depart: true,
-                                  workCenter: true,
                                 },
                               },
                               srimg: {
                                 include: {
                                   srimgdetail: true,
-                                  timeschedule: {
-                                    include: {
-                                      aktivitas: {
-                                        include: {
-                                          masterAktivitas: true,
-                                        },
-                                      },
-                                    },
-                                  },
+                                  timeschedule: true,
                                 },
                               },
                             },
@@ -481,7 +441,7 @@ const getCashier = async (request: Request, response: Response) => {
           },
         },
         include: {
-          journal_cashier:true,
+          journal_cashier: true,
           kontrabon: {
             include: {
               purchase: {
@@ -501,7 +461,7 @@ const getCashier = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-                      
+
                       mr: {
                         include: {
                           wor: {
@@ -580,7 +540,7 @@ const getCashier = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-                      
+
                       sr: {
                         include: {
                           wor: {
@@ -621,18 +581,7 @@ const getCashier = async (request: Request, response: Response) => {
                             include: {
                               dispatchDetail: {
                                 include: {
-                                  aktivitas: {
-                                    select: {
-                                      id: true,
-                                      aktivitasId: true,
-                                      masterAktivitas: {
-                                        select: {
-                                          id: true,
-                                          name: true,
-                                        },
-                                      },
-                                    },
-                                  },
+                                  aktivitas: true,
                                   approve: {
                                     select: {
                                       id: true,
@@ -646,21 +595,12 @@ const getCashier = async (request: Request, response: Response) => {
                                     },
                                   },
                                   sub_depart: true,
-                                  workCenter: true,
                                 },
                               },
                               srimg: {
                                 include: {
                                   srimgdetail: true,
-                                  timeschedule: {
-                                    include: {
-                                      aktivitas: {
-                                        include: {
-                                          masterAktivitas: true,
-                                        },
-                                      },
-                                    },
-                                  },
+                                  timeschedule: true,
                                 },
                               },
                             },
@@ -691,7 +631,7 @@ const getCashier = async (request: Request, response: Response) => {
                             },
                           },
                           approvedRequest: true,
-                          
+
                           mr: {
                             include: {
                               wor: {
@@ -770,7 +710,7 @@ const getCashier = async (request: Request, response: Response) => {
                             },
                           },
                           approvedRequest: true,
-                          
+
                           sr: {
                             include: {
                               wor: {
@@ -811,18 +751,7 @@ const getCashier = async (request: Request, response: Response) => {
                                 include: {
                                   dispatchDetail: {
                                     include: {
-                                      aktivitas: {
-                                        select: {
-                                          id: true,
-                                          aktivitasId: true,
-                                          masterAktivitas: {
-                                            select: {
-                                              id: true,
-                                              name: true,
-                                            },
-                                          },
-                                        },
-                                      },
+                                      aktivitas: true,
                                       approve: {
                                         select: {
                                           id: true,
@@ -836,21 +765,12 @@ const getCashier = async (request: Request, response: Response) => {
                                         },
                                       },
                                       sub_depart: true,
-                                      workCenter: true,
                                     },
                                   },
                                   srimg: {
                                     include: {
                                       srimgdetail: true,
-                                      timeschedule: {
-                                        include: {
-                                          aktivitas: {
-                                            include: {
-                                              masterAktivitas: true,
-                                            },
-                                          },
-                                        },
-                                      },
+                                      timeschedule: true,
                                     },
                                   },
                                 },
@@ -1018,7 +938,7 @@ const getDueDate = async (request: Request, response: Response) => {
                     },
                   },
                   approvedRequest: true,
-                  
+
                   mr: {
                     include: {
                       wor: {
@@ -1097,7 +1017,7 @@ const getDueDate = async (request: Request, response: Response) => {
                     },
                   },
                   approvedRequest: true,
-                  
+
                   sr: {
                     include: {
                       wor: {
@@ -1138,18 +1058,7 @@ const getDueDate = async (request: Request, response: Response) => {
                         include: {
                           dispatchDetail: {
                             include: {
-                              aktivitas: {
-                                select: {
-                                  id: true,
-                                  aktivitasId: true,
-                                  masterAktivitas: {
-                                    select: {
-                                      id: true,
-                                      name: true,
-                                    },
-                                  },
-                                },
-                              },
+                              aktivitas: true,
                               approve: {
                                 select: {
                                   id: true,
@@ -1163,21 +1072,12 @@ const getDueDate = async (request: Request, response: Response) => {
                                 },
                               },
                               sub_depart: true,
-                              workCenter: true,
                             },
                           },
                           srimg: {
                             include: {
                               srimgdetail: true,
-                              timeschedule: {
-                                include: {
-                                  aktivitas: {
-                                    include: {
-                                      masterAktivitas: true,
-                                    },
-                                  },
-                                },
-                              },
+                              timeschedule: true,
                             },
                           },
                         },
@@ -1207,7 +1107,7 @@ const getDueDate = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-                      
+
                       mr: {
                         include: {
                           wor: {
@@ -1286,7 +1186,7 @@ const getDueDate = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-                      
+
                       sr: {
                         include: {
                           wor: {
@@ -1327,18 +1227,7 @@ const getDueDate = async (request: Request, response: Response) => {
                             include: {
                               dispatchDetail: {
                                 include: {
-                                  aktivitas: {
-                                    select: {
-                                      id: true,
-                                      aktivitasId: true,
-                                      masterAktivitas: {
-                                        select: {
-                                          id: true,
-                                          name: true,
-                                        },
-                                      },
-                                    },
-                                  },
+                                  aktivitas: true,
                                   approve: {
                                     select: {
                                       id: true,
@@ -1352,21 +1241,12 @@ const getDueDate = async (request: Request, response: Response) => {
                                     },
                                   },
                                   sub_depart: true,
-                                  workCenter: true,
                                 },
                               },
                               srimg: {
                                 include: {
                                   srimgdetail: true,
-                                  timeschedule: {
-                                    include: {
-                                      aktivitas: {
-                                        include: {
-                                          masterAktivitas: true,
-                                        },
-                                      },
-                                    },
-                                  },
+                                  timeschedule: true,
                                 },
                               },
                             },
@@ -1459,7 +1339,7 @@ const getDueDate = async (request: Request, response: Response) => {
                     },
                   },
                   approvedRequest: true,
-                  
+
                   mr: {
                     include: {
                       wor: {
@@ -1538,7 +1418,7 @@ const getDueDate = async (request: Request, response: Response) => {
                     },
                   },
                   approvedRequest: true,
-                  
+
                   sr: {
                     include: {
                       wor: {
@@ -1579,18 +1459,7 @@ const getDueDate = async (request: Request, response: Response) => {
                         include: {
                           dispatchDetail: {
                             include: {
-                              aktivitas: {
-                                select: {
-                                  id: true,
-                                  aktivitasId: true,
-                                  masterAktivitas: {
-                                    select: {
-                                      id: true,
-                                      name: true,
-                                    },
-                                  },
-                                },
-                              },
+                              aktivitas: true,
                               approve: {
                                 select: {
                                   id: true,
@@ -1604,21 +1473,12 @@ const getDueDate = async (request: Request, response: Response) => {
                                 },
                               },
                               sub_depart: true,
-                              workCenter: true,
                             },
                           },
                           srimg: {
                             include: {
                               srimgdetail: true,
-                              timeschedule: {
-                                include: {
-                                  aktivitas: {
-                                    include: {
-                                      masterAktivitas: true,
-                                    },
-                                  },
-                                },
-                              },
+                              timeschedule: true,
                             },
                           },
                         },
@@ -1648,7 +1508,7 @@ const getDueDate = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-                      
+
                       mr: {
                         include: {
                           wor: {
@@ -1727,7 +1587,7 @@ const getDueDate = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-                      
+
                       sr: {
                         include: {
                           wor: {
@@ -1768,18 +1628,7 @@ const getDueDate = async (request: Request, response: Response) => {
                             include: {
                               dispatchDetail: {
                                 include: {
-                                  aktivitas: {
-                                    select: {
-                                      id: true,
-                                      aktivitasId: true,
-                                      masterAktivitas: {
-                                        select: {
-                                          id: true,
-                                          name: true,
-                                        },
-                                      },
-                                    },
-                                  },
+                                  aktivitas: true,
                                   approve: {
                                     select: {
                                       id: true,
@@ -1793,21 +1642,12 @@ const getDueDate = async (request: Request, response: Response) => {
                                     },
                                   },
                                   sub_depart: true,
-                                  workCenter: true,
                                 },
                               },
                               srimg: {
                                 include: {
                                   srimgdetail: true,
-                                  timeschedule: {
-                                    include: {
-                                      aktivitas: {
-                                        include: {
-                                          masterAktivitas: true,
-                                        },
-                                      },
-                                    },
-                                  },
+                                  timeschedule: true,
                                 },
                               },
                             },

@@ -96,13 +96,6 @@ const getSr = async (request: any, response: Response) => {
                     aktivitas: {
                       select: {
                         id: true,
-                        aktivitasId: true,
-                        masterAktivitas: {
-                          select: {
-                            id: true,
-                            name: true,
-                          },
-                        },
                       },
                     },
                     approve: {
@@ -118,7 +111,6 @@ const getSr = async (request: any, response: Response) => {
                       },
                     },
                     sub_depart: true,
-                    workCenter: true,
                   },
                 },
                 srimg: {
@@ -127,9 +119,7 @@ const getSr = async (request: any, response: Response) => {
                     timeschedule: {
                       include: {
                         aktivitas: {
-                          include: {
-                            masterAktivitas: true,
-                          },
+                          include: {},
                         },
                       },
                     },
@@ -206,13 +196,6 @@ const getSr = async (request: any, response: Response) => {
                     aktivitas: {
                       select: {
                         id: true,
-                        aktivitasId: true,
-                        masterAktivitas: {
-                          select: {
-                            id: true,
-                            name: true,
-                          },
-                        },
                       },
                     },
                     approve: {
@@ -228,21 +211,12 @@ const getSr = async (request: any, response: Response) => {
                       },
                     },
                     sub_depart: true,
-                    workCenter: true,
                   },
                 },
                 srimg: {
                   include: {
                     srimgdetail: true,
-                    timeschedule: {
-                      include: {
-                        aktivitas: {
-                          include: {
-                            masterAktivitas: true,
-                          },
-                        },
-                      },
-                    },
+                    timeschedule: true,
                   },
                 },
               },
@@ -712,8 +686,8 @@ const updateApprovalSr = async (request: Request, response: Response) => {
           const updateStatus: any = getIdsr?.SrDetail;
           for (let index = 0; index < updateStatus.length; index++) {
             console.log("1");
-            console.log(updateStatus[index],"aaaa");
-            
+            console.log(updateStatus[index], "aaaa");
+
             await prisma.sr.update({
               where: {
                 id: updateStatus[index].sr.id,
@@ -987,13 +961,6 @@ const getPsR = async (request: Request, response: Response) => {
                       aktivitas: {
                         select: {
                           id: true,
-                          aktivitasId: true,
-                          masterAktivitas: {
-                            select: {
-                              id: true,
-                              name: true,
-                            },
-                          },
                         },
                       },
                       approve: {
@@ -1009,21 +976,12 @@ const getPsR = async (request: Request, response: Response) => {
                         },
                       },
                       sub_depart: true,
-                      workCenter: true,
                     },
                   },
                   srimg: {
                     include: {
                       srimgdetail: true,
-                      timeschedule: {
-                        include: {
-                          aktivitas: {
-                            include: {
-                              masterAktivitas: true,
-                            },
-                          },
-                        },
-                      },
+                      timeschedule: true,
                     },
                   },
                 },
@@ -1087,18 +1045,7 @@ const getPsR = async (request: Request, response: Response) => {
                     include: {
                       dispatchDetail: {
                         include: {
-                          aktivitas: {
-                            select: {
-                              id: true,
-                              aktivitasId: true,
-                              masterAktivitas: {
-                                select: {
-                                  id: true,
-                                  name: true,
-                                },
-                              },
-                            },
-                          },
+                          aktivitas: true,
                           approve: {
                             select: {
                               id: true,
@@ -1112,21 +1059,12 @@ const getPsR = async (request: Request, response: Response) => {
                             },
                           },
                           sub_depart: true,
-                          workCenter: true,
                         },
                       },
                       srimg: {
                         include: {
                           srimgdetail: true,
-                          timeschedule: {
-                            include: {
-                              aktivitas: {
-                                include: {
-                                  masterAktivitas: true,
-                                },
-                              },
-                            },
-                          },
+                          timeschedule: true,
                         },
                       },
                     },

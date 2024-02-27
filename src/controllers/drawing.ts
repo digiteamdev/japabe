@@ -137,7 +137,6 @@ const getDrawingTms = async (request: Request, response: Response) => {
 
         aktivitas: {
           include: {
-            masterAktivitas: true,
             dispatchDetail: true,
           },
         },
