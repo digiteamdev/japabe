@@ -48,6 +48,7 @@ const getTimeschedule = async (request: Request, response: Response) => {
           },
           wor: {
             include: {
+              work_scope_item: true,
               customerPo: {
                 include: {
                   quotations: {
@@ -64,9 +65,9 @@ const getTimeschedule = async (request: Request, response: Response) => {
               },
             },
           },
-
           aktivitas: {
             include: {
+              work_scope_item: true,
               dispatchDetail: true,
             },
           },
@@ -90,6 +91,7 @@ const getTimeschedule = async (request: Request, response: Response) => {
           },
           wor: {
             include: {
+              work_scope_item: true,
               customerPo: {
                 include: {
                   quotations: {
@@ -108,12 +110,13 @@ const getTimeschedule = async (request: Request, response: Response) => {
           },
           aktivitas: {
             include: {
+              work_scope_item: true,
               dispatchDetail: true,
             },
           },
         },
         orderBy: {
-          updatedAt: "desc",
+          updatedAt: "asc",
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),

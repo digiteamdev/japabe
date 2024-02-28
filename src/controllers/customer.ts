@@ -37,7 +37,7 @@ const getCustomer = async (request: Request, response: Response) => {
           address: true,
         },
         orderBy: {
-          createdAt: "desc",
+          createdAt: "asc",
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),

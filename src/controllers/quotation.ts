@@ -69,7 +69,7 @@ const getQuotation = async (request: Request, response: Response) => {
           CustomerContact: true,
         },
         orderBy: {
-          createdAt: "desc",
+          createdAt: "asc",
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),

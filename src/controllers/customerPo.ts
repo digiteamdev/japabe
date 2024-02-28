@@ -41,7 +41,7 @@ const getcusPo = async (request: Request, response: Response) => {
           term_of_pay: true,
         },
         orderBy: {
-          createdAt: "desc",
+          createdAt: "asc",
         },
       });
     } else {
@@ -69,7 +69,7 @@ const getcusPo = async (request: Request, response: Response) => {
           term_of_pay: true,
         },
         orderBy: {
-          createdAt: "desc",
+          createdAt: "asc",
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
