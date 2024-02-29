@@ -409,7 +409,69 @@ const updateSrimg = async (request: any, response: Response) => {
         inimg: !request.file ? request.body.inimg : request.file.path,
       },
     });
-    if (updateSrimg) {
+    const detailSumrary: any = JSON.parse(request.body);
+    const parsedDelete = JSON.parse(request.body.delete);
+    const deleteQu = parsedDelete.map((deleteByveri: { id: any }) => {
+      return {
+        id: deleteByveri.id,
+      };
+    });
+    const updateVerify = detailSumrary.map(
+      (updateByveri: {
+        name_part: any;
+        srId: any;
+        qty: any;
+        input_finding: any;
+        choice: any;
+        noted: any;
+        id: any;
+      }) => {
+        return {
+          name_part: updateByveri.name_part,
+          srId: updateByveri.srId,
+          qty: parseInt(updateByveri.qty),
+          input_finding: updateByveri.input_finding,
+          choice: updateByveri.choice,
+          noted: updateByveri.noted,
+          id: updateByveri.id,
+        };
+      }
+    );
+    let result: any = [];
+    for (let i = 0; i < updateVerify.length; i++) {
+      const updateSrimgDetail = await prisma.srimgdetail.upsert({
+        where: {
+          id: updateVerify[i].id,
+        },
+        create: {
+          name_part: updateVerify[i].name_part,
+          srimg: { connect: { id: updateVerify[i].srId } },
+          qty: parseInt(updateVerify[i].qty),
+          input_finding: updateVerify[i].input_finding,
+          choice: updateVerify[i].choice,
+          noted: updateVerify[i].noted,
+        },
+        update: {
+          name_part: updateVerify[i].name_part,
+          srimg: { connect: { id: updateVerify[i].srId } },
+          qty: parseInt(updateVerify[i].qty),
+          input_finding: updateVerify[i].input_finding,
+          choice: updateVerify[i].choice,
+          noted: updateVerify[i].noted,
+        },
+      });
+      result = [...result, updateSrimgDetail];
+    }
+    if (deleteQu) {
+      for (let i = 0; i < deleteQu.length; i++) {
+        await prisma.srimgdetail.delete({
+          where: {
+            id: deleteQu[i].id,
+          },
+        });
+      }
+    }
+    if (updateSrimg || result) {
       response.status(201).json({
         success: true,
         massage: "Success Update Data",
