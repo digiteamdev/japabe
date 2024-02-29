@@ -163,34 +163,6 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
                   },
                 },
               },
-              dispatchDetail: {
-                include: {
-                  dispacth: {
-                    include: {
-                      srimg: {
-                        include: {
-                          srimgdetail: true,
-                          timeschedule: true,
-                        },
-                      },
-                    },
-                  },
-                  aktivitas: true,
-                  approve: {
-                    select: {
-                      id: true,
-                      employee_name: true,
-                    },
-                  },
-                  Employee: {
-                    select: {
-                      id: true,
-                      employee_name: true,
-                    },
-                  },
-                  sub_depart: true,
-                },
-              },
             },
           },
         },
@@ -345,34 +317,6 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
                       },
                     },
                   },
-                },
-              },
-              dispatchDetail: {
-                include: {
-                  dispacth: {
-                    include: {
-                      srimg: {
-                        include: {
-                          srimgdetail: true,
-                          timeschedule: true,
-                        },
-                      },
-                    },
-                  },
-                  aktivitas: true,
-                  approve: {
-                    select: {
-                      id: true,
-                      employee_name: true,
-                    },
-                  },
-                  Employee: {
-                    select: {
-                      id: true,
-                      employee_name: true,
-                    },
-                  },
-                  sub_depart: true,
                 },
               },
             },

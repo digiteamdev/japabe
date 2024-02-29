@@ -663,21 +663,22 @@ model masterAktivitas {
 }
 
 model timeschedule {
-  id             String        @id @default(cuid())
-  idTs           String?       @db.VarChar(100)
+  id             String           @id @default(cuid())
+  idTs           String?          @db.VarChar(100)
   timesch        DateTime
-  wor            wor?          @relation(fields: [worId], references: [id])
-  worId          String?       @unique
+  wor            wor?             @relation(fields: [worId], references: [id])
+  worId          String?          @unique
   job_priority   job_priority?
-  status_spv     String?       @db.VarChar(20)
-  status_manager String?       @db.VarChar(20)
-  holiday        Boolean?      @default(false)
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  status_spv     String?          @db.VarChar(20)
+  status_manager String?          @db.VarChar(20)
+  holiday        Boolean?         @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
   deleted        DateTime?
   aktivitas      aktivitas[]
   drawing        drawing?
   srimg          srimg?
+  dispatchDetail dispatchDetail[]
 
   @@index([id, idTs, worId])
 }
@@ -700,7 +701,6 @@ model srimg {
   deleted         DateTime?
   srimgdetail     srimgdetail[]
   bom             bom?
-  dispacth        dispacth?
 
   @@index([id, timeschId])
 }
@@ -771,47 +771,44 @@ model holidayTms {
 }
 
 model dispacth {
-  id             String           @id @default(cuid())
-  srimg          srimg?           @relation(fields: [srId], references: [id])
-  srId           String?          @unique
-  id_dispatch    String?          @db.VarChar(20)
+  id             String    @id @default(cuid())
+  id_dispatch    String?   @db.VarChar(20)
   dispacth_date  DateTime
-  remark         String?          @db.Text
-  status_spv     String?          @db.VarChar(20)
-  status_manager String?          @db.VarChar(20)
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  remark         String?   @db.Text
+  status_spv     String?   @db.VarChar(20)
+  status_manager String?   @db.VarChar(20)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
   deleted        DateTime?
-  dispatchDetail dispatchDetail[]
   Sr             Sr?
 
-  @@index([id, id_dispatch, srId])
+  @@index([id, id_dispatch])
 }
 
 model dispatchDetail {
-  id          String     @id @default(cuid())
-  dispacth    dispacth   @relation(fields: [dispacthID], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  dispacthID  String
-  sub_depart  sub_depart @relation(fields: [subdepId], references: [id])
-  subdepId    String
-  part        String?    @db.VarChar(100)
-  start       DateTime?
-  finish      DateTime?
-  actual      DateTime?
-  so          Boolean?   @default(false)
-  Employee    Employee?  @relation(fields: [operatorID], references: [id])
-  approve     Employee?  @relation(fields: [approvebyID], references: [id], name: "approves")
-  operatorID  String?
-  approvebyID String?
-  remark      String?    @db.Text
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  deleted     DateTime?
-  SrDetail    SrDetail[]
-  aktivitas   aktivitas? @relation(fields: [aktivitasId], references: [id])
-  aktivitasId String?
+  id           String        @id @default(cuid())
+  timeschedule timeschedule? @relation(fields: [timeschId], references: [id])
+  timeschId    String?
+  sub_depart   sub_depart    @relation(fields: [subdepId], references: [id])
+  subdepId     String
+  part         String?       @db.VarChar(100)
+  start        DateTime?
+  finish       DateTime?
+  actual       DateTime?
+  so           Boolean?      @default(false)
+  Employee     Employee?     @relation(fields: [operatorID], references: [id])
+  approve      Employee?     @relation(fields: [approvebyID], references: [id], name: "approves")
+  operatorID   String?
+  approvebyID  String?
+  remark       String?       @db.Text
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  deleted      DateTime?
+  SrDetail     SrDetail[]
+  aktivitas    aktivitas?    @relation(fields: [aktivitasId], references: [id])
+  aktivitasId  String?
 
-  @@index([id, dispacthID])
+  @@index([id])
 }
 
 model drawing {

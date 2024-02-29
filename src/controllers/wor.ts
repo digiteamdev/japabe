@@ -51,11 +51,7 @@ const getJobStatus = async (request: Request, response: Response) => {
         timeschedule: {
           include: {
             drawing: true,
-            srimg: {
-              include: {
-                dispacth: true,
-              },
-            },
+            srimg: true,
           },
         },
         employee: true,
@@ -198,11 +194,7 @@ const getWor = async (request: Request, response: Response) => {
           timeschedule: {
             include: {
               drawing: true,
-              srimg: {
-                include: {
-                  dispacth: true,
-                },
-              },
+              srimg: true,
             },
           },
           employee: true,
@@ -618,7 +610,7 @@ const updateWorStatus = async (request: Request, response: Response) => {
           },
         },
         take: 1,
-        orderBy: [{ createdAt: "desc"}]
+        orderBy: [{ createdAt: "desc" }],
       });
       const d = new Date();
       let year = d.getUTCFullYear().toString().substring(2);

@@ -35,14 +35,10 @@ const getDrawing = async (request: Request, response: Response) => {
           file_drawing: true,
           timeschedule: {
             include: {
+              dispatchDetail: true,
               srimg: {
                 include: {
                   srimgdetail: true,
-                  dispacth: {
-                    include: {
-                      dispatchDetail: true,
-                    },
-                  },
                 },
               },
               wor: {

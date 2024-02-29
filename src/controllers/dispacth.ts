@@ -18,7 +18,7 @@ const getDispatch = async (request: Request, response: Response) => {
     });
     let result: any;
     if (request.query.page === undefined) {
-      result = await prisma.dispacth.findMany({
+      result = await prisma.timeschedule.findMany({
         where: {
           dispatchDetail: {
             some: {
@@ -29,25 +29,9 @@ const getDispatch = async (request: Request, response: Response) => {
             {
               deleted: null,
             },
-            {
-              Sr: {
-                deleted: null,
-              },
-            },
-            {
-              Sr: null,
-            },
-          ],
-          NOT: [
-            {
-              Sr: {
-                deleted: null,
-              },
-            },
           ],
         },
         include: {
-          Sr: true,
           dispatchDetail: {
             include: {
               approve: {
@@ -131,14 +115,10 @@ const getDispatch = async (request: Request, response: Response) => {
           },
           timeschedule: {
             include: {
+              dispatchDetail: true,
               srimg: {
                 include: {
                   srimgdetail: true,
-                  dispacth: {
-                    include: {
-                      dispatchDetail: true,
-                    },
-                  },
                 },
               },
             },
@@ -170,7 +150,7 @@ const getDispatch = async (request: Request, response: Response) => {
       }
     } else {
       let results: any;
-      results = await prisma.dispacth.findMany({
+      results = await prisma.timeschedule.findMany({
         where: {
           OR: [
             {
@@ -206,7 +186,6 @@ const getDispatch = async (request: Request, response: Response) => {
           ],
         },
         include: {
-          Sr: true,
           dispatchDetail: {
             include: {
               aktivitas: true,
@@ -289,17 +268,7 @@ const getSumaryDispacth = async (request: Request, response: Response) => {
           {
             deleted: null,
           },
-          {
-            dispacth: {
-              deleted: null,
-            },
-          },
         ],
-        NOT: {
-          dispacth: {
-            deleted: null,
-          },
-        },
       },
       orderBy: {
         id: "desc",
@@ -352,20 +321,11 @@ const getSumaryDispacth = async (request: Request, response: Response) => {
 
 const createDispacth = async (request: Request, response: Response) => {
   try {
-    const results = await prisma.dispacth.create({
-      data: {
-        srimg: { connect: { id: request.body.srId } },
-        id_dispatch: request.body.id_dispatch,
-        dispacth_date: new Date(request.body.dispacth_date),
-        remark: request.body.remark,
-        dispatchDetail: {
-          create: request.body.dispatchDetail,
-        },
-      },
-      include: {
-        dispatchDetail: true,
-      },
-    });
+    let results
+    // const results = await prisma.dispatchDetail.create({
+    //   data: {
+    //   },
+    // });
     if (results) {
       response.status(201).json({
         success: true,
@@ -451,14 +411,12 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
             id: updateVerify[i].id,
           },
           create: {
-            dispacth: { connect: { id: updateVerify[i].dispacthID } },
             sub_depart: { connect: { id: updateVerify[i].subdepId } },
             aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
             part: updateVerify[i].part,
             start: updateVerify[i].start,
           },
           update: {
-            dispacth: { connect: { id: updateVerify[i].dispacthID } },
             sub_depart: { connect: { id: updateVerify[i].subdepId } },
             aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
             part: updateVerify[i].part,
@@ -473,7 +431,6 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
               id: updateVerify[i].id,
             },
             create: {
-              dispacth: { connect: { id: updateVerify[i].dispacthID } },
               sub_depart: { connect: { id: updateVerify[i].subdepId } },
               aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
               part: updateVerify[i].part,
@@ -481,7 +438,6 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
               Employee: { connect: { id: updateVerify[i].operatorID } },
             },
             update: {
-              dispacth: { connect: { id: updateVerify[i].dispacthID } },
               sub_depart: { connect: { id: updateVerify[i].subdepId } },
               aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
               part: updateVerify[i].part,

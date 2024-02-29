@@ -276,34 +276,6 @@ const getPo = async (request: Request, response: Response) => {
                     },
                   },
                 },
-                dispacth: {
-                  include: {
-                    dispatchDetail: {
-                      include: {
-                        aktivitas: true,
-                        approve: {
-                          select: {
-                            id: true,
-                            employee_name: true,
-                          },
-                        },
-                        Employee: {
-                          select: {
-                            id: true,
-                            employee_name: true,
-                          },
-                        },
-                        sub_depart: true,
-                      },
-                    },
-                    srimg: {
-                      include: {
-                        srimgdetail: true,
-                        timeschedule: true,
-                      },
-                    },
-                  },
-                },
               },
             },
           },
@@ -599,34 +571,6 @@ const getPoandSo = async (request: Request, response: Response) => {
                       },
                     },
                   },
-                  dispacth: {
-                    include: {
-                      dispatchDetail: {
-                        include: {
-                          aktivitas: true,
-                          approve: {
-                            select: {
-                              id: true,
-                              employee_name: true,
-                            },
-                          },
-                          Employee: {
-                            select: {
-                              id: true,
-                              employee_name: true,
-                            },
-                          },
-                          sub_depart: true,
-                        },
-                      },
-                      srimg: {
-                        include: {
-                          srimgdetail: true,
-                          timeschedule: true,
-                        },
-                      },
-                    },
-                  },
                 },
               },
             },
@@ -778,34 +722,6 @@ const getPoandSo = async (request: Request, response: Response) => {
                               },
                             },
                           },
-                        },
-                      },
-                    },
-                  },
-                  dispacth: {
-                    include: {
-                      dispatchDetail: {
-                        include: {
-                          aktivitas: true,
-                          approve: {
-                            select: {
-                              id: true,
-                              employee_name: true,
-                            },
-                          },
-                          Employee: {
-                            select: {
-                              id: true,
-                              employee_name: true,
-                            },
-                          },
-                          sub_depart: true,
-                        },
-                      },
-                      srimg: {
-                        include: {
-                          srimgdetail: true,
-                          timeschedule: true,
                         },
                       },
                     },
@@ -1158,34 +1074,6 @@ const getAllReceive = async (request: Request, response: Response) => {
                       },
                     },
                   },
-                  dispacth: {
-                    include: {
-                      dispatchDetail: {
-                        include: {
-                          aktivitas: true,
-                          approve: {
-                            select: {
-                              id: true,
-                              employee_name: true,
-                            },
-                          },
-                          Employee: {
-                            select: {
-                              id: true,
-                              employee_name: true,
-                            },
-                          },
-                          sub_depart: true,
-                        },
-                      },
-                      srimg: {
-                        include: {
-                          srimgdetail: true,
-                          timeschedule: true,
-                        },
-                      },
-                    },
-                  },
                 },
               },
             },
@@ -1310,34 +1198,6 @@ const getAllReceive = async (request: Request, response: Response) => {
                               },
                             },
                           },
-                        },
-                      },
-                    },
-                  },
-                  dispacth: {
-                    include: {
-                      dispatchDetail: {
-                        include: {
-                          aktivitas: true,
-                          approve: {
-                            select: {
-                              id: true,
-                              employee_name: true,
-                            },
-                          },
-                          Employee: {
-                            select: {
-                              id: true,
-                              employee_name: true,
-                            },
-                          },
-                          sub_depart: true,
-                        },
-                      },
-                      srimg: {
-                        include: {
-                          srimgdetail: true,
-                          timeschedule: true,
                         },
                       },
                     },
@@ -1558,34 +1418,6 @@ const getAllReceive = async (request: Request, response: Response) => {
                               },
                             },
                           },
-                        },
-                      },
-                    },
-                  },
-                  dispacth: {
-                    include: {
-                      dispatchDetail: {
-                        include: {
-                          aktivitas: true,
-                          approve: {
-                            select: {
-                              id: true,
-                              employee_name: true,
-                            },
-                          },
-                          Employee: {
-                            select: {
-                              id: true,
-                              employee_name: true,
-                            },
-                          },
-                          sub_depart: true,
-                        },
-                      },
-                      srimg: {
-                        include: {
-                          srimgdetail: true,
-                          timeschedule: true,
                         },
                       },
                     },

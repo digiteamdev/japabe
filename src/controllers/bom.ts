@@ -59,47 +59,6 @@ const getBom = async (request: Request, response: Response) => {
                   },
                 },
               },
-              dispacth: {
-                include: {
-                  dispatchDetail: {
-                    select: {
-                      id: true,
-                      operatorID: true,
-                      approvebyID: true,
-                      part: true,
-                      start: true,
-                      finish: true,
-                      actual: true,
-                      approve: {
-                        select: {
-                          id: true,
-                          employee_name: true,
-                        },
-                      },
-                      Employee: {
-                        select: {
-                          id: true,
-                          employee_name: true,
-                        },
-                      },
-                      sub_depart: {
-                        select: {
-                          id: true,
-                          name: true,
-                          departement: {
-                            select: {
-                              id: true,
-                              name: true,
-                            },
-                          },
-                        },
-                      },
-
-                      aktivitas: true,
-                    },
-                  },
-                },
-              },
             },
           },
         },
@@ -168,46 +127,6 @@ const getBom = async (request: Request, response: Response) => {
                           },
                         },
                       },
-                    },
-                  },
-                },
-              },
-              dispacth: {
-                include: {
-                  dispatchDetail: {
-                    select: {
-                      id: true,
-                      operatorID: true,
-                      approvebyID: true,
-                      part: true,
-                      start: true,
-                      finish: true,
-                      actual: true,
-                      approve: {
-                        select: {
-                          id: true,
-                          employee_name: true,
-                        },
-                      },
-                      Employee: {
-                        select: {
-                          id: true,
-                          employee_name: true,
-                        },
-                      },
-                      sub_depart: {
-                        select: {
-                          id: true,
-                          name: true,
-                          departement: {
-                            select: {
-                              id: true,
-                              name: true,
-                            },
-                          },
-                        },
-                      },
-                      aktivitas: true,
                     },
                   },
                 },
@@ -298,47 +217,7 @@ const getSumaryBom = async (request: Request, response: Response) => {
                   },
                 },
               },
-            },
-            dispacth: {
-              include: {
-                dispatchDetail: {
-                  select: {
-                    id: true,
-                    operatorID: true,
-                    approvebyID: true,
-                    part: true,
-                    start: true,
-                    finish: true,
-                    actual: true,
-                    approve: {
-                      select: {
-                        id: true,
-                        employee_name: true,
-                      },
-                    },
-                    Employee: {
-                      select: {
-                        id: true,
-                        employee_name: true,
-                      },
-                    },
-                    sub_depart: {
-                      select: {
-                        id: true,
-                        name: true,
-                        departement: {
-                          select: {
-                            id: true,
-                            name: true,
-                          },
-                        },
-                      },
-                    },
-                    aktivitas: true,
-                  },
-                },
-              },
-            },
+            },                         
           },
         },
       },
