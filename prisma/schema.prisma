@@ -747,6 +747,7 @@ model aktivitas {
   timeId          String
   work_scope_item work_scope_item  @relation(fields: [workId], references: [id])
   workId          String
+  bobot           Int              @default(0)
   days            Int              @default(0)
   startday        DateTime
   endday          DateTime

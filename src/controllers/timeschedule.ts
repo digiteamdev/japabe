@@ -214,6 +214,7 @@ const updateTimeAktivity = async (request: any, response: Response) => {
       (updateByveri: {
         timeId: any;
         workId: any;
+        bobot: any;
         days: any;
         startday: any;
         endday: any;
@@ -224,6 +225,7 @@ const updateTimeAktivity = async (request: any, response: Response) => {
         return {
           timeId: updateByveri.timeId,
           workId: updateByveri.workId,
+          bobot: updateByveri.bobot,
           days: updateByveri.days,
           startday: updateByveri.startday,
           endday: updateByveri.endday,
@@ -243,6 +245,7 @@ const updateTimeAktivity = async (request: any, response: Response) => {
           timeschedule: { connect: { id: updateVerify[i].timeId } },
           work_scope_item: { connect: { id: updateVerify[i].workId } },
           days: updateVerify[i].days,
+          bobot: updateVerify[i].bobot,
           startday: new Date(updateVerify[i].startday),
           endday: new Date(updateVerify[i].endday),
           progress: updateVerify[i].progress,
@@ -252,6 +255,7 @@ const updateTimeAktivity = async (request: any, response: Response) => {
           timeschedule: { connect: { id: updateVerify[i].timeId } },
           work_scope_item: { connect: { id: updateVerify[i].workId } },
           days: updateVerify[i].days,
+          bobot: updateVerify[i].bobot,
           startday: new Date(updateVerify[i].startday),
           endday: new Date(updateVerify[i].endday),
           progress: updateVerify[i].progress,
