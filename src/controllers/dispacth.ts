@@ -321,21 +321,50 @@ const getSumaryDispacth = async (request: Request, response: Response) => {
 
 const createDispacth = async (request: Request, response: Response) => {
   try {
-    let results
-    // const results = await prisma.dispatchDetail.create({
-    //   data: {
-    //   },
-    // });
-    if (results) {
+    const updateVerify = request.body.dispatchDetail.map(
+      (updateByveri: {
+        timeschId: any;
+        subdepId: any;
+        date_dispatch: any
+        operatorID: any;
+        approvebyID: any;
+        aktivitasID: any;
+        id: any;
+      }) => {
+        return {
+          timeschId: updateByveri.timeschId,
+          date_dispatch: updateByveri.date_dispatch,
+          subdepId: updateByveri.subdepId,
+          operatorID: updateByveri.operatorID,
+          approvebyID: updateByveri.approvebyID,
+          aktivitasID: updateByveri.aktivitasID,
+          id: updateByveri.id,
+        };
+      }
+    );
+    let result: any = [];
+    for (let i = 0; i < updateVerify.length; i++) {
+      const updateDispacthDetail = await prisma.dispatchDetail.create({
+        data: {
+          timeschedule: { connect: { id: updateVerify[i].timeschId } },
+          date_dispatch: new Date(updateVerify[i].date_dispatch),
+          sub_depart: { connect: { id: updateVerify[i].subdepId } },
+          aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
+          Employee: { connect: { id: updateVerify[i].operatorID } },
+        },
+      });
+      result = [...result, updateDispacthDetail];
+    }
+    if (result) {
       response.status(201).json({
         success: true,
-        massage: "Success Add Data",
-        results: results,
+        massage: "Success Update Data",
+        results: result,
       });
     } else {
       response.status(400).json({
         success: false,
-        massage: "Unsuccess Add Data",
+        massage: "Unsuccess Update Data",
       });
     }
   } catch (error) {
@@ -373,7 +402,7 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
   try {
     const updateVerify = request.body.map(
       (updateByveri: {
-        dispacthID: any;
+        timeschId: any;
         workId: any;
         subdepId: any;
         part: any;
@@ -386,7 +415,7 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
         id: any;
       }) => {
         return {
-          dispacthID: updateByveri.dispacthID,
+          dispacthID: updateByveri.timeschId,
           workId: updateByveri.workId,
           subdepId: updateByveri.subdepId,
           part: updateByveri.part,
@@ -411,16 +440,13 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
             id: updateVerify[i].id,
           },
           create: {
+            date_dispatch: new Date(updateVerify[i].date_dispatch),
             sub_depart: { connect: { id: updateVerify[i].subdepId } },
             aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
-            part: updateVerify[i].part,
-            start: updateVerify[i].start,
           },
           update: {
             sub_depart: { connect: { id: updateVerify[i].subdepId } },
             aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
-            part: updateVerify[i].part,
-            start: updateVerify[i].start,
           },
         });
         result = [...result, updateDispacthDetail];
@@ -431,17 +457,14 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
               id: updateVerify[i].id,
             },
             create: {
+              date_dispatch: new Date(updateVerify[i].date_dispatch),
               sub_depart: { connect: { id: updateVerify[i].subdepId } },
               aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
-              part: updateVerify[i].part,
-              start: updateVerify[i].start,
               Employee: { connect: { id: updateVerify[i].operatorID } },
             },
             update: {
               sub_depart: { connect: { id: updateVerify[i].subdepId } },
               aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
-              part: updateVerify[i].part,
-              start: updateVerify[i].start,
               Employee: { connect: { id: updateVerify[i].operatorID } },
             },
           }
@@ -476,7 +499,6 @@ const updateStart = async (request: Request, response: Response) => {
           id: id,
         },
         data: {
-          actual: new Date(request.body.actual),
           so: request.body.so,
           Employee: { connect: { id: request.body.operatorID } },
         },
@@ -487,7 +509,6 @@ const updateStart = async (request: Request, response: Response) => {
           id: id,
         },
         data: {
-          actual: new Date(request.body.actual),
           so: request.body.so,
         },
       });
@@ -517,7 +538,6 @@ const updateFinish = async (request: Request, response: Response) => {
         id: id,
       },
       data: {
-        finish: new Date(request.body.finish),
         approve: { connect: { id: request.body.approvebyID } },
       },
     });
@@ -527,9 +547,7 @@ const updateFinish = async (request: Request, response: Response) => {
     const totalfinish = await prisma.dispatchDetail.count({
       where: {
         // aktivitasID: selectDispact?.aktivitasID,
-        finish: {
-          not: null,
-        },
+
       },
     });
     const totalfinishnot = await prisma.dispatchDetail.count({

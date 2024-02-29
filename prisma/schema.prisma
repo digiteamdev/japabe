@@ -689,6 +689,9 @@ model srimg {
   date_of_summary DateTime?
   timeschedule    timeschedule? @relation(fields: [timeschId], references: [id])
   timeschId       String?       @unique
+  equipment       String?       @db.VarChar(200)
+  qty             Int           @default(0)
+  model           String?       @db.VarChar(200)
   ioem            String?       @db.VarChar(100)
   isr             String?       @db.VarChar(100)
   itn             String?       @db.VarChar(100)
@@ -751,6 +754,8 @@ model aktivitas {
   days            Int              @default(0)
   startday        DateTime
   endday          DateTime
+  actual_start    DateTime?
+  actual_finish   DateTime?
   progress        Int              @default(0)
   holiday_count   Int              @default(0)
   createdAt       DateTime         @default(now())
@@ -786,27 +791,24 @@ model dispacth {
 }
 
 model dispatchDetail {
-  id           String        @id @default(cuid())
-  timeschedule timeschedule? @relation(fields: [timeschId], references: [id])
-  timeschId    String?
-  sub_depart   sub_depart    @relation(fields: [subdepId], references: [id])
-  subdepId     String
-  part         String?       @db.VarChar(100)
-  start        DateTime?
-  finish       DateTime?
-  actual       DateTime?
-  so           Boolean?      @default(false)
-  Employee     Employee?     @relation(fields: [operatorID], references: [id])
-  approve      Employee?     @relation(fields: [approvebyID], references: [id], name: "approves")
-  operatorID   String?
-  approvebyID  String?
-  remark       String?       @db.Text
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  deleted      DateTime?
-  SrDetail     SrDetail[]
-  aktivitas    aktivitas?    @relation(fields: [aktivitasId], references: [id])
-  aktivitasId  String?
+  id            String        @id @default(cuid())
+  timeschedule  timeschedule? @relation(fields: [timeschId], references: [id])
+  timeschId     String?
+  sub_depart    sub_depart    @relation(fields: [subdepId], references: [id])
+  subdepId      String
+  date_dispatch DateTime
+  so            Boolean?      @default(false)
+  Employee      Employee?     @relation(fields: [operatorID], references: [id])
+  approve       Employee?     @relation(fields: [approvebyID], references: [id], name: "approves")
+  operatorID    String?
+  approvebyID   String?
+  remark        String?       @db.Text
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  deleted       DateTime?
+  SrDetail      SrDetail[]
+  aktivitas     aktivitas?    @relation(fields: [aktivitasId], references: [id])
+  aktivitasId   String?
 
   @@index([id])
 }
