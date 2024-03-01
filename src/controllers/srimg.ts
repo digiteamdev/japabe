@@ -409,8 +409,8 @@ const updateSrimg = async (request: any, response: Response) => {
         inimg: !request.file ? request.body.inimg : request.file.path,
       },
     });
-    const detailSumrary: any = JSON.parse(request.body);
-    const parsedDelete = JSON.parse(request.body.delete);
+    const detailSumrary: any = request.body.sumarydetail;
+    const parsedDelete = request.body.delete;
     const deleteQu = parsedDelete.map((deleteByveri: { id: any }) => {
       return {
         id: deleteByveri.id,
@@ -438,29 +438,31 @@ const updateSrimg = async (request: any, response: Response) => {
       }
     );
     let result: any = [];
-    for (let i = 0; i < updateVerify.length; i++) {
-      const updateSrimgDetail = await prisma.srimgdetail.upsert({
-        where: {
-          id: updateVerify[i].id,
-        },
-        create: {
-          name_part: updateVerify[i].name_part,
-          srimg: { connect: { id: updateVerify[i].srId } },
-          qty: parseInt(updateVerify[i].qty),
-          input_finding: updateVerify[i].input_finding,
-          choice: updateVerify[i].choice,
-          noted: updateVerify[i].noted,
-        },
-        update: {
-          name_part: updateVerify[i].name_part,
-          srimg: { connect: { id: updateVerify[i].srId } },
-          qty: parseInt(updateVerify[i].qty),
-          input_finding: updateVerify[i].input_finding,
-          choice: updateVerify[i].choice,
-          noted: updateVerify[i].noted,
-        },
-      });
-      result = [...result, updateSrimgDetail];
+    if (updateVerify) {
+      for (let i = 0; i < updateVerify.length; i++) {
+        const updateSrimgDetail = await prisma.srimgdetail.upsert({
+          where: {
+            id: updateVerify[i].id,
+          },
+          create: {
+            name_part: updateVerify[i].name_part,
+            srimg: { connect: { id: updateVerify[i].srId } },
+            qty: parseInt(updateVerify[i].qty),
+            input_finding: updateVerify[i].input_finding,
+            choice: updateVerify[i].choice,
+            noted: updateVerify[i].noted,
+          },
+          update: {
+            name_part: updateVerify[i].name_part,
+            srimg: { connect: { id: updateVerify[i].srId } },
+            qty: parseInt(updateVerify[i].qty),
+            input_finding: updateVerify[i].input_finding,
+            choice: updateVerify[i].choice,
+            noted: updateVerify[i].noted,
+          },
+        });
+        result = [...result, updateSrimgDetail];
+      }
     }
     if (deleteQu) {
       for (let i = 0; i < deleteQu.length; i++) {
@@ -471,7 +473,7 @@ const updateSrimg = async (request: any, response: Response) => {
         });
       }
     }
-    if (updateSrimg || result) {
+    if (updateSrimg || result || updateVerify || deleteQu) {
       response.status(201).json({
         success: true,
         massage: "Success Update Data",
