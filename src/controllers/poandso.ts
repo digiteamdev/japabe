@@ -130,9 +130,6 @@ const getPo = async (request: Request, response: Response) => {
             status_manager_pr: true,
           },
           {
-            status_spv_pr: true,
-          },
-          {
             detailMr: {
               every: {
                 poandso: null,
@@ -358,6 +355,28 @@ const createPo = async (request: Request, response: Response) => {
           },
         });
       });
+      await prisma.poandso.findFirst({
+        where: {
+          id: results.id,
+          id_so: {
+            startsWith: "PO",
+          },
+        },
+      });
+      await prisma.journal_cashier.createMany({
+        data: [
+          {
+            coa_id: "clsijsq3s0003cz5ih2fa64xv",
+            status_transaction: "Debet",
+            poandsoId: results.id,
+          },
+          {
+            coa_id: "cls172hpp000fczze86zfh7yn",
+            status_transaction: "Kredit",
+            poandsoId: results.id,
+          },
+        ],
+      });
     }
     if (request.body.detailSrID !== null) {
       request.body.detailSrID.map(async (dataId: any) => {
@@ -386,6 +405,28 @@ const createPo = async (request: Request, response: Response) => {
             statusSr: "Purchase",
           },
         });
+      });
+      await prisma.poandso.findFirst({
+        where: {
+          id: results.id,
+          id_so: {
+            startsWith: "SO",
+          },
+        },
+      });
+      await prisma.journal_cashier.createMany({
+        data: [
+          {
+            coa_id: "clt8gudbn0004cznuy8a34hrm",
+            status_transaction: "Debet",
+            poandsoId: results.id,
+          },
+          {
+            coa_id: "cls172hpp000fczze86zfh7yn",
+            status_transaction: "Kredit",
+            poandsoId: results.id,
+          },
+        ],
       });
     }
     if (results) {

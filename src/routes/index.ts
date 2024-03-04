@@ -1262,6 +1262,38 @@ router.delete(
 /***************************BOM********************************* */
 
 router.get(
+  "/bomPart",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  bom.getPartBom
+);
+
+router.get(
+  "/bomMaterial",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  bom.getBomMaterial
+);
+
+router.get(
   "/srBom",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
@@ -1995,14 +2027,7 @@ router.post(
   "/poandso",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
     purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
   }),
   poandso.createPo
 );

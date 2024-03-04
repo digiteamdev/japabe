@@ -315,6 +315,7 @@ model eq_part {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   deleted         DateTime?
+  bom_detail      bom_detail[]
 
   @@index([id, nama_part])
 }
@@ -721,7 +722,6 @@ model srimgdetail {
   updatedAt     DateTime     @updatedAt
   deleted       DateTime?
   imgSummary    imgSummary[]
-  bom_detail    bom_detail[]
 
   @@index([id, name_part])
 }
@@ -860,11 +860,12 @@ model bom_detail {
   id              String          @id @default(cuid())
   bom             bom             @relation(fields: [bomId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   bomId           String
-  srimgdetail     srimgdetail     @relation(fields: [partId], references: [id])
+  eq_part         eq_part         @relation(fields: [partId], references: [id])
   partId          String
   Material_master Material_master @relation(fields: [materialId], references: [id])
   materialId      String
   dimensi         String          @db.VarChar(200)
+  qty             Int             @default(0)
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   deleted         DateTime?
@@ -1137,7 +1138,7 @@ model poandso {
 
 model term_of_pay_po_so {
   id            String      @id @default(cuid())
-  poandso       poandso?    @relation(fields: [poandsoId], references: [id])
+  poandso       poandso?    @relation(fields: [poandsoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   poandsoId     String?
   limitpay      Limit_Pay?
   percent       Int         @default(0)

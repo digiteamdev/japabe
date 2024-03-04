@@ -192,6 +192,7 @@ const getCashier = async (request: Request, response: Response) => {
             include: {
               poandso: {
                 include: {
+                  journal_cashier: true,
                   supplier: {
                     include: {
                       SupplierContact: true,

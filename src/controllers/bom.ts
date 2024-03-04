@@ -30,8 +30,8 @@ const getBom = async (request: Request, response: Response) => {
         include: {
           bom_detail: {
             include: {
+              eq_part: true,
               Material_master: true,
-              srimgdetail: true,
             },
           },
           srimg: {
@@ -102,8 +102,8 @@ const getBom = async (request: Request, response: Response) => {
         include: {
           bom_detail: {
             include: {
+              eq_part: true,
               Material_master: true,
-              srimgdetail: true,
             },
           },
           srimg: {
@@ -190,7 +190,6 @@ const getSumaryBom = async (request: Request, response: Response) => {
         bom_detail: {
           include: {
             Material_master: true,
-            srimgdetail: true,
           },
         },
         srimg: {
@@ -217,7 +216,7 @@ const getSumaryBom = async (request: Request, response: Response) => {
                   },
                 },
               },
-            },                         
+            },
           },
         },
       },
@@ -281,7 +280,19 @@ const getBomMr = async (request: Request, response: Response) => {
             srimgdetail: true,
             timeschedule: {
               include: {
-                wor: true,
+                wor: {
+                  include: {
+                    customerPo: {
+                      include: {
+                        quotations: {
+                          include: {
+                            Customer: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
               },
             },
           },
@@ -420,6 +431,68 @@ const getUserMr = async (request: Request, response: Response) => {
   }
 };
 
+const getBomMaterial = async (request: Request, response: Response) => {
+  try {
+    const pencarian: any = request.query.search || "";
+    let result;
+    result = await prisma.material_master.findMany({
+      where: {
+        material_name: {
+          contains: pencarian,
+          mode: "insensitive",
+        },
+      },
+    });
+    if (result.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All Material Bom",
+        result: result,
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const getPartBom = async (request: Request, response: Response) => {
+  try {
+    const pencarian: any = request.query.search || "";
+    let result;
+    result = await prisma.eq_part.findMany({
+      where: {
+        nama_part: {
+          contains: pencarian,
+          mode: "insensitive",
+        },
+      },
+    });
+    if (result.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All Part Bom",
+        result: result,
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const CreateBom = async (request: Request, response: Response) => {
   try {
     const results = await prisma.bom.create({
@@ -505,13 +578,13 @@ const updateBom = async (request: Request, response: Response) => {
         },
         create: {
           bom: { connect: { id: updateVerify[i].bomId } },
-          srimgdetail: { connect: { id: updateVerify[i].partId } },
+          eq_part: { connect: { id: updateVerify[i].partId } },
           Material_master: { connect: { id: updateVerify[i].materialId } },
           dimensi: updateVerify[i].dimensi,
         },
         update: {
           bom: { connect: { id: updateVerify[i].bomId } },
-          srimgdetail: { connect: { id: updateVerify[i].partId } },
+          eq_part: { connect: { id: updateVerify[i].partId } },
           Material_master: { connect: { id: updateVerify[i].materialId } },
           dimensi: updateVerify[i].dimensi,
         },
@@ -678,6 +751,8 @@ const DeleteBomDetail = async (request: Request, response: Response) => {
 };
 
 export default {
+  getBomMaterial,
+  getPartBom,
   getBom,
   getBomMr,
   getUserMr,
