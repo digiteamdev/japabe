@@ -11,42 +11,50 @@ const getDispatch = async (request: Request, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPagee;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const dispactCount = await prisma.dispacth.count({
+    const dispactCount = await prisma.timeschedule.count({
       where: {
         deleted: null,
+        NOT: {
+          dispatchDetail: {
+            every: {
+              timeschId: null,
+            },
+          },
+        },
       },
     });
     let result: any;
     if (request.query.page === undefined) {
       result = await prisma.timeschedule.findMany({
         where: {
-          dispatchDetail: {
-            some: {
-              so: true,
-            },
-          },
           OR: [
             {
               deleted: null,
             },
           ],
+          NOT: {
+            dispatchDetail: {
+              every: {
+                timeschId: null,
+              },
+            },
+          },
         },
         include: {
           dispatchDetail: {
             include: {
-              approve: {
-                select: {
-                  id: true,
-                  employee_name: true,
-                },
-              },
-              Employee: {
-                select: {
-                  id: true,
-                  employee_name: true,
+              aktivitas: {
+                include: {
+                  work_scope_item: true,
                 },
               },
               sub_depart: true,
+              operator: true,
+            },
+          },
+          aktivitas: {
+            include: {
+              work_scope_item: true,
             },
           },
           srimg: {
@@ -57,6 +65,7 @@ const getDispatch = async (request: Request, response: Response) => {
                   aktivitas: true,
                   wor: {
                     include: {
+                      work_scope_item: true,
                       customerPo: {
                         include: {
                           quotations: {
@@ -188,20 +197,18 @@ const getDispatch = async (request: Request, response: Response) => {
         include: {
           dispatchDetail: {
             include: {
-              aktivitas: true,
-              approve: {
-                select: {
-                  id: true,
-                  employee_name: true,
-                },
-              },
-              Employee: {
-                select: {
-                  id: true,
-                  employee_name: true,
+              aktivitas: {
+                include: {
+                  work_scope_item: true,
                 },
               },
               sub_depart: true,
+              operator: true,
+            },
+          },
+          aktivitas: {
+            include: {
+              work_scope_item: true,
             },
           },
           srimg: {
@@ -295,7 +302,11 @@ const getSumaryDispacth = async (request: Request, response: Response) => {
                 },
               },
             },
-            aktivitas: true,
+            aktivitas: {
+              include: {
+                work_scope_item: true,
+              },
+            },
           },
         },
       },
@@ -325,9 +336,7 @@ const createDispacth = async (request: Request, response: Response) => {
       (updateByveri: {
         timeschId: any;
         subdepId: any;
-        date_dispatch: any
-        operatorID: any;
-        approvebyID: any;
+        date_dispatch: any;
         aktivitasID: any;
         id: any;
       }) => {
@@ -335,8 +344,6 @@ const createDispacth = async (request: Request, response: Response) => {
           timeschId: updateByveri.timeschId,
           date_dispatch: updateByveri.date_dispatch,
           subdepId: updateByveri.subdepId,
-          operatorID: updateByveri.operatorID,
-          approvebyID: updateByveri.approvebyID,
           aktivitasID: updateByveri.aktivitasID,
           id: updateByveri.id,
         };
@@ -350,7 +357,6 @@ const createDispacth = async (request: Request, response: Response) => {
           date_dispatch: new Date(updateVerify[i].date_dispatch),
           sub_depart: { connect: { id: updateVerify[i].subdepId } },
           aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
-          Employee: { connect: { id: updateVerify[i].operatorID } },
         },
       });
       result = [...result, updateDispacthDetail];
@@ -365,6 +371,56 @@ const createDispacth = async (request: Request, response: Response) => {
       response.status(400).json({
         success: false,
         massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const createOperatorStart = async (request: Request, response: Response) => {
+  try {
+    const results = await prisma.operator.create({
+      data: {
+        dispatchDetail: { connect: { id: request.body.dispatchDetailId } },
+        Employee: { connect: { id: request.body.employeeId } },
+        start: new Date(request.body.start),
+      },
+    });
+    if (results) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Add Data",
+        results: results,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Add Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const createOperatorFinish = async (request: Request, response: Response) => {
+  try {
+    const results = await prisma.operator.create({
+      data: {
+        finish: request.body.finish,
+      },
+    });
+    if (results) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Add Data",
+        results: results,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Add Data",
       });
     }
   } catch (error) {
@@ -460,12 +516,13 @@ const updateDetailDispacth = async (request: Request, response: Response) => {
               date_dispatch: new Date(updateVerify[i].date_dispatch),
               sub_depart: { connect: { id: updateVerify[i].subdepId } },
               aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
-              Employee: { connect: { id: updateVerify[i].operatorID } },
+              timeschedule: { connect: { id: updateVerify[i].timeschId } },
             },
             update: {
+              date_dispatch: new Date(updateVerify[i].date_dispatch),
               sub_depart: { connect: { id: updateVerify[i].subdepId } },
               aktivitas: { connect: { id: updateVerify[i].aktivitasID } },
-              Employee: { connect: { id: updateVerify[i].operatorID } },
+              timeschedule: { connect: { id: updateVerify[i].timeschId } },
             },
           }
         );
@@ -500,7 +557,6 @@ const updateStart = async (request: Request, response: Response) => {
         },
         data: {
           so: request.body.so,
-          Employee: { connect: { id: request.body.operatorID } },
         },
       });
     } else {
@@ -537,9 +593,7 @@ const updateFinish = async (request: Request, response: Response) => {
       where: {
         id: id,
       },
-      data: {
-        approve: { connect: { id: request.body.approvebyID } },
-      },
+      data: {},
     });
     const selectDispact = await prisma.dispatchDetail.findFirst({
       where: { id: id },
@@ -547,7 +601,6 @@ const updateFinish = async (request: Request, response: Response) => {
     const totalfinish = await prisma.dispatchDetail.count({
       where: {
         // aktivitasID: selectDispact?.aktivitasID,
-
       },
     });
     const totalfinishnot = await prisma.dispatchDetail.count({
@@ -641,6 +694,8 @@ const deleteDetailDispacth = async (request: Request, response: Response) => {
 export default {
   getDispatch,
   getSumaryDispacth,
+  createOperatorStart,
+  createOperatorFinish,
   createDispacth,
   updateDispacth,
   updateDetailDispacth,

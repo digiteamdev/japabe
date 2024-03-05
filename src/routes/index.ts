@@ -1016,6 +1016,16 @@ router.get(
   dispacth.getSumaryDispacth
 );
 router.post(
+  "/operatorStart",
+  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
+  dispacth.createOperatorStart
+);
+router.post(
+  "/operatorFinish",
+  jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
+  dispacth.createOperatorFinish
+);
+router.post(
   "/dispacth",
   jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
   dispacth.createDispacth
