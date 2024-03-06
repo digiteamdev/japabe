@@ -508,6 +508,87 @@ const createSpjCdv = async (request: Request, response: Response) => {
   }
 };
 
+const updateSpj = async (request: Request, response: Response) => {
+  try {
+    let result: any;
+    const updateVerify = request.body.cdv_detail.map(
+      (updateByveri: {
+        actual: any;
+        type_cdv: any;
+        description: any;
+        total: any;
+        balance: any;
+        id: any;
+        cdvId: any;
+      }) => {
+        return {
+          actual: updateByveri.actual,
+          total: updateByveri.total,
+          description: updateByveri.description,
+          balance: updateByveri.balance,
+          type_cdv: updateByveri.type_cdv,
+          id: updateByveri.id,
+          cdvId: updateByveri.cdvId,
+        };
+      }
+    );
+    const deleteQu = request.body.delete.map((deleteByveri: { id: any }) => {
+      return {
+        id: deleteByveri.id,
+      };
+    });
+    if (updateVerify) {
+      for (let i = 0; i < updateVerify.length; i++) {
+        const upsertDetailCdv = await prisma.cdv_detail.upsert({
+          where: {
+            id: updateVerify[i].id,
+          },
+          create: {
+            cash_advance: { connect: { id: updateVerify[i].cdvId } },
+            total: updateVerify[i].total,
+            description: updateVerify[i].description,
+            type_cdv: updateVerify[i].type_cdv,
+            actual: updateVerify[i].actual,
+            balance: updateVerify[i].balance,
+          },
+          update: {
+            type_cdv: updateVerify[i].type_cdv,
+            total: updateVerify[i].total,
+            description: updateVerify[i].description,
+            actual: updateVerify[i].actual,
+            balance: updateVerify[i].balance,
+            cash_advance: { connect: { id: updateVerify[i].cdvId } },
+          },
+        });
+        result = [upsertDetailCdv];
+      }
+    }
+    if (deleteQu) {
+      for (let i = 0; i < deleteQu.length; i++) {
+        await prisma.cdv_detail.delete({
+          where: {
+            id: deleteQu[i].id,
+          },
+        });
+      }
+    }
+    if (result || deleteQu || !updateVerify) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const deleteCdv = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
@@ -684,4 +765,5 @@ export default {
   updateCdv,
   deleteCdv,
   deleteCdvDetail,
+  updateSpj,
 };
