@@ -69,7 +69,6 @@ const getCdv = async (request: Request, response: Response) => {
           id_cash_advance: {
             contains: pencarian,
           },
-          id_spj: null,
         },
         include: {
           cdv_detail: true,
