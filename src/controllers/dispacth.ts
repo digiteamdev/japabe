@@ -420,9 +420,13 @@ const createOperatorStart = async (request: Request, response: Response) => {
 
 const createOperatorFinish = async (request: Request, response: Response) => {
   try {
-    const results = await prisma.operator.create({
+    const id: string = request.params.id;
+    const results = await prisma.operator.update({
+      where: {
+        id: id
+      },
       data: {
-        finish: request.body.finish,
+        finish: new Date(request.body.finish)
       },
     });
     if (results) {

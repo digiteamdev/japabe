@@ -1021,7 +1021,7 @@ router.post(
   dispacth.createOperatorStart
 );
 router.post(
-  "/operatorFinish",
+  "/operatorFinish/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR", ppic: "Ppic" }),
   dispacth.createOperatorFinish
 );
