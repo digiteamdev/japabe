@@ -755,6 +755,7 @@ model aktivitas {
   endday          DateTime
   actual_start    DateTime?
   actual_finish   DateTime?
+  so              Boolean?         @default(false)
   progress        Int              @default(0)
   holiday_count   Int              @default(0)
   createdAt       DateTime         @default(now())
@@ -796,7 +797,6 @@ model dispatchDetail {
   sub_depart    sub_depart    @relation(fields: [subdepId], references: [id])
   subdepId      String
   date_dispatch DateTime
-  so            Boolean?      @default(false)
   remark        String?       @db.Text
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt

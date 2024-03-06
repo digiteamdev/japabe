@@ -423,10 +423,10 @@ const createOperatorFinish = async (request: Request, response: Response) => {
     const id: string = request.params.id;
     const results = await prisma.operator.update({
       where: {
-        id: id
+        id: id,
       },
       data: {
-        finish: new Date(request.body.finish)
+        finish: new Date(request.body.finish),
       },
     });
     if (results) {
@@ -568,14 +568,23 @@ const updateStart = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
     let updateStart;
-    updateStart = await prisma.aktivitas.update({
-      where: {
-        id: id,
-      },
-      data: {
-        actual_start: new Date(request.body.actual_start),
-      },
-    });
+    if (request.body.so) {
+      updateStart = await prisma.aktivitas.update({
+        where: { id: id },
+        data: {
+          so: request.body.so,
+        },
+      });
+    }else{
+      updateStart = await prisma.aktivitas.update({
+        where: {
+          id: id,
+        },
+        data: {
+          actual_start: new Date(request.body.actual_start),
+        },
+      });
+    }
     if (updateStart) {
       response.status(201).json({
         success: true,
