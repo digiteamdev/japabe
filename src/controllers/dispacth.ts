@@ -564,25 +564,14 @@ const updateStart = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
     let updateStart;
-    if (request.body.operatorID === null) {
-      updateStart = await prisma.dispatchDetail.update({
-        where: {
-          id: id,
-        },
-        data: {
-          so: request.body.so,
-        },
-      });
-    } else {
-      updateStart = await prisma.dispatchDetail.update({
-        where: {
-          id: id,
-        },
-        data: {
-          so: request.body.so,
-        },
-      });
-    }
+    updateStart = await prisma.aktivitas.update({
+      where: {
+        id: id,
+      },
+      data: {
+        actual_start: new Date(request.body.actual_start),
+      },
+    });
     if (updateStart) {
       response.status(201).json({
         success: true,
@@ -603,39 +592,12 @@ const updateStart = async (request: Request, response: Response) => {
 const updateFinish = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
-    const updateFinish = await prisma.dispatchDetail.update({
-      where: {
-        id: id,
-      },
-      data: {},
-    });
-    const selectDispact = await prisma.dispatchDetail.findFirst({
-      where: { id: id },
-    });
-    const totalfinish = await prisma.dispatchDetail.count({
-      where: {
-        // aktivitasID: selectDispact?.aktivitasID,
-      },
-    });
-    const totalfinishnot = await prisma.dispatchDetail.count({
-      where: {
-        // aktivitasID: selectDispact?.aktivitasID,
-      },
-    });
-    const aktivityId = await prisma.dispatchDetail.findFirst({
-      where: { id: id },
-    });
-
-    // const aktifitasId = aktivityId?.aktivitasID;
-
-    const percentase = (totalfinish / totalfinishnot) * 100;
-
-    await prisma.aktivitas.update({
+    const updateFinish = await prisma.aktivitas.update({
       where: {
         id: id,
       },
       data: {
-        progress: Math.floor(percentase),
+        actual_finish: new Date(request.body.actual_finish),
       },
     });
     if (updateFinish) {
