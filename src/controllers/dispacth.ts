@@ -42,6 +42,9 @@ const getDispatch = async (request: Request, response: Response) => {
         },
         include: {
           dispatchDetail: {
+            orderBy: {
+              createdAt: "asc"
+            },
             include: {
               aktivitas: {
                 include: {
@@ -83,7 +86,7 @@ const getDispatch = async (request: Request, response: Response) => {
           },
         },
         orderBy: {
-          createdAt: "desc",
+          createdAt: "asc",
         },
       });
       let worData;
@@ -196,6 +199,9 @@ const getDispatch = async (request: Request, response: Response) => {
         },
         include: {
           dispatchDetail: {
+            orderBy: {
+              createdAt: "asc"
+            },
             include: {
               aktivitas: {
                 include: {
@@ -236,7 +242,7 @@ const getDispatch = async (request: Request, response: Response) => {
           },
         },
         orderBy: {
-          createdAt: "desc",
+          createdAt: "asc",
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
