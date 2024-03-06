@@ -43,7 +43,7 @@ const getDispatch = async (request: Request, response: Response) => {
         include: {
           dispatchDetail: {
             orderBy: {
-              createdAt: "asc"
+              createdAt: "asc",
             },
             include: {
               aktivitas: {
@@ -52,7 +52,11 @@ const getDispatch = async (request: Request, response: Response) => {
                 },
               },
               sub_depart: true,
-              operator: true,
+              operator: {
+                include: {
+                  Employee: true,
+                },
+              },
             },
           },
           aktivitas: {
@@ -200,7 +204,7 @@ const getDispatch = async (request: Request, response: Response) => {
         include: {
           dispatchDetail: {
             orderBy: {
-              createdAt: "asc"
+              createdAt: "asc",
             },
             include: {
               aktivitas: {
@@ -209,7 +213,11 @@ const getDispatch = async (request: Request, response: Response) => {
                 },
               },
               sub_depart: true,
-              operator: true,
+              operator: {
+                include: {
+                  Employee: true,
+                },
+              },
             },
           },
           aktivitas: {
