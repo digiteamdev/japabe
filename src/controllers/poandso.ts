@@ -363,17 +363,24 @@ const createPo = async (request: Request, response: Response) => {
           },
         },
       });
+      const poTerm = await prisma.term_of_pay_po_so.findFirst({
+        where: {
+          poandsoId: results.id,
+        },
+      });
       await prisma.journal_cashier.createMany({
         data: [
           {
             coa_id: "clsijsq3s0003cz5ih2fa64xv",
             status_transaction: "Debet",
             poandsoId: results.id,
+            grandtotal: poTerm?.price,
           },
           {
             coa_id: "cls172hpp000fczze86zfh7yn",
             status_transaction: "Kredit",
             poandsoId: results.id,
+            grandtotal: poTerm?.price,
           },
         ],
       });
@@ -414,17 +421,24 @@ const createPo = async (request: Request, response: Response) => {
           },
         },
       });
+      const poTerm = await prisma.term_of_pay_po_so.findFirst({
+        where: {
+          poandsoId: results.id,
+        },
+      });
       await prisma.journal_cashier.createMany({
         data: [
           {
             coa_id: "clt8gudbn0004cznuy8a34hrm",
             status_transaction: "Debet",
             poandsoId: results.id,
+            grandtotal: poTerm?.price,
           },
           {
             coa_id: "cls172hpp000fczze86zfh7yn",
             status_transaction: "Kredit",
             poandsoId: results.id,
+            grandtotal: poTerm?.price,
           },
         ],
       });

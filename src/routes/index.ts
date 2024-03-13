@@ -2175,6 +2175,22 @@ router.get(
 );
 
 router.get(
+  "/posting",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketing: "MARKETING",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  cashier.getPosting
+);
+
+router.get(
   "/duedate",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
@@ -2206,6 +2222,15 @@ router.put(
     finance: "FINANCE & ACC",
   }),
   cashier.updateCashier
+);
+
+router.put(
+  "/posting/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    finance: "FINANCE & ACC",
+  }),
+  cashier.updatePosting
 );
 
 router.put(

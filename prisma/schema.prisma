@@ -1204,6 +1204,7 @@ enum status_transaction {
 model cashier {
   id              String            @id @default(cuid())
   id_cashier      String?
+  job_no          String?           @db.VarChar(200)
   status_payment  status_payment?
   cash_advance    cash_advance?     @relation(fields: [cdvId], references: [id])
   cdvId           String?
@@ -1217,6 +1218,7 @@ model cashier {
   bank_name       String?           @db.VarChar(100)
   rekening        String?           @db.VarChar(100)
   total           Int               @default(0)
+  posting         Boolean?          @default(false)
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   deleted         DateTime?
@@ -1229,8 +1231,8 @@ model journal_cashier {
   id                 String             @id @default(cuid())
   cashier            cashier?           @relation(fields: [cashier_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   cashier_id         String?
-  coa                coa                @relation(fields: [coa_id], references: [id])
-  coa_id             String
+  coa                coa?               @relation(fields: [coa_id], references: [id])
+  coa_id             String?
   poandso            poandso?           @relation(fields: [poandsoId], references: [id])
   poandsoId          String?
   purchase           purchase?          @relation(fields: [purchaseID], references: [id])
