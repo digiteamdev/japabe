@@ -45,7 +45,8 @@ router.delete(
   "/signout",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -65,7 +66,8 @@ router.get(
   "/user",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -101,7 +103,8 @@ router.get(
   "/role",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -136,7 +139,8 @@ router.get(
   "/depart",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -191,7 +195,8 @@ router.get(
   "/employe",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -206,7 +211,8 @@ router.get(
   "/employeeAll",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -221,7 +227,8 @@ router.get(
   "/employeDepart",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -301,7 +308,8 @@ router.get(
   "/customer",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -314,33 +322,57 @@ router.get(
 );
 router.post(
   "/customer",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   customer.createCustomer
 );
 router.post(
   "/customerCsvXlsx",
   middle.importData,
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   customer.createCsvNxlsx
 );
 router.put(
   "/customer/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   customer.updateCustomer
 );
 router.put(
   "/customercontact",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   customer.updateCustomerContact
 );
 router.put(
   "/customeraddress",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   customer.updateCustomerAddress
 );
 router.delete(
   "/customer/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   customer.deleteCustomer
 );
 
@@ -352,7 +384,8 @@ router.get(
   "/supplier",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -397,7 +430,8 @@ router.get(
   "/equipment",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -412,7 +446,8 @@ router.post(
   "/equipment",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -454,7 +489,8 @@ router.get(
   "/part",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -469,7 +505,8 @@ router.post(
   "/part",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -501,7 +538,8 @@ router.get(
   "/quotation",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -517,7 +555,6 @@ router.get(
   "/quotation/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -525,21 +562,31 @@ router.get(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
   }),
   quotation.getEditPoQuotation
 );
 
 router.post(
   "/quotation",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
-  upload.single("quo_img", 1000),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
+  upload.array("quo_img", 1000),
   quotation.createQuotation
 );
 
 router.put(
   "/quotation/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
-  upload.single("quo_img", 1000),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
+  upload.array("quo_img", 1000),
   quotation.updateQuotation
 );
 // router.put(
@@ -587,7 +634,8 @@ router.get(
   "/customerPo",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -600,39 +648,67 @@ router.get(
 );
 router.post(
   "/customerPo",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   upload.single("upload_doc", 1000),
   customerPo.createcusPo
 );
 router.put(
   "/customerPo/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   upload.single("upload_doc", 1000),
   customerPo.updatecusPo
 );
 router.put(
   "/customerPoDetail",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   customerPo.updatePoDetail
 );
 router.put(
   "/customerPoTermOfPay",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   customerPo.updatePoTermOfPay
 );
 router.delete(
   "/po/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   customerPo.deletecusPo
 );
 router.delete(
   "/customerPoDetail/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   customerPo.deletecusPoDetail
 );
 router.delete(
   "/customerPoTermOfPay/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   customerPo.deletecusPoTermOfPay
 );
 
@@ -644,7 +720,8 @@ router.get(
   "/jobStatus",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -660,7 +737,8 @@ router.get(
   "/wor",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -675,7 +753,8 @@ router.get(
   "/worTime",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -688,38 +767,62 @@ router.get(
 );
 router.post(
   "/wor",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   upload.single("file_list", 1000),
   wor.createWor
 );
 router.put(
   "/wor/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   upload.single("file_list", 1000),
   wor.updateWor
 );
 
 router.put(
   "/worScope",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   wor.updateWorkscope
 );
 
 router.put(
   "/worStatus/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   wor.updateWorStatus
 );
 
 router.delete(
   "/wor/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   wor.deleteWor
 );
 
 router.delete(
   "/worScope/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   wor.deleteWork
 );
 
@@ -731,7 +834,8 @@ router.get(
   "/groupMaterial",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -746,7 +850,8 @@ router.get(
   "/masterMaterial",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -761,7 +866,8 @@ router.get(
   "/stockMaterial",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -776,7 +882,8 @@ router.post(
   "/stockMaterial",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -791,7 +898,8 @@ router.post(
   "/stock",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -806,7 +914,8 @@ router.post(
   "/groupMaterial",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -821,7 +930,8 @@ router.post(
   "/masterMaterial",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -871,7 +981,8 @@ router.get(
   "/summary",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -897,7 +1008,7 @@ router.post(
 router.put(
   "/summary/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
-  upload.single("inimg", 1),
+  upload.single("inimg", 100),
   srimg.updateSrimg
 );
 router.put(
@@ -945,7 +1056,8 @@ router.get(
   "/workcenter",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -960,7 +1072,8 @@ router.post(
   "/workcenter",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -995,7 +1108,8 @@ router.get(
   "/dispacth",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1069,7 +1183,8 @@ router.get(
   "/masterAktivitas",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1084,7 +1199,8 @@ router.post(
   "/masterAktivitas",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1114,7 +1230,8 @@ router.get(
   "/timeschedule",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1178,7 +1295,8 @@ router.get(
   "/masterHoliday",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1213,7 +1331,8 @@ router.get(
   "/tmsdrawing",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1228,7 +1347,8 @@ router.get(
   "/drawing",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1275,7 +1395,8 @@ router.get(
   "/bomPart",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1291,7 +1412,8 @@ router.get(
   "/bomMaterial",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1307,7 +1429,8 @@ router.get(
   "/srBom",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1322,7 +1445,8 @@ router.get(
   "/SummaryBom",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1337,7 +1461,8 @@ router.get(
   "/bom",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1352,7 +1477,8 @@ router.get(
   "/mrBom",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1367,7 +1493,8 @@ router.get(
   "/mrUser/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1422,7 +1549,8 @@ router.get(
   "/MR",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1438,7 +1566,8 @@ router.get(
   "/mrDetail",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1454,7 +1583,8 @@ router.post(
   "/MR",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1470,7 +1600,8 @@ router.put(
   "/MR",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1486,7 +1617,8 @@ router.put(
   "/MR/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1502,7 +1634,8 @@ router.put(
   "/MRStatusSpv/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1518,7 +1651,8 @@ router.put(
   "/MRStatusManger/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1533,7 +1667,8 @@ router.put(
   "/MRapprove",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1548,7 +1683,8 @@ router.put(
   "/MRdetailUpdate",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1564,7 +1700,8 @@ router.delete(
   "/MR/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1580,7 +1717,8 @@ router.delete(
   "/MRdetail/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1600,7 +1738,8 @@ router.get(
   "/SR",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1616,7 +1755,8 @@ router.get(
   "/detailSR",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1632,7 +1772,8 @@ router.post(
   "/SR",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1648,7 +1789,8 @@ router.put(
   "/SR/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1664,7 +1806,8 @@ router.put(
   "/SRstatusSpv/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1680,7 +1823,8 @@ router.put(
   "/SRstatusManager/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1696,7 +1840,8 @@ router.put(
   "/SR",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1712,7 +1857,8 @@ router.put(
   "/detailSR",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1728,7 +1874,8 @@ router.put(
   "/SRapprove",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1744,7 +1891,8 @@ router.delete(
   "/SR/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1760,7 +1908,8 @@ router.delete(
   "/SRdetail/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1780,7 +1929,8 @@ router.get(
   "/coa",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1795,7 +1945,8 @@ router.post(
   "/coa",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1824,7 +1975,8 @@ router.get(
   "/mrPR",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1840,7 +1992,8 @@ router.put(
   "/mrPr",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1856,7 +2009,8 @@ router.put(
   "/mrPrdetail",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1872,7 +2026,8 @@ router.put(
   "/prStatusSpv/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1900,7 +2055,8 @@ router.get(
   "/srPR",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1916,7 +2072,8 @@ router.put(
   "/srPR",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1932,7 +2089,8 @@ router.put(
   "/srPsR",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1948,7 +2106,8 @@ router.put(
   "/psrStatusMgr/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -1985,7 +2144,8 @@ router.get(
   "/approvalRequest",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2005,7 +2165,8 @@ router.get(
   "/poandso",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2021,7 +2182,8 @@ router.get(
   "/poandsoAll",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2059,7 +2221,8 @@ router.get(
   "/poandsoReceive",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2106,7 +2269,8 @@ router.get(
   "/kontrabonAll",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2162,7 +2326,8 @@ router.get(
   "/cashier",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2178,7 +2343,8 @@ router.get(
   "/posting",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2194,7 +2360,8 @@ router.get(
   "/duedate",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2286,7 +2453,8 @@ router.get(
   "/cashAdv",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2302,7 +2470,8 @@ router.get(
   "/cashAdvEmployee",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2318,7 +2487,8 @@ router.get(
   "/cashAdvWor",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2334,7 +2504,8 @@ router.get(
   "/SPJ",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2350,7 +2521,8 @@ router.post(
   "/cashAdv",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2366,7 +2538,8 @@ router.put(
   "/SPJ/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2382,7 +2555,8 @@ router.put(
   "/SPJ",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2398,7 +2572,8 @@ router.put(
   "/cashAdvStatusSpv/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2414,7 +2589,8 @@ router.put(
   "/cashAdvStatusMgr/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2430,7 +2606,8 @@ router.put(
   "/cashAdv/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2446,7 +2623,8 @@ router.delete(
   "/cashAdv/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2462,7 +2640,8 @@ router.delete(
   "/SPJ/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2482,7 +2661,8 @@ router.get(
   "/outgoingMaterial",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",
@@ -2498,7 +2678,8 @@ router.get(
   "/outgoingMaterialAll",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
-    marketing: "MARKETING",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
     HRandGA: "HR & GA",
     finance: "FINANCE & ACC",
     QAandEng: "QA & ENG",

@@ -44,7 +44,8 @@ function authToken(roles: any) {
                   s.role.role_name === roles.drafter ||
                   s.role.role_name === roles.utility ||
                   s.role.role_name === roles.ppic ||
-                  s.role.role_name === roles.marketing
+                  s.role.role_name === roles.marketingbumn ||
+                  s.role.role_name === roles.marketingswasta
                 );
               });
               req.session.token = token;

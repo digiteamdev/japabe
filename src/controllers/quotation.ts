@@ -7,6 +7,7 @@ import { Prisma } from "@prisma/client";
 const getQuotation = async (request: Request, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
+    const divisi: any = request.query.divisi || "";
     const hostname: any = request.headers.host;
     const pathname = url.parse(request.url).pathname;
     const page: any = request.query.page;
@@ -15,12 +16,15 @@ const getQuotation = async (request: Request, response: Response) => {
     const quotationtCount = await prisma.quotations.count({
       where: {
         deleted: null,
+        job_operational: divisi,
       },
     });
     let results;
     if (request.query.page === undefined) {
       results = await prisma.quotations.findMany({
         where: {
+          job_operational: divisi,
+          deleted: null,
           OR: [
             {
               CustomerPo: null,
@@ -45,18 +49,39 @@ const getQuotation = async (request: Request, response: Response) => {
           CustomerContact: true,
         },
         orderBy: {
-          createdAt: "desc",
+          quo_num: "asc",
         },
       });
     } else {
       results = await prisma.quotations.findMany({
         where: {
-          Customer: {
-            name: {
-              contains: pencarian,
-              mode: "insensitive",
+          job_operational: divisi,
+          OR: [
+            {
+              Customer: {
+                name: {
+                  contains: pencarian,
+                  mode: "insensitive",
+                },
+              },
             },
-          },
+            {
+              quo_num: {
+                contains: pencarian,
+                mode: "insensitive",
+              },
+            },
+            {
+              price_quotation: {
+                some: {
+                  description: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+          ],
         },
         include: {
           price_quotation: true,
@@ -69,7 +94,7 @@ const getQuotation = async (request: Request, response: Response) => {
           CustomerContact: true,
         },
         orderBy: {
-          createdAt: "asc",
+          quo_num: "asc",
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
@@ -149,6 +174,7 @@ const createQuotation = async (request: any, response: Response) => {
           data: {
             quo_num: request.body.quo_num,
             quo_auto: request.body.quo_auto,
+            job_operational: request.body.job_operational,
             Customer: { connect: { id: request.body.customerId } },
             CustomerContact: {
               connect: { id: request.body.customercontactId },
@@ -158,7 +184,7 @@ const createQuotation = async (request: any, response: Response) => {
             send_by: request.body.send_by,
             estimated_delivery: request.body.estimated_delivery,
             date: new Date(request.body.date),
-            quo_img: !request.file ? null : request.file.path,
+            quo_img: !request.files ? null : request.files.path,
             warranty: request.body.warranty,
             note_payment: request.body.note_payment,
             term_payment: request.body.term_payment,
@@ -243,6 +269,7 @@ const updateQuotation = async (request: any, response: Response) => {
       data: {
         quo_num: request.body.quo_num,
         quo_auto: request.body.quo_auto,
+        job_operational: request.body.job_operational,
         revision: genarate,
         send_by: request.body.send_by,
         revision_desc: request.body.revision_desc,
@@ -252,7 +279,7 @@ const updateQuotation = async (request: any, response: Response) => {
         attention: request.body.attention,
         estimated_delivery: request.body.estimated_delivery,
         date: new Date(request.body.date),
-        quo_img: !request.file ? request.body.quo_img : request.file.path,
+        quo_img: !request.files ? request.body.quo_img : request.files.path,
         warranty: request.body.warranty,
         Quotations_Detail: request.body.Quotations_Detail,
         note_payment: request.body.note_payment,

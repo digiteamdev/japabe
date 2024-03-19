@@ -6,6 +6,7 @@ import url from "url";
 const getcusPo = async (request: Request, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
+    const divisi: any = request.query.divisi || "";
     const hostname: any = request.headers.host;
     const pathname = url.parse(request.url).pathname;
     const page: any = request.query.page;
@@ -14,19 +15,23 @@ const getcusPo = async (request: Request, response: Response) => {
     const cusPoCount = await prisma.customerPo.count({
       where: {
         deleted: null,
+        job_operational: divisi,
       },
     });
     let results;
     if (request.query.page === undefined) {
       results = await prisma.customerPo.findMany({
         where: {
+          deleted: null,
           wor: {
             every: {
               customerPo: null,
             },
           },
+          job_operational: divisi,
         },
         include: {
+          price_po: true,
           quotations: {
             include: {
               Customer: {
@@ -47,12 +52,46 @@ const getcusPo = async (request: Request, response: Response) => {
     } else {
       results = await prisma.customerPo.findMany({
         where: {
-          po_num_auto: {
-            contains: pencarian,
-            mode: "insensitive",
-          },
+          job_operational: divisi,
+          OR: [
+            {
+              po_num_auto: {
+                contains: pencarian,
+                mode: "insensitive",
+              },
+            },
+            {
+              wor: {
+                some: {
+                  job_no: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              quotations: {
+                quo_num: {
+                  contains: pencarian,
+                  mode: "insensitive",
+                },
+              },
+            },
+            {
+              quotations: {
+                Customer: {
+                  name: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+          ],
         },
         include: {
+          price_po: true,
           wor: true,
           quotations: {
             include: {
@@ -69,7 +108,9 @@ const getcusPo = async (request: Request, response: Response) => {
           term_of_pay: true,
         },
         orderBy: {
-          createdAt: "asc",
+          quotations: {
+            quo_num: "asc",
+          },
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
@@ -106,6 +147,7 @@ const createcusPo = async (request: Request, response: Response) => {
       data: {
         id_po: request.body.id_po,
         po_num_auto: request.body.po_num_auto,
+        job_operational: request.body.job_operational,
         quotations: { connect: { id: request.body.quo_id } },
         tax: request.body.tax,
         noted: request.body.noted,
@@ -118,9 +160,13 @@ const createcusPo = async (request: Request, response: Response) => {
         term_of_pay: {
           create: JSON.parse(request.body.term_of_pay),
         },
+        price_po: {
+          create: JSON.parse(request.body.price_po),
+        },
       },
       include: {
         term_of_pay: true,
+        price_po: true,
       },
     });
     if (results) {
@@ -151,10 +197,11 @@ const updatecusPo = async (request: Request, response: Response) => {
       data: {
         id_po: request.body.id_po,
         po_num_auto: request.body.po_num_auto,
+        job_operational: request.body.job_operational,
         quotations: { connect: { id: request.body.quo_id } },
         tax: request.body.tax,
         noted: request.body.noted,
-        upload_doc: !request.file ? null : request.file.path,
+        upload_doc: !request.file ? request.body.upload_doc : request.file.path,
         vat: parseInt(request.body.vat),
         grand_tot: parseInt(request.body.grand_tot),
         total: parseInt(request.body.total),
@@ -179,6 +226,28 @@ const updatecusPo = async (request: Request, response: Response) => {
           price: updateByveri.price,
           date_limit: updateByveri.date_limit,
           note: updateByveri.note,
+          id: updateByveri.id,
+        };
+      }
+    );
+    const pricePo = JSON.parse(request.body.price_po);
+    const updateVerifyPo = pricePo.map(
+      (updateByveri: {
+        cuspoId: any;
+        discount: any;
+        qty: any;
+        description: any;
+        unit_price: any;
+        total_price: any;
+        id: any;
+      }) => {
+        return {
+          cuspoId: updateByveri.cuspoId,
+          discount: updateByveri.discount,
+          description: updateByveri.description,
+          qty: updateByveri.qty,
+          unit_price: updateByveri.unit_price,
+          total_price: updateByveri.total_price,
           id: updateByveri.id,
         };
       }
@@ -214,6 +283,32 @@ const updatecusPo = async (request: Request, response: Response) => {
         });
         result = [...result, updatePoMany];
       }
+    } else if (updateVerifyPo) {
+      for (let i = 0; i < updateVerify.length; i++) {
+        const updatePricePo = await prisma.price_po.upsert({
+          where: {
+            id: updateVerify[i].id,
+          },
+          create: {
+            unit: updateVerify[i].unit,
+            discount: updateVerify[i].discount,
+            customerPo: { connect: { id: updateVerify[i].cuspoId } },
+            description: updateVerify[i].description,
+            unit_price: updateVerify[i].unit_price,
+            qty: updateVerify[i].qty,
+            total_price: updateVerify[i].total_price,
+          },
+          update: {
+            unit: updateVerify[i].unit,
+            customerPo: { connect: { id: updateVerify[i].cuspoId } },
+            description: updateVerify[i].description,
+            unit_price: updateVerify[i].unit_price,
+            qty: updateVerify[i].qty,
+            total_price: updateVerify[i].total_price,
+          },
+        });
+        result = [...result, updatePricePo];
+      }
     }
     if (deletePo) {
       for (let i = 0; i < deletePo.length; i++) {
@@ -224,7 +319,7 @@ const updatecusPo = async (request: Request, response: Response) => {
         });
       }
     }
-    if (result || updatecusPo || !updateVerify) {
+    if (result || updatecusPo || updateVerify || updateVerifyPo) {
       response.status(201).json({
         success: true,
         massage: "Success Update Data",

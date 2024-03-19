@@ -6,6 +6,7 @@ import url from "url";
 const getCustomer = async (request: Request, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
+    const divisi: any = request.query.divisi || "";
     const hostname: any = request.headers.host;
     const pathname = url.parse(request.url).pathname;
     const page: any = request.query.page;
@@ -14,11 +15,16 @@ const getCustomer = async (request: Request, response: Response) => {
     const customerCount = await prisma.customer.count({
       where: {
         deleted: null,
+        job_operational: divisi,
       },
     });
     let results;
     if (request.query.page === undefined) {
       results = await prisma.customer.findMany({
+        where: {
+          deleted: null,
+          job_operational: divisi,
+        },
         include: {
           contact: true,
           address: true,
@@ -27,9 +33,10 @@ const getCustomer = async (request: Request, response: Response) => {
     } else {
       results = await prisma.customer.findMany({
         where: {
+          job_operational: divisi,
           name: {
             contains: pencarian,
-            mode: 'insensitive',
+            mode: "insensitive",
           },
         },
         include: {
@@ -79,6 +86,7 @@ const createCustomer = async (request: Request, response: Response) => {
         pph: request.body.pph,
         phone: request.body.phone,
         fax: request.body.fax,
+        job_operational: request.body.job_operational,
         contact: {
           create: request.body.contact,
         },

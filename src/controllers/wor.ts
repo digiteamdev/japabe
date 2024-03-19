@@ -91,6 +91,7 @@ const getWor = async (request: Request, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
     const status: any = request.query.status || undefined;
+    const divisi: any = request.query.divisi || "";
     const hostname: any = request.headers.host;
     const pathname = url.parse(request.url).pathname;
     const page: any = request.query.page;
@@ -99,6 +100,7 @@ const getWor = async (request: Request, response: Response) => {
     const worCount = await prisma.wor.count({
       where: {
         deleted: null,
+        job_operational: divisi,
       },
     });
     let results;
@@ -106,6 +108,8 @@ const getWor = async (request: Request, response: Response) => {
       results = await prisma.wor.findMany({
         where: {
           status: status,
+          deleted: null,
+          job_operational: divisi,
           timeschedule: {
             deleted: null,
           },
@@ -150,6 +154,8 @@ const getWor = async (request: Request, response: Response) => {
     } else {
       results = await prisma.wor.findMany({
         where: {
+          deleted: null,
+          job_operational: divisi,
           OR: [
             {
               job_no: {
@@ -158,16 +164,38 @@ const getWor = async (request: Request, response: Response) => {
               },
             },
             {
-              customerPo: {
-                quotations: {
-                  Customer: {
-                    name: {
+              OR: [
+                {
+                  customerPo: {
+                    quotations: {
+                      Customer: {
+                        name: {
+                          contains: pencarian,
+                          mode: "insensitive",
+                        },
+                      },
+                    },
+                  },
+                },
+                {
+                  customerPo: {
+                    quotations: {
+                      quo_num: {
+                        contains: pencarian,
+                        mode: "insensitive",
+                      },
+                    },
+                  },
+                },
+                {
+                  customerPo: {
+                    id_po: {
                       contains: pencarian,
                       mode: "insensitive",
                     },
                   },
                 },
-              },
+              ],
             },
           ],
           NOT: {
@@ -201,7 +229,11 @@ const getWor = async (request: Request, response: Response) => {
           estimator: true,
         },
         orderBy: {
-          no: "asc",
+          customerPo: {
+            quotations: {
+              quo_num: "asc",
+            },
+          },
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
@@ -311,7 +343,7 @@ const createWor = async (request: any, response: Response) => {
       for (let i = 0; i < arr.length; i++) {
         newArrEdu.push({
           worId: arr[i].worId,
-          qty: parseInt(arr[i].qty),
+          qty: arr[i].qty,
           item: arr[i].item,
           unit: arr[i].unit,
         });
@@ -500,13 +532,13 @@ const updateWor = async (request: Request, response: Response) => {
           },
           create: {
             wor: { connect: { id: updateVerify[i].worId } },
-            qty: parseInt(updateVerify[i].qty),
+            qty: updateVerify[i].qty,
             item: updateVerify[i].item,
             unit: updateVerify[i].unit,
           },
           update: {
             wor: { connect: { id: updateVerify[i].worId } },
-            qty: parseInt(updateVerify[i].qty),
+            qty: updateVerify[i].qty,
             item: updateVerify[i].item,
             unit: updateVerify[i].unit,
           },
