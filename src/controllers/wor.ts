@@ -318,7 +318,7 @@ const createWor = async (request: any, response: Response) => {
       for (let i = 0; i < arr.length; i++) {
         newArrEdu.push({
           worId: arr[i].worId,
-          qty: arr[i].qty,
+          qty: arr[i].qty.toString(),
           item: arr[i].item,
           unit: arr[i].unit,
         });

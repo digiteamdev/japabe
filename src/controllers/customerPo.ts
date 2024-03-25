@@ -160,7 +160,7 @@ const createcusPo = async (request: Request, response: Response) => {
         vat: parseInt(request.body.vat),
         grand_tot: parseInt(request.body.grand_tot),
         total: parseInt(request.body.total),
-        upload_doc: !request.file ? null : request.file.path,
+        upload_doc: !request.file ? request.body.upload_doc : request.file.path,
         term_of_pay: {
           create: JSON.parse(request.body.term_of_pay),
         },
