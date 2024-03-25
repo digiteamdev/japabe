@@ -92,7 +92,11 @@ const getcusPo = async (request: Request, response: Response) => {
         },
         include: {
           price_po: true,
-          wor: true,
+          wor: {
+            orderBy: {
+              job_no: "asc"
+            }
+          },
           quotations: {
             include: {
               price_quotation: true,
@@ -109,8 +113,8 @@ const getcusPo = async (request: Request, response: Response) => {
         },
         orderBy: {
           quotations: {
-            quo_num: "asc",
-          },
+            quo_num: "asc"
+          }
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),

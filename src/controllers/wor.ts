@@ -229,11 +229,7 @@ const getWor = async (request: Request, response: Response) => {
           estimator: true,
         },
         orderBy: {
-          customerPo: {
-            quotations: {
-              quo_num: "asc",
-            },
-          },
+          job_no: "asc",
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
@@ -268,25 +264,8 @@ const getWorTimes = async (request: any, response: Response) => {
   try {
     const results = await prisma.wor.findMany({
       where: {
-        OR: [
-          {
-            status: "valid",
-          },
-          {
-            timeschedule: null,
-          },
-          {
-            timeschedule: {
-              deleted: null,
-            },
-          },
-        ],
+        timeschedule: null,
         NOT: [
-          {
-            timeschedule: {
-              deleted: null,
-            },
-          },
           {
             status: null,
           },
@@ -311,11 +290,7 @@ const getWorTimes = async (request: any, response: Response) => {
         employee: true,
         timeschedule: true,
       },
-      orderBy: {
-        createdAt: "desc",
-      },
     });
-
     if (results.length > 0) {
       return response.status(200).json({
         success: true,

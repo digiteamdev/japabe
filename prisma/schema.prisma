@@ -415,8 +415,8 @@ model SupplierContact {
   contact_person String?   @db.VarChar(100)
   email_person   String?   @unique @db.VarChar(100)
   phone          String?   @db.VarChar(50)
-  supplier       Supplier  @relation("suppliercontact", fields: [supplierId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  supplierId     String
+  supplier       Supplier? @relation("suppliercontact", fields: [supplierId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  supplierId     String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   deleted        DateTime?
@@ -429,8 +429,8 @@ model SupplierBank {
   account_name String?     @db.VarChar(100)
   bank_name    String?     @db.VarChar(100)
   rekening     String?     @db.VarChar(100)
-  supplier     Supplier    @relation("supplierbank", fields: [supplierId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  supplierId   String
+  supplier     Supplier?   @relation("supplierbank", fields: [supplierId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  supplierId   String?
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   deleted      DateTime?
