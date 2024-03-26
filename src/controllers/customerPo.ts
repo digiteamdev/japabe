@@ -151,6 +151,7 @@ const createcusPo = async (request: Request, response: Response) => {
       data: {
         id_po: request.body.id_po,
         po_num_auto: request.body.po_num_auto,
+        job_no: request.body.job_no,
         job_operational: request.body.job_operational,
         quotations: { connect: { id: request.body.quo_id } },
         tax: request.body.tax,
@@ -201,6 +202,7 @@ const updatecusPo = async (request: Request, response: Response) => {
       data: {
         id_po: request.body.id_po,
         po_num_auto: request.body.po_num_auto,
+        job_no: request.body.job_no,
         job_operational: request.body.job_operational,
         quotations: { connect: { id: request.body.quo_id } },
         tax: request.body.tax,

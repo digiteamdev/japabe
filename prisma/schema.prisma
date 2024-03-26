@@ -393,7 +393,7 @@ model Supplier {
   districts       String?           @db.VarChar(100)
   sub_districts   String?           @db.VarChar(100)
   ec_postalcode   Int?              @default(0)
-  office_email    String?           @unique
+  office_email    String?           @db.VarChar(100)
   NPWP            String?           @db.VarChar(200)
   ppn             Int?              @default(0)
   pph             Int?              @default(0)
