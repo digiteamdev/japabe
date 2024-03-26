@@ -10,6 +10,7 @@ import depart from "../controllers/depart";
 import employee from "../controllers/employee";
 import user from "../controllers/user";
 import role from "../controllers/role";
+import masterMaterial from "../controllers/masterMaterial";
 import customer from "../controllers/customer";
 import supplier from "../controllers/supplier";
 import equipment from "../controllers/equipment";
@@ -845,6 +846,38 @@ router.get(
     utility: "Utility/ty",
   }),
   typeMr.getTypeMr
+);
+router.get(
+  "/masterMaterial",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  masterMaterial.getMaterialMaster
+);
+router.post(
+  "/masterMaterial",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  masterMaterial.createMaterialMaster
 );
 router.get(
   "/masterMaterial",

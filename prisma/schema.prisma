@@ -382,6 +382,23 @@ model Material_Stock {
   @@index([id, materialId, spesifikasi])
 }
 
+model Material_Master {
+  id           String    @id @default(cuid())
+  name         String?   @db.VarChar(50)
+  spesifikasi  String?   @db.Text
+  satuan       String?   @db.VarChar(200)
+  jumlah_Stock Int       @default(0)
+  harga        Int       @default(0)
+  note         String?   @db.Text
+  date_in      DateTime?
+  date_out     DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deleted      DateTime?
+
+  @@index([id, name, date_in, date_out, createdAt, updatedAt])
+}
+
 model Supplier {
   id              String            @id @default(cuid())
   type_supplier   type_sup

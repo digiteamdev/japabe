@@ -267,6 +267,9 @@ const getWorTimes = async (request: any, response: Response) => {
         timeschedule: null,
         NOT: [
           {
+            job_no: null,
+          },
+          {
             status: null,
           },
         ],
@@ -598,55 +601,53 @@ const updateWorkscope = async (request: Request, response: Response) => {
 const updateWorStatus = async (request: Request, response: Response) => {
   try {
     const id = request.params.id;
-    const setNum = (num: any) => {
-      return "00" + num;
-    };
+    // const setNum = (num: any) => {
+    //   return "00" + num;
+    // };
     let result;
     const lastResCount: any = await prisma.wor.findFirst({
       where: {
         id: id,
       },
-      take: 1,
-      orderBy: [{ updatedAt: "desc" }],
     });
-    if (lastResCount.status === "") {
-      const statusPenc = await prisma.wor.findMany({
-        where: {
-          NOT: {
-            job_no: "",
-          },
-        },
-        take: 1,
-        orderBy: [{ createdAt: "desc" }],
-      });
-      const d = new Date();
-      let year = d.getUTCFullYear().toString().substring(2);
-      const count: any = statusPenc[0]?.job_no;
-      let generate;
-      const i: any = count?.substring(4);
-      const autoIn: any = parseInt(i) + 1;
-      if (count) {
-        generate = lastResCount.job_operational + year + setNum(0 + autoIn);
-      } else {
-        generate = lastResCount.job_operational + year + setNum(0);
-      }
+    if (lastResCount.status === "" || lastResCount.status === null) {
+      // const statusPenc = await prisma.wor.findMany({
+      //   where: {
+      //     NOT: {
+      //       job_no: "",
+      //     },
+      //   },
+      //   take: 1,
+      //   orderBy: [{ createdAt: "desc" }],
+      // });
+      // const d = new Date();
+      // let year = d.getUTCFullYear().toString().substring(2);
+      // const count: any = statusPenc[0]?.job_no;
+      // let generate;
+      // const i: any = count?.substring(4);
+      // const autoIn: any = parseInt(i) + 1;
+      // if (count) {
+      //   generate = lastResCount.job_operational + year + setNum(0 + autoIn);
+      // } else {
+      //   generate = lastResCount.job_operational + year + setNum(0);
+      // }
 
       result = await prisma.wor.update({
         where: { id: id },
         data: {
           status: "valid",
-          job_no: generate,
+          // job_no: generate,
         },
       });
     } else {
       result = await prisma.wor.update({
         where: { id: id },
         data: {
-          status: lastResCount.status === "valid" ? "unvalid" : "valid",
+          status: "unvalid",
+          // status: lastResCount.status === "valid" ? "unvalid" : "valid",
         },
       });
     }
-
     if (result) {
       response.status(201).json({
         success: true,
