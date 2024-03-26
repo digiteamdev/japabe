@@ -494,6 +494,7 @@ model price_quotation {
 model CustomerPo {
   id                String              @id @default(cuid())
   id_po             String?             @db.VarChar(100)
+  job_no            String?             @db.VarChar(200)
   po_num_auto       String?             @db.VarChar(200)
   quotations        Quotations          @relation(fields: [quo_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   quo_id            String              @unique

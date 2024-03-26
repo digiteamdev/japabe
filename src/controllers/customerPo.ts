@@ -94,8 +94,8 @@ const getcusPo = async (request: Request, response: Response) => {
           price_po: true,
           wor: {
             orderBy: {
-              job_no: "asc"
-            }
+              job_no: "asc",
+            },
           },
           quotations: {
             include: {
@@ -113,8 +113,8 @@ const getcusPo = async (request: Request, response: Response) => {
         },
         orderBy: {
           quotations: {
-            quo_num: "asc"
-          }
+            quo_num: "asc",
+          },
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
@@ -212,7 +212,7 @@ const updatecusPo = async (request: Request, response: Response) => {
         date_of_po: new Date(request.body.date_of_po),
       },
     });
-    const termPo = JSON.parse(request.body.term_of_pay);
+    const termPo = request.body.term_of_pay;
     const updateVerify = termPo.map(
       (updateByveri: {
         cuspoId: any;
@@ -234,7 +234,7 @@ const updatecusPo = async (request: Request, response: Response) => {
         };
       }
     );
-    const pricePo = JSON.parse(request.body.price_po);
+    const pricePo = request.body.price_po;
     const updateVerifyPo = pricePo.map(
       (updateByveri: {
         cuspoId: any;
@@ -256,7 +256,7 @@ const updatecusPo = async (request: Request, response: Response) => {
         };
       }
     );
-    const parsedDelete = JSON.parse(request.body.delete);
+    const parsedDelete = request.body.delete;
     const deletePo = parsedDelete.map((deleteByveri: { id: any }) => {
       return {
         id: deleteByveri.id,
@@ -287,28 +287,30 @@ const updatecusPo = async (request: Request, response: Response) => {
         });
         result = [...result, updatePoMany];
       }
-    } else if (updateVerifyPo) {
-      for (let i = 0; i < updateVerify.length; i++) {
+    }
+    if (updateVerifyPo) {
+      for (let i = 0; i < updateVerifyPo.length; i++) {
         const updatePricePo = await prisma.price_po.upsert({
           where: {
-            id: updateVerify[i].id,
+            id: updateVerifyPo[i].id,
           },
           create: {
-            unit: updateVerify[i].unit,
-            discount: updateVerify[i].discount,
-            customerPo: { connect: { id: updateVerify[i].cuspoId } },
-            description: updateVerify[i].description,
-            unit_price: updateVerify[i].unit_price,
-            qty: updateVerify[i].qty,
-            total_price: updateVerify[i].total_price,
+            unit: updateVerifyPo[i].unit,
+            discount: parseInt(updateVerifyPo[i].discount),
+            customerPo: { connect: { id: updateVerifyPo[i].cuspoId } },
+            description: updateVerifyPo[i].description,
+            unit_price: parseInt(updateVerifyPo[i].unit_price),
+            qty: parseInt(updateVerifyPo[i].qty),
+            total_price: parseInt(updateVerifyPo[i].total_price),
           },
           update: {
-            unit: updateVerify[i].unit,
-            customerPo: { connect: { id: updateVerify[i].cuspoId } },
-            description: updateVerify[i].description,
-            unit_price: updateVerify[i].unit_price,
-            qty: updateVerify[i].qty,
-            total_price: updateVerify[i].total_price,
+            unit: updateVerifyPo[i].unit,
+            discount: parseInt(updateVerifyPo[i].discount),
+            customerPo: { connect: { id: updateVerifyPo[i].cuspoId } },
+            description: updateVerifyPo[i].description,
+            unit_price: parseInt(updateVerifyPo[i].unit_price),
+            qty: parseInt(updateVerifyPo[i].qty),
+            total_price: parseInt(updateVerifyPo[i].total_price),
           },
         });
         result = [...result, updatePricePo];

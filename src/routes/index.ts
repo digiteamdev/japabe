@@ -575,7 +575,7 @@ router.post(
     marketingbumn: "MARKETING BUMN",
     marketingswasta: "MARKETING SWASTA",
   }),
-  upload.array("quo_img", 1000),
+  upload.single("quo_img", 1000),
   quotation.createQuotation
 );
 
@@ -586,7 +586,7 @@ router.put(
     marketingbumn: "MARKETING BUMN",
     marketingswasta: "MARKETING SWASTA",
   }),
-  upload.array("quo_img", 1000),
+  upload.single("quo_img", 1000),
   quotation.updateQuotation
 );
 // router.put(
