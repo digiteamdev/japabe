@@ -489,6 +489,7 @@ model Quotations {
   customerContactId  String
   term_of_pay        term_of_pay[]
   price_quotation    price_quotation[]
+  imgQuotation       imgQuotation[]
 
   @@index([id, quo_num])
 }
@@ -506,6 +507,18 @@ model price_quotation {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   deleted     DateTime?
+}
+
+model imgQuotation {
+  id         String      @id @default(cuid())
+  quotations Quotations? @relation(fields: [quo_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  quo_id     String?
+  img        String?     @db.Text
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  deleted    DateTime?
+
+  @@index([id, img])
 }
 
 model CustomerPo {
