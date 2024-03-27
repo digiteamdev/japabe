@@ -192,8 +192,19 @@ const getSr = async (request: any, response: Response) => {
 
 const createSr = async (request: Request, response: Response) => {
   try {
-    const r = Math.floor(Math.random() * 1000) + 1;
-    const genarate = "SR" + r;
+    const noSr = await prisma.sr.findMany({
+      take: 1,
+      orderBy: [{ createdAt: "desc" }],
+    });
+    const noMrLast: any = noSr[0].no_sr?.split("/");
+    const d = new Date();
+    let month = d.getMonth() + 1;
+    let year = d.getFullYear();
+    let numor = 101;
+    if (month.toString() === noMrLast[1]) {
+      numor = parseInt(noMrLast[0]) + 1;
+    }
+    const genarate = numor + "/" + month.toString() + "/" + year.toString();
     const dispatchNull = request.body.dispacthIDS;
     const worNull = request.body.worId;
     const dispatchNullId = request.body.dispacthdetailId;
