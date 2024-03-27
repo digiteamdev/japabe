@@ -162,7 +162,7 @@ const createcusPo = async (request: Request, response: Response) => {
         vat: parseInt(request.body.vat),
         grand_tot: parseInt(request.body.grand_tot),
         total: parseInt(request.body.total),
-        upload_doc: !request.file ? request.body.upload_doc : request.file.path,
+        upload_doc: !request.file ? null : request.file.path,
         term_of_pay: {
           create: JSON.parse(request.body.term_of_pay),
         },
@@ -196,6 +196,9 @@ const updatecusPo = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
     let result: any = [];
+    let filePo =
+      request.body.upload_doc === "null" ? null : request.body.upload_doc;
+
     const updatecusPo = await prisma.customerPo.update({
       where: {
         id: id,
@@ -207,13 +210,13 @@ const updatecusPo = async (request: Request, response: Response) => {
         quotations: { connect: { id: request.body.quo_id } },
         tax: request.body.tax,
         noted: request.body.noted,
-        upload_doc: !request.file ? request.body.upload_doc : request.file.path,
+        upload_doc: !request.file ? filePo : request.file.path,
         discount: parseInt(request.body.discount),
         vat: parseInt(request.body.vat),
         grand_tot: parseInt(request.body.grand_tot),
         total: parseInt(request.body.total),
         date_of_po: new Date(request.body.date_of_po),
-        date_delivery: new Date(request.body.date_delivery)
+        date_delivery: new Date(request.body.date_delivery),
       },
     });
     const termPo = JSON.parse(request.body.term_of_pay);
