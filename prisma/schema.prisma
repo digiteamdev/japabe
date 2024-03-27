@@ -518,6 +518,7 @@ model CustomerPo {
   tax               Tax?
   noted             String?             @db.Text
   upload_doc        String?             @db.Text
+  discount          Int                 @default(0)
   vat               Int                 @default(0)
   grand_tot         Int                 @default(0)
   total             Int                 @default(0)
