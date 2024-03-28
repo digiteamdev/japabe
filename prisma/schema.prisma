@@ -430,7 +430,7 @@ model Supplier {
 model SupplierContact {
   id             String    @id @default(cuid())
   contact_person String?   @db.VarChar(100)
-  email_person   String?   @unique @db.VarChar(100)
+  email_person   String?   @db.VarChar(100)
   phone          String?   @db.VarChar(50)
   supplier       Supplier? @relation("suppliercontact", fields: [supplierId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   supplierId     String?
