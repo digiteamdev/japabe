@@ -55,6 +55,12 @@ const getcusPo = async (request: Request, response: Response) => {
           job_operational: divisi,
           OR: [
             {
+              job_no: {
+                contains: pencarian,
+                mode: "insensitive",
+              },
+            },
+            {
               po_num_auto: {
                 contains: pencarian,
                 mode: "insensitive",
@@ -112,9 +118,7 @@ const getcusPo = async (request: Request, response: Response) => {
           term_of_pay: true,
         },
         orderBy: {
-          quotations: {
-            quo_num: "asc",
-          },
+          job_no: "asc",
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
