@@ -29,6 +29,7 @@ const getMaterialMaster = async (request: Request, response: Response) => {
           deleted: null,
           name: {
             contains: pencarian,
+            mode: "insensitive",
           },
         },
         orderBy: {

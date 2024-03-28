@@ -847,38 +847,38 @@ router.get(
   }),
   typeMr.getTypeMr
 );
-// router.get(
-//   "/masterMaterial",
-//   jwt.authToken({
-//     administrator: "ADMINISTRATOR",
-//     marketingbumn: "MARKETING BUMN",
-//     marketingswasta: "MARKETING SWASTA",
-//     HRandGA: "HR & GA",
-//     finance: "FINANCE & ACC",
-//     QAandEng: "QA & ENG",
-//     purchasing: "PURCHASING",
-//     drafter: "DRAFTER",
-//     ppic: "Ppic",
-//     utility: "Utility/ty",
-//   }),
-//   typeMr.getMasterM
-// );
-// router.post(
-//   "/masterMaterial",
-//   jwt.authToken({
-//     administrator: "ADMINISTRATOR",
-//     marketingbumn: "MARKETING BUMN",
-//     marketingswasta: "MARKETING SWASTA",
-//     HRandGA: "HR & GA",
-//     finance: "FINANCE & ACC",
-//     QAandEng: "QA & ENG",
-//     purchasing: "PURCHASING",
-//     drafter: "DRAFTER",
-//     ppic: "Ppic",
-//     utility: "Utility/ty",
-//   }),
-//   typeMr.createMaster
-// );
+router.get(
+  "/materialMaster",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  masterMaterial.getMaterialMaster
+);
+router.post(
+  "/materialMaster",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  masterMaterial.createMaterialMaster
+);
 router.get(
   "/masterMaterial",
   jwt.authToken({
