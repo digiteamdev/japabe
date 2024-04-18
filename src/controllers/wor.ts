@@ -610,7 +610,11 @@ const updateWorStatus = async (request: Request, response: Response) => {
         id: id,
       },
     });
-    if (lastResCount.status === "" || lastResCount.status === null) {
+    if (
+      lastResCount.status === "" ||
+      lastResCount.status === null ||
+      lastResCount.status === "unvalid"
+    ) {
       // const statusPenc = await prisma.wor.findMany({
       //   where: {
       //     NOT: {

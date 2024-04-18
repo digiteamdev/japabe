@@ -57,6 +57,7 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
           detailMr: {
             include: {
               supplier: true,
+              Material_Master: true,
               mr: {
                 include: {
                   wor: true,
@@ -64,12 +65,7 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
                     include: {
                       bom_detail: {
                         include: {
-                          Material_master: {
-                            include: {
-                              Material_Stock: true,
-                              grup_material: true,
-                            },
-                          },
+                          Material_Master: true,
                         },
                       },
                       srimg: {
@@ -106,21 +102,11 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
                   },
                 },
               },
-              Material_Stock: {
-                include: {
-                  Material_master: {
-                    include: {
-                      grup_material: true,
-                    },
-                  },
-                },
-              },
             },
           },
           SrDetail: {
             include: {
               supplier: true,
-              workCenter: true,
               sr: {
                 include: {
                   user: {
@@ -213,6 +199,7 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
           detailMr: {
             include: {
               supplier: true,
+              Material_Master: true,
               mr: {
                 include: {
                   wor: true,
@@ -220,12 +207,7 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
                     include: {
                       bom_detail: {
                         include: {
-                          Material_master: {
-                            include: {
-                              Material_Stock: true,
-                              grup_material: true,
-                            },
-                          },
+                          Material_Master: true,
                         },
                       },
                       srimg: {
@@ -262,21 +244,11 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
                   },
                 },
               },
-              Material_Stock: {
-                include: {
-                  Material_master: {
-                    include: {
-                      grup_material: true,
-                    },
-                  },
-                },
-              },
             },
           },
           SrDetail: {
             include: {
               supplier: true,
-              workCenter: true,
               sr: {
                 include: {
                   user: {
@@ -384,6 +356,7 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
         },
         detailMr: {
           include: {
+            Material_Master: true,
             supplier: {
               include: {
                 SupplierContact: true,
@@ -406,12 +379,7 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
                   include: {
                     bom_detail: {
                       include: {
-                        Material_master: {
-                          include: {
-                            Material_Stock: true,
-                            grup_material: true,
-                          },
-                        },
+                        Material_Master: true,
                       },
                     },
                     srimg: {
@@ -444,15 +412,6 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
                         },
                       },
                     },
-                  },
-                },
-              },
-            },
-            Material_Stock: {
-              include: {
-                Material_master: {
-                  include: {
-                    grup_material: true,
                   },
                 },
               },

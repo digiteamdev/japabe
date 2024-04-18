@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import prisma from "../middleware/customer";
 import pagging from "../utils/paggination";
 import url from "url";
+import { Parser } from "@json2csv/plainjs";
 
 const getCustomer = async (request: Request, response: Response) => {
   try {
@@ -316,7 +317,47 @@ const deleteCustomer = async (request: Request, response: Response) => {
   }
 };
 
+const getAllCustomercsv = async (request: Request, response: Response) => {
+  try {
+    const results = await prisma.customer.findMany({
+      where: {
+        deleted: null,
+        job_operational: "B",
+      },
+      include: {
+        contact: true,
+        address: true,
+      },
+    });
+    let arrParse: any = [];
+    results.map((e) => {
+      let obj: any = {};
+      e.address.map((address) => {
+        Object.assign(obj, address);
+      });
+      const csvCus = {
+        name: e.name,
+        email: e.email,
+        phone: e.phone,
+        alamat: obj.address_workshop,
+      };
+      arrParse.push(csvCus);
+    });
+    const parser = new Parser();
+    const csv = parser.parse(arrParse);
+    response.setHeader("Content-Type", "text/csv");
+    response.setHeader(
+      "Content-Disposition",
+      "attachment; filename=customer.csv"
+    );
+    response.status(200).end(csv);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export default {
+  getAllCustomercsv,
   getCustomer,
   createCustomer,
   createCsvNxlsx,

@@ -7,6 +7,8 @@ import { Prisma } from "@prisma/client";
 const getSr = async (request: any, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
+    const filter: any = request.query.filter || "desc";
+    const field: any = request.query.field || "id";
     const status: any = request.query.status || undefined;
     const hostname: any = request.headers.host;
     const pathname = url.parse(request.url).pathname;
@@ -89,15 +91,20 @@ const getSr = async (request: any, response: Response) => {
                 },
               },
             },
-            SrDetail: {
-              include: {
-                workCenter: true,
+            SrDetail: true,
+          },
+          orderBy: [
+            {
+              _relevance: {
+                fields: [field],
+                search: "",
+                sort: filter,
               },
             },
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
+            {
+              createdAt: "desc",
+            },
+          ],
           take: parseInt(pagination.perPage),
           skip: parseInt(pagination.page) * parseInt(pagination.perPage),
         });
@@ -151,11 +158,7 @@ const getSr = async (request: any, response: Response) => {
                 },
               },
             },
-            SrDetail: {
-              include: {
-                workCenter: true,
-              },
-            },
+            SrDetail: true,
           },
           orderBy: {
             createdAt: "desc",
@@ -192,30 +195,33 @@ const getSr = async (request: any, response: Response) => {
 
 const createSr = async (request: Request, response: Response) => {
   try {
+    const d = new Date();
+    let month = d.getMonth() + 1;
+    let year = d.getFullYear();
     const noSr = await prisma.sr.findMany({
       take: 1,
       orderBy: [{ createdAt: "desc" }],
     });
-    const noMrLast: any = noSr[0].no_sr?.split("/");
-    const d = new Date();
-    let month = d.getMonth() + 1;
-    let year = d.getFullYear();
-    let numor = 101;
-    if (month.toString() === noMrLast[1]) {
-      numor = parseInt(noMrLast[0]) + 1;
+    let genarate;
+    if (noSr.length === 0) {
+      genarate = 101 + "/" + month.toString() + "/" + year.toString();
+    } else {
+      const noMrLast: any = noSr[0].no_sr?.split("/");
+      let numor = 101;
+      if (month.toString() === noMrLast[1]) {
+        numor = parseInt(noMrLast[0]) + 1;
+      }
+      genarate = numor + "/" + month.toString() + "/" + year.toString();
     }
-    const genarate = numor + "/" + month.toString() + "/" + year.toString();
     const dispatchNull = request.body.dispacthIDS;
     const worNull = request.body.worId;
     const dispatchNullId = request.body.dispacthdetailId;
-    const descripnull = request.body.description;
     const newArr = [];
     if (request.body.SrDetail) {
       const arr = request.body.SrDetail;
       for (let i = 0; i < arr.length; i++) {
         newArr.push({
-          description: arr[i].description,
-          part: arr[i].part,
+          desc: arr[i].desc,
           qty: arr[i].qty,
           srId: arr[i].srId,
           note: arr[i].note,
@@ -244,7 +250,6 @@ const createSr = async (request: Request, response: Response) => {
         data: {
           no_sr: genarate,
           user: { connect: { id: request.body.userId } },
-          dispacth: { connect: { id: request.body.dispacthIDS } },
           wor: { connect: { id: request.body.worId } },
           date_sr: new Date(request.body.date_sr),
           job_no: request.body.job_no,
@@ -428,21 +433,19 @@ const upsertSr = async (request: Request, response: Response) => {
     const updateVerify = request.body.map(
       (updateByveri: {
         srId: any;
+        desc: any;
         dispacthdetailId: any;
-        part: any;
         qty: any;
         unit: any;
-        description: any;
         note: any;
         id: any;
       }) => {
         return {
           srId: updateByveri.srId,
           dispacthdetailId: updateByveri.dispacthdetailId,
-          part: updateByveri.part,
+          desc: updateByveri.desc,
           qty: updateByveri.qty,
           unit: updateByveri.unit,
-          description: updateByveri.description,
           note: updateByveri.note,
           id: updateByveri.id,
         };
@@ -458,18 +461,16 @@ const upsertSr = async (request: Request, response: Response) => {
           },
           create: {
             sr: { connect: { id: updateVerify[i].srId } },
-            part: updateVerify[i].part,
+            desc: updateVerify[i].desc,
             qty: updateVerify[i].qty,
             unit: updateVerify[i].unit,
-            workCenter: { connect: { id: updateVerify[i].description } },
             note: updateVerify[i].note,
           },
           update: {
             sr: { connect: { id: updateVerify[i].srId } },
-            part: updateVerify[i].part,
+            desc: updateVerify[i].desc,
             qty: updateVerify[i].qty,
             unit: updateVerify[i].unit,
-            workCenter: { connect: { id: updateVerify[i].description } },
             note: updateVerify[i].note,
           },
         });
@@ -483,10 +484,9 @@ const upsertSr = async (request: Request, response: Response) => {
             dispatchDetail: {
               connect: { id: updateVerify[i].dispacthdetailId },
             },
-            part: updateVerify[i].part,
+            desc: updateVerify[i].desc,
             qty: updateVerify[i].qty,
             unit: updateVerify[i].unit,
-            workCenter: { connect: { id: updateVerify[i].description } },
             note: updateVerify[i].note,
           },
           update: {
@@ -494,10 +494,9 @@ const upsertSr = async (request: Request, response: Response) => {
             dispatchDetail: {
               connect: { id: updateVerify[i].dispacthdetailId },
             },
-            part: updateVerify[i].part,
+            desc: updateVerify[i].desc,
             qty: updateVerify[i].qty,
             unit: updateVerify[i].unit,
-            workCenter: { connect: { id: updateVerify[i].description } },
             note: updateVerify[i].note,
           },
         });
@@ -682,6 +681,10 @@ const getdetailSr = async (request: Request, response: Response) => {
       results = await prisma.srDetail.findMany({
         where: {
           approvedRequestId: null,
+          sr: {
+            status_manager: "valid",
+            status_spv: "valid",
+          },
         },
         include: {
           sr: {
@@ -714,7 +717,6 @@ const getdetailSr = async (request: Request, response: Response) => {
               },
             },
           },
-          workCenter: true,
         },
         orderBy: {
           createdAt: "desc",
@@ -865,7 +867,6 @@ const getPsR = async (request: Request, response: Response) => {
           },
         },
         include: {
-          workCenter: true,
           supplier: true,
           sr: {
             include: {
@@ -921,7 +922,6 @@ const getPsR = async (request: Request, response: Response) => {
           SrDetail: {
             include: {
               supplier: true,
-              workCenter: true,
               sr: {
                 include: {
                   wor: true,

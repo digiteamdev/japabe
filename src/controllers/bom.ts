@@ -30,8 +30,7 @@ const getBom = async (request: Request, response: Response) => {
         include: {
           bom_detail: {
             include: {
-              eq_part: true,
-              Material_master: true,
+              Material_Master: true,
             },
           },
           srimg: {
@@ -102,8 +101,7 @@ const getBom = async (request: Request, response: Response) => {
         include: {
           bom_detail: {
             include: {
-              eq_part: true,
-              Material_master: true,
+              Material_Master: true,
             },
           },
           srimg: {
@@ -189,7 +187,7 @@ const getSumaryBom = async (request: Request, response: Response) => {
       include: {
         bom_detail: {
           include: {
-            Material_master: true,
+            Material_Master: true,
           },
         },
         srimg: {
@@ -267,12 +265,7 @@ const getBomMr = async (request: Request, response: Response) => {
                 mr: true,
               },
             },
-            Material_master: {
-              include: {
-                Material_Stock: true,
-                grup_material: true,
-              },
-            },
+            Material_Master: true,
           },
         },
         srimg: {
@@ -556,14 +549,12 @@ const updateBom = async (request: Request, response: Response) => {
     const updateVerify = request.body.map(
       (updateByveri: {
         bomId: any;
-        partId: any;
         materialId: any;
         dimensi: any;
         id: any;
       }) => {
         return {
           bomId: updateByveri.bomId,
-          partId: updateByveri.partId,
           materialId: updateByveri.materialId,
           dimensi: updateByveri.dimensi,
           id: updateByveri.id,
@@ -578,14 +569,12 @@ const updateBom = async (request: Request, response: Response) => {
         },
         create: {
           bom: { connect: { id: updateVerify[i].bomId } },
-          eq_part: { connect: { id: updateVerify[i].partId } },
-          Material_master: { connect: { id: updateVerify[i].materialId } },
+          Material_Master: { connect: { id: updateVerify[i].materialId } },
           dimensi: updateVerify[i].dimensi,
         },
         update: {
           bom: { connect: { id: updateVerify[i].bomId } },
-          eq_part: { connect: { id: updateVerify[i].partId } },
-          Material_master: { connect: { id: updateVerify[i].materialId } },
+          Material_Master: { connect: { id: updateVerify[i].materialId } },
           dimensi: updateVerify[i].dimensi,
         },
       });

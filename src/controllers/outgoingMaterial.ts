@@ -41,6 +41,7 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
                 },
                 detailMr: {
                   include: {
+                    Material_Master: true,
                     supplier: {
                       include: {
                         SupplierContact: true,
@@ -63,12 +64,7 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
                           include: {
                             bom_detail: {
                               include: {
-                                Material_master: {
-                                  include: {
-                                    Material_Stock: true,
-                                    grup_material: true,
-                                  },
-                                },
+                                Material_Master: true,
                               },
                             },
                             srimg: {
@@ -101,15 +97,6 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
                                 },
                               },
                             },
-                          },
-                        },
-                      },
-                    },
-                    Material_Stock: {
-                      include: {
-                        Material_master: {
-                          include: {
-                            grup_material: true,
                           },
                         },
                       },
@@ -167,35 +154,28 @@ const createOutgoingMaterial = async (request: Request, response: Response) => {
               include: {
                 detailMr: {
                   include: {
-                    Material_Stock: {
-                      include: {
-                        Material_master: {
-                          include: {
-                            grup_material: true,
-                          },
-                        },
-                      },
-                    },
+                    Material_Master: true,
                   },
                 },
               },
             });
+
             for (let index = 0; index < getStok.detailMr.length; index++) {
               if (
-                getStok.detailMr[index].Material_Stock.jumlah_Stock <= 0 ||
+                getStok.detailMr[index].Material_Master.jumlah_Stock <= 0 ||
                 arra[i].qty_out >
-                  getStok.detailMr[index].Material_Stock.jumlah_Stock
+                  getStok.detailMr[index].Material_Master.jumlah_Stock
               )
                 return response.status(400).json({
                   msg: "stok abis",
                 });
-              await prisma.material_Stock.update({
+              await prisma.material_Master.update({
                 where: {
-                  id: getStok.detailMr[index].Material_Stock.id,
+                  id: getStok.detailMr[index].Material_Master.id,
                 },
                 data: {
                   jumlah_Stock:
-                    getStok.detailMr[index].Material_Stock.jumlah_Stock -
+                    getStok.detailMr[index].Material_Master.jumlah_Stock -
                     arra[i].qty_out,
                 },
               });
@@ -204,9 +184,9 @@ const createOutgoingMaterial = async (request: Request, response: Response) => {
         } else {
           const pbb: any = request.body.pb;
           for (let a = 0; a < pbb.length; a++) {
-            const getStok: any = await prisma.material_Stock.findFirst({
+            const getStok: any = await prisma.material_Master.findFirst({
               where: {
-                id: request.body.pb[a].materialStockId,
+                id: request.body.pb[a].id,
               },
             });
             if (
@@ -216,7 +196,7 @@ const createOutgoingMaterial = async (request: Request, response: Response) => {
               return response.status(400).json({
                 msg: "stok abis",
               });
-            await prisma.material_Stock.update({
+            await prisma.material_Master.update({
               where: {
                 id: getStok.id,
               },

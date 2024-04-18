@@ -148,6 +148,7 @@ const getPo = async (request: Request, response: Response) => {
       include: {
         detailMr: {
           include: {
+            Material_Master: true,
             supplier: {
               include: {
                 SupplierContact: true,
@@ -174,12 +175,7 @@ const getPo = async (request: Request, response: Response) => {
                   include: {
                     bom_detail: {
                       include: {
-                        Material_master: {
-                          include: {
-                            Material_Stock: true,
-                            grup_material: true,
-                          },
-                        },
+                        Material_Master: true,
                       },
                     },
                     srimg: {
@@ -216,20 +212,10 @@ const getPo = async (request: Request, response: Response) => {
                 },
               },
             },
-            Material_Stock: {
-              include: {
-                Material_master: {
-                  include: {
-                    grup_material: true,
-                  },
-                },
-              },
-            },
           },
         },
         SrDetail: {
           include: {
-            workCenter: true,
             supplier: {
               include: {
                 SupplierContact: true,
@@ -319,6 +305,9 @@ const createPo = async (request: Request, response: Response) => {
         DP: request.body.DP,
         taxPsrDmr: request.body.taxPsrDmr,
         currency: request.body.currency,
+        delivery_time: request.body.delivery_time,
+        franco: request.body.franco,
+        payment_method: request.body.payment_method,
         term_of_pay_po_so: {
           create: request.body.term_of_pay_po_so,
         },
@@ -505,6 +494,7 @@ const getPoandSo = async (request: Request, response: Response) => {
           },
           detailMr: {
             include: {
+              Material_Master: true,
               supplier: {
                 include: {
                   SupplierContact: true,
@@ -527,12 +517,7 @@ const getPoandSo = async (request: Request, response: Response) => {
                     include: {
                       bom_detail: {
                         include: {
-                          Material_master: {
-                            include: {
-                              Material_Stock: true,
-                              grup_material: true,
-                            },
-                          },
+                          Material_Master: true,
                         },
                       },
                       srimg: {
@@ -569,20 +554,10 @@ const getPoandSo = async (request: Request, response: Response) => {
                   },
                 },
               },
-              Material_Stock: {
-                include: {
-                  Material_master: {
-                    include: {
-                      grup_material: true,
-                    },
-                  },
-                },
-              },
             },
           },
           SrDetail: {
             include: {
-              workCenter: true,
               supplier: {
                 include: {
                   SupplierContact: true,
@@ -660,6 +635,7 @@ const getPoandSo = async (request: Request, response: Response) => {
           },
           detailMr: {
             include: {
+              Material_Master: true,
               supplier: {
                 include: {
                   SupplierContact: true,
@@ -682,12 +658,7 @@ const getPoandSo = async (request: Request, response: Response) => {
                     include: {
                       bom_detail: {
                         include: {
-                          Material_master: {
-                            include: {
-                              Material_Stock: true,
-                              grup_material: true,
-                            },
-                          },
+                          Material_Master: true,
                         },
                       },
                       srimg: {
@@ -724,20 +695,10 @@ const getPoandSo = async (request: Request, response: Response) => {
                   },
                 },
               },
-              Material_Stock: {
-                include: {
-                  Material_master: {
-                    include: {
-                      grup_material: true,
-                    },
-                  },
-                },
-              },
             },
           },
           SrDetail: {
             include: {
-              workCenter: true,
               supplier: {
                 include: {
                   SupplierContact: true,
@@ -883,6 +844,9 @@ const updatePoSoTerm = async (request: any, response: Response) => {
       data: {
         your_reff: request.body.your_reff,
         note: request.body.note,
+        delivery_time: request.body.delivery_time,
+        franco: request.body.franco,
+        payment_method: request.body.payment_method,
         DP: request.body.DP,
       },
     });
@@ -1007,6 +971,7 @@ const getAllReceive = async (request: Request, response: Response) => {
           },
           detailMr: {
             include: {
+              Material_Master: true,
               supplier: {
                 include: {
                   SupplierContact: true,
@@ -1029,12 +994,7 @@ const getAllReceive = async (request: Request, response: Response) => {
                     include: {
                       bom_detail: {
                         include: {
-                          Material_master: {
-                            include: {
-                              Material_Stock: true,
-                              grup_material: true,
-                            },
-                          },
+                          Material_Master: true,
                         },
                       },
                       srimg: {
@@ -1071,20 +1031,10 @@ const getAllReceive = async (request: Request, response: Response) => {
                   },
                 },
               },
-              Material_Stock: {
-                include: {
-                  Material_master: {
-                    include: {
-                      grup_material: true,
-                    },
-                  },
-                },
-              },
             },
           },
           SrDetail: {
             include: {
-              workCenter: true,
               supplier: {
                 include: {
                   SupplierContact: true,
@@ -1165,6 +1115,7 @@ const getAllReceive = async (request: Request, response: Response) => {
           detailMr: {
             include: {
               supplier: true,
+              Material_Master: true,
               mr: {
                 include: {
                   wor: true,
@@ -1172,12 +1123,7 @@ const getAllReceive = async (request: Request, response: Response) => {
                     include: {
                       bom_detail: {
                         include: {
-                          Material_master: {
-                            include: {
-                              Material_Stock: true,
-                              grup_material: true,
-                            },
-                          },
+                          Material_Master: true,
                         },
                       },
                       srimg: {
@@ -1214,21 +1160,11 @@ const getAllReceive = async (request: Request, response: Response) => {
                   },
                 },
               },
-              Material_Stock: {
-                include: {
-                  Material_master: {
-                    include: {
-                      grup_material: true,
-                    },
-                  },
-                },
-              },
             },
           },
           SrDetail: {
             include: {
               supplier: true,
-              workCenter: true,
               sr: {
                 include: {
                   wor: true,
@@ -1354,6 +1290,7 @@ const getAllReceive = async (request: Request, response: Response) => {
           },
           detailMr: {
             include: {
+              Material_Master: true,
               supplier: {
                 include: {
                   SupplierContact: true,
@@ -1361,7 +1298,6 @@ const getAllReceive = async (request: Request, response: Response) => {
                 },
               },
               approvedRequest: true,
-
               mr: {
                 include: {
                   wor: {
@@ -1377,12 +1313,7 @@ const getAllReceive = async (request: Request, response: Response) => {
                     include: {
                       bom_detail: {
                         include: {
-                          Material_master: {
-                            include: {
-                              Material_Stock: true,
-                              grup_material: true,
-                            },
-                          },
+                          Material_Master: true,
                         },
                       },
                       srimg: {
@@ -1419,20 +1350,10 @@ const getAllReceive = async (request: Request, response: Response) => {
                   },
                 },
               },
-              Material_Stock: {
-                include: {
-                  Material_master: {
-                    include: {
-                      grup_material: true,
-                    },
-                  },
-                },
-              },
             },
           },
           SrDetail: {
             include: {
-              workCenter: true,
               supplier: {
                 include: {
                   SupplierContact: true,
@@ -1726,6 +1647,9 @@ const updatePoandSo = async (request: Request, response: Response) => {
             date_receive: request.body.date_receive,
             currency: request.body.currency,
             taxPsrDmr: request.body.taxPsrDmr,
+            delivery_time: request.body.delivery_time,
+            franco: request.body.franco,
+            payment_method: request.body.payment_method,
           },
         });
         const statusReceive: any = await prisma.detailMr.findFirst({
@@ -1733,20 +1657,11 @@ const updatePoandSo = async (request: Request, response: Response) => {
             poandsoId: result.id,
           },
         });
-        const updateVerify = request.body.detailMr.map(
-          (updateByveri: { qty_receive: any; status_stock: any; id: any }) => {
+        const updateVerify: any = request.body.detailMr.map(
+          (updateByveri: { qty_receive: any; id: any }) => {
             return {
               qty_receive: updateByveri.qty_receive,
-              status_stock: updateByveri.status_stock,
               id: updateByveri.id,
-            };
-          }
-        );
-        const updateVerifySr = request.body.srDetail.map(
-          (updateVerifySr: { qty_receive: any; id: any }) => {
-            return {
-              qty_receive: updateVerifySr.qty_receive,
-              id: updateVerifySr.id,
             };
           }
         );
@@ -1759,7 +1674,6 @@ const updatePoandSo = async (request: Request, response: Response) => {
               },
               data: {
                 qty_receive: updateVerify[i].qty_receive,
-                status_stock: updateVerify[i].status_stock,
               },
             });
             if (
@@ -1791,6 +1705,21 @@ const updatePoandSo = async (request: Request, response: Response) => {
                   statusMr: "Receive",
                 },
               });
+              const getMaterialS = await prisma.material_Master.findFirst({
+                where: {
+                  id: statusMr.materialId,
+                },
+              });
+              await prisma.material_Master.update({
+                where: {
+                  id: statusMr.materialId,
+                },
+                data: {
+                  jumlah_Stock:
+                    getMaterialS?.jumlah_Stock + updateVerify[i].qty_receive,
+                  harga: statusMr.price,
+                },
+              });
             } else {
               result = await prisma.poandso.update({
                 where: {
@@ -1802,46 +1731,6 @@ const updatePoandSo = async (request: Request, response: Response) => {
               });
             }
           }
-          response.status(201).json({
-            success: true,
-            massage: "Success Update Data",
-            results: result,
-          });
-        } else if (result && updateVerifySr.length !== 0) {
-          for (let i = 0; i < updateVerify.length; i++) {
-            upsertDetailMr = await prisma.srDetail.update({
-              where: {
-                id: updateVerify[i].id,
-              },
-              data: {
-                qty_receive: updateVerify[i].qty_receive,
-              },
-            });
-          }
-          result = await prisma.poandso.update({
-            where: {
-              id: result.id,
-            },
-            data: {
-              status_receive: true,
-            },
-          });
-          const statusSR: any = await prisma.srDetail.findFirst({
-            where: {
-              poandsoId: result.id,
-            },
-            include: {
-              sr: true,
-            },
-          });
-          await prisma.sr.update({
-            where: {
-              id: statusSR.sr.id,
-            },
-            data: {
-              statusSr: "Receive",
-            },
-          });
           response.status(201).json({
             success: true,
             massage: "Success Update Data",

@@ -49,6 +49,20 @@ const getMr = async (request: any, response: Response) => {
               contains: pencarian,
               mode: "insensitive",
             },
+            job_no: {
+              contains: pencarian,
+              mode: "insensitive",
+            },
+            detailMr: {
+              some: {
+                Material_Master: {
+                  name: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
           },
           include: {
             wor: true,
@@ -56,12 +70,7 @@ const getMr = async (request: any, response: Response) => {
               include: {
                 bom_detail: {
                   include: {
-                    Material_master: {
-                      include: {
-                        Material_Stock: true,
-                        grup_material: true,
-                      },
-                    },
+                    Material_Master: true,
                   },
                 },
                 srimg: {
@@ -78,6 +87,7 @@ const getMr = async (request: any, response: Response) => {
             },
             detailMr: {
               include: {
+                Material_Master: true,
                 bom_detail: {
                   include: {
                     bom: {
@@ -92,15 +102,6 @@ const getMr = async (request: any, response: Response) => {
                             },
                           },
                         },
-                      },
-                    },
-                  },
-                },
-                Material_Stock: {
-                  include: {
-                    Material_master: {
-                      include: {
-                        grup_material: true,
                       },
                     },
                   },
@@ -156,12 +157,7 @@ const getMr = async (request: any, response: Response) => {
               include: {
                 bom_detail: {
                   include: {
-                    Material_master: {
-                      include: {
-                        Material_Stock: true,
-                        grup_material: true,
-                      },
-                    },
+                    Material_Master: true,
                   },
                 },
                 srimg: {
@@ -178,6 +174,7 @@ const getMr = async (request: any, response: Response) => {
             },
             detailMr: {
               include: {
+                Material_Master: true,
                 bom_detail: {
                   include: {
                     bom: {
@@ -192,15 +189,6 @@ const getMr = async (request: any, response: Response) => {
                             },
                           },
                         },
-                      },
-                    },
-                  },
-                },
-                Material_Stock: {
-                  include: {
-                    Material_master: {
-                      include: {
-                        grup_material: true,
                       },
                     },
                   },
@@ -268,19 +256,24 @@ const getMr = async (request: any, response: Response) => {
 
 const createMr = async (request: Request, response: Response) => {
   try {
+    const d = new Date();
+    let month = d.getMonth() + 1;
+    let year = d.getFullYear();
     const noMr = await prisma.mr.findMany({
       take: 1,
       orderBy: [{ createdAt: "desc" }],
     });
-    const noMrLast: any = noMr[0].no_mr?.split("/");
-    const d = new Date();
-    let month = d.getMonth() + 1;
-    let year = d.getFullYear();
-    let numor = 101;
-    if (month.toString() === noMrLast[1]) {
-      numor = parseInt(noMrLast[0]) + 1;
+    let genarate;
+    if (noMr.length === 0) {
+      genarate = 101 + "/" + month.toString() + "/" + year.toString();
+    } else {
+      const noMrLast: any = noMr[0].no_mr?.split("/");
+      let numor = 101;
+      if (month.toString() === noMrLast[1]) {
+        numor = parseInt(noMrLast[0]) + 1;
+      }
+      genarate = numor + "/" + month.toString() + "/" + year.toString();
     }
-    const genarate = numor + "/" + month.toString() + "/" + year.toString();
     const bomNull = request.body.bomIdU;
     const worNull = request.body.worId;
     let results;
@@ -375,7 +368,7 @@ const upsertMr = async (request: Request, response: Response) => {
         mrId: any;
         bomIdD: any;
         spesifikasi: any;
-        materialStockId: any;
+        materialId: any;
         note: any;
         qty: any;
         id: any;
@@ -384,7 +377,7 @@ const upsertMr = async (request: Request, response: Response) => {
           mrId: updateByveri.mrId,
           bomIdD: updateByveri.bomIdD,
           spesifikasi: updateByveri.spesifikasi,
-          materialStockId: updateByveri.materialStockId,
+          materialId: updateByveri.materialId,
           note: updateByveri.note,
           qty: updateByveri.qty,
           id: updateByveri.id,
@@ -402,8 +395,8 @@ const upsertMr = async (request: Request, response: Response) => {
           create: {
             mr: { connect: { id: updateVerify[i].mrId } },
             spesifikasi: updateVerify[i].spesifikasi,
-            Material_Stock: {
-              connect: { id: updateVerify[i].materialStockId },
+            Material_Master: {
+              connect: { id: updateVerify[i].materialId },
             },
             note: updateVerify[i].note,
             qty: updateVerify[i].qty,
@@ -411,8 +404,8 @@ const upsertMr = async (request: Request, response: Response) => {
           update: {
             mr: { connect: { id: updateVerify[i].mrId } },
             spesifikasi: updateVerify[i].spesifikasi,
-            Material_Stock: {
-              connect: { id: updateVerify[i].materialStockId },
+            Material_Master: {
+              connect: { id: updateVerify[i].materialId },
             },
             note: updateVerify[i].note,
             qty: updateVerify[i].qty,
@@ -427,8 +420,8 @@ const upsertMr = async (request: Request, response: Response) => {
             mr: { connect: { id: updateVerify[i].mrId } },
             bom_detail: { connect: { id: updateVerify[i].bomIdD } },
             spesifikasi: updateVerify[i].spesifikasi,
-            Material_Stock: {
-              connect: { id: updateVerify[i].materialStockId },
+            Material_Master: {
+              connect: { id: updateVerify[i].materialId },
             },
             note: updateVerify[i].note,
             qty: updateVerify[i].qty,
@@ -437,8 +430,8 @@ const upsertMr = async (request: Request, response: Response) => {
             mr: { connect: { id: updateVerify[i].mrId } },
             bom_detail: { connect: { id: updateVerify[i].bomIdD } },
             spesifikasi: updateVerify[i].spesifikasi,
-            Material_Stock: {
-              connect: { id: updateVerify[i].materialStockId },
+            Material_Master: {
+              connect: { id: updateVerify[i].materialId },
             },
             note: updateVerify[i].note,
             qty: updateVerify[i].qty,
@@ -646,8 +639,13 @@ const getdetailMr = async (request: Request, response: Response) => {
       results = await prisma.detailMr.findMany({
         where: {
           approvedRequestId: null,
+          mr: {
+            status_manager: "valid",
+            status_spv: "valid",
+          },
         },
         include: {
+          Material_Master: true,
           mr: {
             include: {
               wor: true,
@@ -655,12 +653,7 @@ const getdetailMr = async (request: Request, response: Response) => {
                 include: {
                   bom_detail: {
                     include: {
-                      Material_master: {
-                        include: {
-                          Material_Stock: true,
-                          grup_material: true,
-                        },
-                      },
+                      Material_Master: true,
                     },
                   },
                   srimg: {
@@ -693,15 +686,6 @@ const getdetailMr = async (request: Request, response: Response) => {
                       },
                     },
                   },
-                },
-              },
-            },
-          },
-          Material_Stock: {
-            include: {
-              Material_master: {
-                include: {
-                  grup_material: true,
                 },
               },
             },
@@ -943,6 +927,7 @@ const getPrM = async (request: Request, response: Response) => {
         },
         include: {
           supplier: true,
+          Material_Master: true,
           mr: {
             include: {
               wor: true,
@@ -950,12 +935,7 @@ const getPrM = async (request: Request, response: Response) => {
                 include: {
                   bom_detail: {
                     include: {
-                      Material_master: {
-                        include: {
-                          Material_Stock: true,
-                          grup_material: true,
-                        },
-                      },
+                      Material_Master: true,
                     },
                   },
                   srimg: {
@@ -992,15 +972,6 @@ const getPrM = async (request: Request, response: Response) => {
               },
             },
           },
-          Material_Stock: {
-            include: {
-              Material_master: {
-                include: {
-                  grup_material: true,
-                },
-              },
-            },
-          },
         },
         orderBy: {
           createdAt: "desc",
@@ -1024,6 +995,7 @@ const getPrM = async (request: Request, response: Response) => {
         include: {
           detailMr: {
             include: {
+              Material_Master: true,
               supplier: true,
               mr: {
                 include: {
@@ -1032,12 +1004,7 @@ const getPrM = async (request: Request, response: Response) => {
                     include: {
                       bom_detail: {
                         include: {
-                          Material_master: {
-                            include: {
-                              Material_Stock: true,
-                              grup_material: true,
-                            },
-                          },
+                          Material_Master: true,
                         },
                       },
                       srimg: {
@@ -1070,15 +1037,6 @@ const getPrM = async (request: Request, response: Response) => {
                           },
                         },
                       },
-                    },
-                  },
-                },
-              },
-              Material_Stock: {
-                include: {
-                  Material_master: {
-                    include: {
-                      grup_material: true,
                     },
                   },
                 },

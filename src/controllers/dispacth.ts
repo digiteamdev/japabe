@@ -200,6 +200,13 @@ const getDispatch = async (request: Request, response: Response) => {
               },
             },
           ],
+          NOT: {
+            dispatchDetail: {
+              every: {
+                timeschId: null,
+              },
+            },
+          },
         },
         include: {
           dispatchDetail: {
@@ -290,6 +297,13 @@ const getSumaryDispacth = async (request: Request, response: Response) => {
             deleted: null,
           },
         ],
+        timeschedule: {
+          dispatchDetail: {
+            every: {
+              id: "",
+            },
+          },
+        },
       },
       orderBy: {
         id: "desc",
@@ -298,6 +312,7 @@ const getSumaryDispacth = async (request: Request, response: Response) => {
         srimgdetail: true,
         timeschedule: {
           include: {
+            dispatchDetail: true,
             wor: {
               include: {
                 customerPo: {
@@ -575,7 +590,7 @@ const updateStart = async (request: Request, response: Response) => {
           so: request.body.so,
         },
       });
-    }else{
+    } else {
       updateStart = await prisma.aktivitas.update({
         where: {
           id: id,

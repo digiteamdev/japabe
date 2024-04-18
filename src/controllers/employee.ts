@@ -14,6 +14,14 @@ const getEmployee = async (request: Request, response: Response) => {
     const employeeCount = await prisma.employee.count({
       where: {
         deleted: null,
+        NOT: [
+          {
+            employee_name: "digi",
+          },
+          {
+            employee_name: "dev",
+          },
+        ],
       },
     });
     let results;
@@ -32,6 +40,7 @@ const getEmployee = async (request: Request, response: Response) => {
       });
     } else {
       results = await prisma.employee.findMany({
+        distinct: ["id"],
         where: {
           OR: [
             {
@@ -59,6 +68,14 @@ const getEmployee = async (request: Request, response: Response) => {
                   mode: "insensitive",
                 },
               },
+            },
+          ],
+          NOT: [
+            {
+              employee_name: "digi",
+            },
+            {
+              employee_name: "dev",
             },
           ],
         },

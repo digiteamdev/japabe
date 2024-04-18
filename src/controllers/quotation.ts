@@ -54,6 +54,7 @@ const getQuotation = async (request: Request, response: Response) => {
       });
     } else {
       results = await prisma.quotations.findMany({
+        distinct: ["id"],
         where: {
           job_operational: divisi,
           OR: [
@@ -180,6 +181,7 @@ const createQuotation = async (request: any, response: Response) => {
               connect: { id: request.body.customercontactId },
             },
             subject: request.body.subject,
+            note: request.body.note,
             attention: request.body.attention,
             send_by: request.body.send_by,
             estimated_delivery: request.body.estimated_delivery,
@@ -270,6 +272,7 @@ const updateQuotation = async (request: any, response: Response) => {
         quo_num: request.body.quo_num,
         quo_auto: request.body.quo_auto,
         job_operational: request.body.job_operational,
+        note: request.body.note,
         revision: genarate,
         send_by: request.body.send_by,
         revision_desc: request.body.revision_desc,

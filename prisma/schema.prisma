@@ -89,6 +89,7 @@ model User {
   approvedRequest approvedRequest[]
   cash_advance    cash_advance[]
   wor             wor[]
+  time_sheet      time_sheet[]
 
   @@index([id, employeeId])
   @@map("user")
@@ -315,7 +316,6 @@ model eq_part {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   deleted         DateTime?
-  bom_detail      bom_detail[]
 
   @@index([id, nama_part])
 }
@@ -360,7 +360,6 @@ model Material_master {
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   deleted        DateTime?
-  bom_detail     bom_detail[]
   Material_Stock Material_Stock[]
 
   @@index([id, kd_group, material_name, kd_material])
@@ -376,25 +375,26 @@ model Material_Stock {
   createdAt               DateTime                  @default(now())
   updatedAt               DateTime                  @updatedAt
   deleted                 DateTime?
-  detailMr                detailMr[]
   stock_outgoing_material stock_outgoing_material[]
 
   @@index([id, materialId, spesifikasi])
 }
 
 model Material_Master {
-  id           String    @id @default(cuid())
-  name         String?   @db.VarChar(50)
-  spesifikasi  String?   @db.Text
-  satuan       String?   @db.VarChar(200)
-  jumlah_Stock Int       @default(0)
-  harga        Int       @default(0)
-  note         String?   @db.Text
+  id           String       @id @default(cuid())
+  name         String?      @db.VarChar(50)
+  spesifikasi  String?      @db.Text
+  satuan       String?      @db.VarChar(200)
+  jumlah_Stock Int          @default(0)
+  harga        Int          @default(0)
+  note         String?      @db.Text
   date_in      DateTime?
   date_out     DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
   deleted      DateTime?
+  bom_detail   bom_detail[]
+  detailMr     detailMr[]
 
   @@index([id, name, date_in, date_out, createdAt, updatedAt])
 }
@@ -459,6 +459,8 @@ model SupplierBank {
 enum type_sup {
   Material_Supplier @map("Material Supplier")
   Service_Vendor    @map("Service Vendor")
+  Toserba
+  Ecommerce
 }
 
 model Quotations {
@@ -482,6 +484,7 @@ model Quotations {
   updatedAt          DateTime          @updatedAt
   deleted            DateTime?
   Quotations_Detail  String            @db.Text
+  note               String?           @db.Text
   wor                wor[]
   CustomerPo         CustomerPo?
   Customer           Customer          @relation(fields: [customerId], references: [id])
@@ -694,12 +697,11 @@ model work_scope_item {
 }
 
 model workCenter {
-  id        String     @id @default(cuid())
-  name      String?    @db.VarChar(20)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id        String    @id @default(cuid())
+  name      String?   @db.VarChar(20)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   deleted   DateTime?
-  SrDetail  SrDetail[]
 
   @@index([id, name])
 }
@@ -837,7 +839,6 @@ model dispacth {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   deleted        DateTime?
-  Sr             Sr?
 
   @@index([id, id_dispatch])
 }
@@ -921,18 +922,16 @@ model bom_detail {
   id              String          @id @default(cuid())
   bom             bom             @relation(fields: [bomId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   bomId           String
-  eq_part         eq_part         @relation(fields: [partId], references: [id])
-  partId          String
-  Material_master Material_master @relation(fields: [materialId], references: [id])
+  Material_Master Material_Master @relation(fields: [materialId], references: [id])
   materialId      String
-  dimensi         String          @db.VarChar(200)
+  dimensi         String?         @db.VarChar(200)
   qty             Int             @default(0)
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   deleted         DateTime?
   detailMr        detailMr[]
 
-  @@index([id, bomId, partId, materialId])
+  @@index([id, bomId, materialId])
 }
 
 enum MrAppr {
@@ -1030,8 +1029,8 @@ model detailMr {
   bom_detail        bom_detail?      @relation(fields: [bomIdD], references: [id])
   bomIdD            String?
   spesifikasi       String?          @db.Text
-  Material_Stock    Material_Stock?  @relation(fields: [materialStockId], references: [id])
-  materialStockId   String?
+  Material_Master   Material_Master? @relation(fields: [materialId], references: [id])
+  materialId        String?
   note              String?          @db.Text
   qty               Int              @default(0)
   mrappr            MrAppr?
@@ -1042,7 +1041,6 @@ model detailMr {
   price             Int              @default(0)
   total             Int              @default(0)
   qty_receive       Int?             @default(0)
-  status_stock      status_stock?
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
   deleted           DateTime?
@@ -1114,8 +1112,6 @@ model Sr {
   no_sr          String?    @db.VarChar(50)
   job_no         String?    @db.VarChar(200)
   date_sr        DateTime
-  dispacth       dispacth?  @relation(fields: [dispacthIDS], references: [id])
-  dispacthIDS    String?    @unique
   status_spv     String?    @db.VarChar(20)
   status_manager String?    @db.VarChar(20)
   idSrAppr       String?    @db.VarChar(20)
@@ -1127,7 +1123,7 @@ model Sr {
   user           User?      @relation(fields: [userId], references: [id])
   userId         String?
 
-  @@index([id, no_sr, dispacthIDS, idSrAppr])
+  @@index([id, no_sr, idSrAppr])
 }
 
 model SrDetail {
@@ -1136,11 +1132,9 @@ model SrDetail {
   srId              String
   dispatchDetail    dispatchDetail?  @relation(fields: [dispacthdetailId], references: [id])
   dispacthdetailId  String?
-  part              String?          @db.VarChar(200)
+  desc              String?          @db.Text
   qty               Int              @default(0)
   unit              String?          @db.VarChar(20)
-  workCenter        workCenter?      @relation(fields: [description], references: [id])
-  description       String?
   note              String?          @db.Text
   srappr            SrAppr?
   supplier          Supplier?        @relation(fields: [supId], references: [id])
@@ -1164,11 +1158,6 @@ model SrDetail {
   @@index([id, srId, dispacthdetailId, idPurchaseR])
 }
 
-enum status_stock {
-  non
-  stock
-}
-
 model poandso {
   id                      String                    @id @default(cuid())
   id_so                   String?                   @db.VarChar(20)
@@ -1185,6 +1174,9 @@ model poandso {
   status_manager_director status_manager_director?
   status_receive          Boolean?                  @default(false)
   DP                      Int                       @default(0)
+  payment_method          String?                   @db.Text
+  delivery_time           String?                   @db.Text
+  franco                  String?                   @db.Text
   createdAt               DateTime                  @default(now())
   updatedAt               DateTime                  @updatedAt
   deleted                 DateTime?
@@ -1380,4 +1372,19 @@ model stock_outgoing_material {
   deleted           DateTime?
 
   @@index([id, materialStockId, employeeId, outgoingId])
+}
+
+model time_sheet {
+  id              String    @id @default(cuid())
+  date            DateTime
+  job             String    @db.Text
+  job_description String    @db.Text
+  user            User?     @relation(fields: [userId], references: [id])
+  userId          String
+  actual_start    DateTime?
+  actual_finish   DateTime?
+  total_hours     String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deleted         DateTime?
 }

@@ -36,6 +36,7 @@ import kontraBon from "../controllers/kontraBon";
 import cashier from "../controllers/cashier";
 import cashAdv from "../controllers/cashAdvance";
 import outgoing from "../controllers/outgoingMaterial";
+import timeSheet from "../controllers/timeSheet";
 
 /***************************AUTH********************************* */
 
@@ -321,6 +322,24 @@ router.get(
   }),
   customer.getCustomer
 );
+
+router.get(
+  "/customercsv",
+  // jwt.authToken({
+  //   administrator: "ADMINISTRATOR",
+  //   marketingbumn: "MARKETING BUMN",
+  //   marketingswasta: "MARKETING SWASTA",
+  //   HRandGA: "HR & GA",
+  //   finance: "FINANCE & ACC",
+  //   QAandEng: "QA & ENG",
+  //   purchasing: "PURCHASING",
+  //   drafter: "DRAFTER",
+  //   ppic: "Ppic",
+  //   utility: "Utility/ty",
+  // }),
+  customer.getAllCustomercsv
+);
+
 router.post(
   "/customer",
   jwt.authToken({
@@ -602,13 +621,21 @@ router.put(
 // );
 router.put(
   "/quotationEqPart",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   quotation.updateQuotationEqPart
 );
 
 router.delete(
   "/quotation/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", marketing: "MARKETING" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+  }),
   quotation.deleteQuotation
 );
 // router.delete(
@@ -2734,5 +2761,77 @@ router.post(
 );
 
 /***************************Outgoing Material**************************************** */
+
+/***************************Time Sheet**************************************** */
+
+router.get(
+  "/timesheet",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  timeSheet.getTimeSheet
+);
+
+router.post(
+  "/timesheet",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  timeSheet.createTimeSheet
+);
+
+router.put(
+  "/timesheet/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  timeSheet.updateTimeSheet
+);
+
+router.delete(
+  "/timesheet/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  timeSheet.deletetime_sheet
+);
+
+/***************************Time Sheet**************************************** */
 
 export default router;

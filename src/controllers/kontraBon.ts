@@ -68,6 +68,7 @@ const getKontraBon = async (request: Request, response: Response) => {
             },
             detailMr: {
               include: {
+                Material_Master: true,
                 supplier: {
                   include: {
                     SupplierContact: true,
@@ -90,12 +91,7 @@ const getKontraBon = async (request: Request, response: Response) => {
                       include: {
                         bom_detail: {
                           include: {
-                            Material_master: {
-                              include: {
-                                Material_Stock: true,
-                                grup_material: true,
-                              },
-                            },
+                            Material_Master: true,
                           },
                         },
                         srimg: {
@@ -132,20 +128,10 @@ const getKontraBon = async (request: Request, response: Response) => {
                     },
                   },
                 },
-                Material_Stock: {
-                  include: {
-                    Material_master: {
-                      include: {
-                        grup_material: true,
-                      },
-                    },
-                  },
-                },
               },
             },
             SrDetail: {
               include: {
-                workCenter: true,
                 supplier: {
                   include: {
                     SupplierContact: true,
@@ -208,6 +194,7 @@ const getKontraBon = async (request: Request, response: Response) => {
                 },
                 detailMr: {
                   include: {
+                    Material_Master: true,
                     supplier: {
                       include: {
                         SupplierContact: true,
@@ -230,12 +217,7 @@ const getKontraBon = async (request: Request, response: Response) => {
                           include: {
                             bom_detail: {
                               include: {
-                                Material_master: {
-                                  include: {
-                                    Material_Stock: true,
-                                    grup_material: true,
-                                  },
-                                },
+                                Material_Master: true,
                               },
                             },
                             srimg: {
@@ -272,20 +254,10 @@ const getKontraBon = async (request: Request, response: Response) => {
                         },
                       },
                     },
-                    Material_Stock: {
-                      include: {
-                        Material_master: {
-                          include: {
-                            grup_material: true,
-                          },
-                        },
-                      },
-                    },
                   },
                 },
                 SrDetail: {
                   include: {
-                    workCenter: true,
                     supplier: {
                       include: {
                         SupplierContact: true,

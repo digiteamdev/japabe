@@ -60,6 +60,7 @@ const getCashier = async (request: Request, response: Response) => {
               },
               detailMr: {
                 include: {
+                  Material_Master: true,
                   supplier: {
                     include: {
                       SupplierContact: true,
@@ -82,12 +83,7 @@ const getCashier = async (request: Request, response: Response) => {
                         include: {
                           bom_detail: {
                             include: {
-                              Material_master: {
-                                include: {
-                                  Material_Stock: true,
-                                  grup_material: true,
-                                },
-                              },
+                              Material_Master: true,
                             },
                           },
                           srimg: {
@@ -124,20 +120,10 @@ const getCashier = async (request: Request, response: Response) => {
                       },
                     },
                   },
-                  Material_Stock: {
-                    include: {
-                      Material_master: {
-                        include: {
-                          grup_material: true,
-                        },
-                      },
-                    },
-                  },
                 },
               },
               SrDetail: {
                 include: {
-                  workCenter: true,
                   supplier: {
                     include: {
                       SupplierContact: true,
@@ -205,6 +191,7 @@ const getCashier = async (request: Request, response: Response) => {
                   },
                   detailMr: {
                     include: {
+                      Material_Master: true,
                       supplier: {
                         include: {
                           SupplierContact: true,
@@ -228,12 +215,7 @@ const getCashier = async (request: Request, response: Response) => {
                             include: {
                               bom_detail: {
                                 include: {
-                                  Material_master: {
-                                    include: {
-                                      Material_Stock: true,
-                                      grup_material: true,
-                                    },
-                                  },
+                                  Material_Master: true,
                                 },
                               },
                               srimg: {
@@ -270,20 +252,10 @@ const getCashier = async (request: Request, response: Response) => {
                           },
                         },
                       },
-                      Material_Stock: {
-                        include: {
-                          Material_master: {
-                            include: {
-                              grup_material: true,
-                            },
-                          },
-                        },
-                      },
                     },
                   },
                   SrDetail: {
                     include: {
-                      workCenter: true,
                       supplier: {
                         include: {
                           SupplierContact: true,
@@ -407,6 +379,7 @@ const getCashier = async (request: Request, response: Response) => {
                   },
                   detailMr: {
                     include: {
+                      Material_Master: true,
                       supplier: {
                         include: {
                           SupplierContact: true,
@@ -430,12 +403,7 @@ const getCashier = async (request: Request, response: Response) => {
                             include: {
                               bom_detail: {
                                 include: {
-                                  Material_master: {
-                                    include: {
-                                      Material_Stock: true,
-                                      grup_material: true,
-                                    },
-                                  },
+                                  Material_Master: true,
                                 },
                               },
                               srimg: {
@@ -472,20 +440,10 @@ const getCashier = async (request: Request, response: Response) => {
                           },
                         },
                       },
-                      Material_Stock: {
-                        include: {
-                          Material_master: {
-                            include: {
-                              grup_material: true,
-                            },
-                          },
-                        },
-                      },
                     },
                   },
                   SrDetail: {
                     include: {
-                      workCenter: true,
                       supplier: {
                         include: {
                           SupplierContact: true,
@@ -549,6 +507,7 @@ const getCashier = async (request: Request, response: Response) => {
                       },
                       detailMr: {
                         include: {
+                          Material_Master: true,
                           supplier: {
                             include: {
                               SupplierContact: true,
@@ -572,12 +531,7 @@ const getCashier = async (request: Request, response: Response) => {
                                 include: {
                                   bom_detail: {
                                     include: {
-                                      Material_master: {
-                                        include: {
-                                          Material_Stock: true,
-                                          grup_material: true,
-                                        },
-                                      },
+                                      Material_Master: true,
                                     },
                                   },
                                   srimg: {
@@ -614,20 +568,10 @@ const getCashier = async (request: Request, response: Response) => {
                               },
                             },
                           },
-                          Material_Stock: {
-                            include: {
-                              Material_master: {
-                                include: {
-                                  grup_material: true,
-                                },
-                              },
-                            },
-                          },
                         },
                       },
                       SrDetail: {
                         include: {
-                          workCenter: true,
                           supplier: {
                             include: {
                               SupplierContact: true,
@@ -828,6 +772,7 @@ const getDueDate = async (request: Request, response: Response) => {
               },
               detailMr: {
                 include: {
+                  Material_Master: true,
                   supplier: {
                     include: {
                       SupplierContact: true,
@@ -835,7 +780,6 @@ const getDueDate = async (request: Request, response: Response) => {
                     },
                   },
                   approvedRequest: true,
-
                   mr: {
                     include: {
                       wor: {
@@ -851,12 +795,7 @@ const getDueDate = async (request: Request, response: Response) => {
                         include: {
                           bom_detail: {
                             include: {
-                              Material_master: {
-                                include: {
-                                  Material_Stock: true,
-                                  grup_material: true,
-                                },
-                              },
+                              Material_Master: true,
                             },
                           },
                           srimg: {
@@ -893,20 +832,10 @@ const getDueDate = async (request: Request, response: Response) => {
                       },
                     },
                   },
-                  Material_Stock: {
-                    include: {
-                      Material_master: {
-                        include: {
-                          grup_material: true,
-                        },
-                      },
-                    },
-                  },
                 },
               },
               SrDetail: {
                 include: {
-                  workCenter: true,
                   supplier: {
                     include: {
                       SupplierContact: true,
@@ -969,6 +898,7 @@ const getDueDate = async (request: Request, response: Response) => {
                   },
                   detailMr: {
                     include: {
+                      Material_Master: true,
                       supplier: {
                         include: {
                           SupplierContact: true,
@@ -976,7 +906,6 @@ const getDueDate = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-
                       mr: {
                         include: {
                           wor: {
@@ -992,12 +921,7 @@ const getDueDate = async (request: Request, response: Response) => {
                             include: {
                               bom_detail: {
                                 include: {
-                                  Material_master: {
-                                    include: {
-                                      Material_Stock: true,
-                                      grup_material: true,
-                                    },
-                                  },
+                                  Material_Master: true,
                                 },
                               },
                               srimg: {
@@ -1034,20 +958,10 @@ const getDueDate = async (request: Request, response: Response) => {
                           },
                         },
                       },
-                      Material_Stock: {
-                        include: {
-                          Material_master: {
-                            include: {
-                              grup_material: true,
-                            },
-                          },
-                        },
-                      },
                     },
                   },
                   SrDetail: {
                     include: {
-                      workCenter: true,
                       supplier: {
                         include: {
                           SupplierContact: true,
@@ -1173,6 +1087,7 @@ const getDueDate = async (request: Request, response: Response) => {
               },
               detailMr: {
                 include: {
+                  Material_Master: true,
                   supplier: {
                     include: {
                       SupplierContact: true,
@@ -1180,7 +1095,6 @@ const getDueDate = async (request: Request, response: Response) => {
                     },
                   },
                   approvedRequest: true,
-
                   mr: {
                     include: {
                       wor: {
@@ -1196,12 +1110,7 @@ const getDueDate = async (request: Request, response: Response) => {
                         include: {
                           bom_detail: {
                             include: {
-                              Material_master: {
-                                include: {
-                                  Material_Stock: true,
-                                  grup_material: true,
-                                },
-                              },
+                              Material_Master: true,
                             },
                           },
                           srimg: {
@@ -1238,20 +1147,10 @@ const getDueDate = async (request: Request, response: Response) => {
                       },
                     },
                   },
-                  Material_Stock: {
-                    include: {
-                      Material_master: {
-                        include: {
-                          grup_material: true,
-                        },
-                      },
-                    },
-                  },
                 },
               },
               SrDetail: {
                 include: {
-                  workCenter: true,
                   supplier: {
                     include: {
                       SupplierContact: true,
@@ -1314,6 +1213,7 @@ const getDueDate = async (request: Request, response: Response) => {
                   },
                   detailMr: {
                     include: {
+                      Material_Master: true,
                       supplier: {
                         include: {
                           SupplierContact: true,
@@ -1321,7 +1221,6 @@ const getDueDate = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-
                       mr: {
                         include: {
                           wor: {
@@ -1337,12 +1236,7 @@ const getDueDate = async (request: Request, response: Response) => {
                             include: {
                               bom_detail: {
                                 include: {
-                                  Material_master: {
-                                    include: {
-                                      Material_Stock: true,
-                                      grup_material: true,
-                                    },
-                                  },
+                                  Material_Master: true,
                                 },
                               },
                               srimg: {
@@ -1379,20 +1273,10 @@ const getDueDate = async (request: Request, response: Response) => {
                           },
                         },
                       },
-                      Material_Stock: {
-                        include: {
-                          Material_master: {
-                            include: {
-                              grup_material: true,
-                            },
-                          },
-                        },
-                      },
                     },
                   },
                   SrDetail: {
                     include: {
-                      workCenter: true,
                       supplier: {
                         include: {
                           SupplierContact: true,
@@ -1826,10 +1710,10 @@ const getPosting = async (request: Request, response: Response) => {
           NOT: {
             journal_cashier: {
               every: {
-                cashier_id: null
-              }
-            }
-          }
+                cashier_id: null,
+              },
+            },
+          },
         },
         include: {
           journal_cashier: {
@@ -1849,6 +1733,7 @@ const getPosting = async (request: Request, response: Response) => {
                   },
                   detailMr: {
                     include: {
+                      Material_Master: true,
                       supplier: {
                         include: {
                           SupplierContact: true,
@@ -1856,7 +1741,6 @@ const getPosting = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-
                       mr: {
                         include: {
                           wor: {
@@ -1872,12 +1756,7 @@ const getPosting = async (request: Request, response: Response) => {
                             include: {
                               bom_detail: {
                                 include: {
-                                  Material_master: {
-                                    include: {
-                                      Material_Stock: true,
-                                      grup_material: true,
-                                    },
-                                  },
+                                  Material_Master: true,
                                 },
                               },
                               srimg: {
@@ -1914,20 +1793,10 @@ const getPosting = async (request: Request, response: Response) => {
                           },
                         },
                       },
-                      Material_Stock: {
-                        include: {
-                          Material_master: {
-                            include: {
-                              grup_material: true,
-                            },
-                          },
-                        },
-                      },
                     },
                   },
                   SrDetail: {
                     include: {
-                      workCenter: true,
                       supplier: {
                         include: {
                           SupplierContact: true,
@@ -1991,6 +1860,7 @@ const getPosting = async (request: Request, response: Response) => {
                       },
                       detailMr: {
                         include: {
+                          Material_Master: true,
                           supplier: {
                             include: {
                               SupplierContact: true,
@@ -1998,7 +1868,6 @@ const getPosting = async (request: Request, response: Response) => {
                             },
                           },
                           approvedRequest: true,
-
                           mr: {
                             include: {
                               wor: {
@@ -2014,12 +1883,7 @@ const getPosting = async (request: Request, response: Response) => {
                                 include: {
                                   bom_detail: {
                                     include: {
-                                      Material_master: {
-                                        include: {
-                                          Material_Stock: true,
-                                          grup_material: true,
-                                        },
-                                      },
+                                      Material_Master: true,
                                     },
                                   },
                                   srimg: {
@@ -2056,20 +1920,10 @@ const getPosting = async (request: Request, response: Response) => {
                               },
                             },
                           },
-                          Material_Stock: {
-                            include: {
-                              Material_master: {
-                                include: {
-                                  grup_material: true,
-                                },
-                              },
-                            },
-                          },
                         },
                       },
                       SrDetail: {
                         include: {
-                          workCenter: true,
                           supplier: {
                             include: {
                               SupplierContact: true,
@@ -2173,10 +2027,10 @@ const getPosting = async (request: Request, response: Response) => {
           NOT: {
             journal_cashier: {
               every: {
-                cashier_id: null
-              }
-            }
-          }
+                cashier_id: null,
+              },
+            },
+          },
         },
         include: {
           journal_cashier: {
@@ -2196,6 +2050,7 @@ const getPosting = async (request: Request, response: Response) => {
                   },
                   detailMr: {
                     include: {
+                      Material_Master: true,
                       supplier: {
                         include: {
                           SupplierContact: true,
@@ -2203,7 +2058,6 @@ const getPosting = async (request: Request, response: Response) => {
                         },
                       },
                       approvedRequest: true,
-
                       mr: {
                         include: {
                           wor: {
@@ -2219,12 +2073,7 @@ const getPosting = async (request: Request, response: Response) => {
                             include: {
                               bom_detail: {
                                 include: {
-                                  Material_master: {
-                                    include: {
-                                      Material_Stock: true,
-                                      grup_material: true,
-                                    },
-                                  },
+                                  Material_Master: true,
                                 },
                               },
                               srimg: {
@@ -2261,20 +2110,10 @@ const getPosting = async (request: Request, response: Response) => {
                           },
                         },
                       },
-                      Material_Stock: {
-                        include: {
-                          Material_master: {
-                            include: {
-                              grup_material: true,
-                            },
-                          },
-                        },
-                      },
                     },
                   },
                   SrDetail: {
                     include: {
-                      workCenter: true,
                       supplier: {
                         include: {
                           SupplierContact: true,
@@ -2338,6 +2177,7 @@ const getPosting = async (request: Request, response: Response) => {
                       },
                       detailMr: {
                         include: {
+                          Material_Master: true,
                           supplier: {
                             include: {
                               SupplierContact: true,
@@ -2345,7 +2185,6 @@ const getPosting = async (request: Request, response: Response) => {
                             },
                           },
                           approvedRequest: true,
-
                           mr: {
                             include: {
                               wor: {
@@ -2361,12 +2200,7 @@ const getPosting = async (request: Request, response: Response) => {
                                 include: {
                                   bom_detail: {
                                     include: {
-                                      Material_master: {
-                                        include: {
-                                          Material_Stock: true,
-                                          grup_material: true,
-                                        },
-                                      },
+                                      Material_Master: true,
                                     },
                                   },
                                   srimg: {
@@ -2403,20 +2237,10 @@ const getPosting = async (request: Request, response: Response) => {
                               },
                             },
                           },
-                          Material_Stock: {
-                            include: {
-                              Material_master: {
-                                include: {
-                                  grup_material: true,
-                                },
-                              },
-                            },
-                          },
                         },
                       },
                       SrDetail: {
                         include: {
-                          workCenter: true,
                           supplier: {
                             include: {
                               SupplierContact: true,
@@ -2576,5 +2400,5 @@ export default {
   deleteCashier,
   deleteDetailCashier,
   updateStatusM,
-  updatePosting
+  updatePosting,
 };
