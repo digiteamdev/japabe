@@ -3,6 +3,7 @@ import prisma from "../middleware/quotation";
 import pagging from "../utils/paggination";
 import url from "url";
 import { Prisma } from "@prisma/client";
+import { Parser } from "@json2csv/plainjs";
 
 const getQuotation = async (request: Request, response: Response) => {
   try {
@@ -704,7 +705,59 @@ const deleteQuotationEqPart = async (request: Request, response: Response) => {
   }
 };
 
+const getAllQuotationcsv = async (request: Request, response: Response) => {
+  try {
+    const results = await prisma.quotations.findMany({
+      where: {
+        deleted: null,
+        job_operational: "S",
+      },
+      include: {
+        price_quotation: true,
+        CustomerPo: true,
+        Customer: {
+          include: {
+            address: true,
+          },
+        },
+        CustomerContact: true,
+      },
+    });
+    let arrParse: any = [];
+    results.map((e: any) => {
+      let obj: any = {};
+      e.price_quotation.map((a: any) => {
+        Object.assign(obj, a);
+      });
+      const csvCus = {
+        quotation_number: e.quo_num,
+        quotation_date: e.date,
+        customer: e.Customer.name,
+        email: e.Customer.email,
+        phone: e.Customer.phone,
+        contact: e.CustomerContact.contact_person,
+        scope_work: e.Quotations_Detail,
+        desc: obj.description,
+        unit_price: obj.unit_price,
+        total_price: obj.total_price,
+      };
+      arrParse.push(csvCus);
+    });
+    const parser = new Parser();
+    const csv = parser.parse(arrParse);
+    response.setHeader("Content-Type", "text/csv");
+    response.setHeader(
+      "Content-Disposition",
+      "attachment; filename=customer.csv"
+    );
+    response.status(200).end(csv);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export default {
+  getAllQuotationcsv,
   getQuotation,
   createQuotation,
   updateQuotation,

@@ -324,6 +324,23 @@ router.get(
 );
 
 router.get(
+  "/customer/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  customer.getCustomerbyId
+);
+
+router.get(
   "/customercsv",
   // jwt.authToken({
   //   administrator: "ADMINISTRATOR",
@@ -572,6 +589,23 @@ router.get(
 );
 
 router.get(
+  "/quotationcsv",
+  // jwt.authToken({
+  //   administrator: "ADMINISTRATOR",
+  //   marketingbumn: "MARKETING BUMN",
+  //   marketingswasta: "MARKETING SWASTA",
+  //   HRandGA: "HR & GA",
+  //   finance: "FINANCE & ACC",
+  //   QAandEng: "QA & ENG",
+  //   purchasing: "PURCHASING",
+  //   drafter: "DRAFTER",
+  //   ppic: "Ppic",
+  //   utility: "Utility/ty",
+  // }),
+  quotation.getAllQuotationcsv
+);
+
+router.get(
   "/quotation/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
@@ -674,6 +708,24 @@ router.get(
   }),
   customerPo.getcusPo
 );
+
+router.get(
+  "/customerPo/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  customerPo.getcusPobyId
+);
+
 router.post(
   "/customerPo",
   jwt.authToken({
@@ -777,6 +829,24 @@ router.get(
   }),
   wor.getWor
 );
+
+router.get(
+  "/wor/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  wor.getWorbyId
+);
+
 router.get(
   "/worTime",
   jwt.authToken({
@@ -1301,6 +1371,22 @@ router.get(
     utility: "Utility/ty",
   }),
   timeschedule.getTimeschedule
+);
+router.get(
+  "/timeschedule/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  timeschedule.getTimeschedulebyId
 );
 router.get(
   "/summaryTms",

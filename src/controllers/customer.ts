@@ -76,6 +76,39 @@ const getCustomer = async (request: Request, response: Response) => {
   }
 };
 
+const getCustomerbyId = async (request: Request, response: Response) => {
+  try {
+    const divisi: any = request.query.divisi || "";
+    let results;
+    results = await prisma.customer.findMany({
+      where: {
+        job_operational: divisi,
+        id: request.params.id,
+      },
+      include: {
+        contact: true,
+        address: true,
+      },
+    });
+    if (results.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All Customer by id",
+        result: results,
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const createCustomer = async (request: Request, response: Response) => {
   try {
     const results = await prisma.customer.create({
@@ -358,6 +391,7 @@ const getAllCustomercsv = async (request: Request, response: Response) => {
 
 export default {
   getAllCustomercsv,
+  getCustomerbyId,
   getCustomer,
   createCustomer,
   createCsvNxlsx,

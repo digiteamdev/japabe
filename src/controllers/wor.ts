@@ -260,6 +260,62 @@ const getWor = async (request: Request, response: Response) => {
   }
 };
 
+const getWorbyId = async (request: Request, response: Response) => {
+  try {
+    const divisi: any = request.query.divisi || "";
+    let results;
+    results = await prisma.wor.findMany({
+      where: {
+        deleted: null,
+        job_operational: divisi,
+        id: request.params.id,
+      },
+      include: {
+        work_scope_item: true,
+        customerPo: {
+          include: {
+            quotations: {
+              include: {
+                price_quotation: true,
+                CustomerContact: true,
+                Customer: {
+                  include: {
+                    address: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        timeschedule: {
+          include: {
+            drawing: true,
+            srimg: true,
+          },
+        },
+        employee: true,
+        estimator: true,
+      },
+    });
+    if (results.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All Wor by Id",
+        result: results,
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const getWorTimes = async (request: any, response: Response) => {
   try {
     const results = await prisma.wor.findMany({
@@ -721,6 +777,7 @@ const deleteWork = async (request: Request, response: Response) => {
 
 export default {
   getWor,
+  getWorbyId,
   getJobStatus,
   getWorTimes,
   createWor,

@@ -149,6 +149,52 @@ const getcusPo = async (request: Request, response: Response) => {
   }
 };
 
+const getcusPobyId = async (request: Request, response: Response) => {
+  try {
+    const divisi: any = request.query.divisi || "";
+    let results;
+    results = await prisma.customerPo.findMany({
+      where: {
+        job_operational: divisi,
+        id: request.params.id,
+      },
+      include: {
+        price_po: true,
+        wor: true,
+        quotations: {
+          include: {
+            price_quotation: true,
+            Customer: {
+              include: {
+                address: true,
+              },
+            },
+            CustomerContact: true,
+          },
+        },
+        Deskription_CusPo: true,
+        term_of_pay: true,
+      },
+    });
+    if (results.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All Customer PO by id",
+        result: results,
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const createcusPo = async (request: Request, response: Response) => {
   try {
     const results = await prisma.customerPo.create({
@@ -559,6 +605,7 @@ const deletecusPoTermOfPay = async (request: Request, response: Response) => {
 
 export default {
   getcusPo,
+  getcusPobyId,
   createcusPo,
   updatecusPo,
   updatePoDetail,
