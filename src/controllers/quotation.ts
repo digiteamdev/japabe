@@ -3,7 +3,8 @@ import prisma from "../middleware/quotation";
 import pagging from "../utils/paggination";
 import url from "url";
 import { Prisma } from "@prisma/client";
-import { Parser } from "@json2csv/plainjs";
+
+var excel = require("node-excel-export");
 
 const getQuotation = async (request: Request, response: Response) => {
   try {
@@ -707,50 +708,191 @@ const deleteQuotationEqPart = async (request: Request, response: Response) => {
 
 const getAllQuotationcsv = async (request: Request, response: Response) => {
   try {
-    const results = await prisma.quotations.findMany({
+    const results = await prisma.price_quotation.findMany({
       where: {
         deleted: null,
-        job_operational: "S",
+        quotations: {
+          job_operational: "S",
+        },
       },
       include: {
-        price_quotation: true,
-        CustomerPo: true,
-        Customer: {
+        quotations: {
           include: {
-            address: true,
+            Customer: true,
+            CustomerContact: true,
+            CustomerPo: true,
           },
         },
-        CustomerContact: true,
+      },
+      orderBy: {
+        quotations: {
+          quo_num: "asc",
+        },
       },
     });
-    let arrParse: any = [];
-    results.map((e: any) => {
-      let obj: any = {};
-      e.price_quotation.map((a: any) => {
-        Object.assign(obj, a);
-      });
-      const csvCus = {
-        quotation_number: e.quo_num,
-        quotation_date: e.date,
-        customer: e.Customer.name,
-        email: e.Customer.email,
-        phone: e.Customer.phone,
-        contact: e.CustomerContact.contact_person,
-        scope_work: e.Quotations_Detail,
-        desc: obj.description,
-        unit_price: obj.unit_price,
-        total_price: obj.total_price,
+    let csV: any = [];
+    results.map((e: any, i: number) => {
+      // let obj: any = {};
+      // e.quotations.map((a: any) => {
+      //   Object.assign(obj, a);
+      // });
+      const csvCus: any = {
+        No: i + 1,
+        QUOTATION_NO: e.quotations.quo_num,
+        subject: e.description,
+        quotation_date: e.quotations.date,
+        customer: e.quotations.Customer.name,
+        email: e.quotations.Customer.email,
+        phone: e.quotations.Customer.phone,
+        contact: e.quotations.CustomerContact.contact_person,
+        scope_work: e.quotations.Quotations_Detail,
+        desc: e.description,
+        unit_price: e.unit_price,
+        qty: e.qty,
+        unit: e.unit,
+        price: e.unit_price,
+        total_price: e.total_price,
+        estimate_delivered: e.quotations.estimate_delivered,
+        warranty: e.quotations.warranty,
       };
-      arrParse.push(csvCus);
+      csV.push(csvCus);
     });
-    const parser = new Parser();
-    const csv = parser.parse(arrParse);
-    response.setHeader("Content-Type", "text/csv");
-    response.setHeader(
-      "Content-Disposition",
-      "attachment; filename=customer.csv"
-    );
-    response.status(200).end(csv);
+    var styles = {
+      headerDark: {
+        fill: {
+          fgColor: {
+            rgb: "FF000000",
+          },
+        },
+        font: {
+          color: {
+            rgb: "FFFFFFFF",
+          },
+          sz: "11",
+          bold: true,
+          vertAlign: true,
+          underline: false,
+        },
+      },
+      label: {
+        fill: {
+          fgColor: {
+            rgb: "b1a0c7",
+          },
+        },
+        font: {
+          color: {
+            rgb: "000000",
+          },
+          sz: "11",
+          bold: true,
+          vertAlign: true,
+          underline: false,
+          name: "Calibri",
+        },
+        alignment: {
+          horizontal: "center",
+          vertical: "center",
+          wrapText: false,
+        },
+      },
+      cellPink: {
+        alignment: {
+          horizontal: "center",
+        },
+        font: {
+          color: {
+            rgb: "000000",
+          },
+          sz: "11",
+          bold: true,
+          vertAlign: true,
+          underline: false,
+          name: "Calibri",
+        },
+      },
+    };
+    const heading = [
+      [
+        { value: "a1", style: styles.headerDark },
+        { value: "b1", style: styles.headerDark },
+        { value: "c1", style: styles.headerDark },
+      ],
+    ];
+    const merges = [
+      { start: { row: 1, column: 1 }, end: { row: 2, column: 1 } },
+    ];
+    var specification = {
+      No: {
+        displayName: "NO",
+        headerStyle: styles.label,
+        width: 50,
+        cellStyle: styles.cellPink,
+      },
+      QUOTATION_NO: {
+        displayName: `\n QUOTATION NO \n`,
+        headerStyle: styles.label,
+        width: 280,
+      },
+      customer: {
+        displayName: "NAME OF COMPANY",
+        headerStyle: styles.label,
+        width: 250,
+      },
+      subject: {
+        displayName: "DESCRIPTION",
+        headerStyle: styles.label,
+        width: 320,
+      },
+      qty: {
+        displayName: "QTY",
+        headerStyle: styles.label,
+        width: 100,
+        cellStyle: styles.cellPink,
+      },
+      unit: {
+        displayName: "UNIT",
+        headerStyle: styles.label,
+        width: 100,
+        cellStyle: styles.cellPink,
+      },
+      price: {
+        displayName: "PRICE/PCS",
+        headerStyle: styles.label,
+        width: 200,
+      },
+      total_price: {
+        displayName: "TOTAL PRICE",
+        headerStyle: styles.label,
+        width: 200,
+      },
+      quotation_date: {
+        displayName: "DATE OF RFQ",
+        headerStyle: styles.label,
+        width: 200,
+      },
+      estimate_delivered: {
+        displayName: "DATE OF RFQ",
+        headerStyle: styles.label,
+        width: 200,
+      },
+      warranty: {
+        displayName: "WARRANTY PERIOD",
+        headerStyle: styles.label,
+        width: 200,
+      },
+    };
+    var report = excel.buildExport([
+      {
+        name: "quotation.xlsx",
+        specification: specification,
+        // heading: heading,
+        // merges: merges,
+        data: csV,
+      },
+    ]);
+    response.attachment("quotation.xlsx");
+    response.send(report);
   } catch (error) {
     console.log(error);
   }

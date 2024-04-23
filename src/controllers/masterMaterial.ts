@@ -25,6 +25,7 @@ const getMaterialMaster = async (request: Request, response: Response) => {
       });
     } else {
       results = await prisma.material_Master.findMany({
+        distinct: ["id"],
         where: {
           deleted: null,
           name: {

@@ -1377,8 +1377,9 @@ model stock_outgoing_material {
 model time_sheet {
   id              String    @id @default(cuid())
   date            DateTime
-  job             String    @db.Text
-  job_description String    @db.Text
+  job             String?   @db.Text
+  job_description String?   @db.Text
+  part_name       String?   @db.Text
   user            User?     @relation(fields: [userId], references: [id])
   userId          String
   actual_start    DateTime?
