@@ -1502,6 +1502,164 @@ const updatePrStatusM = async (request: any, response: Response) => {
   }
 };
 
+const updateMrDirector = async (request: any, response: Response) => {
+  try {
+    const id = request.params.id;
+    const userLogin = await prisma.user.findFirst({
+      where: {
+        username: request.session.userId,
+      },
+    });
+    const a: any = userLogin?.employeeId;
+    const emplo = await prisma.employee.findFirst({
+      where: {
+        id: a,
+      },
+    });
+    let result;
+    let error_position: boolean = false;    
+    if (
+      (emplo?.position === "Director" &&
+        request.body.statusApprove.status_manager_director !== undefined) ||
+      (emplo?.position === "Manager" &&
+        request.body.statusApprove.status_manager_pr !== undefined)
+    ) {
+      result = await prisma.mr.update({
+        where: { id: id },
+        data: request.body.statusApprove,
+      });
+      if (request.body.revision !== undefined) {
+        const updateVerify = request.body.revision.map(
+          (updateByveri: { note_revision: any; id: any }) => {
+            return {
+              note_revision: updateByveri.note_revision,
+              id: updateByveri.id,
+            };
+          }
+        );
+        let result: any = [];
+        for (let i = 0; i < updateVerify.length; i++) {
+          result = await prisma.mr.update({
+            where: { id: updateVerify[i].id },
+            data: {
+              note_revision: updateVerify[i].note_revision,
+            },
+          });
+        }
+      }
+    } else if (
+      (emplo?.position === "Director" &&
+        request.body.statusApprove.status_manager_pr === undefined) ||
+      (emplo?.position === "Manager" &&
+        request.body.statusApprove.status_manager_director === undefined)
+    ) {
+      false;
+    } else {
+      error_position = true;
+    }
+    if (result && !error_position) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: result,
+      });
+    } else if (error_position) {
+      response.status(400).json({
+        success: false,
+        massage: `anda bukan ${
+          emplo?.position === "Director" ? "Manager" : "Director"
+        }`,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updateSrDirector = async (request: any, response: Response) => {
+  try {
+    const id = request.params.id;
+    const userLogin = await prisma.user.findFirst({
+      where: {
+        username: request.session.userId,
+      },
+    });
+    const a: any = userLogin?.employeeId;
+    const emplo = await prisma.employee.findFirst({
+      where: {
+        id: a,
+      },
+    });
+    let result;
+    let error_position: boolean = false;
+    if (
+      (emplo?.position === "Director" &&
+        request.body.statusApprove.status_manager_director !== undefined) ||
+      (emplo?.position === "Manager" &&
+        request.body.statusApprove.status_manager_pr !== undefined)
+    ) {
+      result = await prisma.sr.update({
+        where: { id: id },
+        data: request.body.statusApprove,
+      });
+      if (request.body.revision !== undefined) {
+        const updateVerify = request.body.revision.map(
+          (updateByveri: { note_revision: any; id: any }) => {
+            return {
+              note_revision: updateByveri.note_revision,
+              id: updateByveri.id,
+            };
+          }
+        );
+        let result: any = [];
+        for (let i = 0; i < updateVerify.length; i++) {
+          result = await prisma.sr.update({
+            where: { id: updateVerify[i].id },
+            data: {
+              note_revision: updateVerify[i].note_revision,
+            },
+          });
+        }
+      }
+    } else if (
+      (emplo?.position === "Director" &&
+        request.body.statusApprove.status_manager_pr === undefined) ||
+      (emplo?.position === "Manager" &&
+        request.body.statusApprove.status_manager_director === undefined)
+    ) {
+      false;
+    } else {
+      error_position = true;
+    }
+    if (result && !error_position) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: result,
+      });
+    } else if (error_position) {
+      response.status(400).json({
+        success: false,
+        massage: `anda bukan ${
+          emplo?.position === "Director" ? "Manager" : "Director"
+        }`,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getMr,
   getdetailMr,
@@ -1509,6 +1667,8 @@ export default {
   createMr,
   updateMr,
   upsertMr,
+  updateMrDirector,
+  updateSrDirector,
   updatedetailPr,
   updateApprovalOne,
   updatePr,

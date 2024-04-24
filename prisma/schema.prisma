@@ -999,25 +999,27 @@ enum statusSr {
 }
 
 model Mr {
-  id             String     @id @default(cuid())
-  statusMr       statusMr?
-  wor            wor?       @relation(fields: [worId], references: [id])
-  worId          String?    @unique
-  no_mr          String?    @db.VarChar(50)
-  job_no         String?    @db.VarChar(200)
-  bom            bom?       @relation(fields: [bomIdU], references: [id])
-  bomIdU         String?    @unique
-  date_mr        DateTime
-  user           User?      @relation(fields: [userId], references: [id])
-  userId         String
-  status_spv     String?    @db.VarChar(20)
-  status_manager String?    @db.VarChar(20)
-  idMrAppr       String?    @db.VarChar(20)
-  dateOfAppr     DateTime?
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  deleted        DateTime?
-  detailMr       detailMr[]
+  id                      String                   @id @default(cuid())
+  statusMr                statusMr?
+  wor                     wor?                     @relation(fields: [worId], references: [id])
+  worId                   String?                  @unique
+  no_mr                   String?                  @db.VarChar(50)
+  job_no                  String?                  @db.VarChar(200)
+  bom                     bom?                     @relation(fields: [bomIdU], references: [id])
+  bomIdU                  String?                  @unique
+  date_mr                 DateTime
+  user                    User?                    @relation(fields: [userId], references: [id])
+  userId                  String
+  status_spv              String?                  @db.VarChar(20)
+  status_manager          String?                  @db.VarChar(20)
+  status_manager_director status_manager_director?
+  note_revision           String?                  @db.Text
+  idMrAppr                String?                  @db.VarChar(20)
+  dateOfAppr              DateTime?
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  deleted                 DateTime?
+  detailMr                detailMr[]
 
   @@index([id, no_mr, userId, idMrAppr])
 }
@@ -1105,23 +1107,25 @@ model approvedRequest {
 }
 
 model Sr {
-  id             String     @id @default(cuid())
-  statusSr       statusSr?
-  wor            wor?       @relation(fields: [worId], references: [id])
-  worId          String?    @unique
-  no_sr          String?    @db.VarChar(50)
-  job_no         String?    @db.VarChar(200)
-  date_sr        DateTime
-  status_spv     String?    @db.VarChar(20)
-  status_manager String?    @db.VarChar(20)
-  idSrAppr       String?    @db.VarChar(20)
-  dateOfAppr     DateTime?
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  deleted        DateTime?
-  SrDetail       SrDetail[]
-  user           User?      @relation(fields: [userId], references: [id])
-  userId         String?
+  id                      String                   @id @default(cuid())
+  statusSr                statusSr?
+  wor                     wor?                     @relation(fields: [worId], references: [id])
+  worId                   String?                  @unique
+  no_sr                   String?                  @db.VarChar(50)
+  job_no                  String?                  @db.VarChar(200)
+  date_sr                 DateTime
+  status_spv              String?                  @db.VarChar(20)
+  status_manager          String?                  @db.VarChar(20)
+  status_manager_director status_manager_director?
+  note_revision           String?                  @db.Text
+  idSrAppr                String?                  @db.VarChar(20)
+  dateOfAppr              DateTime?
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  deleted                 DateTime?
+  SrDetail                SrDetail[]
+  user                    User?                    @relation(fields: [userId], references: [id])
+  userId                  String?
 
   @@index([id, no_sr, idSrAppr])
 }

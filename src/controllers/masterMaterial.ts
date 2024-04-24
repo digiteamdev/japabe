@@ -87,7 +87,60 @@ const createMaterialMaster = async (request: Request, response: Response) => {
   }
 };
 
+const updateMaterialMaster = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const updateCustomer = await prisma.material_Master.update({
+      where: {
+        id: id,
+      },
+      data: request.body,
+    });
+    if (updateCustomer) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        results: updateCustomer,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const deleteMaterialMaster = async (request: Request, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const deleteCustomer = await prisma.material_Master.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (deleteCustomer) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Delete Data",
+        results: deleteCustomer,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Delete Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getMaterialMaster,
   createMaterialMaster,
+  updateMaterialMaster,
+  deleteMaterialMaster,
 };

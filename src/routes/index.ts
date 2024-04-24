@@ -927,23 +927,6 @@ router.delete(
 /***************************WOR********************************* */
 
 /***************************TYPEMR********************************* */
-
-router.get(
-  "/groupMaterial",
-  jwt.authToken({
-    administrator: "ADMINISTRATOR",
-    marketingbumn: "MARKETING BUMN",
-    marketingswasta: "MARKETING SWASTA",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
-    purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
-  }),
-  typeMr.getTypeMr
-);
 router.get(
   "/materialMaster",
   jwt.authToken({
@@ -976,131 +959,38 @@ router.post(
   }),
   masterMaterial.createMaterialMaster
 );
-router.get(
-  "/masterMaterial",
-  jwt.authToken({
-    administrator: "ADMINISTRATOR",
-    marketingbumn: "MARKETING BUMN",
-    marketingswasta: "MARKETING SWASTA",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
-    purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
-  }),
-  typeMr.getMasterM
-);
-router.get(
-  "/stockMaterial",
-  jwt.authToken({
-    administrator: "ADMINISTRATOR",
-    marketingbumn: "MARKETING BUMN",
-    marketingswasta: "MARKETING SWASTA",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
-    purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
-  }),
-  typeMr.getStock
-);
-router.post(
-  "/stockMaterial",
-  jwt.authToken({
-    administrator: "ADMINISTRATOR",
-    marketingbumn: "MARKETING BUMN",
-    marketingswasta: "MARKETING SWASTA",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
-    purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
-  }),
-  typeMr.createMasterSpesifikasi
-);
-router.post(
-  "/stock",
-  jwt.authToken({
-    administrator: "ADMINISTRATOR",
-    marketingbumn: "MARKETING BUMN",
-    marketingswasta: "MARKETING SWASTA",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
-    purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
-  }),
-  typeMr.createMasterOne
-);
-router.post(
-  "/groupMaterial",
-  jwt.authToken({
-    administrator: "ADMINISTRATOR",
-    marketingbumn: "MARKETING BUMN",
-    marketingswasta: "MARKETING SWASTA",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
-    purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
-  }),
-  typeMr.createTypeMr
-);
-router.post(
-  "/masterMaterial",
-  jwt.authToken({
-    administrator: "ADMINISTRATOR",
-    marketingbumn: "MARKETING BUMN",
-    marketingswasta: "MARKETING SWASTA",
-    HRandGA: "HR & GA",
-    finance: "FINANCE & ACC",
-    QAandEng: "QA & ENG",
-    purchasing: "PURCHASING",
-    drafter: "DRAFTER",
-    ppic: "Ppic",
-    utility: "Utility/ty",
-  }),
-  typeMr.createMaster
-);
-router.put(
-  "/groupMaterial/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
-  typeMr.updateMaterial
-);
+
 router.put(
   "/masterMaterial/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
-  typeMr.updateMaterialSpek
-);
-router.put(
-  "/stockMaterial/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
-  typeMr.updateStokMaterial
-);
-router.delete(
-  "/groupMaterial/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
-  typeMr.deleteMaterial
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  masterMaterial.updateMaterialMaster
 );
 router.delete(
   "/masterMaterial/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
-  typeMr.deleteMaterialSpek
-);
-router.delete(
-  "/stockMaterial/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
-  typeMr.deleteStokMaterial
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  masterMaterial.deleteMaterialMaster
 );
 
 /***************************TYPEMR********************************* */
@@ -2194,6 +2084,24 @@ router.put(
   MR.updatePrStatusM
 );
 
+router.put(
+  "/mrApprove/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    purchasing: "PURCHASING",
+  }),
+  MR.updateMrDirector
+);
+
+router.put(
+  "/srApprove/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    purchasing: "PURCHASING",
+  }),
+  MR.updateSrDirector
+);
+
 /***************************PurchaseMR********************************* */
 
 /***************************PurchaseSR********************************* */
@@ -2273,6 +2181,46 @@ router.get(
     administrator: "ADMINISTRATOR",
   }),
   director.getAllApprove
+);
+
+router.get(
+  "/directorApprovalMR",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+  }),
+  director.getAllApproveMr
+);
+
+router.get(
+  "/directorApprovalSR",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+  }),
+  director.getAllApproveSr
+);
+
+router.get(
+  "/directorApprovalPO",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+  }),
+  director.getAllApprovePo
+);
+
+router.get(
+  "/directorApprovalSPJ",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+  }),
+  director.getAllApproveSpj
+);
+
+router.get(
+  "/directorApprovalCDV",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+  }),
+  director.getAllApproveCdv
 );
 
 router.put(
