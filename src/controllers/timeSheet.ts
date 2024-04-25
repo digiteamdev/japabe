@@ -18,11 +18,26 @@ const getTimeSheet = async (request: Request, response: Response) => {
       },
     });
     let results;
-    if (request.query.page === undefined) {
+    if (!type) {
       results = await prisma.time_sheet.findMany({
-        orderBy: {
-          createdAt: "asc",
+        where: {
+          job: {
+            contains: pencarian,
+            mode: "insensitive",
+          },
         },
+        include: {
+          user: {
+            include: {
+              employee: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: parseInt(pagination.perPage),
+        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
     } else {
       results = await prisma.time_sheet.findMany({
@@ -31,7 +46,14 @@ const getTimeSheet = async (request: Request, response: Response) => {
             contains: pencarian,
             mode: "insensitive",
           },
-          type_timesheet: type
+          type_timesheet: type,
+        },
+        include: {
+          user: {
+            include: {
+              employee: true,
+            },
+          },
         },
         orderBy: {
           createdAt: "desc",

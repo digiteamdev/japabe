@@ -919,15 +919,15 @@ model bom {
 }
 
 model bom_detail {
-  id              String          @id @default(cuid())
-  bom             bom             @relation(fields: [bomId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  id              String           @id @default(cuid())
+  bom             bom              @relation(fields: [bomId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   bomId           String
-  Material_Master Material_Master @relation(fields: [materialId], references: [id])
+  Material_Master Material_Master? @relation(fields: [materialId], references: [id])
   materialId      String
-  dimensi         String?         @db.VarChar(200)
-  qty             Int             @default(0)
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  dimensi         String?          @db.VarChar(200)
+  qty             Int              @default(0)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
   deleted         DateTime?
   detailMr        detailMr[]
 

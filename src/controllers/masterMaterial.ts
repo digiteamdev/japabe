@@ -25,7 +25,7 @@ const getMaterialMaster = async (request: Request, response: Response) => {
       });
     } else {
       results = await prisma.material_Master.findMany({
-        distinct: ["id"],
+        distinct: ["id", "name"],
         where: {
           deleted: null,
           name: {
@@ -34,7 +34,7 @@ const getMaterialMaster = async (request: Request, response: Response) => {
           },
         },
         orderBy: {
-          createdAt: "asc",
+          name: "asc",
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
