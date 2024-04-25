@@ -1378,18 +1378,24 @@ model stock_outgoing_material {
   @@index([id, materialStockId, employeeId, outgoingId])
 }
 
+enum type_timesheet {
+  overtime
+  worktime
+}
+
 model time_sheet {
-  id              String    @id @default(cuid())
+  id              String          @id @default(cuid())
   date            DateTime
-  job             String?   @db.Text
-  job_description String?   @db.Text
-  part_name       String?   @db.Text
-  user            User?     @relation(fields: [userId], references: [id])
+  job             String?         @db.Text
+  job_description String?         @db.Text
+  part_name       String?         @db.Text
+  user            User?           @relation(fields: [userId], references: [id])
+  type_timesheet  type_timesheet?
   userId          String
   actual_start    DateTime?
   actual_finish   DateTime?
   total_hours     String
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
   deleted         DateTime?
 }

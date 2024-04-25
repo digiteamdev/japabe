@@ -414,6 +414,7 @@ const createOperatorStart = async (request: Request, response: Response) => {
         dispatchDetail: { connect: { id: request.body.dispatchDetailId } },
         Employee: { connect: { id: request.body.employeeId } },
         start: new Date(request.body.start),
+        finish: new Date(request.body.finish)
       },
     });
     if (results) {

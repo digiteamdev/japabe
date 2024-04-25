@@ -6,6 +6,7 @@ import url from "url";
 const getTimeSheet = async (request: Request, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
+    const type: any = request.query.type || "";
     const hostname: any = request.headers.host;
     const pathname = url.parse(request.url).pathname;
     const page: any = request.query.page;
@@ -30,6 +31,7 @@ const getTimeSheet = async (request: Request, response: Response) => {
             contains: pencarian,
             mode: "insensitive",
           },
+          type_timesheet: type
         },
         orderBy: {
           createdAt: "desc",
