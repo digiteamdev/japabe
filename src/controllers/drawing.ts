@@ -97,45 +97,38 @@ const getDrawing = async (request: Request, response: Response) => {
 };
 
 const getDrawingTms = async (request: Request, response: Response) => {
+  const pencarian: any = request.query.search || "";
   try {
-    const results = await prisma.timeschedule.findMany({
+    const results = await prisma.wor.findMany({
       where: {
-        drawing: null,
-      },
-      orderBy: {
-        id: "desc",
+        deleted: null,
+        job_no: {
+          contains: pencarian,
+          mode: "insensitive",
+        },
       },
       include: {
-        drawing: true,
-        srimg: {
+        work_scope_item: true,
+        customerPo: {
           include: {
-            srimgdetail: true,
-          },
-        },
-        wor: {
-          include: {
-            customerPo: {
+            quotations: {
               include: {
-                quotations: {
+                price_quotation: true,
+                CustomerContact: true,
+                Customer: {
                   include: {
-                    CustomerContact: true,
-                    Customer: {
-                      include: {
-                        address: true,
-                      },
-                    },
+                    address: true,
                   },
                 },
               },
             },
           },
         },
-
-        aktivitas: {
-          include: {
-            dispatchDetail: true,
-          },
-        },
+        timeschedule: true,
+        employee: true,
+      },
+      orderBy: {
+        no: "asc",
       },
     });
     if (results.length > 0) {

@@ -166,60 +166,45 @@ const getSrimg = async (request: Request, response: Response) => {
 };
 
 const getSumaryTms = async (request: Request, response: Response) => {
+  const pencarian: any = request.query.search || "";
   try {
-    const result = await prisma.timeschedule.findMany({
+    const results = await prisma.wor.findMany({
       where: {
-        OR: [
-          {
-            deleted: null,
-          },
-          {
-            srimg: {
-              deleted: null,
-            },
-          },
-        ],
-        NOT: {
-          srimg: {
-            deleted: null,
-          },
+        deleted: null,
+        job_no: {
+          contains: pencarian,
+          mode: "insensitive",
         },
-      },
-      orderBy: {
-        id: "desc",
       },
       include: {
-        srimg: {
+        work_scope_item: true,
+        customerPo: {
           include: {
-            srimgdetail: true,
-          },
-        },
-        wor: {
-          include: {
-            customerPo: {
+            quotations: {
               include: {
-                quotations: {
+                price_quotation: true,
+                CustomerContact: true,
+                Customer: {
                   include: {
-                    CustomerContact: true,
-                    Customer: {
-                      include: {
-                        address: true,
-                      },
-                    },
+                    address: true,
                   },
                 },
               },
             },
           },
         },
-        aktivitas: true,
+        timeschedule: true,
+        employee: true,
+      },
+      orderBy: {
+        no: "asc",
       },
     });
-    if (result.length > 0) {
+    if (results.length > 0) {
       return response.status(200).json({
         success: true,
         massage: "Get All Tms Summary",
-        result: result,
+        result: results,
       });
     } else {
       return response.status(200).json({

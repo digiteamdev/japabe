@@ -1088,120 +1088,130 @@ const getAllReceive = async (request: Request, response: Response) => {
           createdAt: "desc",
         },
       });
-      detailDmr = await prisma.purchase.findMany({
-        where: {
-          status_manager_director: "approve",
-          kontrabon: null,
-          OR: [
-            {
-              idPurchase: {
-                startsWith: "DMR",
-              },
-            },
-            {
-              idPurchase: {
-                startsWith: "DSR",
-              },
-            },
-          ],
-        },
-        include: {
-          supplier: {
-            include: {
-              SupplierBank: true,
-              SupplierContact: true,
-            },
-          },
-          detailMr: {
-            include: {
-              supplier: true,
-              Material_Master: true,
-              mr: {
-                include: {
-                  wor: true,
-                  bom: {
-                    include: {
-                      bom_detail: {
-                        include: {
-                          Material_Master: true,
-                        },
-                      },
-                      srimg: {
-                        include: {
-                          srimgdetail: true,
-                        },
-                      },
-                    },
-                  },
-                  user: {
-                    select: {
-                      id: true,
-                      username: true,
-                      employee: {
-                        select: {
-                          id: true,
-                          employee_name: true,
-                          position: true,
-                          sub_depart: {
-                            select: {
-                              id: true,
-                              name: true,
-                              departement: {
-                                select: {
-                                  id: true,
-                                  name: true,
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-          SrDetail: {
-            include: {
-              supplier: true,
-              sr: {
-                include: {
-                  wor: true,
-                  user: {
-                    select: {
-                      id: true,
-                      username: true,
-                      employee: {
-                        select: {
-                          id: true,
-                          employee_name: true,
-                          position: true,
-                          sub_depart: {
-                            select: {
-                              id: true,
-                              name: true,
-                              departement: {
-                                select: {
-                                  id: true,
-                                  name: true,
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-      });
+      // detailDmr = await prisma.purchase.findMany({
+      //   where: {
+      //     status_manager_director: "approve",
+      //     kontrabon: null,
+      //     OR: [
+      //       {
+      //         idPurchase: {
+      //           startsWith: "DMR",
+      //         },
+      //       },
+      //       {
+      //         idPurchase: {
+      //           startsWith: "DSR",
+      //         },
+      //       },
+      //     ],
+      //   },
+      //   include: {
+      //     supplier: {
+      //       include: {
+      //         SupplierBank: true,
+      //         SupplierContact: true,
+      //       },
+      //     },
+      //     detailMr: {
+      //       include: {
+      //         supplier: {
+      //           include: {
+      //             SupplierBank: true,
+      //             SupplierContact: true,
+      //           },
+      //         },
+      //         Material_Master: true,
+      //         mr: {
+      //           include: {
+      //             wor: true,
+      //             bom: {
+      //               include: {
+      //                 bom_detail: {
+      //                   include: {
+      //                     Material_Master: true,
+      //                   },
+      //                 },
+      //                 srimg: {
+      //                   include: {
+      //                     srimgdetail: true,
+      //                   },
+      //                 },
+      //               },
+      //             },
+      //             user: {
+      //               select: {
+      //                 id: true,
+      //                 username: true,
+      //                 employee: {
+      //                   select: {
+      //                     id: true,
+      //                     employee_name: true,
+      //                     position: true,
+      //                     sub_depart: {
+      //                       select: {
+      //                         id: true,
+      //                         name: true,
+      //                         departement: {
+      //                           select: {
+      //                             id: true,
+      //                             name: true,
+      //                           },
+      //                         },
+      //                       },
+      //                     },
+      //                   },
+      //                 },
+      //               },
+      //             },
+      //           },
+      //         },
+      //       },
+      //     },
+      //     SrDetail: {
+      //       include: {
+      //         supplier: {
+      //           include: {
+      //             SupplierBank: true,
+      //             SupplierContact: true,
+      //           },
+      //         },
+      //         sr: {
+      //           include: {
+      //             wor: true,
+      //             user: {
+      //               select: {
+      //                 id: true,
+      //                 username: true,
+      //                 employee: {
+      //                   select: {
+      //                     id: true,
+      //                     employee_name: true,
+      //                     position: true,
+      //                     sub_depart: {
+      //                       select: {
+      //                         id: true,
+      //                         name: true,
+      //                         departement: {
+      //                           select: {
+      //                             id: true,
+      //                             name: true,
+      //                           },
+      //                         },
+      //                       },
+      //                     },
+      //                   },
+      //                 },
+      //               },
+      //             },
+      //           },
+      //         },
+      //       },
+      //     },
+      //   },
+      //   orderBy: {
+      //     createdAt: "desc",
+      //   },
+      // });
       spjCdv = await prisma.cash_advance.findMany({
         where: {
           id_cash_advance: {
@@ -1420,11 +1430,11 @@ const getAllReceive = async (request: Request, response: Response) => {
     resultNoPage.map((r: any) => {
       noPage.push(...r);
     });
-    let obj: any = [];
-    const detailDm: any = [detailDmr];
-    detailDm.map((d: any) => {
-      obj.push(...d);
-    });
+    // let obj: any = [];
+    // const detailDm: any = [detailDmr];
+    // detailDm.map((d: any) => {
+    //   obj.push(...d);
+    // });
     let cdvSpj: any = [];
     const spj: any = [spjCdv];
     spj.map((c: any) => {
@@ -1432,7 +1442,7 @@ const getAllReceive = async (request: Request, response: Response) => {
     });
     if (
       result.length > 0 ||
-      obj.length > 0 ||
+      // obj.length > 0 ||
       noPage.length > 0 ||
       cdvSpj.length > 0
     ) {
@@ -1612,7 +1622,7 @@ const getAllReceive = async (request: Request, response: Response) => {
       return response.status(200).json({
         success: true,
         massage: "Get All Receive PO and SO",
-        result: [...result, ...obj, ...res, ...cdvSpj],
+        result: [...result, ...res, ...cdvSpj],
         page: pagination.page,
         limit: pagination.perPage,
         totalData: poandsoCount,

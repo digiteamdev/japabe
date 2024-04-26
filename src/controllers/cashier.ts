@@ -19,6 +19,7 @@ const getCashier = async (request: Request, response: Response) => {
     });
     let results: any;
     let cdv: any;
+    let detailDmr: any;
     if (request.query.page === undefined) {
       results = await prisma.kontrabon.findMany({
         where: {
@@ -353,6 +354,130 @@ const getCashier = async (request: Request, response: Response) => {
           },
         },
       });
+      detailDmr = await prisma.purchase.findMany({
+        where: {
+          status_manager_director: "approve",
+          kontrabon: null,
+          OR: [
+            {
+              idPurchase: {
+                startsWith: "DMR",
+              },
+            },
+            {
+              idPurchase: {
+                startsWith: "DSR",
+              },
+            },
+          ],
+        },
+        include: {
+          supplier: {
+            include: {
+              SupplierBank: true,
+              SupplierContact: true,
+            },
+          },
+          detailMr: {
+            include: {
+              supplier: {
+                include: {
+                  SupplierBank: true,
+                  SupplierContact: true,
+                },
+              },
+              Material_Master: true,
+              mr: {
+                include: {
+                  wor: true,
+                  bom: {
+                    include: {
+                      bom_detail: {
+                        include: {
+                          Material_Master: true,
+                        },
+                      },
+                      srimg: {
+                        include: {
+                          srimgdetail: true,
+                        },
+                      },
+                    },
+                  },
+                  user: {
+                    select: {
+                      id: true,
+                      username: true,
+                      employee: {
+                        select: {
+                          id: true,
+                          employee_name: true,
+                          position: true,
+                          sub_depart: {
+                            select: {
+                              id: true,
+                              name: true,
+                              departement: {
+                                select: {
+                                  id: true,
+                                  name: true,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          SrDetail: {
+            include: {
+              supplier: {
+                include: {
+                  SupplierBank: true,
+                  SupplierContact: true,
+                },
+              },
+              sr: {
+                include: {
+                  wor: true,
+                  user: {
+                    select: {
+                      id: true,
+                      username: true,
+                      employee: {
+                        select: {
+                          id: true,
+                          employee_name: true,
+                          position: true,
+                          sub_depart: {
+                            select: {
+                              id: true,
+                              name: true,
+                              departement: {
+                                select: {
+                                  id: true,
+                                  name: true,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
     } else {
       results = await prisma.cashier.findMany({
         where: {
@@ -671,11 +796,16 @@ const getCashier = async (request: Request, response: Response) => {
     cashAdvance.map((d: any) => {
       obj.push(...d);
     });
-    if (results.length > 0 || obj.length > 0) {
+    let dmr: any = [];
+    const detailDm: any = [detailDmr];
+    detailDm.map((d: any) => {
+      obj.push(...d);
+    });
+    if (results.length > 0 || obj.length > 0 || dmr.length > 0) {
       return response.status(200).json({
         success: true,
         massage: "Get All Cashier",
-        result: [...results, ...obj],
+        result: [...results, ...obj, ...dmr],
         page: pagination.page,
         limit: pagination.perPage,
         totalData: cashieCount,

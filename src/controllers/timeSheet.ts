@@ -3,7 +3,7 @@ import prisma from "../middleware/timeSheet";
 import pagging from "../utils/paggination";
 import url from "url";
 
-const getTimeSheet = async (request: Request, response: Response) => {
+const getTimeSheet = async (request: any, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
     const type: any = request.query.type || "";
@@ -21,6 +21,9 @@ const getTimeSheet = async (request: Request, response: Response) => {
     if (!type) {
       results = await prisma.time_sheet.findMany({
         where: {
+          user: {
+            username: request.session.userId,
+          },
           job: {
             contains: pencarian,
             mode: "insensitive",
@@ -29,7 +32,15 @@ const getTimeSheet = async (request: Request, response: Response) => {
         include: {
           user: {
             include: {
-              employee: true,
+              employee: {
+                include: {
+                  sub_depart: {
+                    include: {
+                      departement: true,
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -42,6 +53,9 @@ const getTimeSheet = async (request: Request, response: Response) => {
     } else {
       results = await prisma.time_sheet.findMany({
         where: {
+          user: {
+            username: request.session.userId,
+          },
           job: {
             contains: pencarian,
             mode: "insensitive",
@@ -51,7 +65,15 @@ const getTimeSheet = async (request: Request, response: Response) => {
         include: {
           user: {
             include: {
-              employee: true,
+              employee: {
+                include: {
+                  sub_depart: {
+                    include: {
+                      departement: true,
+                    },
+                  },
+                },
+              },
             },
           },
         },
