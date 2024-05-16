@@ -242,12 +242,22 @@ const getEmployeeSales = async (request: Request, response: Response) => {
     const dep: any = request.query.dep || "";
     const results = await prisma.employee.findMany({
       where: {
-        sub_depart: {
-          name: sub,
-          departement: {
-            name: dep,
+        OR: [
+          {
+            employee_name: "Joko Hadi Saputro",
           },
-        },
+          {
+            employee_name: "Zein Bahrul Hilmi",
+          },
+          {
+            sub_depart: {
+              name: sub,
+              departement: {
+                name: dep,
+              },
+            },
+          },
+        ],
       },
       include: {
         sub_depart: {

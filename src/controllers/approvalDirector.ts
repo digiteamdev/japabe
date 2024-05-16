@@ -648,6 +648,7 @@ const getAllApproveMr = async (request: Request, response: Response) => {
     });
     const results = await prisma.mr.findMany({
       where: {
+        status_manager_director: null,
         no_mr: {
           contains: pencarian,
           mode: "insensitive",
@@ -785,6 +786,7 @@ const getAllApproveSr = async (request: Request, response: Response) => {
     });
     const results = await prisma.sr.findMany({
       where: {
+        status_manager_director: null,
         no_sr: {
           contains: pencarian,
           mode: "insensitive",

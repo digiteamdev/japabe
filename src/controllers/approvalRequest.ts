@@ -334,9 +334,6 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
           {
             status_receive: true,
           },
-          {
-            status_manager_director: "approve",
-          },
         ],
         NOT: {
           detailMr: {

@@ -165,46 +165,123 @@ const getSrimg = async (request: Request, response: Response) => {
   }
 };
 
-const getSumaryTms = async (request: Request, response: Response) => {
-  const pencarian: any = request.query.search || "";
+const getSrimgId = async (request: Request, response: Response) => {
   try {
-    const results = await prisma.wor.findMany({
+    const pencarian: any = request.query.search || "";
+    let results;
+    results = await prisma.srimg.findMany({
       where: {
-        deleted: null,
-        job_no: {
-          contains: pencarian,
-          mode: "insensitive",
-        },
+        id: request.params.id,
       },
       include: {
-        work_scope_item: true,
-        customerPo: {
+        srimgdetail: {
           include: {
-            quotations: {
+            imgSummary: true,
+          },
+        },
+        timeschedule: {
+          include: {
+            wor: {
               include: {
-                price_quotation: true,
-                CustomerContact: true,
-                Customer: {
+                customerPo: {
                   include: {
-                    address: true,
+                    quotations: {
+                      include: {
+                        CustomerContact: true,
+                        Customer: {
+                          include: {
+                            address: true,
+                          },
+                        },
+                      },
+                    },
                   },
                 },
               },
             },
           },
         },
-        timeschedule: true,
-        employee: true,
       },
       orderBy: {
-        no: "asc",
+        createdAt: "desc",
       },
     });
     if (results.length > 0) {
       return response.status(200).json({
         success: true,
-        massage: "Get All Tms Summary",
+        massage: "Get All Summary Report One",
         result: results,
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const getSumaryTms = async (request: Request, response: Response) => {
+  try {
+    const result = await prisma.timeschedule.findMany({
+      where: {
+        OR: [
+          {
+            deleted: null,
+          },
+          {
+            srimg: {
+              deleted: null,
+            },
+          },
+        ],
+        NOT: {
+          srimg: {
+            deleted: null,
+          },
+        },
+      },
+      orderBy: {
+        wor: {
+          job_no: "asc",
+        },
+      },
+      include: {
+        srimg: {
+          include: {
+            srimgdetail: true,
+          },
+        },
+        wor: {
+          include: {
+            customerPo: {
+              include: {
+                quotations: {
+                  include: {
+                    CustomerContact: true,
+                    Customer: {
+                      include: {
+                        address: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        aktivitas: true,
+      },
+    });
+    if (result.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All Tms Summary",
+        result: result,
       });
     } else {
       return response.status(200).json({
@@ -304,6 +381,7 @@ const createSrimg = async (request: any, response: Response) => {
         equipment: request.body.equipment,
         qty: parseInt(request.body.qty),
         model: request.body.model,
+        ca_number: request.body.ca_number,
         ioem: request.body.ioem,
         isr: request.body.isr,
         itn: request.body.itn,
@@ -388,6 +466,7 @@ const updateSrimg = async (request: any, response: Response) => {
         isr: request.body.isr,
         itn: request.body.itn,
         equipment: request.body.equipment,
+        ca_number: request.body.ca_number,
         qty: parseInt(request.body.qty),
         model: request.body.model,
         introduction: request.body.introduction,
@@ -761,6 +840,7 @@ const deleteSrimgImg = async (request: any, response: Response) => {
 
 export default {
   getSrimg,
+  getSrimgId,
   getSrimBom,
   getSumaryTms,
   createSrimg,

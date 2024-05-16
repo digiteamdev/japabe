@@ -97,163 +97,432 @@ const getWor = async (request: Request, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const worCount = await prisma.wor.count({
-      where: {
-        deleted: null,
-        job_operational: divisi,
-      },
-    });
-    let results;
-    if (request.query.page === undefined && status != undefined) {
-      results = await prisma.wor.findMany({
+    let worCount: any;
+    if (divisi) {
+      worCount = await prisma.wor.count({
         where: {
-          status: status,
           deleted: null,
           job_operational: divisi,
-          timeschedule: {
-            deleted: null,
-          },
-          OR: [
-            {
-              timeschedule: {
-                deleted: { not: null },
-              },
-            },
-            {
-              timeschedule: null,
-            },
-          ],
-          NOT: {
-            timeschedule: null,
-          },
-        },
-        include: {
-          work_scope_item: true,
-          customerPo: {
-            include: {
-              quotations: {
-                include: {
-                  price_quotation: true,
-                  CustomerContact: true,
-                  Customer: {
-                    include: {
-                      address: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
-          timeschedule: true,
-          employee: true,
-        },
-        orderBy: {
-          no: "asc",
         },
       });
     } else {
-      results = await prisma.wor.findMany({
+      worCount = await prisma.wor.count({
         where: {
           deleted: null,
-          job_operational: divisi,
-          OR: [
-            {
-              job_no: {
-                contains: pencarian,
-                mode: "insensitive",
+        },
+      });
+    }
+    let results;
+    if (request.query.page === undefined) {
+      if (divisi) {
+        results = await prisma.wor.findMany({
+          where: {
+            deleted: null,
+            job_operational: divisi,
+            OR: [
+              {
+                job_no: {
+                  contains: pencarian,
+                  mode: "insensitive",
+                },
               },
-            },
-            {
-              OR: [
-                {
-                  customerPo: {
-                    quotations: {
-                      Customer: {
-                        name: {
+              {
+                OR: [
+                  {
+                    customerPo: {
+                      quotations: {
+                        Customer: {
+                          name: {
+                            contains: pencarian,
+                            mode: "insensitive",
+                          },
+                        },
+                      },
+                    },
+                  },
+                  {
+                    customerPo: {
+                      quotations: {
+                        quo_num: {
                           contains: pencarian,
                           mode: "insensitive",
                         },
                       },
                     },
                   },
-                },
-                {
-                  customerPo: {
-                    quotations: {
-                      quo_num: {
+                  {
+                    customerPo: {
+                      id_po: {
                         contains: pencarian,
                         mode: "insensitive",
                       },
                     },
                   },
-                },
-                {
-                  customerPo: {
-                    id_po: {
-                      contains: pencarian,
-                      mode: "insensitive",
-                    },
-                  },
-                },
-              ],
+                ],
+              },
+            ],
+            NOT: {
+              customerPo: null,
             },
-          ],
-          NOT: {
-            customerPo: null,
           },
-        },
-        include: {
-          work_scope_item: true,
-          customerPo: {
-            include: {
-              quotations: {
-                include: {
-                  price_quotation: true,
-                  CustomerContact: true,
-                  Customer: {
-                    include: {
-                      address: true,
+          include: {
+            work_scope_item: true,
+            customerPo: {
+              include: {
+                quotations: {
+                  include: {
+                    price_quotation: true,
+                    CustomerContact: true,
+                    Customer: {
+                      include: {
+                        address: true,
+                      },
                     },
                   },
                 },
               },
             },
+            timeschedule: {
+              include: {
+                drawing: true,
+                srimg: true,
+              },
+            },
+            employee: true,
+            estimator: true,
           },
-          timeschedule: {
-            include: {
-              drawing: true,
-              srimg: true,
+          orderBy: {
+            job_no: "asc",
+          },
+        });
+        if (results.length > 0) {
+          return response.status(200).json({
+            success: true,
+            massage: "Get All Wor",
+            result: results,
+            page: pagination.page,
+            limit: pagination.perPage,
+            totalData: worCount,
+            currentPage: pagination.currentPage,
+            nextPage: pagination.next(),
+            previouspage: pagination.prev(),
+          });
+        } else {
+          return response.status(200).json({
+            success: false,
+            massage: "No data",
+            totalData: 0,
+            result: [],
+          });
+        }
+      } else {
+        results = await prisma.wor.findMany({
+          where: {
+            deleted: null,
+            OR: [
+              {
+                job_no: {
+                  contains: pencarian,
+                  mode: "insensitive",
+                },
+              },
+              {
+                OR: [
+                  {
+                    customerPo: {
+                      quotations: {
+                        Customer: {
+                          name: {
+                            contains: pencarian,
+                            mode: "insensitive",
+                          },
+                        },
+                      },
+                    },
+                  },
+                  {
+                    customerPo: {
+                      quotations: {
+                        quo_num: {
+                          contains: pencarian,
+                          mode: "insensitive",
+                        },
+                      },
+                    },
+                  },
+                  {
+                    customerPo: {
+                      id_po: {
+                        contains: pencarian,
+                        mode: "insensitive",
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+            NOT: {
+              customerPo: null,
             },
           },
-          employee: true,
-          estimator: true,
-        },
-        orderBy: {
-          job_no: "asc",
-        },
-        take: parseInt(pagination.perPage),
-        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
-      });
-    }
-    if (results.length > 0) {
-      return response.status(200).json({
-        success: true,
-        massage: "Get All Wor",
-        result: results,
-        page: pagination.page,
-        limit: pagination.perPage,
-        totalData: worCount,
-        currentPage: pagination.currentPage,
-        nextPage: pagination.next(),
-        previouspage: pagination.prev(),
-      });
+          include: {
+            work_scope_item: true,
+            customerPo: {
+              include: {
+                quotations: {
+                  include: {
+                    price_quotation: true,
+                    CustomerContact: true,
+                    Customer: {
+                      include: {
+                        address: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            timeschedule: {
+              include: {
+                drawing: true,
+                srimg: true,
+              },
+            },
+            employee: true,
+            estimator: true,
+          },
+          orderBy: {
+            job_no: "asc",
+          },
+        });
+        if (results.length > 0) {
+          return response.status(200).json({
+            success: true,
+            massage: "Get All Wor",
+            result: results,
+            page: pagination.page,
+            limit: pagination.perPage,
+            totalData: worCount,
+            currentPage: pagination.currentPage,
+            nextPage: pagination.next(),
+            previouspage: pagination.prev(),
+          });
+        } else {
+          return response.status(200).json({
+            success: false,
+            massage: "No data",
+            totalData: 0,
+            result: [],
+          });
+        }
+      }
     } else {
-      return response.status(200).json({
-        success: false,
-        massage: "No data",
-        totalData: 0,
-        result: [],
-      });
+      if (divisi) {
+        results = await prisma.wor.findMany({
+          where: {
+            deleted: null,
+            job_operational: divisi,
+            OR: [
+              {
+                job_no: {
+                  contains: pencarian,
+                  mode: "insensitive",
+                },
+              },
+              {
+                OR: [
+                  {
+                    customerPo: {
+                      quotations: {
+                        Customer: {
+                          name: {
+                            contains: pencarian,
+                            mode: "insensitive",
+                          },
+                        },
+                      },
+                    },
+                  },
+                  {
+                    customerPo: {
+                      quotations: {
+                        quo_num: {
+                          contains: pencarian,
+                          mode: "insensitive",
+                        },
+                      },
+                    },
+                  },
+                  {
+                    customerPo: {
+                      id_po: {
+                        contains: pencarian,
+                        mode: "insensitive",
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+            NOT: {
+              customerPo: null,
+            },
+          },
+          include: {
+            work_scope_item: true,
+            customerPo: {
+              include: {
+                quotations: {
+                  include: {
+                    price_quotation: true,
+                    CustomerContact: true,
+                    Customer: {
+                      include: {
+                        address: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            timeschedule: {
+              include: {
+                drawing: true,
+                srimg: true,
+              },
+            },
+            employee: true,
+            estimator: true,
+          },
+          orderBy: {
+            job_no: "asc",
+          },
+          take: parseInt(pagination.perPage),
+          skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+        });
+        if (results.length > 0) {
+          return response.status(200).json({
+            success: true,
+            massage: "Get All Wor",
+            result: results,
+            page: pagination.page,
+            limit: pagination.perPage,
+            totalData: worCount,
+            currentPage: pagination.currentPage,
+            nextPage: pagination.next(),
+            previouspage: pagination.prev(),
+          });
+        } else {
+          return response.status(200).json({
+            success: false,
+            massage: "No data",
+            totalData: 0,
+            result: [],
+          });
+        }
+      } else {
+        results = await prisma.wor.findMany({
+          where: {
+            deleted: null,
+            OR: [
+              {
+                job_no: {
+                  contains: pencarian,
+                  mode: "insensitive",
+                },
+              },
+              {
+                OR: [
+                  {
+                    customerPo: {
+                      quotations: {
+                        Customer: {
+                          name: {
+                            contains: pencarian,
+                            mode: "insensitive",
+                          },
+                        },
+                      },
+                    },
+                  },
+                  {
+                    customerPo: {
+                      quotations: {
+                        quo_num: {
+                          contains: pencarian,
+                          mode: "insensitive",
+                        },
+                      },
+                    },
+                  },
+                  {
+                    customerPo: {
+                      id_po: {
+                        contains: pencarian,
+                        mode: "insensitive",
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+            NOT: {
+              customerPo: null,
+            },
+          },
+          include: {
+            work_scope_item: true,
+            customerPo: {
+              include: {
+                quotations: {
+                  include: {
+                    price_quotation: true,
+                    CustomerContact: true,
+                    Customer: {
+                      include: {
+                        address: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            timeschedule: {
+              include: {
+                drawing: true,
+                srimg: true,
+              },
+            },
+            employee: true,
+            estimator: true,
+          },
+          orderBy: {
+            job_no: "asc",
+          },
+          take: parseInt(pagination.perPage),
+          skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+        });
+        if (results.length > 0) {
+          return response.status(200).json({
+            success: true,
+            massage: "Get All Wor",
+            result: results,
+            page: pagination.page,
+            limit: pagination.perPage,
+            totalData: worCount,
+            currentPage: pagination.currentPage,
+            nextPage: pagination.next(),
+            previouspage: pagination.prev(),
+          });
+        } else {
+          return response.status(200).json({
+            success: false,
+            massage: "No data",
+            totalData: 0,
+            result: [],
+          });
+        }
+      }
     }
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string

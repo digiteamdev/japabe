@@ -607,7 +607,6 @@ const updateApprovalSr = async (request: Request, response: Response) => {
               },
               data: {
                 srappr: updateVerify[i].srappr,
-                supplier: { connect: { id: updateVerify[i].supId } },
                 approvedRequest: { connect: { id: result.id } },
                 qtyAppr: parseInt(updateVerify[i].qtyAppr),
               },
@@ -668,48 +667,49 @@ const getdetailSr = async (request: Request, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const pr = await prisma.srDetail.count({
-      where: {
-        deleted: null,
-        NOT: {
-          idPurchaseR: null,
-        },
-      },
-    });
     let results;
-    if (request.query.page === undefined) {
-      results = await prisma.srDetail.findMany({
-        where: {
-          approvedRequestId: null,
-          sr: {
-            status_manager: "valid",
-            status_spv: "valid",
+    results = await prisma.sr.findMany({
+      where: {
+        status_manager_director: "approve",
+        no_sr: {
+          contains: pencarian,
+          mode: "insensitive",
+        },
+        OR: [
+          {
+            SrDetail: {
+              some: {
+                supId: null,
+              },
+            },
+          },
+        ],
+        SrDetail: {
+          every: {
+            approvedRequestId: null,
           },
         },
-        include: {
-          sr: {
-            include: {
-              wor: true,
-              user: {
-                select: {
-                  id: true,
-                  username: true,
-                  employee: {
-                    select: {
-                      id: true,
-                      employee_name: true,
-                      position: true,
-                      sub_depart: {
-                        select: {
-                          id: true,
-                          name: true,
-                          departement: {
-                            select: {
-                              id: true,
-                              name: true,
-                            },
-                          },
-                        },
+      },
+      include: {
+        SrDetail: true,
+        wor: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            employee: {
+              select: {
+                id: true,
+                employee_name: true,
+                position: true,
+                sub_depart: {
+                  select: {
+                    id: true,
+                    name: true,
+                    departement: {
+                      select: {
+                        id: true,
+                        name: true,
                       },
                     },
                   },
@@ -718,19 +718,13 @@ const getdetailSr = async (request: Request, response: Response) => {
             },
           },
         },
-        orderBy: {
-          createdAt: "desc",
-        },
-      });
-    } else {
-      results = await prisma.mr.findMany({
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: parseInt(pagination.perPage),
-        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
-      });
-    }
+      },
+      orderBy: {
+        no_sr: "desc",
+      },
+      take: parseInt(pagination.perPage),
+      skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+    });
     if (results.length > 0) {
       return response.status(200).json({
         success: true,
@@ -738,7 +732,7 @@ const getdetailSr = async (request: Request, response: Response) => {
         result: results,
         page: pagination.page,
         limit: pagination.perPage,
-        totalData: pr,
+        totalData: results.length,
         currentPage: pagination.currentPage,
         nextPage: pagination.next(),
         previouspage: pagination.prev(),

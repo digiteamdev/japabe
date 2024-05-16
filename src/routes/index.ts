@@ -85,12 +85,7 @@ router.put(
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
   user.updateUser
 );
-router.put(
-  "/userPhoto/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
-  upload.single("photo", 1000),
-  user.updatePhoto
-);
+router.put("/userPhoto/:id", upload.single("photo", 1000), user.updatePhoto);
 router.delete(
   "/user/:id",
   jwt.authToken({ administrator: "ADMINISTRATOR" }),
@@ -809,6 +804,7 @@ router.get(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   wor.getJobStatus
 );
@@ -826,6 +822,7 @@ router.get(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   wor.getWor
 );
@@ -843,6 +840,7 @@ router.get(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   wor.getWorbyId
 );
@@ -1013,6 +1011,24 @@ router.get(
   }),
   srimg.getSrimg
 );
+
+router.get(
+  "/summary/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  srimg.getSrimgId
+);
+
 router.post(
   "/summary",
   jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
@@ -1140,6 +1156,7 @@ router.get(
   }),
   dispacth.getDispatch
 );
+
 router.get(
   "/sumarryDispacth",
   jwt.authToken({
@@ -1395,6 +1412,22 @@ router.get(
   }),
   drawing.getDrawing
 );
+router.get(
+  "/drawing/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  drawing.getDrawingId
+);
 router.post(
   "/drawing",
   jwt.authToken({ administrator: "ADMINISTRATOR", QAandEng: "QA & ENG" }),
@@ -1594,6 +1627,7 @@ router.get(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   MR.getMr
 );
@@ -1611,6 +1645,7 @@ router.get(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   MR.getdetailMr
 );
@@ -1628,6 +1663,7 @@ router.post(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   MR.createMr
 );
@@ -1645,6 +1681,7 @@ router.put(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   MR.upsertMr
 );
@@ -1662,6 +1699,7 @@ router.put(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   MR.updateMr
 );
@@ -1728,6 +1766,7 @@ router.put(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   MR.updateApprovalOne
 );
@@ -1745,6 +1784,7 @@ router.delete(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   MR.deleteMr
 );
@@ -1762,6 +1802,7 @@ router.delete(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   MR.deleteMrDetail
 );
@@ -1783,6 +1824,7 @@ router.get(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   SR.getSr
 );
@@ -1800,6 +1842,7 @@ router.get(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   SR.getdetailSr
 );
@@ -1817,6 +1860,7 @@ router.post(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   SR.createSr
 );
@@ -1834,6 +1878,7 @@ router.put(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   SR.updateSr
 );
@@ -1885,6 +1930,7 @@ router.put(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   SR.upsertSr
 );
@@ -1902,6 +1948,7 @@ router.put(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   SR.updateApprovalOneSR
 );
@@ -1936,6 +1983,7 @@ router.delete(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   SR.deleteSr
 );
@@ -1953,6 +2001,7 @@ router.delete(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   SR.deleteDetailSr
 );
@@ -2504,6 +2553,15 @@ router.put(
 );
 
 router.put(
+  "/postingJournal",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    finance: "FINANCE & ACC",
+  }),
+  cashier.updateJournalPosting
+);
+
+router.put(
   "/duedatevalid",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
@@ -2811,6 +2869,7 @@ router.get(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   timeSheet.getTimeSheet
 );
@@ -2828,6 +2887,7 @@ router.post(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   timeSheet.createTimeSheet
 );
@@ -2845,6 +2905,7 @@ router.put(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   timeSheet.updateTimeSheet
 );
@@ -2862,6 +2923,7 @@ router.delete(
     drafter: "DRAFTER",
     ppic: "Ppic",
     utility: "Utility/ty",
+    public: "public",
   }),
   timeSheet.deletetime_sheet
 );

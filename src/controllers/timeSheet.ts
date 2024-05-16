@@ -14,6 +14,9 @@ const getTimeSheet = async (request: any, response: Response) => {
     const pagination: any = new pagging(page, perPage, hostname, pathname);
     const timeSheetCount = await prisma.time_sheet.count({
       where: {
+        user: {
+          username: request.session.userId,
+        },
         deleted: null,
       },
     });
@@ -24,12 +27,21 @@ const getTimeSheet = async (request: any, response: Response) => {
           user: {
             username: request.session.userId,
           },
-          job: {
-            contains: pencarian,
-            mode: "insensitive",
-          },
+          OR: [
+            {
+              user: {
+                employee: {
+                  employee_name: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+          ],
         },
         include: {
+          time_sheet_add: true,
           user: {
             include: {
               employee: {
@@ -56,13 +68,22 @@ const getTimeSheet = async (request: any, response: Response) => {
           user: {
             username: request.session.userId,
           },
-          job: {
-            contains: pencarian,
-            mode: "insensitive",
-          },
+          OR: [
+            {
+              user: {
+                employee: {
+                  employee_name: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+          ],
           type_timesheet: type,
         },
         include: {
+          time_sheet_add: true,
           user: {
             include: {
               employee: {
@@ -112,7 +133,14 @@ const getTimeSheet = async (request: any, response: Response) => {
 const createTimeSheet = async (request: Request, response: Response) => {
   try {
     const results = await prisma.time_sheet.create({
-      data: request.body,
+      data: {
+        date: new Date(request.body.date),
+        user: { connect: { id: request.body.userId } },
+        type_timesheet: request.body.type_timesheet,
+        time_sheet_add: {
+          create: request.body.time_sheet_add,
+        },
+      },
     });
     if (results) {
       response.status(201).json({
@@ -134,17 +162,89 @@ const createTimeSheet = async (request: Request, response: Response) => {
 const updateTimeSheet = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
-    const updateCoa = await prisma.time_sheet.update({
-      data: request.body,
+    let result: any = [];
+    const updateOne = await prisma.time_sheet.update({
+      data: {
+        date: new Date(request.body.date),
+        user: { connect: { id: request.body.userId } },
+        type_timesheet: request.body.type_timesheet,
+      },
       where: {
         id: id,
       },
     });
-    if (updateCoa) {
+    const timesAdd = request.body.time_sheet_add;
+    const updateVerify = timesAdd.map(
+      (updateByveri: {
+        job: any;
+        job_description: any;
+        part_name: any;
+        actual_start: any;
+        actual_finish: any;
+        timesheetId: any;
+        total_hours: any;
+        id: any;
+      }) => {
+        return {
+          job: updateByveri.job,
+          job_description: updateByveri.job_description,
+          part_name: updateByveri.part_name,
+          actual_start: updateByveri.actual_start,
+          actual_finish: updateByveri.actual_finish,
+          timesheetId: updateByveri.timesheetId,
+          total_hours: updateByveri.total_hours,
+          id: updateByveri.id,
+        };
+      }
+    );
+    const timeDelete = request.body.delete;
+    const deleteQu = timeDelete.map((deleteByveri: { id: any }) => {
+      return {
+        id: deleteByveri.id,
+      };
+    });
+    if (updateVerify) {
+      for (let i = 0; i < updateVerify.length; i++) {
+        const updateTimes = await prisma.time_sheet_add.upsert({
+          where: {
+            id: updateVerify[i].id,
+          },
+          create: {
+            job: updateVerify[i].job,
+            time_sheet: { connect: { id: updateVerify[i].timesheetId } },
+            job_description: updateVerify[i].job_description,
+            part_name: updateVerify[i].part_name,
+            actual_start: new Date(updateVerify[i].actual_start),
+            actual_finish: new Date(updateVerify[i].actual_finish),
+            total_hours: updateVerify[i].total_hours,
+          },
+          update: {
+            job: updateVerify[i].job,
+            time_sheet: { connect: { id: updateVerify[i].timesheetId } },
+            job_description: updateVerify[i].job_description,
+            part_name: updateVerify[i].part_name,
+            actual_start: new Date(updateVerify[i].actual_start),
+            actual_finish: new Date(updateVerify[i].actual_finish),
+            total_hours: updateVerify[i].total_hours,
+          },
+        });
+        result = [...result, updateTimes];
+      }
+    }
+    if (deleteQu) {
+      for (let i = 0; i < deleteQu.length; i++) {
+        await prisma.time_sheet_add.delete({
+          where: {
+            id: deleteQu[i].id,
+          },
+        });
+      }
+    }
+    if (result || updateOne || !updateVerify || deleteQu) {
       response.status(201).json({
         success: true,
         massage: "Success Delete Data",
-        results: updateCoa,
+        results: result,
       });
     } else {
       response.status(400).json({
@@ -160,16 +260,16 @@ const updateTimeSheet = async (request: Request, response: Response) => {
 const deletetime_sheet = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
-    const deleteCoa = await prisma.time_sheet.delete({
+    const deletetime_sheet = await prisma.time_sheet.delete({
       where: {
         id: id,
       },
     });
-    if (deleteCoa) {
+    if (deletetime_sheet) {
       response.status(201).json({
         success: true,
         massage: "Success Delete Data",
-        results: deleteCoa,
+        results: deletetime_sheet,
       });
     } else {
       response.status(400).json({

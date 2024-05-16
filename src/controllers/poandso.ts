@@ -13,133 +13,24 @@ const getPo = async (request: Request, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const poandsoCount = await prisma.purchase.count({
+    const results = await prisma.mr.findMany({
       where: {
-        deleted: null,
-        OR: [
-          {
-            status_manager_director: null,
+        status_manager_director: "approve",
+        no_mr: {
+          contains: pencarian,
+          mode: "insensitive",
+        },
+        detailMr: {
+          some: {
+            poandsoId: null,
           },
-          {
-            status_manager_director: "revision",
-          },
-          {
-            detailMr: {
-              some: {
-                poandso: {
-                  status_manager: true,
-                },
-              },
-            },
-          },
-          {
-            SrDetail: {
-              some: {
-                poandso: {
-                  status_manager: true,
-                },
-              },
-            },
-          },
-        ],
+        },
         NOT: [
           {
             detailMr: {
               some: {
-                poandsoId: null,
-              },
-            },
-          },
-          {
-            SrDetail: {
-              some: {
-                poandsoId: null,
-              },
-            },
-          },
-        ],
-        idPurchase: {
-          startsWith: type,
-        },
-      },
-    });
-    const results = await prisma.purchase.findMany({
-      where: {
-        deleted: null,
-        idPurchase: {
-          startsWith: type,
-        },
-        OR: [
-          {
-            status_manager_director: null,
-          },
-          {
-            status_manager_director: "revision",
-          },
-          {
-            detailMr: {
-              some: {
-                poandso: {
-                  id_so: {
-                    contains: pencarian,
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-          },
-          {
-            SrDetail: {
-              some: {
-                poandso: {
-                  id_so: {
-                    contains: pencarian,
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-          },
-          {
-            SrDetail: {
-              some: {
-                supplier: {
-                  supplier_name: {
-                    contains: pencarian,
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-          },
-          {
-            detailMr: {
-              some: {
-                supplier: {
-                  supplier_name: {
-                    contains: pencarian,
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-          },
-        ],
-        AND: [
-          {
-            status_manager_pr: true,
-          },
-          {
-            detailMr: {
-              every: {
-                poandso: null,
-              },
-            },
-          },
-          {
-            SrDetail: {
-              every: {
-                poandso: null,
+                mrappr: type,
+                supId: null,
               },
             },
           },
@@ -147,114 +38,51 @@ const getPo = async (request: Request, response: Response) => {
       },
       include: {
         detailMr: {
+          where: {
+            poandsoId: null,
+          },
           include: {
             Material_Master: true,
             supplier: {
               include: {
-                SupplierContact: true,
                 SupplierBank: true,
-              },
-            },
-            approvedRequest: true,
-            mr: {
-              include: {
-                wor: {
-                  include: {
-                    customerPo: {
-                      include: {
-                        quotations: {
-                          include: {
-                            CustomerContact: true,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-                bom: {
-                  include: {
-                    bom_detail: {
-                      include: {
-                        Material_Master: true,
-                      },
-                    },
-                    srimg: {
-                      include: {
-                        srimgdetail: true,
-                      },
-                    },
-                  },
-                },
-                user: {
-                  select: {
-                    id: true,
-                    username: true,
-                    employee: {
-                      select: {
-                        id: true,
-                        employee_name: true,
-                        position: true,
-                        sub_depart: {
-                          select: {
-                            id: true,
-                            name: true,
-                            departement: {
-                              select: {
-                                id: true,
-                                name: true,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
+                SupplierContact: true,
               },
             },
           },
         },
-        SrDetail: {
+        wor: true,
+        bom: {
           include: {
-            supplier: {
+            bom_detail: {
               include: {
-                SupplierContact: true,
-                SupplierBank: true,
+                Material_Master: true,
               },
             },
-            approvedRequest: true,
-            sr: {
+            srimg: {
               include: {
-                wor: {
-                  include: {
-                    Quotations: {
-                      include: {
-                        CustomerContact: true,
-                      },
-                    },
-                  },
-                },
-                user: {
+                srimgdetail: true,
+              },
+            },
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            username: true,
+            employee: {
+              select: {
+                id: true,
+                employee_name: true,
+                position: true,
+                sub_depart: {
                   select: {
                     id: true,
-                    username: true,
-                    employee: {
+                    name: true,
+                    departement: {
                       select: {
                         id: true,
-                        employee_name: true,
-                        position: true,
-                        sub_depart: {
-                          select: {
-                            id: true,
-                            name: true,
-                            departement: {
-                              select: {
-                                id: true,
-                                name: true,
-                              },
-                            },
-                          },
-                        },
+                        name: true,
                       },
                     },
                   },
@@ -265,8 +93,10 @@ const getPo = async (request: Request, response: Response) => {
         },
       },
       orderBy: {
-        createdAt: "desc",
+        no_mr: "desc",
       },
+      take: parseInt(pagination.perPage),
+      skip: parseInt(pagination.page) * parseInt(pagination.perPage),
     });
     if (results.length > 0) {
       return response.status(200).json({
@@ -275,7 +105,7 @@ const getPo = async (request: Request, response: Response) => {
         result: results,
         page: pagination.page,
         limit: pagination.perPage,
-        totalData: poandsoCount,
+        totalData: results.length,
         currentPage: pagination.currentPage,
         nextPage: pagination.next(),
         previouspage: pagination.prev(),
@@ -473,9 +303,6 @@ const getPoandSo = async (request: Request, response: Response) => {
           AND: [
             {
               status_receive: false,
-            },
-            {
-              status_manager_director: "approve",
             },
             {
               id_so: {
@@ -945,9 +772,6 @@ const getAllReceive = async (request: Request, response: Response) => {
         where: {
           AND: [
             {
-              status_manager_director: "approve",
-            },
-            {
               status_receive: true,
             },
           ],
@@ -1265,9 +1089,6 @@ const getAllReceive = async (request: Request, response: Response) => {
           AND: [
             {
               status_receive: true,
-            },
-            {
-              status_manager_director: "approve",
             },
             {
               id_so: {
@@ -1739,6 +1560,41 @@ const updatePoandSo = async (request: Request, response: Response) => {
                   status_receive: false,
                 },
               });
+            }
+            // journal
+            const getPO = await prisma.poandso.findFirst({
+              where: {
+                id: result.id,
+                id_so: {
+                  startsWith: "PO",
+                },
+              },
+              include: {
+                detailMr: true,
+              },
+            });
+            const updateTotalPo: any = getPO?.detailMr;
+            if (getPO) {
+              for (let index = 0; index < updateTotalPo.length; index++) {
+                await prisma.journal_cashier.createMany({
+                  data: [
+                    {
+                      coa_id: "clsijq6ib0001cz5i00exhz5l",
+                      status_transaction: "Debet",
+                      poandsoId: getPO.id,
+                      id_receive: getPO.id_receive,
+                      grandtotal: updateTotalPo[index].total,
+                    },
+                    {
+                      coa_id: "clsijof120000cz5ir5v067vu",
+                      status_transaction: "Kredit",
+                      poandsoId: getPO.id,
+                      id_receive: getPO.id_receive,
+                      grandtotal: updateTotalPo[index].total,
+                    },
+                  ],
+                });
+              }
             }
           }
           response.status(201).json({

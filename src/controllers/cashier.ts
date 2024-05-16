@@ -1501,7 +1501,6 @@ const createCashier = async (request: Request, response: Response) => {
           results = await prisma.cashier.create({
             data: {
               id_cashier: request.body.id_cashier,
-              job_no: request.body.job_no,
               status_payment: request.body.status_payment,
               date_cashier: request.body.date_cashier,
               note: request.body.note,
@@ -1824,12 +1823,8 @@ const getPosting = async (request: Request, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const cashieCount = await prisma.cashier.count({
-      where: {
-        deleted: null,
-      },
-    });
     let results: any;
+    let cashier: any;
     if (request.query.page === undefined) {
       results = await prisma.cashier.findMany({
         where: {
@@ -2148,7 +2143,41 @@ const getPosting = async (request: Request, response: Response) => {
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
     } else {
-      results = await prisma.cashier.findMany({
+      results = await prisma.poandso.findMany({
+        where: {
+          NOT: {
+            journal_cashier: {
+              every: {
+                poandsoId: null,
+              },
+            },
+          },
+        },
+        include: {
+          journal_cashier: {
+            include: {
+              coa: true,
+            },
+          },
+          detailMr: {
+            include: {
+              Material_Master: true,
+              supplier: true,
+            },
+          },
+          SrDetail: {
+            include: {
+              supplier: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: parseInt(pagination.perPage),
+        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+      });
+      cashier = await prisma.cashier.findMany({
         where: {
           id_cashier: {
             contains: pencarian,
@@ -2465,14 +2494,15 @@ const getPosting = async (request: Request, response: Response) => {
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
     }
+    const totalData: any = parseInt(results.length) + parseInt(cashier.length);
     if (results.length > 0) {
       return response.status(200).json({
         success: true,
         massage: "Get All Posting Cashier",
-        result: results,
+        result: [...results, ...cashier],
         page: pagination.page,
         limit: pagination.perPage,
-        totalData: cashieCount,
+        totalData: totalData,
         currentPage: pagination.currentPage,
         nextPage: pagination.next(),
         previouspage: pagination.prev(),
@@ -2519,6 +2549,108 @@ const updatePosting = async (request: Request, response: Response) => {
   }
 };
 
+const updateJournalPosting = async (request: Request, response: Response) => {
+  try {
+    const updateVerify = request.body.journal.map(
+      (updateByveri: {
+        coa_id: any;
+        grandtotal: any;
+        status_transaction: any;
+        cashier_id: any;
+        poandsoId: any;
+        status: any;
+        id: any;
+      }) => {
+        return {
+          coa_id: updateByveri.coa_id,
+          grandtotal: updateByveri.grandtotal,
+          status_transaction: updateByveri.status_transaction,
+          cashier_id: updateByveri.cashier_id,
+          poandsoId: updateByveri.poandsoId,
+          status: updateByveri.status,
+          id: updateByveri.id,
+        };
+      }
+    );
+    const deleteQu = request.body.delete.map((deleteByveri: { id: any }) => {
+      return {
+        id: deleteByveri.id,
+      };
+    });
+    let result: any = [];
+    if (updateVerify) {
+      for (let i = 0; i < updateVerify.length; i++) {
+        if (updateVerify[i].cashier_id === null) {
+          const updateJournal = await prisma.journal_cashier.upsert({
+            where: {
+              id: updateVerify[i].id,
+            },
+            create: {
+              grandtotal: updateVerify[i].grandtotal,
+              status_transaction: updateVerify[i].status_transaction,
+              status: updateVerify[i].status,
+              coa: { connect: { id: updateVerify[i].coa_id } },
+              poandso: { connect: { id: updateVerify[i].poandsoId } },
+            },
+            update: {
+              grandtotal: updateVerify[i].grandtotal,
+              status_transaction: updateVerify[i].status_transaction,
+              status: updateVerify[i].status,
+              coa: { connect: { id: updateVerify[i].coa_id } },
+              poandso: { connect: { id: updateVerify[i].poandsoId } },
+            },
+          });
+          result = [...result, updateJournal];
+        } else if (updateVerify[i].poandsoId === null) {
+          const updateJournal = await prisma.journal_cashier.upsert({
+            where: {
+              id: updateVerify[i].id,
+            },
+            create: {
+              grandtotal: updateVerify[i].grandtotal,
+              status_transaction: updateVerify[i].status_transaction,
+              status: updateVerify[i].status,
+              coa: { connect: { id: updateVerify[i].coa_id } },
+              cashier: { connect: { id: updateVerify[i].cashier_id } },
+            },
+            update: {
+              grandtotal: updateVerify[i].grandtotal,
+              status_transaction: updateVerify[i].status_transaction,
+              status: updateVerify[i].status,
+              coa: { connect: { id: updateVerify[i].coa_id } },
+              cashier: { connect: { id: updateVerify[i].cashier_id } },
+            },
+          });
+          result = [...result, updateJournal];
+        }
+      }
+    }
+    if (deleteQu) {
+      for (let i = 0; i < deleteQu.length; i++) {
+        await prisma.journal_cashier.delete({
+          where: {
+            id: deleteQu[i].id,
+          },
+        });
+      }
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        result: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getCashier,
   getPosting,
@@ -2531,4 +2663,5 @@ export default {
   deleteDetailCashier,
   updateStatusM,
   updatePosting,
+  updateJournalPosting,
 };

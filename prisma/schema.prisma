@@ -740,6 +740,7 @@ model timeschedule {
 model srimg {
   id              String        @id @default(cuid())
   id_summary      String?       @db.VarChar(200)
+  ca_number       String?       @db.Text
   date_of_summary DateTime?
   timeschedule    timeschedule? @relation(fields: [timeschId], references: [id])
   timeschId       String?       @unique
@@ -782,6 +783,7 @@ model srimgdetail {
 enum choice {
   Manufacture_New @map("Manufacture New")
   Supply_New      @map("Supply New")
+  Inspection
   Repair
 }
 
@@ -1287,6 +1289,8 @@ model journal_cashier {
   purchaseID         String?
   status_transaction status_transaction
   grandtotal         Int                @default(0)
+  status             Boolean            @default(false)
+  id_receive         String?            @db.Text
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
   deleted            DateTime?
@@ -1384,18 +1388,28 @@ enum type_timesheet {
 }
 
 model time_sheet {
-  id              String          @id @default(cuid())
-  date            DateTime
-  job             String?         @db.Text
-  job_description String?         @db.Text
-  part_name       String?         @db.Text
-  user            User?           @relation(fields: [userId], references: [id])
-  type_timesheet  type_timesheet?
-  userId          String
+  id             String           @id @default(cuid())
+  date           DateTime
+  user           User?            @relation(fields: [userId], references: [id])
+  type_timesheet type_timesheet?
+  userId         String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  deleted        DateTime?
+  time_sheet_add time_sheet_add[]
+}
+
+model time_sheet_add {
+  id              String      @id @default(cuid())
+  time_sheet      time_sheet? @relation(fields: [timesheetId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  timesheetId     String
   actual_start    DateTime?
   actual_finish   DateTime?
+  job             String?     @db.Text
+  job_description String?     @db.Text
+  part_name       String?     @db.Text
   total_hours     String
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
   deleted         DateTime?
 }

@@ -13,11 +13,6 @@ const getMr = async (request: any, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const MrCount = await prisma.mr.count({
-      where: {
-        deleted: null,
-      },
-    });
     let results;
     if (request.query.page === undefined && status != undefined) {
       results = await prisma.mr.findMany({
@@ -30,6 +25,27 @@ const getMr = async (request: any, response: Response) => {
       const userLogin = await prisma.user.findFirst({
         where: {
           username: request.session.userId,
+        },
+        include: {
+          employee: {
+            select: {
+              id: true,
+              employee_name: true,
+              position: true,
+              sub_depart: {
+                select: {
+                  id: true,
+                  name: true,
+                  departement: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       });
       const a: any = userLogin?.employeeId;
@@ -45,6 +61,11 @@ const getMr = async (request: any, response: Response) => {
       ) {
         results = await prisma.mr.findMany({
           where: {
+            user: {
+              employee: {
+                sub_depart: { id: userLogin?.employee?.sub_depart?.id },
+              },
+            },
             no_mr: {
               contains: pencarian,
               mode: "insensitive",
@@ -236,7 +257,7 @@ const getMr = async (request: any, response: Response) => {
         result: results,
         page: pagination.page,
         limit: pagination.perPage,
-        totalData: MrCount,
+        totalData: results.length,
         currentPage: pagination.currentPage,
         nextPage: pagination.next(),
         previouspage: pagination.prev(),
@@ -635,54 +656,57 @@ const getdetailMr = async (request: Request, response: Response) => {
       },
     });
     let results;
-    if (request.query.page === undefined) {
-      results = await prisma.detailMr.findMany({
-        where: {
-          approvedRequestId: null,
-          mr: {
-            status_manager: "valid",
-            status_spv: "valid",
+    results = await prisma.mr.findMany({
+      where: {
+        status_manager: "valid",
+        no_mr: {
+          contains: pencarian,
+          mode: "insensitive",
+        },
+        detailMr: {
+          every: {
+            approvedRequestId: null,
           },
         },
-        include: {
-          Material_Master: true,
-          mr: {
-            include: {
-              wor: true,
-              bom: {
-                include: {
-                  bom_detail: {
-                    include: {
-                      Material_Master: true,
-                    },
-                  },
-                  srimg: {
-                    include: {
-                      srimgdetail: true,
-                    },
-                  },
-                },
+      },
+      include: {
+        detailMr: {
+          include: {
+            Material_Master: true,
+          },
+        },
+        wor: true,
+        bom: {
+          include: {
+            bom_detail: {
+              include: {
+                Material_Master: true,
               },
-              user: {
-                select: {
-                  id: true,
-                  username: true,
-                  employee: {
-                    select: {
-                      id: true,
-                      employee_name: true,
-                      position: true,
-                      sub_depart: {
-                        select: {
-                          id: true,
-                          name: true,
-                          departement: {
-                            select: {
-                              id: true,
-                              name: true,
-                            },
-                          },
-                        },
+            },
+            srimg: {
+              include: {
+                srimgdetail: true,
+              },
+            },
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            username: true,
+            employee: {
+              select: {
+                id: true,
+                employee_name: true,
+                position: true,
+                sub_depart: {
+                  select: {
+                    id: true,
+                    name: true,
+                    departement: {
+                      select: {
+                        id: true,
+                        name: true,
                       },
                     },
                   },
@@ -691,19 +715,13 @@ const getdetailMr = async (request: Request, response: Response) => {
             },
           },
         },
-        orderBy: {
-          createdAt: "desc",
-        },
-      });
-    } else {
-      results = await prisma.mr.findMany({
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: parseInt(pagination.perPage),
-        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
-      });
-    }
+      },
+      orderBy: {
+        no_mr: "desc",
+      },
+      take: parseInt(pagination.perPage),
+      skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+    });
     if (results.length > 0) {
       return response.status(200).json({
         success: true,
@@ -765,7 +783,6 @@ const updateApproval = async (request: any, response: Response) => {
               },
               data: {
                 mrappr: updateVerify[i].mrappr,
-                supplier: { connect: { id: updateVerify[i].supId } },
                 approvedRequest: { connect: { id: result.id } },
                 qtyAppr: parseInt(updateVerify[i].qtyAppr),
               },
@@ -901,14 +918,6 @@ const getPrM = async (request: Request, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const pr = await prisma.purchase.count({
-      where: {
-        deleted: null,
-        idPurchase: {
-          startsWith: typeMR,
-        },
-      },
-    });
     let results;
     if (request.query.page === undefined) {
       results = await prisma.detailMr.findMany({
@@ -976,6 +985,88 @@ const getPrM = async (request: Request, response: Response) => {
         orderBy: {
           createdAt: "desc",
         },
+        take: parseInt(pagination.perPage),
+        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+      });
+      results = await prisma.mr.findMany({
+        where: {
+          status_manager_director: "approve",
+          no_mr: {
+            contains: pencarian,
+            mode: "insensitive",
+          },
+          OR: [
+            {
+              detailMr: {
+                some: {
+                  mrappr: typeMR,
+                  supId: null
+                },
+              },
+            },
+          ],
+          NOT: [
+            {
+              detailMr: {
+                every: {
+                  approvedRequestId: null,
+                },
+              },
+            },
+          ],
+        },
+        include: {
+          detailMr: {
+            include: {
+              Material_Master: true,
+            },
+          },
+          wor: true,
+          bom: {
+            include: {
+              bom_detail: {
+                include: {
+                  Material_Master: true,
+                },
+              },
+              srimg: {
+                include: {
+                  srimgdetail: true,
+                },
+              },
+            },
+          },
+          user: {
+            select: {
+              id: true,
+              username: true,
+              employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                  position: true,
+                  sub_depart: {
+                    select: {
+                      id: true,
+                      name: true,
+                      departement: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          no_mr: "desc",
+        },
+        take: parseInt(pagination.perPage),
+        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
     } else {
       results = await prisma.purchase.findMany({
@@ -983,6 +1074,14 @@ const getPrM = async (request: Request, response: Response) => {
           idPurchase: {
             contains: pencarian,
             mode: "insensitive",
+          },
+          detailMr: {
+            every: {
+              supId: null,
+              mr: {
+                status_manager_director: "approve"
+              }
+            },
           },
           OR: [
             {
@@ -1058,7 +1157,7 @@ const getPrM = async (request: Request, response: Response) => {
         result: results,
         page: pagination.page,
         limit: pagination.perPage,
-        totalData: pr,
+        totalData: results.length,
         currentPage: pagination.currentPage,
         nextPage: pagination.next(),
         previouspage: pagination.prev(),
@@ -1153,32 +1252,32 @@ const updatePr = async (request: Request, response: Response) => {
                 statusMr: "Approval",
               },
             });
-            const getDmr = await prisma.purchase.findFirst({
-              where: {
-                id: result.id,
-                idPurchase: {
-                  startsWith: "DMR",
-                },
-              },
-            });
-            if (getDmr) {
-              await prisma.journal_cashier.createMany({
-                data: [
-                  {
-                    coa_id: "clsijsq3s0003cz5ih2fa64xv",
-                    status_transaction: "Debet",
-                    purchaseID: result.id,
-                    grandtotal: updateStatus[index].total,
-                  },
-                  {
-                    coa_id: "cls172hpp000fczze86zfh7yn",
-                    status_transaction: "Kredit",
-                    purchaseID: result.id,
-                    grandtotal: updateStatus[index].total,
-                  },
-                ],
-              });
-            }
+            // const getDmr = await prisma.purchase.findFirst({
+            //   where: {
+            //     id: result.id,
+            //     idPurchase: {
+            //       startsWith: "DMR",
+            //     },
+            //   },
+            // });
+            // if (getDmr) {
+            //   await prisma.journal_cashier.createMany({
+            //     data: [
+            //       {
+            //         coa_id: "clsijsq3s0003cz5ih2fa64xv",
+            //         status_transaction: "Debet",
+            //         purchaseID: result.id,
+            //         grandtotal: updateStatus[index].total,
+            //       },
+            //       {
+            //         coa_id: "cls172hpp000fczze86zfh7yn",
+            //         status_transaction: "Kredit",
+            //         purchaseID: result.id,
+            //         grandtotal: updateStatus[index].total,
+            //       },
+            //     ],
+            //   });
+            // }
           }
           response.status(201).json({
             success: true,
@@ -1517,7 +1616,7 @@ const updateMrDirector = async (request: any, response: Response) => {
       },
     });
     let result;
-    let error_position: boolean = false;    
+    let error_position: boolean = false;
     if (
       (emplo?.position === "Director" &&
         request.body.statusApprove.status_manager_director !== undefined) ||
@@ -1546,6 +1645,14 @@ const updateMrDirector = async (request: any, response: Response) => {
             },
           });
         }
+      }
+      if (request.body.statusApprove.status_manager_director === "reject") {
+        await prisma.mr.update({
+          where: { id: id },
+          data: {
+            statusMr: "Reject",
+          },
+        });
       }
     } else if (
       (emplo?.position === "Director" &&
