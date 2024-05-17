@@ -1446,7 +1446,7 @@ const getAllReceive = async (request: Request, response: Response) => {
         result: [...result, ...res, ...cdvSpj],
         page: pagination.page,
         limit: pagination.perPage,
-        totalData: poandsoCount,
+        totalData: result.length,
         currentPage: pagination.currentPage,
         nextPage: pagination.next(),
         previouspage: pagination.prev(),
@@ -1528,14 +1528,33 @@ const updatePoandSo = async (request: Request, response: Response) => {
                   mr: true,
                 },
               });
-              await prisma.mr.update({
+              const statusSr: any = await prisma.srDetail.findFirst({
                 where: {
-                  id: statusMr.mr.id,
+                  poandsoId: result.id,
                 },
-                data: {
-                  statusMr: "Receive",
+                include: {
+                  sr: true,
                 },
               });
+              if (statusMr) {
+                await prisma.mr.update({
+                  where: {
+                    id: statusMr.mr.id,
+                  },
+                  data: {
+                    statusMr: "Receive",
+                  },
+                });
+              } else if (statusSr) {
+                await prisma.sr.update({
+                  where: {
+                    id: statusMr.mr.id,
+                  },
+                  data: {
+                    statusSr: "Receive",
+                  },
+                });
+              }
               const getMaterialS = await prisma.material_Master.findFirst({
                 where: {
                   id: statusMr.materialId,
