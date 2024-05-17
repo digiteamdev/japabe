@@ -898,19 +898,30 @@ const getPsR = async (request: Request, response: Response) => {
         },
       });
     } else {
-      results = await prisma.purchase.findMany({
+      results = await prisma.sr.findMany({
         where: {
-          idPurchase: {
+          status_manager_director: "approve",
+          no_sr: {
             contains: pencarian,
             mode: "insensitive",
           },
           OR: [
             {
-              idPurchase: {
-                startsWith: typeMR,
+              SrDetail: {
+                some: {
+                  srappr: typeMR,
+                  supId: null,
+                },
               },
             },
           ],
+          NOT: {
+            SrDetail: {
+              every: {
+                approvedRequestId: null,
+              },
+            },
+          },
         },
         include: {
           SrDetail: {
@@ -950,7 +961,7 @@ const getPsR = async (request: Request, response: Response) => {
           },
         },
         orderBy: {
-          createdAt: "desc",
+          no_sr: "desc",
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
@@ -963,7 +974,7 @@ const getPsR = async (request: Request, response: Response) => {
         result: results,
         page: pagination.page,
         limit: pagination.perPage,
-        totalData: pr,
+        totalData: results.length,
         currentPage: pagination.currentPage,
         nextPage: pagination.next(),
         previouspage: pagination.prev(),

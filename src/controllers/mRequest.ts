@@ -729,7 +729,7 @@ const getdetailMr = async (request: Request, response: Response) => {
         result: results,
         page: pagination.page,
         limit: pagination.perPage,
-        totalData: pr,
+        totalData: results.length,
         currentPage: pagination.currentPage,
         nextPage: pagination.next(),
         previouspage: pagination.prev(),
@@ -988,6 +988,87 @@ const getPrM = async (request: Request, response: Response) => {
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
+    } else {
+      // results = await prisma.purchase.findMany({
+      //   where: {
+      //     idPurchase: {
+      //       contains: pencarian,
+      //       mode: "insensitive",
+      //     },
+      //     detailMr: {
+      //       every: {
+      //         supId: null,
+      //         mr: {
+      //           status_manager_director: "approve"
+      //         }
+      //       },
+      //     },
+      //     OR: [
+      //       {
+      //         idPurchase: {
+      //           startsWith: typeMR,
+      //         },
+      //       },
+      //     ],
+      //   },
+      //   include: {
+      //     detailMr: {
+      //       include: {
+      //         Material_Master: true,
+      //         supplier: true,
+      //         mr: {
+      //           include: {
+      //             wor: true,
+      //             bom: {
+      //               include: {
+      //                 bom_detail: {
+      //                   include: {
+      //                     Material_Master: true,
+      //                   },
+      //                 },
+      //                 srimg: {
+      //                   include: {
+      //                     srimgdetail: true,
+      //                   },
+      //                 },
+      //               },
+      //             },
+      //             user: {
+      //               select: {
+      //                 id: true,
+      //                 username: true,
+      //                 employee: {
+      //                   select: {
+      //                     id: true,
+      //                     employee_name: true,
+      //                     position: true,
+      //                     sub_depart: {
+      //                       select: {
+      //                         id: true,
+      //                         name: true,
+      //                         departement: {
+      //                           select: {
+      //                             id: true,
+      //                             name: true,
+      //                           },
+      //                         },
+      //                       },
+      //                     },
+      //                   },
+      //                 },
+      //               },
+      //             },
+      //           },
+      //         },
+      //       },
+      //     },
+      //   },
+      //   orderBy: {
+      //     createdAt: "desc",
+      //   },
+      //   take: parseInt(pagination.perPage),
+      //   skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+      // });
       results = await prisma.mr.findMany({
         where: {
           status_manager_director: "approve",
@@ -1064,87 +1145,6 @@ const getPrM = async (request: Request, response: Response) => {
         },
         orderBy: {
           no_mr: "desc",
-        },
-        take: parseInt(pagination.perPage),
-        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
-      });
-    } else {
-      results = await prisma.purchase.findMany({
-        where: {
-          idPurchase: {
-            contains: pencarian,
-            mode: "insensitive",
-          },
-          detailMr: {
-            every: {
-              supId: null,
-              mr: {
-                status_manager_director: "approve"
-              }
-            },
-          },
-          OR: [
-            {
-              idPurchase: {
-                startsWith: typeMR,
-              },
-            },
-          ],
-        },
-        include: {
-          detailMr: {
-            include: {
-              Material_Master: true,
-              supplier: true,
-              mr: {
-                include: {
-                  wor: true,
-                  bom: {
-                    include: {
-                      bom_detail: {
-                        include: {
-                          Material_Master: true,
-                        },
-                      },
-                      srimg: {
-                        include: {
-                          srimgdetail: true,
-                        },
-                      },
-                    },
-                  },
-                  user: {
-                    select: {
-                      id: true,
-                      username: true,
-                      employee: {
-                        select: {
-                          id: true,
-                          employee_name: true,
-                          position: true,
-                          sub_depart: {
-                            select: {
-                              id: true,
-                              name: true,
-                              departement: {
-                                select: {
-                                  id: true,
-                                  name: true,
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-        orderBy: {
-          createdAt: "desc",
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),

@@ -20,7 +20,7 @@ const getTimeSheet = async (request: any, response: Response) => {
         deleted: null,
       },
     });
-    let results;
+    let results: any;
     if (!type) {
       results = await prisma.time_sheet.findMany({
         where: {
@@ -63,34 +63,24 @@ const getTimeSheet = async (request: any, response: Response) => {
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
     } else {
-      results = await prisma.time_sheet.findMany({
+      const userLogin = await prisma.user.findFirst({
         where: {
-          user: {
-            username: request.session.userId,
-          },
-          OR: [
-            {
-              user: {
-                employee: {
-                  employee_name: {
-                    contains: pencarian,
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-          ],
-          type_timesheet: type,
+          username: request.session.userId,
         },
         include: {
-          time_sheet_add: true,
-          user: {
-            include: {
-              employee: {
-                include: {
-                  sub_depart: {
-                    include: {
-                      departement: true,
+          employee: {
+            select: {
+              id: true,
+              employee_name: true,
+              position: true,
+              sub_depart: {
+                select: {
+                  id: true,
+                  name: true,
+                  departement: {
+                    select: {
+                      id: true,
+                      name: true,
                     },
                   },
                 },
@@ -98,12 +88,63 @@ const getTimeSheet = async (request: any, response: Response) => {
             },
           },
         },
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: parseInt(pagination.perPage),
-        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
+      const a: any = userLogin?.employeeId;
+      const emplo = await prisma.employee.findFirst({
+        where: {
+          id: a,
+        },
+      });
+      if (
+        emplo?.position === "Supervisor" ||
+        emplo?.position === "Manager" ||
+        emplo?.position === "Director"
+      ){
+        results = await prisma.time_sheet.findMany({
+          where: {
+            user: {
+              username: request.session.userId,
+              employee: {
+                sub_depart: { id: userLogin?.employee?.sub_depart?.id },
+              },
+            },
+            OR: [
+              {
+                user: {
+                  employee: {
+                    employee_name: {
+                      contains: pencarian,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            ],
+            type_timesheet: type,
+          },
+          include: {
+            time_sheet_add: true,
+            user: {
+              include: {
+                employee: {
+                  include: {
+                    sub_depart: {
+                      include: {
+                        departement: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: parseInt(pagination.perPage),
+          skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+        });
+      }
     }
     if (results.length > 0) {
       return response.status(200).json({
