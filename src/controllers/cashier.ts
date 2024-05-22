@@ -324,6 +324,7 @@ const getCashier = async (request: Request, response: Response) => {
           },
         },
         include: {
+          cdv_detail: true,
           employee: true,
           user: {
             select: {
@@ -355,38 +356,18 @@ const getCashier = async (request: Request, response: Response) => {
         },
       });
       detailDmr = await prisma.purchase.findMany({
+        distinct: ["id"],
         where: {
-          status_manager_director: "approve",
-          kontrabon: null,
-          OR: [
-            {
-              idPurchase: {
-                startsWith: "DMR",
-              },
-            },
-            {
-              idPurchase: {
-                startsWith: "DSR",
-              },
-            },
-          ],
+          idPurchase: {
+            contains: pencarian,
+            mode: "insensitive",
+          },
         },
         include: {
-          supplier: {
-            include: {
-              SupplierBank: true,
-              SupplierContact: true,
-            },
-          },
           detailMr: {
             include: {
-              supplier: {
-                include: {
-                  SupplierBank: true,
-                  SupplierContact: true,
-                },
-              },
               Material_Master: true,
+              supplier: true,
               mr: {
                 include: {
                   wor: true,
@@ -435,12 +416,7 @@ const getCashier = async (request: Request, response: Response) => {
           },
           SrDetail: {
             include: {
-              supplier: {
-                include: {
-                  SupplierBank: true,
-                  SupplierContact: true,
-                },
-              },
+              supplier: true,
               sr: {
                 include: {
                   wor: true,
@@ -1817,8 +1793,10 @@ const updateStatusM = async (request: any, response: Response) => {
 
 const getPosting = async (request: Request, response: Response) => {
   try {
+    let l = request.query.status === "true" ? true : false;
     const pencarian: any = request.query.search || "";
     const hostname: any = request.headers.host;
+    let status: boolean = l;
     const pathname = url.parse(request.url).pathname;
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
@@ -2145,6 +2123,11 @@ const getPosting = async (request: Request, response: Response) => {
     } else {
       results = await prisma.poandso.findMany({
         where: {
+          journal_cashier: {
+            every: {
+              status: status,
+            },
+          },
           NOT: {
             journal_cashier: {
               every: {
@@ -2179,6 +2162,11 @@ const getPosting = async (request: Request, response: Response) => {
       });
       cashier = await prisma.cashier.findMany({
         where: {
+          journal_cashier: {
+            some: {
+              status: status,
+            },
+          },
           id_cashier: {
             contains: pencarian,
             mode: "insensitive",

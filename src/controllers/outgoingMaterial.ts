@@ -29,7 +29,7 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
           include: {
             employee: true,
             coa: true,
-            Material_Stock: true,
+            Material_Master: true,
             poandso: {
               include: {
                 term_of_pay_po_so: true,
@@ -159,7 +159,6 @@ const createOutgoingMaterial = async (request: Request, response: Response) => {
                 },
               },
             });
-
             for (let index = 0; index < getStok.detailMr.length; index++) {
               if (
                 getStok.detailMr[index].Material_Master.jumlah_Stock <= 0 ||
@@ -186,7 +185,7 @@ const createOutgoingMaterial = async (request: Request, response: Response) => {
           for (let a = 0; a < pbb.length; a++) {
             const getStok: any = await prisma.material_Master.findFirst({
               where: {
-                id: request.body.pb[a].id,
+                id: request.body.pb[a].materialStockId,
               },
             });
             if (
@@ -252,6 +251,21 @@ const createOutgoingMaterial = async (request: Request, response: Response) => {
               stock_outgoing_material: true,
             },
           });
+          console.log(results.stock_outgoing_material);
+          const journalCa = results.stock_outgoing_material;
+          // results.stock_outgoing_material
+          for (let index = 0; index < journalCa.length; index++) {
+            await prisma.journal_cashier.createMany({
+              data: [
+                {
+                  // coa: { connect: { coa_id: journalCa[index].coa_id } },
+                  coa_id: journalCa[index].coa_id,
+                  status_transaction: "Debet",
+                  outgoingId: journalCa[index].outgoingId,
+                },
+              ],
+            });
+          }
         }
         if (results) {
           response.status(201).json({

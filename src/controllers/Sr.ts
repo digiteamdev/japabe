@@ -624,9 +624,6 @@ const updateApprovalSr = async (request: Request, response: Response) => {
           });
           const updateStatus: any = getIdsr?.SrDetail;
           for (let index = 0; index < updateStatus.length; index++) {
-            console.log("1");
-            console.log(updateStatus[index], "aaaa");
-
             await prisma.sr.update({
               where: {
                 id: updateStatus[index].sr.id,
@@ -924,6 +921,31 @@ const getPsR = async (request: Request, response: Response) => {
           },
         },
         include: {
+          user: {
+            select: {
+              id: true,
+              username: true,
+              employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                  position: true,
+                  sub_depart: {
+                    select: {
+                      id: true,
+                      name: true,
+                      departement: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
           SrDetail: {
             include: {
               supplier: true,

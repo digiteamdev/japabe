@@ -13,76 +13,64 @@ const getPo = async (request: Request, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const results = await prisma.mr.findMany({
-      where: {
-        status_manager_director: "approve",
-        no_mr: {
-          contains: pencarian,
-          mode: "insensitive",
-        },
-        detailMr: {
-          some: {
-            poandsoId: null,
+    let results: any;
+    if (type === "SO") {
+      results = await prisma.sr.findMany({
+        where: {
+          status_manager_director: "approve",
+          no_sr: {
+            contains: pencarian,
+            mode: "insensitive",
           },
+          SrDetail: {
+            some: {
+              poandsoId: null,
+            },
+          },
+          NOT: [
+            {
+              SrDetail: {
+                some: {
+                  srappr: type,
+                  supId: null,
+                },
+              },
+            },
+          ],
         },
-        NOT: [
-          {
-            detailMr: {
-              some: {
-                mrappr: type,
-                supId: null,
+        include: {
+          SrDetail: {
+            where: {
+              poandsoId: null,
+            },
+            include: {
+              supplier: {
+                include: {
+                  SupplierBank: true,
+                  SupplierContact: true,
+                },
               },
             },
           },
-        ],
-      },
-      include: {
-        detailMr: {
-          where: {
-            poandsoId: null,
-          },
-          include: {
-            Material_Master: true,
-            supplier: {
-              include: {
-                SupplierBank: true,
-                SupplierContact: true,
-              },
-            },
-          },
-        },
-        wor: true,
-        bom: {
-          include: {
-            bom_detail: {
-              include: {
-                Material_Master: true,
-              },
-            },
-            srimg: {
-              include: {
-                srimgdetail: true,
-              },
-            },
-          },
-        },
-        user: {
-          select: {
-            id: true,
-            username: true,
-            employee: {
-              select: {
-                id: true,
-                employee_name: true,
-                position: true,
-                sub_depart: {
-                  select: {
-                    id: true,
-                    name: true,
-                    departement: {
-                      select: {
-                        id: true,
-                        name: true,
+          wor: true,
+          user: {
+            select: {
+              id: true,
+              username: true,
+              employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                  position: true,
+                  sub_depart: {
+                    select: {
+                      id: true,
+                      name: true,
+                      departement: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
                       },
                     },
                   },
@@ -91,13 +79,99 @@ const getPo = async (request: Request, response: Response) => {
             },
           },
         },
-      },
-      orderBy: {
-        no_mr: "desc",
-      },
-      take: parseInt(pagination.perPage),
-      skip: parseInt(pagination.page) * parseInt(pagination.perPage),
-    });
+        orderBy: {
+          no_sr: "desc",
+        },
+        take: parseInt(pagination.perPage),
+        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+      });
+    } else if (type === "PO") {
+      results = await prisma.mr.findMany({
+        where: {
+          status_manager_director: "approve",
+          no_mr: {
+            contains: pencarian,
+            mode: "insensitive",
+          },
+          detailMr: {
+            some: {
+              poandsoId: null,
+            },
+          },
+          NOT: [
+            {
+              detailMr: {
+                some: {
+                  mrappr: type,
+                  supId: null,
+                },
+              },
+            },
+          ],
+        },
+        include: {
+          detailMr: {
+            where: {
+              poandsoId: null,
+            },
+            include: {
+              Material_Master: true,
+              supplier: {
+                include: {
+                  SupplierBank: true,
+                  SupplierContact: true,
+                },
+              },
+            },
+          },
+          wor: true,
+          bom: {
+            include: {
+              bom_detail: {
+                include: {
+                  Material_Master: true,
+                },
+              },
+              srimg: {
+                include: {
+                  srimgdetail: true,
+                },
+              },
+            },
+          },
+          user: {
+            select: {
+              id: true,
+              username: true,
+              employee: {
+                select: {
+                  id: true,
+                  employee_name: true,
+                  position: true,
+                  sub_depart: {
+                    select: {
+                      id: true,
+                      name: true,
+                      departement: {
+                        select: {
+                          id: true,
+                          name: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          no_mr: "desc",
+        },
+        take: parseInt(pagination.perPage),
+        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+      });
+    }
     if (results.length > 0) {
       return response.status(200).json({
         success: true,
@@ -122,7 +196,8 @@ const getPo = async (request: Request, response: Response) => {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
 };
-
+//termin dan repeymen harus ada nomor invoince
+//kontrabon
 const createPo = async (request: Request, response: Response) => {
   try {
     const results = await prisma.poandso.create({
@@ -174,35 +249,6 @@ const createPo = async (request: Request, response: Response) => {
           },
         });
       });
-      await prisma.poandso.findFirst({
-        where: {
-          id: results.id,
-          id_so: {
-            startsWith: "PO",
-          },
-        },
-      });
-      const poTerm = await prisma.term_of_pay_po_so.findFirst({
-        where: {
-          poandsoId: results.id,
-        },
-      });
-      await prisma.journal_cashier.createMany({
-        data: [
-          {
-            coa_id: "clsijsq3s0003cz5ih2fa64xv",
-            status_transaction: "Debet",
-            poandsoId: results.id,
-            grandtotal: poTerm?.price,
-          },
-          {
-            coa_id: "cls172hpp000fczze86zfh7yn",
-            status_transaction: "Kredit",
-            poandsoId: results.id,
-            grandtotal: poTerm?.price,
-          },
-        ],
-      });
     }
     if (request.body.detailSrID !== null) {
       request.body.detailSrID.map(async (dataId: any) => {
@@ -231,35 +277,6 @@ const createPo = async (request: Request, response: Response) => {
             statusSr: "Purchase",
           },
         });
-      });
-      await prisma.poandso.findFirst({
-        where: {
-          id: results.id,
-          id_so: {
-            startsWith: "SO",
-          },
-        },
-      });
-      const poTerm = await prisma.term_of_pay_po_so.findFirst({
-        where: {
-          poandsoId: results.id,
-        },
-      });
-      await prisma.journal_cashier.createMany({
-        data: [
-          {
-            coa_id: "clt8gudbn0004cznuy8a34hrm",
-            status_transaction: "Debet",
-            poandsoId: results.id,
-            grandtotal: poTerm?.price,
-          },
-          {
-            coa_id: "cls172hpp000fczze86zfh7yn",
-            status_transaction: "Kredit",
-            poandsoId: results.id,
-            grandtotal: poTerm?.price,
-          },
-        ],
       });
     }
     if (results) {
@@ -1592,23 +1609,56 @@ const updatePoandSo = async (request: Request, response: Response) => {
                 detailMr: true,
               },
             });
+            const getSO = await prisma.poandso.findFirst({
+              where: {
+                id: result.id,
+                id_so: {
+                  startsWith: "SO",
+                },
+              },
+              include: {
+                SrDetail: true,
+              },
+            });
+            const updateTotalSo: any = getSO?.SrDetail
             const updateTotalPo: any = getPO?.detailMr;
             if (getPO) {
               for (let index = 0; index < updateTotalPo.length; index++) {
                 await prisma.journal_cashier.createMany({
                   data: [
                     {
-                      coa_id: "clsijq6ib0001cz5i00exhz5l",
+                      coa_id: "clwftmglr000rrspb2thk69fx",
                       status_transaction: "Debet",
                       poandsoId: getPO.id,
                       id_receive: getPO.id_receive,
                       grandtotal: updateTotalPo[index].total,
                     },
                     {
-                      coa_id: "clsijof120000cz5ir5v067vu",
+                      coa_id: "clwftmglr001nrspbdgzabjbl",
                       status_transaction: "Kredit",
                       poandsoId: getPO.id,
                       id_receive: getPO.id_receive,
+                      grandtotal: updateTotalPo[index].total,
+                    },
+                  ],
+                });
+              }
+            }else if(getSO){
+              for (let index = 0; index < updateTotalSo.length; index++) {
+                await prisma.journal_cashier.createMany({
+                  data: [
+                    {
+                      coa_id: "clwftmgls0066rspb8h6qvpan",
+                      status_transaction: "Debet",
+                      poandsoId: getSO.id,
+                      id_receive: getSO.id_receive,
+                      grandtotal: updateTotalPo[index].total,
+                    },
+                    {
+                      coa_id: "clwftmglr001orspbjswfjt31",
+                      status_transaction: "Kredit",
+                      poandsoId: getSO.id,
+                      id_receive: getSO.id_receive,
                       grandtotal: updateTotalPo[index].total,
                     },
                   ],

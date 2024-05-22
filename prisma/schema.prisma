@@ -337,64 +337,22 @@ enum Keterangan_Part {
   Consumable @map("Consumable Part")
 }
 
-model grup_material {
-  id              String            @id @default(cuid())
-  kd_group        String?           @db.VarChar(50)
-  material_name   String?           @db.VarChar(50)
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  deleted         DateTime?
-  Material_master Material_master[]
-
-  @@index([id, kd_group, material_name])
-}
-
-model Material_master {
-  id             String           @id @default(cuid())
-  kd_material    String?          @db.VarChar(50)
-  grup_material  grup_material?   @relation(fields: [kd_group], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  kd_group       String?
-  material_name  String?          @db.VarChar(200)
-  satuan         String?          @db.VarChar(200)
-  detail         String?          @db.Text
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  deleted        DateTime?
-  Material_Stock Material_Stock[]
-
-  @@index([id, kd_group, material_name, kd_material])
-}
-
-model Material_Stock {
+model Material_Master {
   id                      String                    @id @default(cuid())
-  Material_master         Material_master?          @relation(fields: [materialId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  materialId              String?
-  spesifikasi             String                    @db.Text
+  name                    String?                   @db.VarChar(50)
+  spesifikasi             String?                   @db.Text
+  satuan                  String?                   @db.VarChar(200)
   jumlah_Stock            Int                       @default(0)
   harga                   Int                       @default(0)
+  note                    String?                   @db.Text
+  date_in                 DateTime?
+  date_out                DateTime?
   createdAt               DateTime                  @default(now())
   updatedAt               DateTime                  @updatedAt
   deleted                 DateTime?
+  bom_detail              bom_detail[]
+  detailMr                detailMr[]
   stock_outgoing_material stock_outgoing_material[]
-
-  @@index([id, materialId, spesifikasi])
-}
-
-model Material_Master {
-  id           String       @id @default(cuid())
-  name         String?      @db.VarChar(50)
-  spesifikasi  String?      @db.Text
-  satuan       String?      @db.VarChar(200)
-  jumlah_Stock Int          @default(0)
-  harga        Int          @default(0)
-  note         String?      @db.Text
-  date_in      DateTime?
-  date_out     DateTime?
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  deleted      DateTime?
-  bom_detail   bom_detail[]
-  detailMr     detailMr[]
 
   @@index([id, name, date_in, date_out, createdAt, updatedAt])
 }
@@ -1287,6 +1245,8 @@ model journal_cashier {
   poandsoId          String?
   purchase           purchase?          @relation(fields: [purchaseID], references: [id])
   purchaseID         String?
+  outgoing_material  outgoing_material? @relation(fields: [outgoingId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  outgoingId         String?
   status_transaction status_transaction
   grandtotal         Int                @default(0)
   status             Boolean            @default(false)
@@ -1358,6 +1318,7 @@ model outgoing_material {
   updatedAt               DateTime                  @updatedAt
   deleted                 DateTime?
   stock_outgoing_material stock_outgoing_material[]
+  journal_cashier         journal_cashier[]
 
   @@index([id, id_outgoing_material])
 }
@@ -1366,7 +1327,7 @@ model stock_outgoing_material {
   id                String            @id @default(cuid())
   outgoing_material outgoing_material @relation(fields: [outgoingId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   outgoingId        String
-  Material_Stock    Material_Stock?   @relation(fields: [materialStockId], references: [id])
+  Material_Master   Material_Master?  @relation(fields: [materialStockId], references: [id])
   materialStockId   String?
   coa               coa?              @relation(fields: [coa_id], references: [id])
   coa_id            String?

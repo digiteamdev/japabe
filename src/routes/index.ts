@@ -337,18 +337,18 @@ router.get(
 
 router.get(
   "/customercsv",
-  // jwt.authToken({
-  //   administrator: "ADMINISTRATOR",
-  //   marketingbumn: "MARKETING BUMN",
-  //   marketingswasta: "MARKETING SWASTA",
-  //   HRandGA: "HR & GA",
-  //   finance: "FINANCE & ACC",
-  //   QAandEng: "QA & ENG",
-  //   purchasing: "PURCHASING",
-  //   drafter: "DRAFTER",
-  //   ppic: "Ppic",
-  //   utility: "Utility/ty",
-  // }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
   customer.getAllCustomercsv
 );
 
@@ -2073,6 +2073,23 @@ router.get(
   MR.getPrM
 );
 
+router.get(
+  "/listdirect",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  MR.getDirect
+);
+
 router.put(
   "/mrPr",
   jwt.authToken({
@@ -2872,6 +2889,42 @@ router.get(
     public: "public",
   }),
   timeSheet.getTimeSheet
+);
+
+router.get(
+  "/timesheetHrd",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+    public: "public",
+  }),
+  timeSheet.getTimeSheetHrd
+);
+
+router.get(
+  "/timesheetCsv",
+  // jwt.authToken({
+  //   administrator: "ADMINISTRATOR",
+  //   marketingbumn: "MARKETING BUMN",
+  //   marketingswasta: "MARKETING SWASTA",
+  //   HRandGA: "HR & GA",
+  //   finance: "FINANCE & ACC",
+  //   QAandEng: "QA & ENG",
+  //   purchasing: "PURCHASING",
+  //   drafter: "DRAFTER",
+  //   ppic: "Ppic",
+  //   utility: "Utility/ty",
+  //   public: "public",
+  // }),
+  timeSheet.getTimeSheetCsv
 );
 
 router.post(

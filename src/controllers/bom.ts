@@ -428,9 +428,9 @@ const getBomMaterial = async (request: Request, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
     let result;
-    result = await prisma.material_master.findMany({
+    result = await prisma.material_Master.findMany({
       where: {
-        material_name: {
+        name: {
           contains: pencarian,
           mode: "insensitive",
         },
