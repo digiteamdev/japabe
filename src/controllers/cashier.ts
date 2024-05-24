@@ -362,6 +362,18 @@ const getCashier = async (request: Request, response: Response) => {
             contains: pencarian,
             mode: "insensitive",
           },
+          OR: [
+            {
+              idPurchase: {
+                startsWith: "DMR",
+              },
+            },
+            {
+              idPurchase: {
+                startsWith: "DSR",
+              },
+            },
+          ],
         },
         include: {
           detailMr: {
@@ -470,131 +482,6 @@ const getCashier = async (request: Request, response: Response) => {
           },
           kontrabon: {
             include: {
-              purchase: {
-                include: {
-                  supplier: {
-                    include: {
-                      SupplierBank: true,
-                      SupplierContact: true,
-                    },
-                  },
-                  detailMr: {
-                    include: {
-                      Material_Master: true,
-                      supplier: {
-                        include: {
-                          SupplierContact: true,
-                          SupplierBank: true,
-                        },
-                      },
-                      approvedRequest: true,
-
-                      mr: {
-                        include: {
-                          wor: {
-                            include: {
-                              Quotations: {
-                                include: {
-                                  CustomerContact: true,
-                                },
-                              },
-                            },
-                          },
-                          bom: {
-                            include: {
-                              bom_detail: {
-                                include: {
-                                  Material_Master: true,
-                                },
-                              },
-                              srimg: {
-                                include: {
-                                  srimgdetail: true,
-                                },
-                              },
-                            },
-                          },
-                          user: {
-                            select: {
-                              id: true,
-                              username: true,
-                              employee: {
-                                select: {
-                                  id: true,
-                                  employee_name: true,
-                                  position: true,
-                                  sub_depart: {
-                                    select: {
-                                      id: true,
-                                      name: true,
-                                      departement: {
-                                        select: {
-                                          id: true,
-                                          name: true,
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                  SrDetail: {
-                    include: {
-                      supplier: {
-                        include: {
-                          SupplierContact: true,
-                          SupplierBank: true,
-                        },
-                      },
-                      approvedRequest: true,
-
-                      sr: {
-                        include: {
-                          wor: {
-                            include: {
-                              Quotations: {
-                                include: {
-                                  CustomerContact: true,
-                                },
-                              },
-                            },
-                          },
-                          user: {
-                            select: {
-                              id: true,
-                              username: true,
-                              employee: {
-                                select: {
-                                  id: true,
-                                  employee_name: true,
-                                  position: true,
-                                  sub_depart: {
-                                    select: {
-                                      id: true,
-                                      name: true,
-                                      departement: {
-                                        select: {
-                                          id: true,
-                                          name: true,
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
               SupplierBank: true,
               term_of_pay_po_so: {
                 include: {
@@ -680,7 +567,6 @@ const getCashier = async (request: Request, response: Response) => {
                             },
                           },
                           approvedRequest: true,
-
                           sr: {
                             include: {
                               wor: {
@@ -743,14 +629,124 @@ const getCashier = async (request: Request, response: Response) => {
                   },
                 },
               },
-              wor: {
+            },
+          },
+          purchase: {
+            include: {
+              supplier: {
                 include: {
-                  customerPo: {
+                  SupplierBank: true,
+                  SupplierContact: true,
+                },
+              },
+              SrDetail: {
+                include: {
+                  supplier: {
                     include: {
-                      quotations: {
+                      SupplierContact: true,
+                      SupplierBank: true,
+                    },
+                  },
+                  approvedRequest: true,
+                  sr: {
+                    include: {
+                      wor: {
                         include: {
-                          Customer: true,
-                          CustomerContact: true,
+                          Quotations: {
+                            include: {
+                              CustomerContact: true,
+                            },
+                          },
+                        },
+                      },
+                      user: {
+                        select: {
+                          id: true,
+                          username: true,
+                          employee: {
+                            select: {
+                              id: true,
+                              employee_name: true,
+                              position: true,
+                              sub_depart: {
+                                select: {
+                                  id: true,
+                                  name: true,
+                                  departement: {
+                                    select: {
+                                      id: true,
+                                      name: true,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              detailMr: {
+                include: {
+                  Material_Master: true,
+                  supplier: {
+                    include: {
+                      SupplierContact: true,
+                      SupplierBank: true,
+                    },
+                  },
+                  approvedRequest: true,
+
+                  mr: {
+                    include: {
+                      wor: {
+                        include: {
+                          Quotations: {
+                            include: {
+                              CustomerContact: true,
+                            },
+                          },
+                        },
+                      },
+                      bom: {
+                        include: {
+                          bom_detail: {
+                            include: {
+                              Material_Master: true,
+                            },
+                          },
+                          srimg: {
+                            include: {
+                              srimgdetail: true,
+                            },
+                          },
+                        },
+                      },
+                      user: {
+                        select: {
+                          id: true,
+                          username: true,
+                          employee: {
+                            select: {
+                              id: true,
+                              employee_name: true,
+                              position: true,
+                              sub_depart: {
+                                select: {
+                                  id: true,
+                                  name: true,
+                                  departement: {
+                                    select: {
+                                      id: true,
+                                      name: true,
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
                         },
                       },
                     },
@@ -1473,7 +1469,11 @@ const createCashier = async (request: Request, response: Response) => {
     await prisma.$transaction(
       async (prisma) => {
         let results: any;
-        if (request.body.cdvId === null && request.body.kontrabonId === null) {
+        if (
+          request.body.cdvId === null &&
+          request.body.kontrabonId === null &&
+          request.body.idPurchase === null
+        ) {
           results = await prisma.cashier.create({
             data: {
               id_cashier: request.body.id_cashier,
@@ -1502,6 +1502,27 @@ const createCashier = async (request: Request, response: Response) => {
               date_cashier: request.body.date_cashier,
               pay_to: request.body.pay_to,
               note: request.body.note,
+              total: request.body.total,
+              journal_cashier: {
+                create: request.body.journal_cashier,
+              },
+            },
+            include: {
+              journal_cashier: true,
+            },
+          });
+        } else if (request.body.idPurchase !== null) {
+          results = await prisma.cashier.create({
+            data: {
+              id_cashier: request.body.id_cashier,
+              purchase: { connect: { id: request.body.idPurchase } },
+              status_payment: request.body.status_payment,
+              date_cashier: request.body.date_cashier,
+              note: request.body.note,
+              pay_to: request.body.pay_to,
+              account_name: request.body.account_name,
+              bank_name: request.body.bank_name,
+              rekening: request.body.rekening,
               total: request.body.total,
               journal_cashier: {
                 create: request.body.journal_cashier,

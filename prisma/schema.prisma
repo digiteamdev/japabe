@@ -1041,6 +1041,7 @@ model purchase {
   SrDetail                SrDetail[]
   kontrabon               kontrabon?
   journal_cashier         journal_cashier[]
+  cashier                 cashier[]
 
   @@index([id, idPurchase, dateOfPurchase, id_receive])
 }
@@ -1218,6 +1219,8 @@ model cashier {
   cdvId           String?
   kontrabon       kontrabon?        @relation(fields: [kontrabonId], references: [id])
   kontrabonId     String?
+  purchase        purchase?         @relation(fields: [idPurchase], references: [id])
+  idPurchase      String?
   pay_to          String?           @db.VarChar(200)
   date_cashier    DateTime?
   note            String?           @db.Text
