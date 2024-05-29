@@ -14,101 +14,159 @@ const getTimeSheet = async (request: any, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const timeSheetCount = await prisma.time_sheet.count({
+    let results: any;
+    const userLogin = await prisma.user.findFirst({
       where: {
-        user: {
-          username: request.session.userId,
+        username: request.session.userId,
+      },
+      include: {
+        employee: {
+          select: {
+            id: true,
+            employee_name: true,
+            position: true,
+            sub_depart: {
+              select: {
+                id: true,
+                name: true,
+                departement: {
+                  select: {
+                    id: true,
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
         },
-        deleted: null,
       },
     });
-    let results: any;
-    if (!type) {
-      results = await prisma.time_sheet.findMany({
-        where: {
-          user: {
-            username: request.session.userId,
-          },
-          OR: [
-            {
-              user: {
-                employee: {
-                  employee_name: {
-                    contains: pencarian,
-                    mode: "insensitive",
-                  },
-                },
-              },
-            },
-          ],
-        },
-        include: {
-          time_sheet_add: true,
-          user: {
-            include: {
-              employee: {
-                include: {
-                  sub_depart: {
-                    include: {
-                      departement: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: parseInt(pagination.perPage),
-        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
-      });
-    } else {
-      const userLogin = await prisma.user.findFirst({
-        where: {
-          username: request.session.userId,
-        },
-        include: {
-          employee: {
-            select: {
-              id: true,
-              employee_name: true,
-              position: true,
-              sub_depart: {
-                select: {
-                  id: true,
-                  name: true,
-                  departement: {
-                    select: {
-                      id: true,
-                      name: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      });
-      const a: any = userLogin?.employeeId;
-      const emplo = await prisma.employee.findFirst({
-        where: {
-          id: a,
-        },
-      });
-      if (
-        emplo?.position === "Supervisor" ||
-        emplo?.position === "Manager" ||
-        emplo?.position === "Director"
-      ) {
+    const a: any = userLogin?.employeeId;
+    const emplo = await prisma.employee.findFirst({
+      where: {
+        id: a,
+      },
+    });
+    let timeSheetCount: any;
+    if (emplo?.position === "Staff" || emplo?.position === "Operator") {
+      if (type) {
         results = await prisma.time_sheet.findMany({
           where: {
             user: {
               username: request.session.userId,
-              employee: {
-                sub_depart: { id: userLogin?.employee?.sub_depart?.id },
+            },
+            type_timesheet: type,
+            OR: [
+              {
+                user: {
+                  employee: {
+                    employee_name: {
+                      contains: pencarian,
+                      mode: "insensitive",
+                    },
+                  },
+                },
               },
+            ],
+          },
+          include: {
+            time_sheet_add: true,
+            user: {
+              include: {
+                employee: {
+                  include: {
+                    sub_depart: {
+                      include: {
+                        departement: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: parseInt(pagination.perPage),
+          skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+        });
+        timeSheetCount = await prisma.time_sheet.count({
+          where: {
+            user: {
+              username: request.session.userId,
+            },
+            type_timesheet: type,
+            deleted: null,
+          },
+        });
+      } else {
+        results = await prisma.time_sheet.findMany({
+          where: {
+            user: {
+              username: request.session.userId,
+            },
+            OR: [
+              {
+                user: {
+                  employee: {
+                    employee_name: {
+                      contains: pencarian,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          include: {
+            time_sheet_add: true,
+            user: {
+              include: {
+                employee: {
+                  include: {
+                    sub_depart: {
+                      include: {
+                        departement: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: parseInt(pagination.perPage),
+          skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+        });
+        timeSheetCount = await prisma.time_sheet.count({
+          where: {
+            user: {
+              username: request.session.userId,
+            },
+            deleted: null,
+          },
+        });
+      }
+    } else if (
+      emplo?.position === "Supervisor" ||
+      emplo?.position === "Manager"
+    ) {
+      if (type) {
+        results = await prisma.time_sheet.findMany({
+          where: {
+            user: {
+              username: request.session.userId,
+              // employee: {
+              //   sub_depart: {
+              //     departement: {
+              //       id: userLogin?.employee?.sub_depart?.departement?.id,
+              //     },
+              //   },
+              //   // sub_depart: { id: userLogin?.employee?.sub_depart?.id },
+              // },
             },
             OR: [
               {
@@ -145,6 +203,178 @@ const getTimeSheet = async (request: any, response: Response) => {
           },
           take: parseInt(pagination.perPage),
           skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+        });
+        timeSheetCount = await prisma.time_sheet.count({
+          where: {
+            user: {
+              username: request.session.userId,
+              // employee: {
+              //   sub_depart: {
+              //     departement: {
+              //       id: userLogin?.employee?.sub_depart?.departement?.id,
+              //     },
+              //   },
+              //   // sub_depart: { id: userLogin?.employee?.sub_depart?.id },
+              // },
+            },
+            type_timesheet: type,
+            deleted: null,
+          },
+        });
+      } else {
+        results = await prisma.time_sheet.findMany({
+          where: {
+            user: {
+              username: request.session.userId,
+              // employee: {
+              //   sub_depart: {
+              //     departement: {
+              //       id: userLogin?.employee?.sub_depart?.departement?.id,
+              //     },
+              //   },
+              //   // sub_depart: { id: userLogin?.employee?.sub_depart?.id },
+              // },
+            },
+            OR: [
+              {
+                user: {
+                  employee: {
+                    employee_name: {
+                      contains: pencarian,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          include: {
+            time_sheet_add: true,
+            user: {
+              include: {
+                employee: {
+                  include: {
+                    sub_depart: {
+                      include: {
+                        departement: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: parseInt(pagination.perPage),
+          skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+        });
+        timeSheetCount = await prisma.time_sheet.count({
+          where: {
+            user: {
+              username: request.session.userId,
+              // employee: {
+              //   sub_depart: {
+              //     departement: {
+              //       id: userLogin?.employee?.sub_depart?.departement?.id,
+              //     },
+              //   },
+              //   // sub_depart: { id: userLogin?.employee?.sub_depart?.id },
+              // },
+            },
+            deleted: null,
+          },
+        });
+      }
+    } else if (emplo?.position === "Director") {
+      if (type) {
+        results = await prisma.time_sheet.findMany({
+          where: {
+            OR: [
+              {
+                user: {
+                  employee: {
+                    employee_name: {
+                      contains: pencarian,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            ],
+            type_timesheet: type,
+          },
+          include: {
+            time_sheet_add: true,
+            user: {
+              include: {
+                employee: {
+                  include: {
+                    sub_depart: {
+                      include: {
+                        departement: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: parseInt(pagination.perPage),
+          skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+        });
+        timeSheetCount = await prisma.time_sheet.count({
+          where: {
+            deleted: null,
+            type_timesheet: type,
+          },
+        });
+      } else {
+        results = await prisma.time_sheet.findMany({
+          where: {
+            OR: [
+              {
+                user: {
+                  employee: {
+                    employee_name: {
+                      contains: pencarian,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          include: {
+            time_sheet_add: true,
+            user: {
+              include: {
+                employee: {
+                  include: {
+                    sub_depart: {
+                      include: {
+                        departement: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: parseInt(pagination.perPage),
+          skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+        });
+        timeSheetCount = await prisma.time_sheet.count({
+          where: {
+            deleted: null,
+          },
         });
       }
     }
@@ -547,7 +777,7 @@ const getTimeSheetHrd = async (request: any, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
     const type: any = request.query.type || "";
-    const employename: any = request.query.employename || "";
+    const userId: any = request.query.userId || "";
     const dateStar: any = request.query.dateStar || new Date();
     const dateEnd: any = request.query.dateEnd || new Date();
     const hostname: any = request.headers.host;
@@ -556,28 +786,33 @@ const getTimeSheetHrd = async (request: any, response: Response) => {
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
     let results: any;
-    console.log(dateStar);
-    console.log(dateEnd);
+    let timsheetcount: any;
+    const date = new Date(dateStar);
+    const mountt = date.getMonth() + 1;
+    const formattedDate = `${date.getFullYear()}-${
+      mountt < 10 ? "0" + mountt : mountt
+    }-${date.getDate()} 00:00:00`;
+
+    const dateS = new Date(dateEnd);
+    const mount = dateS.getMonth() + 1;
+    const formatS = `${dateS.getFullYear()}-${
+      mount < 10 ? "0" + mount : mount
+    }-${dateS.getDate()} 23:59:59`;
+
     if (!type) {
       results = await prisma.time_sheet.findMany({
+        distinct: ["id"],
         where: {
-          user: {
-            employee: {
-              employee_name: {
-                contains: employename,
-                mode: "insensitive",
-              },
-            },
-          },
+          deleted: null,
           OR: [
             {
-              date: {
-                lte: new Date(dateStar),
-              },
-            },
-            {
-              date: {
-                gte: new Date(dateEnd),
+              time_sheet_add: {
+                some: {
+                  job: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
               },
             },
             {
@@ -614,26 +849,41 @@ const getTimeSheetHrd = async (request: any, response: Response) => {
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
+      timsheetcount = await prisma.time_sheet.count({
+        where: {
+          deleted: null,
+        },
+      });
     } else {
       results = await prisma.time_sheet.findMany({
+        distinct: ["id"],
         where: {
-          user: {
-            employee: {
-              employee_name: {
-                contains: employename,
-                mode: "insensitive",
-              },
-            },
+          userId: {
+            contains: userId,
           },
-          AND: [
+          date: {
+            lte: new Date(formatS),
+            gte: new Date(formattedDate),
+          },
+          OR: [
             {
-              date: {
-                gte: new Date(dateStar),
+              time_sheet_add: {
+                some: {
+                  job: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
               },
             },
             {
-              date: {
-                lte: new Date(dateEnd),
+              user: {
+                employee: {
+                  employee_name: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
               },
             },
           ],
@@ -661,6 +911,16 @@ const getTimeSheetHrd = async (request: any, response: Response) => {
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
+      timsheetcount = await prisma.time_sheet.count({
+        where: {
+          type_timesheet: type,
+          deleted: null,
+          date: {
+            lte: new Date(formatS),
+            gte: new Date(formattedDate),
+          },
+        },
+      });
     }
     if (results.length > 0) {
       return response.status(200).json({
@@ -669,7 +929,7 @@ const getTimeSheetHrd = async (request: any, response: Response) => {
         result: results,
         page: pagination.page,
         limit: pagination.perPage,
-        totalData: results.length,
+        totalData: timsheetcount,
         currentPage: pagination.currentPage,
         nextPage: pagination.next(),
         previouspage: pagination.prev(),

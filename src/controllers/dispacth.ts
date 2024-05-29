@@ -23,96 +23,14 @@ const getDispatch = async (request: Request, response: Response) => {
         },
       },
     });
-    let result: any;
     if (request.query.page === undefined) {
-      result = await prisma.timeschedule.findMany({
-        where: {
-          OR: [
-            {
-              deleted: null,
-            },
-          ],
-          NOT: {
-            dispatchDetail: {
-              every: {
-                timeschId: null,
-              },
-            },
-          },
-        },
-        include: {
-          dispatchDetail: {
-            orderBy: {
-              createdAt: "asc",
-            },
-            include: {
-              aktivitas: {
-                include: {
-                  work_scope_item: true,
-                },
-              },
-              sub_depart: true,
-              operator: {
-                include: {
-                  Employee: true,
-                },
-              },
-            },
-          },
-          aktivitas: {
-            include: {
-              work_scope_item: true,
-            },
-          },
-          srimg: {
-            include: {
-              srimgdetail: true,
-              timeschedule: {
-                include: {
-                  aktivitas: true,
-                  wor: {
-                    include: {
-                      work_scope_item: true,
-                      customerPo: {
-                        include: {
-                          quotations: {
-                            include: {
-                              Customer: true,
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-        orderBy: {
-          createdAt: "asc",
-        },
-      });
-      let worData;
+      let worData: any
       worData = await prisma.wor.findMany({
         where: {
-          OR: [
-            {
-              Sr: {
-                deleted: null,
-              },
-            },
-          ],
-          NOT: [
-            {
-              Sr: {
-                deleted: null,
-              },
-            },
-            {
-              status: null,
-            },
-          ],
+          deleted: null,
+          NOT: {
+            job_no: null,
+          },
         },
         include: {
           customerPo: {
@@ -143,15 +61,14 @@ const getDispatch = async (request: Request, response: Response) => {
           Sr: true,
         },
       });
-      const results = [...result, ...worData];
-      if (results.length > 0) {
+      if (worData.length > 0) {
         return response.status(200).json({
           success: true,
           massage: "Get All Dispacth",
-          result: results,
+          result: worData,
           page: pagination.page,
           limit: pagination.perPage,
-          totalData: dispactCount,
+          totalData: worData.length,
           currentPage: pagination.currentPage,
           nextPage: pagination.next(),
           previouspage: pagination.prev(),
@@ -414,7 +331,7 @@ const createOperatorStart = async (request: Request, response: Response) => {
         dispatchDetail: { connect: { id: request.body.dispatchDetailId } },
         Employee: { connect: { id: request.body.employeeId } },
         start: new Date(request.body.start),
-        finish: new Date(request.body.finish)
+        finish: new Date(request.body.finish),
       },
     });
     if (results) {

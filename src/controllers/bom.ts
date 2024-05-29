@@ -243,81 +243,13 @@ const getSumaryBom = async (request: Request, response: Response) => {
 
 const getBomMr = async (request: Request, response: Response) => {
   try {
-    let result;
-    result = await prisma.bom.findMany({
-      where: {
-        NOT: {
-          Mr: {
-            deleted: null,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      include: {
-        Mr: true,
-        bom_detail: {
-          include: {
-            detailMr: {
-              select: {
-                id: true,
-                mr: true,
-              },
-            },
-            Material_Master: true,
-          },
-        },
-        srimg: {
-          include: {
-            srimgdetail: true,
-            timeschedule: {
-              include: {
-                wor: {
-                  include: {
-                    customerPo: {
-                      include: {
-                        quotations: {
-                          include: {
-                            Customer: true,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    });
     let worData;
     worData = await prisma.wor.findMany({
       where: {
-        OR: [
-          {
-            NOT: {
-              Mr: {
-                deleted: null,
-              },
-              status: null,
-            },
-            Mr: {
-              deleted: null,
-            },
-          },
-        ],
-        // NOT: [
-        //   {
-        //     Mr: {
-        //       deleted: null,
-        //     },
-        //   },
-        //   {
-        //     status: null,
-        //   },
-        // ],
+        deleted: null,
+        NOT: {
+          job_no: null,
+        },
       },
       include: {
         customerPo: {
@@ -342,13 +274,11 @@ const getBomMr = async (request: Request, response: Response) => {
         createdAt: "desc",
       },
     });
-    const results = [...result, ...worData];
-
-    if (results.length > 0) {
+    if (worData.length > 0) {
       return response.status(200).json({
         success: true,
         massage: "Get All Material Request Bom",
-        result: results,
+        result: worData,
       });
     } else {
       return response.status(200).json({

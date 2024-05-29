@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import htmlToPdf from "../utils/generatePdf";
 import prisma from "../middleware/podandso";
 import pagging from "../utils/paggination";
 import url from "url";
@@ -24,15 +25,14 @@ const getPo = async (request: Request, response: Response) => {
           },
           SrDetail: {
             some: {
-              poandsoId: null,
+              srappr: type,
             },
           },
           NOT: [
             {
               SrDetail: {
                 some: {
-                  srappr: type,
-                  supId: null,
+                  idPurchaseR: null,
                 },
               },
             },
@@ -95,7 +95,7 @@ const getPo = async (request: Request, response: Response) => {
           },
           detailMr: {
             some: {
-              poandsoId: null,
+              mrappr: type,
             },
           },
           NOT: [
@@ -103,7 +103,7 @@ const getPo = async (request: Request, response: Response) => {
               detailMr: {
                 some: {
                   mrappr: type,
-                  supId: null,
+                  idPurchaseR: null,
                 },
               },
             },
@@ -1620,7 +1620,7 @@ const updatePoandSo = async (request: Request, response: Response) => {
                 SrDetail: true,
               },
             });
-            const updateTotalSo: any = getSO?.SrDetail
+            const updateTotalSo: any = getSO?.SrDetail;
             const updateTotalPo: any = getPO?.detailMr;
             if (getPO) {
               for (let index = 0; index < updateTotalPo.length; index++) {
@@ -1643,7 +1643,7 @@ const updatePoandSo = async (request: Request, response: Response) => {
                   ],
                 });
               }
-            }else if(getSO){
+            } else if (getSO) {
               for (let index = 0; index < updateTotalSo.length; index++) {
                 await prisma.journal_cashier.createMany({
                   data: [
@@ -1717,8 +1717,36 @@ const deleteTermOf = async (request: Request, response: Response) => {
   }
 };
 
+const getGeneratePO = async (request: Request, response: any, error: any) => {
+  try {
+    const pdf = await htmlToPdf(`<!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8" />
+        <title>PO</title>
+      </head>
+      <body>
+        <h1>POt</h1>
+        <ul>
+          {{#each users}}
+          <li style="color: aqua">Name: {{this.name}}</li>
+          <li>Age: {{this.age}}</li>
+          <br />
+          {{/each}}
+        </ul>
+      </body>
+    </html>
+    `);
+    response.contentType("application/pdf");
+    response.send(pdf);
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getPo,
+  getGeneratePO,
   getPoandSo,
   createPo,
   updateStatusMpoandso,

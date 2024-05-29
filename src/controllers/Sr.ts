@@ -15,11 +15,7 @@ const getSr = async (request: any, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    const SrCount = await prisma.sr.count({
-      where: {
-        deleted: null,
-      },
-    });
+    let SrCount: any;
     let results;
     if (request.query.page === undefined && status != undefined) {
       results = await prisma.sr.findMany({
@@ -33,6 +29,27 @@ const getSr = async (request: any, response: Response) => {
         where: {
           username: request.session.userId,
         },
+        include: {
+          employee: {
+            select: {
+              id: true,
+              employee_name: true,
+              position: true,
+              sub_depart: {
+                select: {
+                  id: true,
+                  name: true,
+                  departement: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       });
       const a: any = userLogin?.employeeId;
       const emplo = await prisma.employee.findFirst({
@@ -45,44 +62,50 @@ const getSr = async (request: any, response: Response) => {
         emplo?.position === "Manager" ||
         emplo?.position === "Director"
       ) {
-        results = await prisma.sr.findMany({
-          where: {
-            no_sr: {
-              contains: pencarian,
-              mode: "insensitive",
+        if (
+          userLogin?.employee?.sub_depart?.id === "cli8fkhn4001orswmj0y479d7" ||
+          userLogin?.employee?.sub_depart?.id === "cli8fmb2g001urswmi5rhwmai"
+        ) {
+          results = await prisma.sr.findMany({
+            where: {
+              deleted: null,
+              no_sr: {
+                contains: pencarian,
+                mode: "insensitive",
+              },
             },
-          },
-          include: {
-            wor: {
-              include: {
-                customerPo: {
-                  include: {
-                    quotations: {
-                      include: {
-                        Customer: true,
+            include: {
+              wor: {
+                include: {
+                  customerPo: {
+                    include: {
+                      quotations: {
+                        include: {
+                          Customer: true,
+                        },
                       },
                     },
                   },
                 },
               },
-            },
-            user: {
-              select: {
-                id: true,
-                username: true,
-                employee: {
-                  select: {
-                    id: true,
-                    employee_name: true,
-                    position: true,
-                    sub_depart: {
-                      select: {
-                        id: true,
-                        name: true,
-                        departement: {
-                          select: {
-                            id: true,
-                            name: true,
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                  employee: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                      position: true,
+                      sub_depart: {
+                        select: {
+                          id: true,
+                          name: true,
+                          departement: {
+                            select: {
+                              id: true,
+                              name: true,
+                            },
                           },
                         },
                       },
@@ -90,27 +113,113 @@ const getSr = async (request: any, response: Response) => {
                   },
                 },
               },
+              SrDetail: true,
             },
-            SrDetail: true,
-          },
-          orderBy: [
-            {
-              _relevance: {
-                fields: [field],
-                search: "",
-                sort: filter,
+            orderBy: [
+              {
+                _relevance: {
+                  fields: [field],
+                  search: "",
+                  sort: filter,
+                },
+              },
+              {
+                createdAt: "desc",
+              },
+            ],
+            take: parseInt(pagination.perPage),
+            skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+          });
+          SrCount = await prisma.sr.count({
+            where: {
+              deleted: null,
+            },
+          });
+        } else {
+          results = await prisma.sr.findMany({
+            where: {
+              deleted: null,
+              user: {
+                employee: {
+                  sub_depart: { id: userLogin?.employee?.sub_depart?.id },
+                },
+              },
+              no_sr: {
+                contains: pencarian,
+                mode: "insensitive",
               },
             },
-            {
-              createdAt: "desc",
+            include: {
+              wor: {
+                include: {
+                  customerPo: {
+                    include: {
+                      quotations: {
+                        include: {
+                          Customer: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                  employee: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                      position: true,
+                      sub_depart: {
+                        select: {
+                          id: true,
+                          name: true,
+                          departement: {
+                            select: {
+                              id: true,
+                              name: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              SrDetail: true,
             },
-          ],
-          take: parseInt(pagination.perPage),
-          skip: parseInt(pagination.page) * parseInt(pagination.perPage),
-        });
+            orderBy: [
+              {
+                _relevance: {
+                  fields: [field],
+                  search: "",
+                  sort: filter,
+                },
+              },
+              {
+                createdAt: "desc",
+              },
+            ],
+            take: parseInt(pagination.perPage),
+            skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+          });
+          SrCount = await prisma.sr.count({
+            where: {
+              user: {
+                employee: {
+                  sub_depart: { id: userLogin?.employee?.sub_depart?.id },
+                },
+              },
+              deleted: null,
+            },
+          });
+        }
       } else {
         results = await prisma.sr.findMany({
           where: {
+            deleted: null,
             user: {
               username: request.session.userId,
             },
@@ -165,6 +274,14 @@ const getSr = async (request: any, response: Response) => {
           },
           take: parseInt(pagination.perPage),
           skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+        });
+        SrCount = await prisma.sr.count({
+          where: {
+            user: {
+              username: request.session.userId,
+            },
+            deleted: null,
+          },
         });
       }
     }

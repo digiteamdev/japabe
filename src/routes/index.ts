@@ -150,37 +150,37 @@ router.get(
 );
 router.get(
   "/subdepart",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
   depart.getsubDepart
 );
 router.post(
   "/depart",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
   depart.createDepart
 );
 router.post(
   "/departMany",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
   depart.createDepartMany
 );
 router.post(
   "/subMany",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
   depart.createSubMany
 );
 router.put(
   "/depart",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
   depart.updateDepart
 );
 router.delete(
   "/depart/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
   depart.deleteDepart
 );
 router.delete(
   "/subdepart/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
   depart.deleteSubDepart
 );
 
@@ -2336,6 +2336,23 @@ router.get(
     utility: "Utility/ty",
   }),
   poandso.getPo
+);
+
+router.get(
+  "/pdfPo",
+  // jwt.authToken({
+  //   administrator: "ADMINISTRATOR",
+  //   marketingbumn: "MARKETING BUMN",
+  //   marketingswasta: "MARKETING SWASTA",
+  //   HRandGA: "HR & GA",
+  //   finance: "FINANCE & ACC",
+  //   QAandEng: "QA & ENG",
+  //   purchasing: "PURCHASING",
+  //   drafter: "DRAFTER",
+  //   ppic: "Ppic",
+  //   utility: "Utility/ty",
+  // }),
+  poandso.getGeneratePO
 );
 
 router.get(

@@ -644,10 +644,12 @@ const getAllApproveMr = async (request: Request, response: Response) => {
     const MrCount = await prisma.mr.count({
       where: {
         deleted: null,
+        status_manager_director: null,
       },
     });
     const results = await prisma.mr.findMany({
       where: {
+        deleted: null,
         status_manager_director: null,
         no_mr: {
           contains: pencarian,
@@ -786,6 +788,7 @@ const getAllApproveSr = async (request: Request, response: Response) => {
     });
     const results = await prisma.sr.findMany({
       where: {
+        deleted: null,
         status_manager_director: null,
         no_sr: {
           contains: pencarian,
@@ -888,6 +891,7 @@ const getAllApprovePo = async (request: Request, response: Response) => {
     });
     const results = await prisma.poandso.findMany({
       where: {
+        deleted: null,
         id_so: {
           contains: pencarian,
           mode: "insensitive",
@@ -1045,6 +1049,7 @@ const getAllApproveCdv = async (request: Request, response: Response) => {
     });
     const results = await prisma.cash_advance.findMany({
       where: {
+        deleted: null,
         id_cash_advance: {
           contains: pencarian,
           mode: "insensitive",
@@ -1142,6 +1147,7 @@ const getAllApproveSpj = async (request: Request, response: Response) => {
     });
     const results = await prisma.cash_advance.findMany({
       where: {
+        deleted: null,
         id_cash_advance: {
           contains: pencarian,
         },

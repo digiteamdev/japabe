@@ -31,6 +31,7 @@ const getEmployee = async (request: Request, response: Response) => {
           status_user: false,
         },
         include: {
+          user: true,
           sub_depart: {
             include: {
               departement: true,
@@ -80,7 +81,7 @@ const getEmployee = async (request: Request, response: Response) => {
           ],
         },
         orderBy: {
-          createdAt: "desc",
+          NIK: "asc",
         },
         select: {
           id: true,
@@ -170,6 +171,7 @@ const getEmployee = async (request: Request, response: Response) => {
               deleted: true,
             },
           },
+          user: true,
         },
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
