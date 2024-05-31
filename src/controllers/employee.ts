@@ -28,7 +28,14 @@ const getEmployee = async (request: Request, response: Response) => {
     if (request.query.page === undefined) {
       results = await prisma.employee.findMany({
         where: {
-          status_user: false,
+          NOT: [
+            {
+              employee_name: "digi",
+            },
+            {
+              employee_name: "dev",
+            },
+          ],
         },
         include: {
           user: true,

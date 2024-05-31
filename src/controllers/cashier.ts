@@ -17,9 +17,9 @@ const getCashier = async (request: Request, response: Response) => {
         deleted: null,
       },
     });
-    let results: any;
-    let cdv: any;
-    let detailDmr: any;
+    let results: any = [];
+    let cdv: any = [];
+    let detailDmr: any = [];
     if (request.query.page === undefined) {
       results = await prisma.kontrabon.findMany({
         where: {
@@ -763,21 +763,11 @@ const getCashier = async (request: Request, response: Response) => {
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
     }
-    let obj: any = [];
-    const cashAdvance: any = [cdv];
-    cashAdvance.map((d: any) => {
-      obj.push(...d);
-    });
-    let dmr: any = [];
-    const detailDm: any = [detailDmr];
-    detailDm.map((d: any) => {
-      obj.push(...d);
-    });
-    if (results.length > 0 || obj.length > 0 || dmr.length > 0) {
+    if (results.length > 0 || cdv.length > 0 || detailDmr.length > 0) {
       return response.status(200).json({
         success: true,
         massage: "Get All Cashier",
-        result: [...results, ...obj, ...dmr],
+        result: [...results, ...cdv, ...detailDmr],
         page: pagination.page,
         limit: pagination.perPage,
         totalData: cashieCount,

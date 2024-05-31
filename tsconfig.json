@@ -4,11 +4,14 @@
     "module": "commonjs",
     "lib": ["es5"],
     "allowJs": true,
-    "outDir": "build",
+    "outDir": "ts-built",
     "rootDir": "src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "allowSyntheticDefaultImports": true,
     "useUnknownInCatchVariables": false,
     "forceConsistentCasingInFileNames": true /* Skip type checking all .d.ts files. */
   }

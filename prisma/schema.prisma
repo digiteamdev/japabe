@@ -1034,6 +1034,8 @@ model purchase {
   approveById             String?
   note                    String?                  @db.Text
   taxPsrDmr               TaxPsrDmr?
+  date_receive            DateTime?
+  status_receive          Boolean?                 @default(false)
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @updatedAt
   deleted                 DateTime?

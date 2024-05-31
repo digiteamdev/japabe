@@ -313,20 +313,28 @@ const getPoandSo = async (request: Request, response: Response) => {
         },
       },
     });
-    let results;
+    let results: any = [];
+    let PoandSo: any = [];
+    let DmrandDsr: any = [];
     if (request.query.page === undefined) {
-      results = await prisma.poandso.findMany({
+      PoandSo = await prisma.poandso.findMany({
         where: {
-          AND: [
-            {
-              status_receive: false,
-            },
-            {
-              id_so: {
-                startsWith: type,
-              },
-            },
-          ],
+          status_receive: false,
+          deleted: null,
+          id_so: {
+            contains: pencarian,
+            mode: "insensitive",
+          },
+          // AND: [
+          // {
+          //   status_receive: false,
+          // },
+          // {
+          //   id_so: {
+          //     startsWith: type,
+          //   },
+          // },
+          // ],
         },
         include: {
           term_of_pay_po_so: true,
@@ -420,6 +428,119 @@ const getPoandSo = async (request: Request, response: Response) => {
                       },
                     },
                   },
+                  user: {
+                    select: {
+                      id: true,
+                      username: true,
+                      employee: {
+                        select: {
+                          id: true,
+                          employee_name: true,
+                          position: true,
+                          sub_depart: {
+                            select: {
+                              id: true,
+                              name: true,
+                              departement: {
+                                select: {
+                                  id: true,
+                                  name: true,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+      DmrandDsr = await prisma.purchase.findMany({
+        distinct: ["id"],
+        where: {
+          deleted: null,
+          status_receive: false,
+          idPurchase: {
+            contains: pencarian,
+            mode: "insensitive",
+          },
+          OR: [
+            {
+              idPurchase: {
+                startsWith: "DMR",
+              },
+            },
+            {
+              idPurchase: {
+                startsWith: "DSR",
+              },
+            },
+          ],
+        },
+        include: {
+          detailMr: {
+            include: {
+              Material_Master: true,
+              supplier: true,
+              mr: {
+                include: {
+                  wor: true,
+                  bom: {
+                    include: {
+                      bom_detail: {
+                        include: {
+                          Material_Master: true,
+                        },
+                      },
+                      srimg: {
+                        include: {
+                          srimgdetail: true,
+                        },
+                      },
+                    },
+                  },
+                  user: {
+                    select: {
+                      id: true,
+                      username: true,
+                      employee: {
+                        select: {
+                          id: true,
+                          employee_name: true,
+                          position: true,
+                          sub_depart: {
+                            select: {
+                              id: true,
+                              name: true,
+                              departement: {
+                                select: {
+                                  id: true,
+                                  name: true,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          SrDetail: {
+            include: {
+              supplier: true,
+              sr: {
+                include: {
+                  wor: true,
                   user: {
                     select: {
                       id: true,
@@ -598,11 +719,11 @@ const getPoandSo = async (request: Request, response: Response) => {
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
     }
-    if (results.length > 0) {
+    if (results.length > 0 || PoandSo.length > 0 || DmrandDsr.length > 0) {
       return response.status(200).json({
         success: true,
         massage: "Get All PO and SO",
-        result: results,
+        result: [...results, ...PoandSo, ...DmrandDsr],
         page: pagination.page,
         limit: pagination.perPage,
         totalData: poandsoCount,
@@ -1486,35 +1607,82 @@ const updatePoandSo = async (request: Request, response: Response) => {
     await prisma.$transaction(
       async (prisma) => {
         let result: any = [];
-        result = await prisma.poandso.update({
-          where: {
-            id: request.body.id,
-          },
-          data: {
-            id_receive: request.body.id_receive,
-            date_receive: request.body.date_receive,
-            currency: request.body.currency,
-            taxPsrDmr: request.body.taxPsrDmr,
-            delivery_time: request.body.delivery_time,
-            franco: request.body.franco,
-            payment_method: request.body.payment_method,
-          },
-        });
-        const statusReceive: any = await prisma.detailMr.findFirst({
-          where: {
-            poandsoId: result.id,
-          },
-        });
-        const updateVerify: any = request.body.detailMr.map(
-          (updateByveri: { qty_receive: any; id: any }) => {
-            return {
-              qty_receive: updateByveri.qty_receive,
-              id: updateByveri.id,
-            };
-          }
-        );
+        let statusReceive: any;
+        let updateVerify: any;
+        let statusReceiveSo: any;
+        let updateVerifySo: any;
+        if (request.body.type === "po") {
+          result = await prisma.poandso.update({
+            where: {
+              id: request.body.id,
+            },
+            data: {
+              id_receive: request.body.id_receive,
+              date_receive: request.body.date_receive,
+              currency: request.body.currency,
+              taxPsrDmr: request.body.taxPsrDmr,
+              delivery_time: request.body.delivery_time,
+              franco: request.body.franco,
+              payment_method: request.body.payment_method,
+            },
+          });
+        } else if (request.body.type === "pu") {
+          result = await prisma.purchase.update({
+            where: {
+              id: request.body.id,
+            },
+            data: {
+              date_receive: request.body.date_receive,
+              id_receive: request.body.id_receive,
+            },
+          });
+        }
+        if (request.body.detailMr) {
+          statusReceive = await prisma.detailMr.findFirst({
+            where: {
+              OR: [
+                {
+                  poandsoId: result.id,
+                },
+                {
+                  idPurchaseR: result.id,
+                },
+              ],
+            },
+          });
+          updateVerify = request.body.detailMr.map(
+            (updateByveri: { qty_receive: any; id: any }) => {
+              return {
+                qty_receive: updateByveri.qty_receive,
+                id: updateByveri.id,
+              };
+            }
+          );
+        } else if (request.body.srDetail) {
+          statusReceiveSo = await prisma.srDetail.findFirst({
+            where: {
+              OR: [
+                {
+                  poandsoId: result.id,
+                },
+                {
+                  idPurchaseR: result.id,
+                },
+              ],
+            },
+          });
+          updateVerifySo = request.body.srDetail.map(
+            (updateByveri: { qty_receive: any; id: any }) => {
+              return {
+                qty_receive: updateByveri.qty_receive,
+                id: updateByveri.id,
+              };
+            }
+          );
+        }
         let upsertDetailMr: any = [];
-        if (result && updateVerify.length !== 0) {
+        let upsertDetailSr: any = [];
+        if (result && updateVerify) {
           for (let i = 0; i < updateVerify.length; i++) {
             upsertDetailMr = await prisma.detailMr.update({
               where: {
@@ -1529,64 +1697,91 @@ const updatePoandSo = async (request: Request, response: Response) => {
                 statusReceive?.qtyAppr === upsertDetailMr.qty_receive) ||
               statusReceive?.qtyAppr < upsertDetailMr.qty_receive
             ) {
-              result = await prisma.poandso.update({
-                where: {
-                  id: result.id,
-                },
-                data: {
-                  status_receive: true,
-                },
-              });
-              const statusMr: any = await prisma.detailMr.findFirst({
-                where: {
-                  poandsoId: result.id,
-                },
-                include: {
-                  mr: true,
-                },
-              });
-              const statusSr: any = await prisma.srDetail.findFirst({
-                where: {
-                  poandsoId: result.id,
-                },
-                include: {
-                  sr: true,
-                },
-              });
-              if (statusMr) {
-                await prisma.mr.update({
+              if (request.body.type === "po") {
+                result = await prisma.poandso.update({
                   where: {
-                    id: statusMr.mr.id,
+                    id: result.id,
                   },
                   data: {
-                    statusMr: "Receive",
+                    status_receive: true,
                   },
                 });
-              } else if (statusSr) {
-                await prisma.sr.update({
+                const statusMr: any = await prisma.detailMr.findFirst({
                   where: {
-                    id: statusMr.mr.id,
+                    poandsoId: result.id,
+                  },
+                  include: {
+                    mr: true,
+                  },
+                });
+                if (statusMr) {
+                  await prisma.mr.update({
+                    where: {
+                      id: statusMr.mr.id,
+                    },
+                    data: {
+                      statusMr: "Receive",
+                    },
+                  });
+                }
+                const getMaterialS = await prisma.material_Master.findFirst({
+                  where: {
+                    id: statusMr.materialId,
+                  },
+                });
+                await prisma.material_Master.update({
+                  where: {
+                    id: statusMr.materialId,
                   },
                   data: {
-                    statusSr: "Receive",
+                    jumlah_Stock:
+                      getMaterialS?.jumlah_Stock + updateVerify[i].qty_receive,
+                    harga: statusMr.price,
+                  },
+                });
+              } else if (request.body.type === "pu") {
+                result = await prisma.purchase.update({
+                  where: {
+                    id: result.id,
+                  },
+                  data: {
+                    status_receive: true,
+                  },
+                });
+                const statusMr: any = await prisma.detailMr.findFirst({
+                  where: {
+                    idPurchaseR: result.id,
+                  },
+                  include: {
+                    mr: true,
+                  },
+                });
+                if (statusMr) {
+                  await prisma.mr.update({
+                    where: {
+                      id: statusMr.mr.id,
+                    },
+                    data: {
+                      statusMr: "Receive",
+                    },
+                  });
+                }
+                const getMaterialS = await prisma.material_Master.findFirst({
+                  where: {
+                    id: statusMr.materialId,
+                  },
+                });
+                await prisma.material_Master.update({
+                  where: {
+                    id: statusMr.materialId,
+                  },
+                  data: {
+                    jumlah_Stock:
+                      getMaterialS?.jumlah_Stock + updateVerify[i].qty_receive,
+                    harga: statusMr.price,
                   },
                 });
               }
-              const getMaterialS = await prisma.material_Master.findFirst({
-                where: {
-                  id: statusMr.materialId,
-                },
-              });
-              await prisma.material_Master.update({
-                where: {
-                  id: statusMr.materialId,
-                },
-                data: {
-                  jumlah_Stock:
-                    getMaterialS?.jumlah_Stock + updateVerify[i].qty_receive,
-                  harga: statusMr.price,
-                },
-              });
             } else {
               result = await prisma.poandso.update({
                 where: {
@@ -1609,19 +1804,19 @@ const updatePoandSo = async (request: Request, response: Response) => {
                 detailMr: true,
               },
             });
-            const getSO = await prisma.poandso.findFirst({
+            const getDmr = await prisma.purchase.findFirst({
               where: {
                 id: result.id,
-                id_so: {
-                  startsWith: "SO",
+                idPurchase: {
+                  startsWith: "DMR",
                 },
               },
               include: {
-                SrDetail: true,
+                detailMr: true,
               },
             });
-            const updateTotalSo: any = getSO?.SrDetail;
             const updateTotalPo: any = getPO?.detailMr;
+            const updateTotalPu: any = getDmr?.detailMr;
             if (getPO) {
               for (let index = 0; index < updateTotalPo.length; index++) {
                 await prisma.journal_cashier.createMany({
@@ -1643,7 +1838,140 @@ const updatePoandSo = async (request: Request, response: Response) => {
                   ],
                 });
               }
-            } else if (getSO) {
+            } else if (getDmr) {
+              for (let index = 0; index < updateTotalPu.length; index++) {
+                await prisma.journal_cashier.createMany({
+                  data: [
+                    {
+                      coa_id: "clwftmglr000rrspb2thk69fx",
+                      status_transaction: "Debet",
+                      purchaseID: getDmr.id,
+                      id_receive: getDmr.id_receive,
+                      grandtotal: updateTotalPu[index].total,
+                    },
+                    {
+                      coa_id: "clwftmglr001nrspbdgzabjbl",
+                      status_transaction: "Kredit",
+                      purchaseID: getDmr.id,
+                      id_receive: getDmr.id_receive,
+                      grandtotal: updateTotalPu[index].total,
+                    },
+                  ],
+                });
+              }
+            }
+          }
+          response.status(201).json({
+            success: true,
+            massage: "Success Update Data",
+            results: result,
+          });
+        } else if (result && updateVerifySo) {
+          for (let i = 0; i < updateVerifySo.length; i++) {
+            upsertDetailSr = await prisma.srDetail.update({
+              where: {
+                id: updateVerifySo[i].id,
+              },
+              data: {
+                qty_receive: updateVerifySo[i].qty_receive,
+              },
+            });
+            if (
+              (result &&
+                statusReceiveSo?.qtyAppr === upsertDetailSr.qty_receive) ||
+              statusReceiveSo?.qtyAppr < upsertDetailSr.qty_receive
+            ) {
+              if (request.body.type === "po") {
+                result = await prisma.poandso.update({
+                  where: {
+                    id: result.id,
+                  },
+                  data: {
+                    status_receive: true,
+                  },
+                });
+                const statusSr: any = await prisma.srDetail.findFirst({
+                  where: {
+                    poandsoId: result.id,
+                  },
+                  include: {
+                    sr: true,
+                  },
+                });
+                if (statusSr) {
+                  await prisma.sr.update({
+                    where: {
+                      id: statusSr.sr.id,
+                    },
+                    data: {
+                      statusSr: "Receive",
+                    },
+                  });
+                }
+              } else if (request.body.type === "pu") {
+                result = await prisma.purchase.update({
+                  where: {
+                    id: result.id,
+                  },
+                  data: {
+                    status_receive: true,
+                  },
+                });
+                const statusSr: any = await prisma.srDetail.findFirst({
+                  where: {
+                    poandsoId: result.id,
+                  },
+                  include: {
+                    sr: true,
+                  },
+                });
+                if (statusSr) {
+                  await prisma.sr.update({
+                    where: {
+                      id: statusSr.sr.id,
+                    },
+                    data: {
+                      statusSr: "Receive",
+                    },
+                  });
+                }
+              }
+            } else {
+              result = await prisma.poandso.update({
+                where: {
+                  id: result.id,
+                },
+                data: {
+                  status_receive: false,
+                },
+              });
+            }
+            // journal
+            const getSO = await prisma.poandso.findFirst({
+              where: {
+                id: result.id,
+                id_so: {
+                  startsWith: "SO",
+                },
+              },
+              include: {
+                SrDetail: true,
+              },
+            });
+            const getDsr = await prisma.purchase.findFirst({
+              where: {
+                id: result.id,
+                idPurchase: {
+                  startsWith: "DSR",
+                },
+              },
+              include: {
+                SrDetail: true,
+              },
+            });
+            const updateTotalSo: any = getSO?.SrDetail;
+            const updateTotaldSo: any = getDsr?.SrDetail;
+            if (getSO) {
               for (let index = 0; index < updateTotalSo.length; index++) {
                 await prisma.journal_cashier.createMany({
                   data: [
@@ -1652,14 +1980,35 @@ const updatePoandSo = async (request: Request, response: Response) => {
                       status_transaction: "Debet",
                       poandsoId: getSO.id,
                       id_receive: getSO.id_receive,
-                      grandtotal: updateTotalPo[index].total,
+                      grandtotal: updateTotalSo[index].total,
                     },
                     {
                       coa_id: "clwftmglr001orspbjswfjt31",
                       status_transaction: "Kredit",
                       poandsoId: getSO.id,
                       id_receive: getSO.id_receive,
-                      grandtotal: updateTotalPo[index].total,
+                      grandtotal: updateTotalSo[index].total,
+                    },
+                  ],
+                });
+              }
+            } else if (getDsr) {
+              for (let index = 0; index < updateTotaldSo.length; index++) {
+                await prisma.journal_cashier.createMany({
+                  data: [
+                    {
+                      coa_id: "clwftmgls0066rspb8h6qvpan",
+                      status_transaction: "Debet",
+                      purchaseID: getDsr.id,
+                      id_receive: getDsr.id_receive,
+                      grandtotal: updateTotaldSo[index].total,
+                    },
+                    {
+                      coa_id: "clwftmglr001orspbjswfjt31",
+                      status_transaction: "Kredit",
+                      purchaseID: getDsr.id,
+                      id_receive: getDsr.id_receive,
+                      grandtotal: updateTotaldSo[index].total,
                     },
                   ],
                 });
@@ -1719,24 +2068,7 @@ const deleteTermOf = async (request: Request, response: Response) => {
 
 const getGeneratePO = async (request: Request, response: any, error: any) => {
   try {
-    const pdf = await htmlToPdf(`<!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8" />
-        <title>PO</title>
-      </head>
-      <body>
-        <h1>POt</h1>
-        <ul>
-          {{#each users}}
-          <li style="color: aqua">Name: {{this.name}}</li>
-          <li>Age: {{this.age}}</li>
-          <br />
-          {{/each}}
-        </ul>
-      </body>
-    </html>
-    `);
+    const pdf = await htmlToPdf();
     response.contentType("application/pdf");
     response.send(pdf);
   } catch (error) {
