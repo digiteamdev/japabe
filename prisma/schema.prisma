@@ -133,8 +133,8 @@ model Customer {
   phone           String?           @db.VarChar(200)
   contact         CustomerContact[] @relation("contact")
   address         CustomerAddress[] @relation("address")
-  ppn             Int?              @default(0)
-  pph             Int?              @default(0)
+  ppn             Float             @default(0)
+  pph             Float             @default(0)
   job_operational job_operational?
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
@@ -370,8 +370,8 @@ model Supplier {
   ec_postalcode   Int?              @default(0)
   office_email    String?           @db.VarChar(100)
   NPWP            String?           @db.VarChar(200)
-  ppn             Int?              @default(0)
-  pph             Int?              @default(0)
+  ppn             Float?            @default(0)
+  pph             Float?            @default(0)
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   deleted         DateTime?
@@ -629,6 +629,7 @@ model wor {
   user             User?             @relation(fields: [userId], references: [id])
   userId           String?
   work_scope_item  work_scope_item[]
+  journal_cashier  journal_cashier[]
 
   @@index([id, job_no, userId])
 }
@@ -1253,14 +1254,23 @@ model journal_cashier {
   outgoing_material  outgoing_material? @relation(fields: [outgoingId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   outgoingId         String?
   status_transaction status_transaction
+  wor                wor?               @relation(fields: [worId], references: [id])
+  worId              String?
   grandtotal         Int                @default(0)
   status             Boolean            @default(false)
+  statusJournal      statusJournal      @default(satu)
   id_receive         String?            @db.Text
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
   deleted            DateTime?
 
   @@index([id, cashier_id, coa_id])
+}
+
+enum statusJournal {
+  satu @map("1")
+  dua  @map("2")
+  tiga @map("3")
 }
 
 enum type_cdv {
