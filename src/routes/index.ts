@@ -2559,6 +2559,15 @@ router.post(
   cashier.createCashier
 );
 
+router.post(
+  "/createJournal",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    finance: "FINANCE & ACC",
+  }),
+  cashier.createJournal
+);
+
 router.put(
   "/cashier/:id",
   jwt.authToken({

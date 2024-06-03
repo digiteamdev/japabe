@@ -2650,11 +2650,61 @@ const updateJournalPosting = async (request: Request, response: Response) => {
   }
 };
 
+const createJournal = async (request: any, response: Response) => {
+  try {
+    const updateVerify = request.body.map(
+      (updateByveri: { worId: any; coa_id: any; status_transaction: any }) => {
+        return {
+          worId: updateByveri.worId,
+          coa_id: updateByveri.coa_id,
+          status_transaction: updateByveri.status_transaction,
+        };
+      }
+    );
+    let result: any = [];
+    for (let i = 0; i < updateVerify.length; i++) {
+      let createJournal: any;
+      if (updateVerify[i].worId === null) {
+        createJournal = await prisma.journal_cashier.create({
+          data: {
+            coa: { connect: { id: updateVerify[i].coa_id } },
+            status_transaction: updateVerify[i].status_transaction,
+          },
+        });
+      } else {
+        createJournal = await prisma.journal_cashier.create({
+          data: {
+            wor: { connect: { id: updateVerify[i].worId } },
+            coa: { connect: { id: updateVerify[i].coa_id } },
+            status_transaction: updateVerify[i].status_transaction,
+          },
+        });
+      }
+      result = [...result, createJournal];
+    }
+    if (result) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        result: result,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getCashier,
   getPosting,
   getDueDate,
   createCashier,
+  createJournal,
   updateCashier,
   updateDuedate,
   updateDuedateStatus,
