@@ -62,7 +62,8 @@ const getMr = async (request: any, response: Response) => {
       ) {
         if (
           userLogin?.employee?.sub_depart?.id === "cli8fkhn4001orswmj0y479d7" ||
-          userLogin?.employee?.sub_depart?.id === "cli8fmb2g001urswmi5rhwmai"
+          userLogin?.employee?.sub_depart?.id === "cli8fmb2g001urswmi5rhwmai" ||
+          userLogin?.employee?.sub_depart?.id === "cli8fa5050000rswmhh4qkn6w" 
         ) {
           results = await prisma.mr.findMany({
             where: {

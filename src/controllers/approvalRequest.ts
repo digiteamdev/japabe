@@ -328,20 +328,11 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
 
 const getOutgoingMaterial = async (request: Request, response: Response) => {
   try {
-    const results = await prisma.poandso.findMany({
+    let results: any [];
+    let detailDmr: any [];
+    results = await prisma.poandso.findMany({
       where: {
-        AND: [
-          {
-            status_receive: true,
-          },
-        ],
-        NOT: {
-          detailMr: {
-            every: {
-              id: "null",
-            },
-          },
-        },
+        status_receive: true,
       },
       include: {
         term_of_pay_po_so: true,
@@ -420,11 +411,134 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
         createdAt: "desc",
       },
     });
+    detailDmr = await prisma.purchase.findMany({
+      where: {
+        status_receive: true,
+        OR: [
+          {
+            idPurchase: {
+              startsWith: "DMR",
+            },
+          },
+          {
+            idPurchase: {
+              startsWith: "DSR",
+            },
+          },
+        ],
+      },
+      include: {
+        supplier: {
+          include: {
+            SupplierBank: true,
+            SupplierContact: true,
+          },
+        },
+        detailMr: {
+          include: {
+            supplier: {
+              include: {
+                SupplierBank: true,
+                SupplierContact: true,
+              },
+            },
+            Material_Master: true,
+            mr: {
+              include: {
+                wor: true,
+                bom: {
+                  include: {
+                    bom_detail: {
+                      include: {
+                        Material_Master: true,
+                      },
+                    },
+                    srimg: {
+                      include: {
+                        srimgdetail: true,
+                      },
+                    },
+                  },
+                },
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    employee: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                        position: true,
+                        sub_depart: {
+                          select: {
+                            id: true,
+                            name: true,
+                            departement: {
+                              select: {
+                                id: true,
+                                name: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        SrDetail: {
+          include: {
+            supplier: {
+              include: {
+                SupplierBank: true,
+                SupplierContact: true,
+              },
+            },
+            sr: {
+              include: {
+                wor: true,
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    employee: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                        position: true,
+                        sub_depart: {
+                          select: {
+                            id: true,
+                            name: true,
+                            departement: {
+                              select: {
+                                id: true,
+                                name: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
     if (results.length > 0) {
       return response.status(200).json({
         success: true,
         massage: "Get All ApprovalRequest Stock",
-        result: results,
+        result: [...results, ...detailDmr],
       });
     } else {
       return response.status(200).json({

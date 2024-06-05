@@ -883,7 +883,8 @@ const getAllReceive = async (request: Request, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    let totalCount: any;
+    let totalCount: any = 0;
+    let totalCountPO: any = 0;
     let results: any = [];
     let detailDmr: any = [];
     let resultnopage: any = [];
@@ -1083,16 +1084,7 @@ const getAllReceive = async (request: Request, response: Response) => {
     } else {
       results = await prisma.poandso.findMany({
         where: {
-          AND: [
-            {
-              status_receive: true,
-            },
-            {
-              id_so: {
-                startsWith: type,
-              },
-            },
-          ],
+          status_receive: true,
           OR: [
             {
               id_receive: {
@@ -1237,7 +1229,7 @@ const getAllReceive = async (request: Request, response: Response) => {
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
-      totalCount = await prisma.poandso.count({
+      totalCountPO = await prisma.poandso.count({
         where: {
           status_receive: true,
         },
@@ -1556,7 +1548,7 @@ const getAllReceive = async (request: Request, response: Response) => {
         result: [...results, ...resultnopage, ...spjCdv, ...detailDmr],
         page: pagination.page,
         limit: pagination.perPage,
-        totalData: totalCount,
+        totalData: totalCount + totalCountPO,
         currentPage: pagination.currentPage,
         nextPage: pagination.next(),
         previouspage: pagination.prev(),

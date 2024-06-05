@@ -1812,8 +1812,9 @@ const getPosting = async (request: Request, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    let results: any;
-    let cashier: any;
+    let results: any = [];
+    let cashier: any = [];
+    let purchase: any = [];
     if (request.query.page === undefined) {
       results = await prisma.cashier.findMany({
         where: {
@@ -2492,13 +2493,137 @@ const getPosting = async (request: Request, response: Response) => {
         take: parseInt(pagination.perPage),
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
+      purchase = await prisma.purchase.findMany({
+        where: {
+          status_receive: true,
+          OR: [
+            {
+              idPurchase: {
+                startsWith: "DMR",
+              },
+            },
+            {
+              idPurchase: {
+                startsWith: "DSR",
+              },
+            },
+          ],
+        },
+        include: {
+          supplier: {
+            include: {
+              SupplierBank: true,
+              SupplierContact: true,
+            },
+          },
+          detailMr: {
+            include: {
+              supplier: {
+                include: {
+                  SupplierBank: true,
+                  SupplierContact: true,
+                },
+              },
+              Material_Master: true,
+              mr: {
+                include: {
+                  wor: true,
+                  bom: {
+                    include: {
+                      bom_detail: {
+                        include: {
+                          Material_Master: true,
+                        },
+                      },
+                      srimg: {
+                        include: {
+                          srimgdetail: true,
+                        },
+                      },
+                    },
+                  },
+                  user: {
+                    select: {
+                      id: true,
+                      username: true,
+                      employee: {
+                        select: {
+                          id: true,
+                          employee_name: true,
+                          position: true,
+                          sub_depart: {
+                            select: {
+                              id: true,
+                              name: true,
+                              departement: {
+                                select: {
+                                  id: true,
+                                  name: true,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          SrDetail: {
+            include: {
+              supplier: {
+                include: {
+                  SupplierBank: true,
+                  SupplierContact: true,
+                },
+              },
+              sr: {
+                include: {
+                  wor: true,
+                  user: {
+                    select: {
+                      id: true,
+                      username: true,
+                      employee: {
+                        select: {
+                          id: true,
+                          employee_name: true,
+                          position: true,
+                          sub_depart: {
+                            select: {
+                              id: true,
+                              name: true,
+                              departement: {
+                                select: {
+                                  id: true,
+                                  name: true,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
     }
-    const totalData: any = parseInt(results.length) + parseInt(cashier.length);
+    const totalData: any =
+      parseInt(results.length) + parseInt(cashier.length) + parseInt(purchase);
     if (results.length > 0) {
       return response.status(200).json({
         success: true,
         massage: "Get All Posting Cashier",
-        result: [...results, ...cashier],
+        result: [...results, ...cashier, ...purchase],
         page: pagination.page,
         limit: pagination.perPage,
         totalData: totalData,
@@ -2523,12 +2648,13 @@ const updatePosting = async (request: Request, response: Response) => {
   try {
     const id: string = request.params.id;
     let result: any = [];
-    result = await prisma.cashier.update({
+    result = await prisma.journal_cashier.update({
       where: {
         id: id,
       },
       data: {
-        posting: true,
+        status: true,
+        statusJournal: "dua",
       },
     });
     if (result) {
@@ -2653,11 +2779,17 @@ const updateJournalPosting = async (request: Request, response: Response) => {
 const createJournal = async (request: any, response: Response) => {
   try {
     const updateVerify = request.body.map(
-      (updateByveri: { worId: any; coa_id: any; status_transaction: any }) => {
+      (updateByveri: {
+        worId: any;
+        coa_id: any;
+        status_transaction: any;
+        grandtotal: any;
+      }) => {
         return {
           worId: updateByveri.worId,
           coa_id: updateByveri.coa_id,
           status_transaction: updateByveri.status_transaction,
+          grandtotal: updateByveri.grandtotal,
         };
       }
     );
@@ -2669,6 +2801,7 @@ const createJournal = async (request: any, response: Response) => {
           data: {
             coa: { connect: { id: updateVerify[i].coa_id } },
             status_transaction: updateVerify[i].status_transaction,
+            grandtotal: updateVerify[i].grandtotal,
           },
         });
       } else {
@@ -2677,6 +2810,7 @@ const createJournal = async (request: any, response: Response) => {
             wor: { connect: { id: updateVerify[i].worId } },
             coa: { connect: { id: updateVerify[i].coa_id } },
             status_transaction: updateVerify[i].status_transaction,
+            grandtotal: updateVerify[i].grandtotal,
           },
         });
       }
