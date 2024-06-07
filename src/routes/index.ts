@@ -2640,6 +2640,40 @@ router.put(
   cashier.updateStatusM
 );
 
+router.get(
+  "/LabaRugiPdf",
+  // jwt.authToken({
+  //   administrator: "ADMINISTRATOR",
+  //   marketingbumn: "MARKETING BUMN",
+  //   marketingswasta: "MARKETING SWASTA",
+  //   HRandGA: "HR & GA",
+  //   finance: "FINANCE & ACC",
+  //   QAandEng: "QA & ENG",
+  //   purchasing: "PURCHASING",
+  //   drafter: "DRAFTER",
+  //   ppic: "Ppic",
+  //   utility: "Utility/ty",
+  // }),
+  cashier.getGenerateLabaRugi
+);
+
+router.get(
+  "/Neraca",
+  // jwt.authToken({
+  //   administrator: "ADMINISTRATOR",
+  //   marketingbumn: "MARKETING BUMN",
+  //   marketingswasta: "MARKETING SWASTA",
+  //   HRandGA: "HR & GA",
+  //   finance: "FINANCE & ACC",
+  //   QAandEng: "QA & ENG",
+  //   purchasing: "PURCHASING",
+  //   drafter: "DRAFTER",
+  //   ppic: "Ppic",
+  //   utility: "Utility/ty",
+  // }),
+  cashier.getGenerateNeraca
+);
+
 /***************************Cashier**************************************** */
 
 /***************************Cash Advance**************************************** */

@@ -213,6 +213,7 @@ const getEmployeeAll = async (request: Request, response: Response) => {
   try {
     const results = await prisma.employee.findMany({
       include: {
+        user: true,
         Employee_Child: true,
         Certificate_Employee: true,
         Educational_Employee: true,

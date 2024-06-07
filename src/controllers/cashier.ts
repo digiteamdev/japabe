@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import prisma from "../middleware/cashier";
 import pagging from "../utils/paggination";
+import labaRugi from "../utils/generatePdfLaba";
+import neraca from "../utils/generatePdfNeraca";
 import url from "url";
 import { Prisma } from "@prisma/client";
 
@@ -1804,10 +1806,9 @@ const updateStatusM = async (request: any, response: Response) => {
 
 const getPosting = async (request: Request, response: Response) => {
   try {
-    let l = request.query.status === "true" ? true : false;
     const pencarian: any = request.query.search || "";
     const hostname: any = request.headers.host;
-    let status: boolean = l;
+    let status: any = request.query.status || "satu" || "dua" || "tiga";
     const pathname = url.parse(request.url).pathname;
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
@@ -2137,7 +2138,7 @@ const getPosting = async (request: Request, response: Response) => {
         where: {
           journal_cashier: {
             every: {
-              status: status,
+              statusJournal: status,
             },
           },
           NOT: {
@@ -2175,8 +2176,8 @@ const getPosting = async (request: Request, response: Response) => {
       cashier = await prisma.cashier.findMany({
         where: {
           journal_cashier: {
-            some: {
-              status: status,
+            every: {
+              statusJournal: status,
             },
           },
           id_cashier: {
@@ -2495,6 +2496,11 @@ const getPosting = async (request: Request, response: Response) => {
       });
       purchase = await prisma.purchase.findMany({
         where: {
+          journal_cashier: {
+            every: {
+              statusJournal: status,
+            },
+          },
           status_receive: true,
           OR: [
             {
@@ -2833,6 +2839,36 @@ const createJournal = async (request: any, response: Response) => {
   }
 };
 
+const getGenerateLabaRugi = async (
+  request: Request,
+  response: any,
+  error: any
+) => {
+  try {
+    const pdf = await labaRugi();
+    response.contentType("application/pdf");
+    response.send(pdf);
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const getGenerateNeraca = async (
+  request: Request,
+  response: any,
+  error: any
+) => {
+  try {
+    const pdf = await neraca();
+    response.contentType("application/pdf");
+    response.setHeader("Content-Type", "application/pdf");
+    response.attachment("neraca.pdf");
+    response.send(pdf);
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 export default {
   getCashier,
   getPosting,
@@ -2847,4 +2883,6 @@ export default {
   updateStatusM,
   updatePosting,
   updateJournalPosting,
+  getGenerateLabaRugi,
+  getGenerateNeraca,
 };

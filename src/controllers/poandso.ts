@@ -19,6 +19,7 @@ const getPo = async (request: Request, response: Response) => {
       results = await prisma.sr.findMany({
         where: {
           status_manager_director: "approve",
+          statusSr: "Purchase",
           no_sr: {
             contains: pencarian,
             mode: "insensitive",
@@ -26,22 +27,18 @@ const getPo = async (request: Request, response: Response) => {
           SrDetail: {
             some: {
               srappr: type,
+              poandsoId: null
             },
           },
-          NOT: [
-            {
-              SrDetail: {
-                some: {
-                  idPurchaseR: null,
-                },
-              },
-            },
-          ],
         },
         include: {
           SrDetail: {
             where: {
               poandsoId: null,
+              NOT: {
+                supId: null,
+                idPurchaseR: null,
+              }
             },
             include: {
               supplier: {
@@ -89,6 +86,7 @@ const getPo = async (request: Request, response: Response) => {
       results = await prisma.mr.findMany({
         where: {
           status_manager_director: "approve",
+          statusMr: "Purchase",
           no_mr: {
             contains: pencarian,
             mode: "insensitive",
@@ -96,23 +94,18 @@ const getPo = async (request: Request, response: Response) => {
           detailMr: {
             some: {
               mrappr: type,
+              poandsoId: null
             },
           },
-          NOT: [
-            {
-              detailMr: {
-                some: {
-                  mrappr: type,
-                  idPurchaseR: null,
-                },
-              },
-            },
-          ],
         },
         include: {
           detailMr: {
             where: {
               poandsoId: null,
+              NOT: {
+                supId: null,
+                idPurchaseR: null,
+              }
             },
             include: {
               Material_Master: true,
@@ -883,8 +876,8 @@ const getAllReceive = async (request: Request, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    let totalCount: any = 0;
-    let totalCountPO: any = 0;
+    let totalCount: any = 0
+    let totalCountPO: any = 0
     let results: any = [];
     let detailDmr: any = [];
     let resultnopage: any = [];
@@ -1356,6 +1349,8 @@ const getAllReceive = async (request: Request, response: Response) => {
         orderBy: {
           createdAt: "desc",
         },
+        take: parseInt(pagination.perPage),
+        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
       totalCount = await prisma.purchase.count({
         where: {
@@ -1747,14 +1742,14 @@ const updatePoandSo = async (request: Request, response: Response) => {
                 });
               }
             } else {
-              result = await prisma.poandso.update({
-                where: {
-                  id: result.id,
-                },
-                data: {
-                  status_receive: false,
-                },
-              });
+            //   result = await prisma.poandso.update({
+            //     where: {
+            //       id: result.id,
+            //     },
+            //     data: {
+            //       status_receive: false,
+            //     },
+            //   });
             }
             // journal
             const getPO = await prisma.poandso.findFirst({

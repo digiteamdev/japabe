@@ -63,7 +63,7 @@ const getMr = async (request: any, response: Response) => {
         if (
           userLogin?.employee?.sub_depart?.id === "cli8fkhn4001orswmj0y479d7" ||
           userLogin?.employee?.sub_depart?.id === "cli8fmb2g001urswmi5rhwmai" ||
-          userLogin?.employee?.sub_depart?.id === "cli8fa5050000rswmhh4qkn6w" 
+          userLogin?.employee?.sub_depart?.id === "cli8fa5050000rswmhh4qkn6w"
         ) {
           results = await prisma.mr.findMany({
             where: {
@@ -1206,21 +1206,13 @@ const getPrM = async (request: Request, response: Response) => {
             contains: pencarian,
             mode: "insensitive",
           },
-          OR: [
+          AND: [
             {
               detailMr: {
                 some: {
                   mrappr: typeMR,
                   supId: null,
-                },
-              },
-            },
-          ],
-          NOT: [
-            {
-              detailMr: {
-                every: {
-                  approvedRequestId: null,
+                  idPurchaseR: null,
                 },
               },
             },
@@ -1228,6 +1220,13 @@ const getPrM = async (request: Request, response: Response) => {
         },
         include: {
           detailMr: {
+            where: {
+              supId: null,
+              idPurchaseR: null,
+              NOT: {
+                approvedRequestId: null,
+              },
+            },
             include: {
               Material_Master: true,
             },

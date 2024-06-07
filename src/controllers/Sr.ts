@@ -1020,23 +1020,17 @@ const getPsR = async (request: Request, response: Response) => {
             contains: pencarian,
             mode: "insensitive",
           },
-          OR: [
+          AND: [
             {
               SrDetail: {
                 some: {
                   srappr: typeMR,
                   supId: null,
+                  idPurchaseR: null,
                 },
               },
             },
           ],
-          NOT: {
-            SrDetail: {
-              every: {
-                approvedRequestId: null,
-              },
-            },
-          },
         },
         include: {
           user: {
@@ -1065,6 +1059,13 @@ const getPsR = async (request: Request, response: Response) => {
             },
           },
           SrDetail: {
+            where: {
+              supId: null,
+              idPurchaseR: null,
+              NOT: {
+                approvedRequestId: null,
+              },
+            },
             include: {
               supplier: true,
               sr: {
