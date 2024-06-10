@@ -252,7 +252,7 @@ const createPo = async (request: Request, response: Response) => {
           },
           data: {
             poandsoId: results.id,
-            name_material: request.body.name_material,
+            desc: request.body.desc,
           },
         });
         const getMrId: any = await prisma.srDetail.findFirst({
