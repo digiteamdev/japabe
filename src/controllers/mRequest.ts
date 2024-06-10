@@ -894,12 +894,14 @@ const updateApproval = async (request: any, response: Response) => {
             mrappr: any;
             supId: any;
             qtyAppr: any;
+            name_material: any;
             id: any;
           }) => {
             return {
               mrappr: updateByveri.mrappr,
               supId: updateByveri.supId,
               qtyAppr: updateByveri.qtyAppr,
+              name_material: updateByveri.name_material,
               id: updateByveri.id,
             };
           }
@@ -914,6 +916,7 @@ const updateApproval = async (request: any, response: Response) => {
               data: {
                 mrappr: updateVerify[i].mrappr,
                 approvedRequest: { connect: { id: result.id } },
+                name_material: updateVerify[i].name_material,
                 qtyAppr: parseInt(updateVerify[i].qtyAppr),
               },
             });
@@ -980,12 +983,14 @@ const updateApprovalOne = async (request: Request, response: Response) => {
         supId: any;
         qtyAppr: any;
         approvedRequestId: any;
+        name_material: any,
         id: any;
       }) => {
         return {
           approvedRequestId: updateByveri.approvedRequestId,
           mrappr: updateByveri.mrappr,
           supId: updateByveri.supId,
+          name_material: updateByveri.name_material,
           qtyAppr: updateByveri.qtyAppr,
           id: updateByveri.id,
         };
@@ -1002,6 +1007,7 @@ const updateApprovalOne = async (request: Request, response: Response) => {
             mrappr: updateVerify[i].mrappr,
             supplier: { disconnect: true },
             approvedRequest: { disconnect: true },
+            name_material: updateVerify[i].name_material,
             qtyAppr: parseInt(updateVerify[i].qtyAppr),
           },
         });
@@ -1014,6 +1020,7 @@ const updateApprovalOne = async (request: Request, response: Response) => {
           data: {
             mrappr: updateVerify[i].mrappr,
             supplier: { connect: { id: updateVerify[i].supId } },
+            name_material: updateVerify[i].name_material,
             approvedRequest: {
               connect: { id: updateVerify[i].approvedRequestId },
             },
@@ -1327,6 +1334,7 @@ const updatePr = async (request: Request, response: Response) => {
             id: any;
             disc: any;
             currency: any;
+            name_material: any;
             price: any;
             total: any;
           }) => {
@@ -1338,6 +1346,7 @@ const updatePr = async (request: Request, response: Response) => {
               disc: updateByveri.disc,
               qtyAppr: updateByveri.qtyAppr,
               currency: updateByveri.currency,
+              name_material: updateByveri.name_material,
               total: updateByveri.total,
               supId: updateByveri.supId,
               id: updateByveri.id,
@@ -1356,6 +1365,7 @@ const updatePr = async (request: Request, response: Response) => {
                 disc: updateVerify[i].disc,
                 price: updateVerify[i].price,
                 qtyAppr: updateVerify[i].qtyAppr,
+                name_material: updateVerify[i].name_material,
                 total: updateVerify[i].total,
                 purchase: { connect: { id: result.id } },
               },
@@ -1465,6 +1475,7 @@ const updatedetailPr = async (request: Request, response: Response) => {
           price: any;
           note_revision: any;
           id: any;
+          name_material: any
           qtyAppr: any;
           disc: any;
           currency: any;
@@ -1477,6 +1488,7 @@ const updatedetailPr = async (request: Request, response: Response) => {
             price: updateByveri.price,
             qtyAppr: updateByveri.qtyAppr,
             note_revision: updateByveri.note_revision,
+            name_material: updateByveri.name_material,
             currency: updateByveri.currency,
             total: updateByveri.total,
             supId: updateByveri.supId,
@@ -1495,6 +1507,7 @@ const updatedetailPr = async (request: Request, response: Response) => {
             note_revision: updateVerify[i].note_revision,
             price: updateVerify[i].price,
             qtyAppr: updateVerify[i].qtyAppr,
+            name_material: updateVerify[i].name_material,
             disc: updateVerify[i].disc,
             total: updateVerify[i].total,
           },
@@ -1522,6 +1535,7 @@ const updatedetailPr = async (request: Request, response: Response) => {
           supId: any;
           price: any;
           note_revision: any;
+          name_material: any,
           id: any;
           qtyAppr: any;
           disc: any;
@@ -1536,6 +1550,7 @@ const updatedetailPr = async (request: Request, response: Response) => {
             qtyAppr: updateByveri.qtyAppr,
             note_revision: updateByveri.note_revision,
             currency: updateByveri.currency,
+            name_material: updateByveri.name_material,
             total: updateByveri.total,
             supId: updateByveri.supId,
             id: updateByveri.id,
@@ -1553,6 +1568,7 @@ const updatedetailPr = async (request: Request, response: Response) => {
             note_revision: updateVerify[i].note_revision,
             price: updateVerify[i].price,
             qtyAppr: updateVerify[i].qtyAppr,
+            name_material: updateVerify[i].name_material,
             disc: updateVerify[i].disc,
             total: updateVerify[i].total,
           },
