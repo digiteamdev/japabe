@@ -983,7 +983,7 @@ const updateApprovalOne = async (request: Request, response: Response) => {
         supId: any;
         qtyAppr: any;
         approvedRequestId: any;
-        name_material: any,
+        name_material: any;
         id: any;
       }) => {
         return {
@@ -1388,7 +1388,7 @@ const updatePr = async (request: Request, response: Response) => {
                 id: updateStatus[index].mr.id,
               },
               data: {
-                statusMr: "Approval",
+                statusMr: "Purchase",
               },
             });
             // const getDmr = await prisma.purchase.findFirst({
@@ -1475,7 +1475,7 @@ const updatedetailPr = async (request: Request, response: Response) => {
           price: any;
           note_revision: any;
           id: any;
-          name_material: any
+          name_material: any;
           qtyAppr: any;
           disc: any;
           currency: any;
@@ -1535,7 +1535,7 @@ const updatedetailPr = async (request: Request, response: Response) => {
           supId: any;
           price: any;
           note_revision: any;
-          name_material: any,
+          name_material: any;
           id: any;
           qtyAppr: any;
           disc: any;

@@ -1218,7 +1218,7 @@ const updatePsr = async (request: Request, response: Response) => {
                 id: updateStatus[index].sr.id,
               },
               data: {
-                statusSr: "Approval",
+                statusSr: "Purchase",
               },
             });
           }

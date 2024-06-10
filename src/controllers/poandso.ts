@@ -233,15 +233,6 @@ const createPo = async (request: Request, response: Response) => {
             mr: true,
           },
         });
-        const updateStatus: any = getMrId;
-        await prisma.mr.update({
-          where: {
-            id: updateStatus.mr.id,
-          },
-          data: {
-            statusMr: "Purchase",
-          },
-        });
       });
     }
     if (request.body.detailSrID !== null) {
@@ -261,15 +252,6 @@ const createPo = async (request: Request, response: Response) => {
           },
           include: {
             sr: true,
-          },
-        });
-        const updateStatus: any = getMrId;
-        await prisma.sr.update({
-          where: {
-            id: updateStatus.sr.id,
-          },
-          data: {
-            statusSr: "Purchase",
           },
         });
       });
