@@ -992,6 +992,7 @@ model detailMr {
   bom_detail        bom_detail?      @relation(fields: [bomIdD], references: [id])
   bomIdD            String?
   spesifikasi       String?          @db.Text
+  name_material     String?          @db.Text
   Material_Master   Material_Master? @relation(fields: [materialId], references: [id])
   materialId        String?
   note              String?          @db.Text
@@ -1101,6 +1102,7 @@ model SrDetail {
   dispatchDetail    dispatchDetail?  @relation(fields: [dispacthdetailId], references: [id])
   dispacthdetailId  String?
   desc              String?          @db.Text
+  name_material     String?          @db.Text
   qty               Int              @default(0)
   unit              String?          @db.VarChar(20)
   note              String?          @db.Text

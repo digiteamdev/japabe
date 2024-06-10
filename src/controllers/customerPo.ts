@@ -54,6 +54,7 @@ const getcusPo = async (request: Request, response: Response) => {
     } else {
       results = await prisma.customerPo.findMany({
         where: {
+          deleted: null,
           job_operational: divisi,
           OR: [
             {

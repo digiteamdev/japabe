@@ -58,6 +58,7 @@ const getQuotation = async (request: Request, response: Response) => {
       results = await prisma.quotations.findMany({
         distinct: ["id"],
         where: {
+          deleted: null,
           job_operational: divisi,
           OR: [
             {

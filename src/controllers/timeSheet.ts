@@ -826,6 +826,13 @@ const getTimeSheetHrd = async (request: any, response: Response) => {
               },
             },
           ],
+          userId: {
+            contains: userId,
+          },
+          date: {
+            lte: new Date(formatS),
+            gte: new Date(formattedDate),
+          },
         },
         include: {
           time_sheet_add: true,
@@ -851,13 +858,43 @@ const getTimeSheetHrd = async (request: any, response: Response) => {
       });
       timsheetcount = await prisma.time_sheet.count({
         where: {
+          userId: {
+            contains: userId,
+          },
+          date: {
+            lte: new Date(formatS),
+            gte: new Date(formattedDate),
+          },
           deleted: null,
+          OR: [
+            {
+              time_sheet_add: {
+                some: {
+                  job: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              user: {
+                employee: {
+                  employee_name: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+          ],
         },
       });
     } else {
       results = await prisma.time_sheet.findMany({
         distinct: ["id"],
         where: {
+          deleted: null,
           userId: {
             contains: userId,
           },
@@ -913,12 +950,37 @@ const getTimeSheetHrd = async (request: any, response: Response) => {
       });
       timsheetcount = await prisma.time_sheet.count({
         where: {
+          userId: {
+            contains: userId,
+          },
           type_timesheet: type,
           deleted: null,
           date: {
             lte: new Date(formatS),
             gte: new Date(formattedDate),
           },
+          OR: [
+            {
+              time_sheet_add: {
+                some: {
+                  job: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              user: {
+                employee: {
+                  employee_name: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+          ],
         },
       });
     }

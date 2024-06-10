@@ -34,6 +34,7 @@ const getCustomer = async (request: Request, response: Response) => {
     } else {
       results = await prisma.customer.findMany({
         where: {
+          deleted: null,
           job_operational: divisi,
           name: {
             contains: pencarian,

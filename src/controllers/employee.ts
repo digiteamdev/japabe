@@ -212,6 +212,16 @@ const getEmployee = async (request: Request, response: Response) => {
 const getEmployeeAll = async (request: Request, response: Response) => {
   try {
     const results = await prisma.employee.findMany({
+      where: {
+        NOT: [
+          {
+            employee_name: "digi",
+          },
+          {
+            employee_name: "dev",
+          },
+        ],
+      },
       include: {
         user: true,
         Employee_Child: true,
@@ -224,7 +234,7 @@ const getEmployeeAll = async (request: Request, response: Response) => {
         },
       },
       orderBy: {
-        createdAt: "desc",
+        employee_name: "asc",
       },
     });
     if (results.length > 0) {
