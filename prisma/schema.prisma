@@ -1102,7 +1102,6 @@ model SrDetail {
   dispatchDetail    dispatchDetail?  @relation(fields: [dispacthdetailId], references: [id])
   dispacthdetailId  String?
   desc              String?          @db.Text
-  name_material     String?          @db.Text
   qty               Int              @default(0)
   unit              String?          @db.VarChar(20)
   note              String?          @db.Text

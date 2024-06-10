@@ -706,14 +706,14 @@ const updateApprovalSr = async (request: Request, response: Response) => {
             srappr: any;
             supId: any;
             qtyAppr: any;
-            name_material: any;
+            desc: any;
             id: any;
           }) => {
             return {
               srappr: updateByveri.srappr,
               supId: updateByveri.supId,
               qtyAppr: updateByveri.qtyAppr,
-              name_material: updateByveri.name_material,
+              desc: updateByveri.desc,
               id: updateByveri.id,
             };
           }
@@ -727,7 +727,7 @@ const updateApprovalSr = async (request: Request, response: Response) => {
               },
               data: {
                 srappr: updateVerify[i].srappr,
-                name_material: updateVerify[i].name_material,
+                desc: updateVerify[i].desc,
                 approvedRequest: { connect: { id: result.id } },
                 qtyAppr: parseInt(updateVerify[i].qtyAppr),
               },
@@ -886,7 +886,7 @@ const updateApprovalOneSR = async (request: Request, response: Response) => {
         supId: any;
         qtyAppr: any;
         approvedRequestId: any;
-        name_material: any;
+        desc: any;
         id: any;
       }) => {
         return {
@@ -894,7 +894,7 @@ const updateApprovalOneSR = async (request: Request, response: Response) => {
           srappr: updateByveri.srappr,
           supId: updateByveri.supId,
           qtyAppr: updateByveri.qtyAppr,
-          name_material: updateByveri.name_material,
+          desc: updateByveri.desc,
           id: updateByveri.id,
         };
       }
@@ -910,7 +910,7 @@ const updateApprovalOneSR = async (request: Request, response: Response) => {
             srappr: updateVerify[i].srappr,
             supplier: { disconnect: true },
             approvedRequest: { disconnect: true },
-            name_material: updateVerify[i].name_material,
+            desc: updateVerify[i].desc,
             qtyAppr: parseInt(updateVerify[i].qtyAppr),
           },
         });
@@ -923,7 +923,7 @@ const updateApprovalOneSR = async (request: Request, response: Response) => {
           data: {
             srappr: updateVerify[i].srappr,
             supplier: { connect: { id: updateVerify[i].supId } },
-            name_material: updateVerify[i].name_material,
+            desc: updateVerify[i].desc,
             approvedRequest: {
               connect: { id: updateVerify[i].approvedRequestId },
             },
@@ -1164,7 +1164,7 @@ const updatePsr = async (request: Request, response: Response) => {
             qtyAppr: any;
             id: any;
             disc: any;
-            name_material: any;
+            desc: any;
             currency: any;
             total: any;
           }) => {
@@ -1176,7 +1176,7 @@ const updatePsr = async (request: Request, response: Response) => {
               price: updateByveri.price,
               currency: updateByveri.currency,
               qtyAppr: updateByveri.qtyAppr,
-              name_material: updateByveri.name_material,
+              desc: updateByveri.desc,
               total: updateByveri.total,
               supId: updateByveri.supId,
               id: updateByveri.id,
@@ -1194,7 +1194,7 @@ const updatePsr = async (request: Request, response: Response) => {
                 supplier: { connect: { id: updateVerify[i].supId } },
                 disc: updateVerify[i].disc,
                 qtyAppr: updateVerify[i].qtyAppr,
-                name_material: updateVerify[i].name_material,
+                desc: updateVerify[i].desc,
                 price: updateVerify[i].price,
                 total: updateVerify[i].total,
                 purchase: { connect: { id: result.id } },
