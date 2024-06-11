@@ -27,7 +27,16 @@ const getPo = async (request: Request, response: Response) => {
           SrDetail: {
             some: {
               srappr: type,
-              poandsoId: null
+              poandsoId: null,
+            },
+          },
+          NOT: {
+            SrDetail: {
+              some: {
+                srappr: type,
+                supId: null,
+                idPurchaseR: null,
+              },
             },
           },
         },
@@ -35,10 +44,12 @@ const getPo = async (request: Request, response: Response) => {
           SrDetail: {
             where: {
               poandsoId: null,
+              srappr: type,
               NOT: {
                 supId: null,
+                srappr: type,
                 idPurchaseR: null,
-              }
+              },
             },
             include: {
               supplier: {
@@ -94,7 +105,16 @@ const getPo = async (request: Request, response: Response) => {
           detailMr: {
             some: {
               mrappr: type,
-              poandsoId: null
+              poandsoId: null,
+            },
+          },
+          NOT: {
+            detailMr: {
+              some: {
+                mrappr: type,
+                supId: null,
+                idPurchaseR: null,
+              },
             },
           },
         },
@@ -102,10 +122,12 @@ const getPo = async (request: Request, response: Response) => {
           detailMr: {
             where: {
               poandsoId: null,
+              mrappr: type,
               NOT: {
+                mrappr: type,
                 supId: null,
                 idPurchaseR: null,
-              }
+              },
             },
             include: {
               Material_Master: true,
@@ -860,8 +882,8 @@ const getAllReceive = async (request: Request, response: Response) => {
     const page: any = request.query.page;
     const perPage: any = request.query.perPage;
     const pagination: any = new pagging(page, perPage, hostname, pathname);
-    let totalCount: any = 0
-    let totalCountPO: any = 0
+    let totalCount: any = 0;
+    let totalCountPO: any = 0;
     let results: any = [];
     let detailDmr: any = [];
     let resultnopage: any = [];
@@ -1726,14 +1748,14 @@ const updatePoandSo = async (request: Request, response: Response) => {
                 });
               }
             } else {
-            //   result = await prisma.poandso.update({
-            //     where: {
-            //       id: result.id,
-            //     },
-            //     data: {
-            //       status_receive: false,
-            //     },
-            //   });
+              //   result = await prisma.poandso.update({
+              //     where: {
+              //       id: result.id,
+              //     },
+              //     data: {
+              //       status_receive: false,
+              //     },
+              //   });
             }
             // journal
             const getPO = await prisma.poandso.findFirst({

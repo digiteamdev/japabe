@@ -1027,17 +1027,21 @@ const getPsR = async (request: Request, response: Response) => {
             contains: pencarian,
             mode: "insensitive",
           },
-          AND: [
-            {
-              SrDetail: {
-                some: {
-                  srappr: typeMR,
-                  supId: null,
-                  idPurchaseR: null,
-                },
+          SrDetail: {
+            some: {
+              srappr: typeMR,
+              supId: null,
+              idPurchaseR: null,
+            },
+          },
+          NOT: {
+            SrDetail: {
+              some: {
+                srappr: typeMR,
+                approvedRequestId: null,
               },
             },
-          ],
+          }
         },
         include: {
           user: {
@@ -1067,9 +1071,11 @@ const getPsR = async (request: Request, response: Response) => {
           },
           SrDetail: {
             where: {
+              srappr: typeMR,
               supId: null,
               idPurchaseR: null,
               NOT: {
+                srappr: typeMR,
                 approvedRequestId: null,
               },
             },

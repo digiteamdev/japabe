@@ -5,6 +5,7 @@ import labaRugi from "../utils/generatePdfLaba";
 import neraca from "../utils/generatePdfNeraca";
 import url from "url";
 import { Prisma } from "@prisma/client";
+import fs from "fs";
 
 const getCashier = async (request: Request, response: Response) => {
   try {
@@ -2859,11 +2860,11 @@ const getGenerateNeraca = async (
   error: any
 ) => {
   try {
+    fs.unlink("./public/pdf/neraca.pdf", (err) => {
+      console.log(err);
+    });
     const pdf = await neraca();
-    response.contentType("application/pdf");
-    response.setHeader("Content-Type", "application/pdf");
-    response.attachment("neraca.pdf");
-    response.send(pdf);
+    response.download(pdf.filename, "neraca.pdf");
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }

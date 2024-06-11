@@ -521,6 +521,7 @@ const upsertMr = async (request: Request, response: Response) => {
         spesifikasi: any;
         materialId: any;
         note: any;
+        name_material: any;
         qty: any;
         id: any;
       }) => {
@@ -529,6 +530,7 @@ const upsertMr = async (request: Request, response: Response) => {
           bomIdD: updateByveri.bomIdD,
           spesifikasi: updateByveri.spesifikasi,
           materialId: updateByveri.materialId,
+          name_material: updateByveri.name_material,
           note: updateByveri.note,
           qty: updateByveri.qty,
           id: updateByveri.id,
@@ -549,16 +551,17 @@ const upsertMr = async (request: Request, response: Response) => {
             Material_Master: {
               connect: { id: updateVerify[i].materialId },
             },
+            name_material: updateVerify[i].name_material,
             note: updateVerify[i].note,
             qty: updateVerify[i].qty,
           },
           update: {
-            mr: { connect: { id: updateVerify[i].mrId } },
             spesifikasi: updateVerify[i].spesifikasi,
             Material_Master: {
               connect: { id: updateVerify[i].materialId },
             },
             note: updateVerify[i].note,
+            name_material: updateVerify[i].name_material,
             qty: updateVerify[i].qty,
           },
         });
@@ -571,6 +574,7 @@ const upsertMr = async (request: Request, response: Response) => {
             mr: { connect: { id: updateVerify[i].mrId } },
             bom_detail: { connect: { id: updateVerify[i].bomIdD } },
             spesifikasi: updateVerify[i].spesifikasi,
+            name_material: updateVerify[i].name_material,
             Material_Master: {
               connect: { id: updateVerify[i].materialId },
             },
@@ -578,8 +582,8 @@ const upsertMr = async (request: Request, response: Response) => {
             qty: updateVerify[i].qty,
           },
           update: {
-            mr: { connect: { id: updateVerify[i].mrId } },
             bom_detail: { connect: { id: updateVerify[i].bomIdD } },
+            name_material: updateVerify[i].name_material,
             spesifikasi: updateVerify[i].spesifikasi,
             Material_Master: {
               connect: { id: updateVerify[i].materialId },
@@ -1126,86 +1130,6 @@ const getPrM = async (request: Request, response: Response) => {
         skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
     } else {
-      // results = await prisma.purchase.findMany({
-      //   where: {
-      //     idPurchase: {
-      //       contains: pencarian,
-      //       mode: "insensitive",
-      //     },
-      //     detailMr: {
-      //       every: {
-      //         supId: null,
-      //         mr: {
-      //           status_manager_director: "approve"
-      //         }
-      //       },
-      //     },
-      //     OR: [
-      //       {
-      //         idPurchase: {
-      //           startsWith: typeMR,
-      //         },
-      //       },
-      //     ],
-      //   },
-      //   include: {
-      //     detailMr: {
-      //       include: {
-      //         Material_Master: true,
-      //         supplier: true,
-      //         mr: {
-      //           include: {
-      //             wor: true,
-      //             bom: {
-      //               include: {
-      //                 bom_detail: {
-      //                   include: {
-      //                     Material_Master: true,
-      //                   },
-      //                 },
-      //                 srimg: {
-      //                   include: {
-      //                     srimgdetail: true,
-      //                   },
-      //                 },
-      //               },
-      //             },
-      //             user: {
-      //               select: {
-      //                 id: true,
-      //                 username: true,
-      //                 employee: {
-      //                   select: {
-      //                     id: true,
-      //                     employee_name: true,
-      //                     position: true,
-      //                     sub_depart: {
-      //                       select: {
-      //                         id: true,
-      //                         name: true,
-      //                         departement: {
-      //                           select: {
-      //                             id: true,
-      //                             name: true,
-      //                           },
-      //                         },
-      //                       },
-      //                     },
-      //                   },
-      //                 },
-      //               },
-      //             },
-      //           },
-      //         },
-      //       },
-      //     },
-      //   },
-      //   orderBy: {
-      //     createdAt: "desc",
-      //   },
-      //   take: parseInt(pagination.perPage),
-      //   skip: parseInt(pagination.page) * parseInt(pagination.perPage),
-      // });
       results = await prisma.mr.findMany({
         where: {
           status_manager_director: "approve",
@@ -1213,24 +1137,30 @@ const getPrM = async (request: Request, response: Response) => {
             contains: pencarian,
             mode: "insensitive",
           },
-          AND: [
-            {
-              detailMr: {
-                some: {
-                  mrappr: typeMR,
-                  supId: null,
-                  idPurchaseR: null,
-                },
+          detailMr: {
+            some: {
+              mrappr: typeMR,
+              supId: null,
+              idPurchaseR: null,
+            },
+          },
+          NOT: {
+            detailMr: {
+              some: {
+                mrappr: typeMR,
+                approvedRequestId: null,
               },
             },
-          ],
+          },
         },
         include: {
           detailMr: {
             where: {
+              mrappr: typeMR,
               supId: null,
               idPurchaseR: null,
               NOT: {
+                mrappr: typeMR,
                 approvedRequestId: null,
               },
             },
