@@ -5,108 +5,120 @@
     <title>Invoice</title>
     <style>
       .invoice-box {
-        max-width: 560px;
+        max-width: 540px;
         margin: auto;
-        padding: 60px;
-        font-size: 11px;
-        line-height: 4px;
-        font-family:  "Calibri";
+        padding: 50px;
+        padding-top: 40px;
+        font-family: "Calibri";
         color: #000000;
       }
-      .hr {
-        display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      } 
       .ex1 {
-        transition: 0.3s;
         border-radius: 5px;
       }
       .row {
         display: flex;
+        flex-wrap: wrap;
+        padding-left: 20px;
       }
-      .column {
-        flex: 50%;
-        padding-top: 50px;
-        line-height: 1;
-        height: 300px;
+      .column1 {
+        padding-top: 10px;
+        display: inline-block;
+        width: 47%;
       }
-      .invoice-box table tr td:nth-child(2) {
-        text-align: right;
+      .column2 {
+        padding-top: 10px;
+        display: inline-block;
+        width: 47%;
       }
-      .invoice-box table tr.top table td {
-        padding-bottom: 20px;
+      p {
+        font-size: 8px;
+        font-family: "Calibri";
       }
-      .invoice-box table tr.top table td.title {
-        font-size: 45px;
-        line-height: 45px;
-        color: #333;
+      .titik {
+        display: flex;
       }
-      .invoice-box table tr.information table td {
-        padding-bottom: 40px;
+      .titik2 {
+        display: inline-block;
+        line-height: 0.5em;
+        width: 20%;
       }
-      .invoice-box table tr.heading td {
-        background: #eee;
-        border-bottom: 1px solid #ddd;
-        font-weight: bold;
-      }
-      .invoice-box table tr.item td {
-        border-bottom: 1px solid #eee;
-      }
-      .invoice-box table tr.item.last td {
-        border-bottom: none;
-      }
-      .invoice-box table tr.total td:nth-child(2) {
-        border-top: 2px solid #eee;
-        font-weight: bold;
+      .titik3 {
+        display: inline-block;
+        line-height: 0.5em;
+        width: 70%;
       }
     </style>
   </head>
   <body>
     <div class="invoice-box">
-      <table cellpadding="0" cellspacing="0">
-        <div class="ex1">
-          <img
-            src="https://res.cloudinary.com/dotshxa6z/image/upload/v1717078910/workshop/yohzm0thbh9e2muqokia.png"
-            style="width: 100%"
-          />
+      <div class="ex1">
+        <img
+          src="https://res.cloudinary.com/dotshxa6z/image/upload/v1717078910/workshop/yohzm0thbh9e2muqokia.png"
+          style="width: 100%"
+        />
+      </div>
+      <div class="row">
+        <div class="column1">
+          <span class="titik">
+            <p class="titik2" style="font-weight: bold">Number</p>
+            <p class="titik3">:</p>
+          </span>
+          <span class="titik">
+            <p class="titik2">Date</p>
+            <p class="titik3">:</p>
+          </span>
+          <span class="titik">
+            <p class="titik2">Vendor</p>
+            <p class="titik3">:</p>
+          </span>
+          <span class="titik">
+            <p class="titik2">Address</p>
+            <p class="titik3" style="background-color: aqua;">:</p>
+          </span>
+          <span class="titik">
+            <p class="titik2">Phone</p>
+            <p class="titik3">:</p>
+          </span>
+          <span class="titik">
+            <p class="titik2">Facsimile</p>
+            <p class="titik3">:</p>
+          </span>
+          <span class="titik">
+            <p class="titik2">Contact</p>
+            <p class="titik3">:</p>
+          </span>
         </div>
-        <div class="row">
-          <div class="column">
-            <p>Number : {{nomor}}</p>
-            <hr width="50%" color="black" size="1px" align="center" padding="10px" />
-          </div>
-          <div class="column">
-            <h2>Column 2</h2>
-            <p>Some text..</p>
-          </div>
+        <div class="column2">
+          <span class="titik">
+            <p class="titik2" style="font-weight: bold">Number</p>
+            <p class="titik3">:</p>
+          </span>
+          <span class="titik">
+            <p class="titik2">Date</p>
+            <p class="titik3">:</p>
+          </span>
+          <span class="titik">
+            <p class="titik2">Vendor</p>
+            <p class="titik3">:</p>
+          </span>
+          <span class="titik">
+            <p class="titik2">Address</p>
+            <p class="titik3" style="width:80%; background-color: aqua;">:</p>
+          </span>
+          <span class="titik">
+            <p class="titik2">Phone</p>
+            <p class="titik3">:</p>
+          </span>
+          <span class="titik">
+            <p class="titik2">Facsimile</p>
+            <p class="titik3">:</p>
+          </span>
+          <span class="titik">
+            <p class="titik2">Contact</p>
+            <p class="titik3">:</p>
+          </span>
         </div>
-        <tr class="heading">
-          <td>Metode Pembayaran</td>
-          <td>Jumlah</td>
-        </tr>
-        {{#pembayaran}}
-        <tr class="item">
-          <td>{{metode}}</td>
-          <td>{{jumlah}}</td>
-        </tr>
-        {{/pembayaran}}
-        <tr class="heading">
-          <td>Barang</td>
-          <td>Harga</td>
-        </tr>
-        {{#barang}}
-        <tr class="item">
-          <td>{{item}}</td>
-          <td>{{harga}}</td>
-        </tr>
-        {{/barang}}
-        <tr class="total">
-          <td></td>
-          <td>Total: {{total}}</td>
-        </tr>
-      </table>
+      </div>
     </div>
   </body>
 </html>

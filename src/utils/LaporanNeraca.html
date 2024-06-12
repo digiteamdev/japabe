@@ -48,9 +48,11 @@
           </td>
         </tr>
         <tr>
+          {{#each data}}
           <td style="padding-left: 15px; padding-top: 5px">KAS</td>
-          <td style="padding-top: 5px">Rp.10.500.00</td>
+          <td style="padding-top: 5px">{{this.nomor}}</td>
           <td></td>
+          {{/each}}
         </tr>
         <tr>
           <td style="padding-left: 15px; padding-top: 5px">BANK</td>

@@ -2860,9 +2860,6 @@ const getGenerateNeraca = async (
   error: any
 ) => {
   try {
-    fs.unlink("./public/pdf/neraca.pdf", (err) => {
-      console.log(err);
-    });
     const pdf = await neraca();
     response.download(pdf.filename, "neraca.pdf");
   } catch (error) {

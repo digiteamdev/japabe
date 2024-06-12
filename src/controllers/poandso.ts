@@ -4,6 +4,7 @@ import prisma from "../middleware/podandso";
 import pagging from "../utils/paggination";
 import url from "url";
 import { Prisma } from "@prisma/client";
+import fs from "fs";
 
 const getPo = async (request: Request, response: Response) => {
   try {
@@ -1225,8 +1226,6 @@ const getAllReceive = async (request: Request, response: Response) => {
         orderBy: {
           createdAt: "desc",
         },
-        take: parseInt(pagination.perPage),
-        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
       totalCountPO = await prisma.poandso.count({
         where: {
@@ -1355,8 +1354,6 @@ const getAllReceive = async (request: Request, response: Response) => {
         orderBy: {
           createdAt: "desc",
         },
-        take: parseInt(pagination.perPage),
-        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
       });
       totalCount = await prisma.purchase.count({
         where: {
@@ -2034,8 +2031,7 @@ const deleteTermOf = async (request: Request, response: Response) => {
 const getGeneratePO = async (request: Request, response: any, error: any) => {
   try {
     const pdf = await htmlToPdf();
-    response.contentType("application/pdf");
-    response.send(pdf);
+    response.download(pdf.filename, "PO.pdf");
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }

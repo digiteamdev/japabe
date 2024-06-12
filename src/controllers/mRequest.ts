@@ -7,6 +7,7 @@ import { Prisma } from "@prisma/client";
 const getMr = async (request: any, response: Response) => {
   try {
     const pencarian: any = request.query.search || "";
+    const statusMr: any = request.query.statusMr || "";
     const status: any = request.query.status || undefined;
     const hostname: any = request.headers.host;
     const pathname = url.parse(request.url).pathname;
@@ -65,62 +66,65 @@ const getMr = async (request: any, response: Response) => {
           userLogin?.employee?.sub_depart?.id === "cli8fmb2g001urswmi5rhwmai" ||
           userLogin?.employee?.sub_depart?.id === "cli8fa5050000rswmhh4qkn6w"
         ) {
-          results = await prisma.mr.findMany({
-            where: {
-              deleted: null,
-              no_mr: {
-                contains: pencarian,
-                mode: "insensitive",
-              },
-              job_no: {
-                contains: pencarian,
-                mode: "insensitive",
-              },
-              detailMr: {
-                some: {
-                  Material_Master: {
-                    name: {
-                      contains: pencarian,
-                      mode: "insensitive",
-                    },
-                  },
+          if (statusMr) {
+            results = await prisma.mr.findMany({
+              where: {
+                deleted: null,
+                statusMr: statusMr,
+                no_mr: {
+                  contains: pencarian,
+                  mode: "insensitive",
                 },
-              },
-            },
-            include: {
-              wor: true,
-              bom: {
-                include: {
-                  bom_detail: {
-                    include: {
-                      Material_Master: true,
-                    },
-                  },
-                  srimg: {
-                    include: {
-                      srimgdetail: true,
-                      timeschedule: {
-                        include: {
-                          wor: true,
-                        },
+                job_no: {
+                  contains: pencarian,
+                  mode: "insensitive",
+                },
+                detailMr: {
+                  some: {
+                    Material_Master: {
+                      name: {
+                        contains: pencarian,
+                        mode: "insensitive",
                       },
                     },
                   },
                 },
               },
-              detailMr: {
-                include: {
-                  Material_Master: true,
-                  bom_detail: {
-                    include: {
-                      bom: {
-                        include: {
-                          srimg: {
-                            include: {
-                              srimgdetail: true,
-                              timeschedule: {
-                                include: {
-                                  wor: true,
+              include: {
+                wor: true,
+                bom: {
+                  include: {
+                    bom_detail: {
+                      include: {
+                        Material_Master: true,
+                      },
+                    },
+                    srimg: {
+                      include: {
+                        srimgdetail: true,
+                        timeschedule: {
+                          include: {
+                            wor: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                detailMr: {
+                  include: {
+                    Material_Master: true,
+                    bom_detail: {
+                      include: {
+                        bom: {
+                          include: {
+                            srimg: {
+                              include: {
+                                srimgdetail: true,
+                                timeschedule: {
+                                  include: {
+                                    wor: true,
+                                  },
                                 },
                               },
                             },
@@ -130,24 +134,24 @@ const getMr = async (request: any, response: Response) => {
                     },
                   },
                 },
-              },
-              user: {
-                select: {
-                  id: true,
-                  username: true,
-                  employee: {
-                    select: {
-                      id: true,
-                      employee_name: true,
-                      position: true,
-                      sub_depart: {
-                        select: {
-                          id: true,
-                          name: true,
-                          departement: {
-                            select: {
-                              id: true,
-                              name: true,
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    employee: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                        position: true,
+                        sub_depart: {
+                          select: {
+                            id: true,
+                            name: true,
+                            departement: {
+                              select: {
+                                id: true,
+                                name: true,
+                              },
                             },
                           },
                         },
@@ -156,18 +160,123 @@ const getMr = async (request: any, response: Response) => {
                   },
                 },
               },
-            },
-            orderBy: {
-              createdAt: "desc",
-            },
-            take: parseInt(pagination.perPage),
-            skip: parseInt(pagination.page) * parseInt(pagination.perPage),
-          });
-          mrCount = await prisma.mr.count({
-            where: {
-              deleted: null,
-            },
-          });
+              orderBy: {
+                createdAt: "desc",
+              },
+              take: parseInt(pagination.perPage),
+              skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+            });
+            mrCount = await prisma.mr.count({
+              where: {
+                deleted: null,
+                statusMr: statusMr,
+              },
+            });
+          } else {
+            results = await prisma.mr.findMany({
+              where: {
+                deleted: null,
+                no_mr: {
+                  contains: pencarian,
+                  mode: "insensitive",
+                },
+                job_no: {
+                  contains: pencarian,
+                  mode: "insensitive",
+                },
+                detailMr: {
+                  some: {
+                    Material_Master: {
+                      name: {
+                        contains: pencarian,
+                        mode: "insensitive",
+                      },
+                    },
+                  },
+                },
+              },
+              include: {
+                wor: true,
+                bom: {
+                  include: {
+                    bom_detail: {
+                      include: {
+                        Material_Master: true,
+                      },
+                    },
+                    srimg: {
+                      include: {
+                        srimgdetail: true,
+                        timeschedule: {
+                          include: {
+                            wor: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                detailMr: {
+                  include: {
+                    Material_Master: true,
+                    bom_detail: {
+                      include: {
+                        bom: {
+                          include: {
+                            srimg: {
+                              include: {
+                                srimgdetail: true,
+                                timeschedule: {
+                                  include: {
+                                    wor: true,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    employee: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                        position: true,
+                        sub_depart: {
+                          select: {
+                            id: true,
+                            name: true,
+                            departement: {
+                              select: {
+                                id: true,
+                                name: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              orderBy: {
+                createdAt: "desc",
+              },
+              take: parseInt(pagination.perPage),
+              skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+            });
+            mrCount = await prisma.mr.count({
+              where: {
+                deleted: null,
+              },
+            });
+          }
         } else {
           results = await prisma.mr.findMany({
             where: {

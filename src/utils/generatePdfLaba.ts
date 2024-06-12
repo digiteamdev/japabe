@@ -1,6 +1,5 @@
 var pdf = require("pdf-creator-node");
 import fs from "fs";
-import mustache from "mustache";
 
 const formatKertas = {
   format: "A4",
