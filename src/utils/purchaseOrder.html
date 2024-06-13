@@ -24,6 +24,7 @@
         padding-top: 10px;
         display: inline-block;
         width: 47%;
+        background-color: aquamarine;
       }
       .column2 {
         padding-top: 10px;
@@ -34,18 +35,18 @@
         font-size: 8px;
         font-family: "Calibri";
       }
-      .titik {
+      .flex-container {
         display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        background-color: DodgerBlue;
       }
-      .titik2 {
+      .flex-div {
+        background-color: #f1f1f1;
         display: inline-block;
-        line-height: 0.5em;
-        width: 20%;
-      }
-      .titik3 {
-        display: inline-block;
-        line-height: 0.5em;
-        width: 70%;
+        justify-content: space-between;
+        width: 10%;
+        font-size: 8px;
       }
     </style>
   </head>
@@ -59,64 +60,44 @@
       </div>
       <div class="row">
         <div class="column1">
-          <span class="titik">
-            <p class="titik2" style="font-weight: bold">Number</p>
-            <p class="titik3">:</p>
-          </span>
-          <span class="titik">
+          <div class="flex-container">
+            <div class="flex-div">1</div>
+            <div class="flex-div">2</div>
+            <div class="flex-div">3</div>
+          </div>
+          <div class="titik">
             <p class="titik2">Date</p>
-            <p class="titik3">:</p>
-          </span>
-          <span class="titik">
+            <p class="titik3">: Rabu, 29 Mei 2024</p>
+          </div>
+          <div class="titik">
             <p class="titik2">Vendor</p>
-            <p class="titik3">:</p>
-          </span>
-          <span class="titik">
+            <p class="titik3">: Rabu, 29 Mei 2024</p>
+          </div>
+          <div class="titik">
             <p class="titik2">Address</p>
-            <p class="titik3" style="background-color: aqua;">:</p>
-          </span>
-          <span class="titik">
+            <p class="titik3">
+              : Mall of Indonesia Lantai 2 Unit 2F-A7B Rt 18/19 Jl Kelapa Gading
+              Barat, Kelapa Gading
+            </p>
+          </div>
+          <div class="titik">
             <p class="titik2">Phone</p>
-            <p class="titik3">:</p>
-          </span>
-          <span class="titik">
-            <p class="titik2">Facsimile</p>
-            <p class="titik3">:</p>
-          </span>
-          <span class="titik">
+            <p class="titik3">: Rabu, 29 Mei 2024</p>
+          </div>
+          <div class="titik">
+            <p class="titik2">Facsimilie</p>
+            <p class="titik3">: Rabu, 29 Mei 2024</p>
+          </div>
+          <div class="titik">
             <p class="titik2">Contact</p>
-            <p class="titik3">:</p>
-          </span>
+            <p class="titik3">: Rabu, 29 Mei 2024</p>
+          </div>
         </div>
         <div class="column2">
-          <span class="titik">
+          <div class="titik">
             <p class="titik2" style="font-weight: bold">Number</p>
             <p class="titik3">:</p>
-          </span>
-          <span class="titik">
-            <p class="titik2">Date</p>
-            <p class="titik3">:</p>
-          </span>
-          <span class="titik">
-            <p class="titik2">Vendor</p>
-            <p class="titik3">:</p>
-          </span>
-          <span class="titik">
-            <p class="titik2">Address</p>
-            <p class="titik3" style="width:80%; background-color: aqua;">:</p>
-          </span>
-          <span class="titik">
-            <p class="titik2">Phone</p>
-            <p class="titik3">:</p>
-          </span>
-          <span class="titik">
-            <p class="titik2">Facsimile</p>
-            <p class="titik3">:</p>
-          </span>
-          <span class="titik">
-            <p class="titik2">Contact</p>
-            <p class="titik3">:</p>
-          </span>
+          </div>
         </div>
       </div>
     </div>

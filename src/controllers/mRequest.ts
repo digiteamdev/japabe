@@ -1430,32 +1430,6 @@ const updatePr = async (request: Request, response: Response) => {
                 statusMr: "Purchase",
               },
             });
-            // const getDmr = await prisma.purchase.findFirst({
-            //   where: {
-            //     id: result.id,
-            //     idPurchase: {
-            //       startsWith: "DMR",
-            //     },
-            //   },
-            // });
-            // if (getDmr) {
-            //   await prisma.journal_cashier.createMany({
-            //     data: [
-            //       {
-            //         coa_id: "clsijsq3s0003cz5ih2fa64xv",
-            //         status_transaction: "Debet",
-            //         purchaseID: result.id,
-            //         grandtotal: updateStatus[index].total,
-            //       },
-            //       {
-            //         coa_id: "cls172hpp000fczze86zfh7yn",
-            //         status_transaction: "Kredit",
-            //         purchaseID: result.id,
-            //         grandtotal: updateStatus[index].total,
-            //       },
-            //     ],
-            //   });
-            // }
           }
           response.status(201).json({
             success: true,

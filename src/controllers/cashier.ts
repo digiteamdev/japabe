@@ -2847,8 +2847,7 @@ const getGenerateLabaRugi = async (
 ) => {
   try {
     const pdf = await labaRugi();
-    response.contentType("application/pdf");
-    response.send(pdf);
+    response.download(pdf.filename, "labarugi.pdf");
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }
