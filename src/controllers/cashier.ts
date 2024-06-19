@@ -1456,6 +1456,18 @@ const createCashier = async (request: Request, response: Response) => {
   try {
     await prisma.$transaction(
       async (prisma) => {
+        const newArrEdu = [];
+        if (request.body.journal_cashier) {
+          const arr = request.body.journal_cashier;
+          for (let i = 0; i < arr.length; i++) {
+            newArrEdu.push({
+              cashier_id: arr[i].cashier_id,
+              coa_id: arr[i].coa_id,
+              status_transaction: arr[i].status_transaction,
+              grandtotal: arr[i].grandtotal,
+            });
+          }
+        }
         let results: any;
         if (
           request.body.cdvId === null &&
@@ -1474,7 +1486,7 @@ const createCashier = async (request: Request, response: Response) => {
               rekening: request.body.rekening,
               total: request.body.total,
               journal_cashier: {
-                create: request.body.journal_cashier,
+                create: newArrEdu,
               },
             },
             include: {
@@ -1492,7 +1504,7 @@ const createCashier = async (request: Request, response: Response) => {
               note: request.body.note,
               total: request.body.total,
               journal_cashier: {
-                create: request.body.journal_cashier,
+                create: newArrEdu,
               },
             },
             include: {
@@ -1513,7 +1525,7 @@ const createCashier = async (request: Request, response: Response) => {
               rekening: request.body.rekening,
               total: request.body.total,
               journal_cashier: {
-                create: request.body.journal_cashier,
+                create: newArrEdu,
               },
             },
             include: {
@@ -1531,7 +1543,7 @@ const createCashier = async (request: Request, response: Response) => {
               note: request.body.note,
               total: request.body.total,
               journal_cashier: {
-                create: request.body.journal_cashier,
+                create: newArrEdu,
               },
             },
             include: {
