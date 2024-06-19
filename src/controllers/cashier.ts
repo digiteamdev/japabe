@@ -5,7 +5,6 @@ import labaRugi from "../utils/generatePdfLaba";
 import neraca from "../utils/generatePdfNeraca";
 import url from "url";
 import { Prisma } from "@prisma/client";
-import fs from "fs";
 
 const getCashier = async (request: Request, response: Response) => {
   try {
@@ -328,7 +327,6 @@ const getCashier = async (request: Request, response: Response) => {
         },
         include: {
           cdv_detail: true,
-          employee: true,
           user: {
             select: {
               id: true,
@@ -618,7 +616,6 @@ const getCashier = async (request: Request, response: Response) => {
           },
           cash_advance: {
             include: {
-              employee: true,
               user: {
                 select: {
                   id: true,
@@ -818,7 +815,6 @@ const getDueDate = async (request: Request, response: Response) => {
           cash_advance: {
             include: {
               cdv_detail: true,
-              employee: true,
               user: {
                 select: {
                   id: true,
@@ -1133,7 +1129,6 @@ const getDueDate = async (request: Request, response: Response) => {
           cash_advance: {
             include: {
               cdv_detail: true,
-              employee: true,
               user: {
                 select: {
                   id: true,
@@ -1817,451 +1812,138 @@ const getPosting = async (request: Request, response: Response) => {
     let results: any = [];
     let cashier: any = [];
     let purchase: any = [];
-    if (request.query.page === undefined) {
-      results = await prisma.cashier.findMany({
-        where: {
-          id_cashier: {
-            contains: pencarian,
-            mode: "insensitive",
-          },
-          NOT: {
-            journal_cashier: {
-              every: {
-                cashier_id: null,
-              },
-            },
-          },
-        },
-        include: {
-          journal_cashier: {
-            include: {
-              coa: true,
-            },
-          },
-          kontrabon: {
-            include: {
-              purchase: {
-                include: {
-                  supplier: {
-                    include: {
-                      SupplierBank: true,
-                      SupplierContact: true,
-                    },
-                  },
-                  detailMr: {
-                    include: {
-                      Material_Master: true,
-                      supplier: {
-                        include: {
-                          SupplierContact: true,
-                          SupplierBank: true,
-                        },
-                      },
-                      approvedRequest: true,
-                      mr: {
-                        include: {
-                          wor: {
-                            include: {
-                              Quotations: {
-                                include: {
-                                  CustomerContact: true,
-                                },
-                              },
-                            },
-                          },
-                          bom: {
-                            include: {
-                              bom_detail: {
-                                include: {
-                                  Material_Master: true,
-                                },
-                              },
-                              srimg: {
-                                include: {
-                                  srimgdetail: true,
-                                },
-                              },
-                            },
-                          },
-                          user: {
-                            select: {
-                              id: true,
-                              username: true,
-                              employee: {
-                                select: {
-                                  id: true,
-                                  employee_name: true,
-                                  position: true,
-                                  sub_depart: {
-                                    select: {
-                                      id: true,
-                                      name: true,
-                                      departement: {
-                                        select: {
-                                          id: true,
-                                          name: true,
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                  SrDetail: {
-                    include: {
-                      supplier: {
-                        include: {
-                          SupplierContact: true,
-                          SupplierBank: true,
-                        },
-                      },
-                      approvedRequest: true,
-
-                      sr: {
-                        include: {
-                          wor: {
-                            include: {
-                              Quotations: {
-                                include: {
-                                  CustomerContact: true,
-                                },
-                              },
-                            },
-                          },
-                          user: {
-                            select: {
-                              id: true,
-                              username: true,
-                              employee: {
-                                select: {
-                                  id: true,
-                                  employee_name: true,
-                                  position: true,
-                                  sub_depart: {
-                                    select: {
-                                      id: true,
-                                      name: true,
-                                      departement: {
-                                        select: {
-                                          id: true,
-                                          name: true,
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-              SupplierBank: true,
-              term_of_pay_po_so: {
-                include: {
-                  poandso: {
-                    include: {
-                      supplier: {
-                        include: {
-                          SupplierContact: true,
-                          SupplierBank: true,
-                        },
-                      },
-                      detailMr: {
-                        include: {
-                          Material_Master: true,
-                          supplier: {
-                            include: {
-                              SupplierContact: true,
-                              SupplierBank: true,
-                            },
-                          },
-                          approvedRequest: true,
-                          mr: {
-                            include: {
-                              wor: {
-                                include: {
-                                  Quotations: {
-                                    include: {
-                                      CustomerContact: true,
-                                    },
-                                  },
-                                },
-                              },
-                              bom: {
-                                include: {
-                                  bom_detail: {
-                                    include: {
-                                      Material_Master: true,
-                                    },
-                                  },
-                                  srimg: {
-                                    include: {
-                                      srimgdetail: true,
-                                    },
-                                  },
-                                },
-                              },
-                              user: {
-                                select: {
-                                  id: true,
-                                  username: true,
-                                  employee: {
-                                    select: {
-                                      id: true,
-                                      employee_name: true,
-                                      position: true,
-                                      sub_depart: {
-                                        select: {
-                                          id: true,
-                                          name: true,
-                                          departement: {
-                                            select: {
-                                              id: true,
-                                              name: true,
-                                            },
-                                          },
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                      SrDetail: {
-                        include: {
-                          supplier: {
-                            include: {
-                              SupplierContact: true,
-                              SupplierBank: true,
-                            },
-                          },
-                          approvedRequest: true,
-
-                          sr: {
-                            include: {
-                              wor: {
-                                include: {
-                                  Quotations: {
-                                    include: {
-                                      CustomerContact: true,
-                                    },
-                                  },
-                                },
-                              },
-                              user: {
-                                select: {
-                                  id: true,
-                                  username: true,
-                                  employee: {
-                                    select: {
-                                      id: true,
-                                      employee_name: true,
-                                      position: true,
-                                      sub_depart: {
-                                        select: {
-                                          id: true,
-                                          name: true,
-                                          departement: {
-                                            select: {
-                                              id: true,
-                                              name: true,
-                                            },
-                                          },
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-          cash_advance: {
-            include: {
-              employee: true,
-              user: {
-                select: {
-                  id: true,
-                  username: true,
-                  employee: {
-                    select: {
-                      id: true,
-                      employee_name: true,
-                      position: true,
-                    },
-                  },
-                },
-              },
-              wor: {
-                include: {
-                  customerPo: {
-                    include: {
-                      quotations: {
-                        include: {
-                          Customer: true,
-                          CustomerContact: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
+    let journal: any = [];
+    let resultCount: any = 0;
+    let cashierCount: any = 0;
+    let purchaseCount: any = 0;
+    let journalCount: any = 0;
+    results = await prisma.poandso.findMany({
+      where: {
+        deleted: null,
+        status_receive: true,
+        journal_cashier: {
+          every: {
+            statusJournal: status,
           },
         },
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: parseInt(pagination.perPage),
-        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
-      });
-    } else {
-      results = await prisma.poandso.findMany({
-        where: {
+        NOT: {
           journal_cashier: {
             every: {
-              statusJournal: status,
-            },
-          },
-          NOT: {
-            journal_cashier: {
-              every: {
-                poandsoId: null,
-              },
+              poandsoId: null,
             },
           },
         },
-        include: {
-          journal_cashier: {
-            include: {
-              coa: true,
-            },
-          },
-          detailMr: {
-            include: {
-              Material_Master: true,
-              supplier: true,
-            },
-          },
-          SrDetail: {
-            include: {
-              supplier: true,
-            },
+      },
+      include: {
+        journal_cashier: {
+          include: {
+            coa: true,
           },
         },
-        orderBy: {
-          createdAt: "desc",
+        detailMr: {
+          include: {
+            Material_Master: true,
+            supplier: true,
+          },
         },
-        take: parseInt(pagination.perPage),
-        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
-      });
-      cashier = await prisma.cashier.findMany({
-        where: {
+        SrDetail: {
+          include: {
+            supplier: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    cashier = await prisma.cashier.findMany({
+      where: {
+        deleted: null,
+        journal_cashier: {
+          every: {
+            statusJournal: status,
+          },
+        },
+        id_cashier: {
+          contains: pencarian,
+          mode: "insensitive",
+        },
+        NOT: {
           journal_cashier: {
             every: {
-              statusJournal: status,
-            },
-          },
-          id_cashier: {
-            contains: pencarian,
-            mode: "insensitive",
-          },
-          NOT: {
-            journal_cashier: {
-              every: {
-                cashier_id: null,
-              },
+              cashier_id: null,
             },
           },
         },
-        include: {
-          journal_cashier: {
-            include: {
-              coa: true,
-            },
+      },
+      include: {
+        journal_cashier: {
+          include: {
+            coa: true,
           },
-          kontrabon: {
-            include: {
-              purchase: {
-                include: {
-                  supplier: {
-                    include: {
-                      SupplierBank: true,
-                      SupplierContact: true,
-                    },
+        },
+        kontrabon: {
+          include: {
+            purchase: {
+              include: {
+                supplier: {
+                  include: {
+                    SupplierBank: true,
+                    SupplierContact: true,
                   },
-                  detailMr: {
-                    include: {
-                      Material_Master: true,
-                      supplier: {
-                        include: {
-                          SupplierContact: true,
-                          SupplierBank: true,
-                        },
+                },
+                detailMr: {
+                  include: {
+                    Material_Master: true,
+                    supplier: {
+                      include: {
+                        SupplierContact: true,
+                        SupplierBank: true,
                       },
-                      approvedRequest: true,
-                      mr: {
-                        include: {
-                          wor: {
-                            include: {
-                              Quotations: {
-                                include: {
-                                  CustomerContact: true,
-                                },
+                    },
+                    approvedRequest: true,
+                    mr: {
+                      include: {
+                        wor: {
+                          include: {
+                            Quotations: {
+                              include: {
+                                CustomerContact: true,
                               },
                             },
                           },
-                          bom: {
-                            include: {
-                              bom_detail: {
-                                include: {
-                                  Material_Master: true,
-                                },
+                        },
+                        bom: {
+                          include: {
+                            bom_detail: {
+                              include: {
+                                Material_Master: true,
                               },
-                              srimg: {
-                                include: {
-                                  srimgdetail: true,
-                                },
+                            },
+                            srimg: {
+                              include: {
+                                srimgdetail: true,
                               },
                             },
                           },
-                          user: {
-                            select: {
-                              id: true,
-                              username: true,
-                              employee: {
-                                select: {
-                                  id: true,
-                                  employee_name: true,
-                                  position: true,
-                                  sub_depart: {
-                                    select: {
-                                      id: true,
-                                      name: true,
-                                      departement: {
-                                        select: {
-                                          id: true,
-                                          name: true,
-                                        },
+                        },
+                        user: {
+                          select: {
+                            id: true,
+                            username: true,
+                            employee: {
+                              select: {
+                                id: true,
+                                employee_name: true,
+                                position: true,
+                                sub_depart: {
+                                  select: {
+                                    id: true,
+                                    name: true,
+                                    departement: {
+                                      select: {
+                                        id: true,
+                                        name: true,
                                       },
                                     },
                                   },
@@ -2273,45 +1955,45 @@ const getPosting = async (request: Request, response: Response) => {
                       },
                     },
                   },
-                  SrDetail: {
-                    include: {
-                      supplier: {
-                        include: {
-                          SupplierContact: true,
-                          SupplierBank: true,
-                        },
+                },
+                SrDetail: {
+                  include: {
+                    supplier: {
+                      include: {
+                        SupplierContact: true,
+                        SupplierBank: true,
                       },
-                      approvedRequest: true,
+                    },
+                    approvedRequest: true,
 
-                      sr: {
-                        include: {
-                          wor: {
-                            include: {
-                              Quotations: {
-                                include: {
-                                  CustomerContact: true,
-                                },
+                    sr: {
+                      include: {
+                        wor: {
+                          include: {
+                            Quotations: {
+                              include: {
+                                CustomerContact: true,
                               },
                             },
                           },
-                          user: {
-                            select: {
-                              id: true,
-                              username: true,
-                              employee: {
-                                select: {
-                                  id: true,
-                                  employee_name: true,
-                                  position: true,
-                                  sub_depart: {
-                                    select: {
-                                      id: true,
-                                      name: true,
-                                      departement: {
-                                        select: {
-                                          id: true,
-                                          name: true,
-                                        },
+                        },
+                        user: {
+                          select: {
+                            id: true,
+                            username: true,
+                            employee: {
+                              select: {
+                                id: true,
+                                employee_name: true,
+                                position: true,
+                                sub_depart: {
+                                  select: {
+                                    id: true,
+                                    name: true,
+                                    departement: {
+                                      select: {
+                                        id: true,
+                                        name: true,
                                       },
                                     },
                                   },
@@ -2325,120 +2007,70 @@ const getPosting = async (request: Request, response: Response) => {
                   },
                 },
               },
-              SupplierBank: true,
-              term_of_pay_po_so: {
-                include: {
-                  poandso: {
-                    include: {
-                      supplier: {
-                        include: {
-                          SupplierContact: true,
-                          SupplierBank: true,
-                        },
+            },
+            SupplierBank: true,
+            term_of_pay_po_so: {
+              include: {
+                poandso: {
+                  include: {
+                    supplier: {
+                      include: {
+                        SupplierContact: true,
+                        SupplierBank: true,
                       },
-                      detailMr: {
-                        include: {
-                          Material_Master: true,
-                          supplier: {
-                            include: {
-                              SupplierContact: true,
-                              SupplierBank: true,
-                            },
-                          },
-                          approvedRequest: true,
-                          mr: {
-                            include: {
-                              wor: {
-                                include: {
-                                  Quotations: {
-                                    include: {
-                                      CustomerContact: true,
-                                    },
-                                  },
-                                },
-                              },
-                              bom: {
-                                include: {
-                                  bom_detail: {
-                                    include: {
-                                      Material_Master: true,
-                                    },
-                                  },
-                                  srimg: {
-                                    include: {
-                                      srimgdetail: true,
-                                    },
-                                  },
-                                },
-                              },
-                              user: {
-                                select: {
-                                  id: true,
-                                  username: true,
-                                  employee: {
-                                    select: {
-                                      id: true,
-                                      employee_name: true,
-                                      position: true,
-                                      sub_depart: {
-                                        select: {
-                                          id: true,
-                                          name: true,
-                                          departement: {
-                                            select: {
-                                              id: true,
-                                              name: true,
-                                            },
-                                          },
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
+                    },
+                    detailMr: {
+                      include: {
+                        Material_Master: true,
+                        supplier: {
+                          include: {
+                            SupplierContact: true,
+                            SupplierBank: true,
                           },
                         },
-                      },
-                      SrDetail: {
-                        include: {
-                          supplier: {
-                            include: {
-                              SupplierContact: true,
-                              SupplierBank: true,
-                            },
-                          },
-                          approvedRequest: true,
-
-                          sr: {
-                            include: {
-                              wor: {
-                                include: {
-                                  Quotations: {
-                                    include: {
-                                      CustomerContact: true,
-                                    },
+                        approvedRequest: true,
+                        mr: {
+                          include: {
+                            wor: {
+                              include: {
+                                Quotations: {
+                                  include: {
+                                    CustomerContact: true,
                                   },
                                 },
                               },
-                              user: {
-                                select: {
-                                  id: true,
-                                  username: true,
-                                  employee: {
-                                    select: {
-                                      id: true,
-                                      employee_name: true,
-                                      position: true,
-                                      sub_depart: {
-                                        select: {
-                                          id: true,
-                                          name: true,
-                                          departement: {
-                                            select: {
-                                              id: true,
-                                              name: true,
-                                            },
+                            },
+                            bom: {
+                              include: {
+                                bom_detail: {
+                                  include: {
+                                    Material_Master: true,
+                                  },
+                                },
+                                srimg: {
+                                  include: {
+                                    srimgdetail: true,
+                                  },
+                                },
+                              },
+                            },
+                            user: {
+                              select: {
+                                id: true,
+                                username: true,
+                                employee: {
+                                  select: {
+                                    id: true,
+                                    employee_name: true,
+                                    position: true,
+                                    sub_depart: {
+                                      select: {
+                                        id: true,
+                                        name: true,
+                                        departement: {
+                                          select: {
+                                            id: true,
+                                            name: true,
                                           },
                                         },
                                       },
@@ -2451,35 +2083,53 @@ const getPosting = async (request: Request, response: Response) => {
                         },
                       },
                     },
-                  },
-                },
-              },
-            },
-          },
-          cash_advance: {
-            include: {
-              employee: true,
-              user: {
-                select: {
-                  id: true,
-                  username: true,
-                  employee: {
-                    select: {
-                      id: true,
-                      employee_name: true,
-                      position: true,
-                    },
-                  },
-                },
-              },
-              wor: {
-                include: {
-                  customerPo: {
-                    include: {
-                      quotations: {
-                        include: {
-                          Customer: true,
-                          CustomerContact: true,
+                    SrDetail: {
+                      include: {
+                        supplier: {
+                          include: {
+                            SupplierContact: true,
+                            SupplierBank: true,
+                          },
+                        },
+                        approvedRequest: true,
+
+                        sr: {
+                          include: {
+                            wor: {
+                              include: {
+                                Quotations: {
+                                  include: {
+                                    CustomerContact: true,
+                                  },
+                                },
+                              },
+                            },
+                            user: {
+                              select: {
+                                id: true,
+                                username: true,
+                                employee: {
+                                  select: {
+                                    id: true,
+                                    employee_name: true,
+                                    position: true,
+                                    sub_depart: {
+                                      select: {
+                                        id: true,
+                                        name: true,
+                                        departement: {
+                                          select: {
+                                            id: true,
+                                            name: true,
+                                          },
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
                         },
                       },
                     },
@@ -2489,148 +2139,269 @@ const getPosting = async (request: Request, response: Response) => {
             },
           },
         },
-        orderBy: {
-          createdAt: "desc",
+        cash_advance: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                username: true,
+                employee: {
+                  select: {
+                    id: true,
+                    employee_name: true,
+                    position: true,
+                  },
+                },
+              },
+            },
+            wor: {
+              include: {
+                customerPo: {
+                  include: {
+                    quotations: {
+                      include: {
+                        Customer: true,
+                        CustomerContact: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
-        take: parseInt(pagination.perPage),
-        skip: parseInt(pagination.page) * parseInt(pagination.perPage),
-      });
-      purchase = await prisma.purchase.findMany({
-        where: {
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    purchase = await prisma.purchase.findMany({
+      where: {
+        deleted: null,
+        journal_cashier: {
+          every: {
+            statusJournal: status,
+          },
+        },
+        status_receive: true,
+        OR: [
+          {
+            idPurchase: {
+              startsWith: "DMR",
+            },
+          },
+          {
+            idPurchase: {
+              startsWith: "DSR",
+            },
+          },
+        ],
+      },
+      include: {
+        supplier: {
+          include: {
+            SupplierBank: true,
+            SupplierContact: true,
+          },
+        },
+        detailMr: {
+          include: {
+            supplier: {
+              include: {
+                SupplierBank: true,
+                SupplierContact: true,
+              },
+            },
+            Material_Master: true,
+            mr: {
+              include: {
+                wor: true,
+                bom: {
+                  include: {
+                    bom_detail: {
+                      include: {
+                        Material_Master: true,
+                      },
+                    },
+                    srimg: {
+                      include: {
+                        srimgdetail: true,
+                      },
+                    },
+                  },
+                },
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    employee: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                        position: true,
+                        sub_depart: {
+                          select: {
+                            id: true,
+                            name: true,
+                            departement: {
+                              select: {
+                                id: true,
+                                name: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        SrDetail: {
+          include: {
+            supplier: {
+              include: {
+                SupplierBank: true,
+                SupplierContact: true,
+              },
+            },
+            sr: {
+              include: {
+                wor: true,
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    employee: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                        position: true,
+                        sub_depart: {
+                          select: {
+                            id: true,
+                            name: true,
+                            departement: {
+                              select: {
+                                id: true,
+                                name: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    journal = await prisma.journal_cashier.findMany({
+      where: {
+        deleted: null,
+        poandsoId: null,
+        purchaseID: null,
+        coa_id: null,
+        cashier_id: null,
+        statusJournal: status,
+        status_transaction: null,
+      },
+      include: {
+        wor: true,
+        journal_general: {
+          include: {
+            coa: true,
+          },
+        },
+      },
+    });
+    resultCount = await prisma.poandso.count({
+      where: {
+        deleted: null,
+        status_receive: true,
+        journal_cashier: {
+          every: {
+            statusJournal: status,
+          },
+        },
+        NOT: {
           journal_cashier: {
             every: {
-              statusJournal: status,
-            },
-          },
-          status_receive: true,
-          OR: [
-            {
-              idPurchase: {
-                startsWith: "DMR",
-              },
-            },
-            {
-              idPurchase: {
-                startsWith: "DSR",
-              },
-            },
-          ],
-        },
-        include: {
-          supplier: {
-            include: {
-              SupplierBank: true,
-              SupplierContact: true,
-            },
-          },
-          detailMr: {
-            include: {
-              supplier: {
-                include: {
-                  SupplierBank: true,
-                  SupplierContact: true,
-                },
-              },
-              Material_Master: true,
-              mr: {
-                include: {
-                  wor: true,
-                  bom: {
-                    include: {
-                      bom_detail: {
-                        include: {
-                          Material_Master: true,
-                        },
-                      },
-                      srimg: {
-                        include: {
-                          srimgdetail: true,
-                        },
-                      },
-                    },
-                  },
-                  user: {
-                    select: {
-                      id: true,
-                      username: true,
-                      employee: {
-                        select: {
-                          id: true,
-                          employee_name: true,
-                          position: true,
-                          sub_depart: {
-                            select: {
-                              id: true,
-                              name: true,
-                              departement: {
-                                select: {
-                                  id: true,
-                                  name: true,
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-          SrDetail: {
-            include: {
-              supplier: {
-                include: {
-                  SupplierBank: true,
-                  SupplierContact: true,
-                },
-              },
-              sr: {
-                include: {
-                  wor: true,
-                  user: {
-                    select: {
-                      id: true,
-                      username: true,
-                      employee: {
-                        select: {
-                          id: true,
-                          employee_name: true,
-                          position: true,
-                          sub_depart: {
-                            select: {
-                              id: true,
-                              name: true,
-                              departement: {
-                                select: {
-                                  id: true,
-                                  name: true,
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
+              poandsoId: null,
             },
           },
         },
-        orderBy: {
-          createdAt: "desc",
+      },
+    });
+    cashierCount = await prisma.cashier.count({
+      where: {
+        deleted: null,
+        journal_cashier: {
+          every: {
+            statusJournal: status,
+          },
         },
-      });
-    }
+        NOT: {
+          journal_cashier: {
+            every: {
+              cashier_id: null,
+            },
+          },
+        },
+      },
+    });
+    purchaseCount = await prisma.purchase.count({
+      where: {
+        deleted: null,
+        status_receive: true,
+        journal_cashier: {
+          every: {
+            statusJournal: status,
+          },
+        },
+        OR: [
+          {
+            idPurchase: {
+              startsWith: "DMR",
+            },
+          },
+          {
+            idPurchase: {
+              startsWith: "DSR",
+            },
+          },
+        ],
+      },
+    });
+    journalCount = await prisma.journal_cashier.count({
+      where: {
+        deleted: null,
+        poandsoId: null,
+        purchaseID: null,
+        coa_id: null,
+        cashier_id: null,
+        statusJournal: status,
+        status_transaction: null,
+      },
+    });
     const totalData: any =
-      parseInt(results.length) + parseInt(cashier.length) + parseInt(purchase);
+      parseInt(resultCount) +
+      parseInt(cashierCount) +
+      parseInt(purchaseCount) +
+      parseInt(journalCount);
     if (results.length > 0) {
       return response.status(200).json({
         success: true,
         massage: "Get All Posting Cashier",
-        result: [...results, ...cashier, ...purchase],
+        result: [...results, ...cashier, ...purchase, ...journal],
         page: pagination.page,
         limit: pagination.perPage,
         totalData: totalData,
@@ -2785,45 +2556,115 @@ const updateJournalPosting = async (request: Request, response: Response) => {
 
 const createJournal = async (request: any, response: Response) => {
   try {
-    const updateVerify = request.body.map(
+    let results: any;
+    if (request.body.worId === null) {
+      results = await prisma.journal_cashier.create({
+        data: {
+          note: request.body.note,
+          journal_general: {
+            create: request.body.journal_general,
+          },
+        },
+      });
+    } else {
+      results = await prisma.journal_cashier.create({
+        data: {
+          wor: { connect: { id: request.body.worId } },
+          note: request.body.note,
+          grandtotal: request.body.grandtotal,
+          journal_general: {
+            create: request.body.journal_general,
+          },
+        },
+      });
+    }
+    if (results) {
+      response.status(201).json({
+        success: true,
+        massage: "Success Update Data",
+        result: results,
+      });
+    } else {
+      response.status(400).json({
+        success: false,
+        massage: "Unsuccess Update Data",
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
+const updateJournal = async (request: any, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const updateOne = await prisma.journal_cashier.update({
+      where: {
+        id: id,
+      },
+      data: {
+        note: request.body.note,
+      },
+    });
+    const updateVerify = request.body.journal_general.map(
       (updateByveri: {
-        worId: any;
         coa_id: any;
         status_transaction: any;
         grandtotal: any;
+        note: any;
+        journalId: any;
+        id: any;
       }) => {
         return {
-          worId: updateByveri.worId,
+          note: updateByveri.note,
           coa_id: updateByveri.coa_id,
           status_transaction: updateByveri.status_transaction,
           grandtotal: updateByveri.grandtotal,
+          journalId: updateByveri.journalId,
+          id: updateByveri.id,
         };
       }
     );
+    const deleteQu = request.body.delete.map((deleteByveri: { id: any }) => {
+      return {
+        id: deleteByveri.id,
+      };
+    });
     let result: any = [];
-    for (let i = 0; i < updateVerify.length; i++) {
-      let createJournal: any;
-      if (updateVerify[i].worId === null) {
-        createJournal = await prisma.journal_cashier.create({
-          data: {
+    if (updateVerify) {
+      for (let i = 0; i < updateVerify.length; i++) {
+        const createJournal = await prisma.journal_general.upsert({
+          where: {
+            id: updateVerify[i].id,
+          },
+          create: {
             coa: { connect: { id: updateVerify[i].coa_id } },
             status_transaction: updateVerify[i].status_transaction,
             grandtotal: updateVerify[i].grandtotal,
+            note: updateVerify[i].note,
+            journal_cashier: { connect: { id: updateVerify[i].journalId } },
+          },
+          update: {
+            coa: { connect: { id: updateVerify[i].coa_id } },
+            status_transaction: updateVerify[i].status_transaction,
+            grandtotal: updateVerify[i].grandtotal,
+            note: updateVerify[i].note,
+            journal_cashier: { connect: { id: updateVerify[i].journalId } },
           },
         });
-      } else {
-        createJournal = await prisma.journal_cashier.create({
-          data: {
-            wor: { connect: { id: updateVerify[i].worId } },
-            coa: { connect: { id: updateVerify[i].coa_id } },
-            status_transaction: updateVerify[i].status_transaction,
-            grandtotal: updateVerify[i].grandtotal,
+        result = [...result, createJournal];
+      }
+    }
+    if (deleteQu) {
+      for (let i = 0; i < deleteQu.length; i++) {
+        await prisma.journal_general.delete({
+          where: {
+            id: deleteQu[i].id,
           },
         });
       }
-      result = [...result, createJournal];
     }
-    if (result) {
+    if (result || deleteQu || updateOne) {
       response.status(201).json({
         success: true,
         massage: "Success Update Data",
@@ -2882,4 +2723,5 @@ export default {
   updateJournalPosting,
   getGenerateLabaRugi,
   getGenerateNeraca,
+  updateJournal,
 };

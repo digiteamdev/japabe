@@ -2569,6 +2569,15 @@ router.post(
 );
 
 router.put(
+  "/updateJournal/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    finance: "FINANCE & ACC",
+  }),
+  cashier.updateJournal
+);
+
+router.put(
   "/cashier/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",

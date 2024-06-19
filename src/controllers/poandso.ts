@@ -1048,7 +1048,6 @@ const getAllReceive = async (request: Request, response: Response) => {
         },
         include: {
           cdv_detail: true,
-          employee: true,
           user: {
             select: {
               id: true,

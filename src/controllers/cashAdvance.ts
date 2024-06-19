@@ -30,7 +30,6 @@ const getCdv = async (request: Request, response: Response) => {
         include: {
           cashier: true,
           cdv_detail: true,
-          employee: true,
           user: {
             select: {
               id: true,
@@ -72,7 +71,6 @@ const getCdv = async (request: Request, response: Response) => {
         },
         include: {
           cdv_detail: true,
-          employee: true,
           user: {
             select: {
               id: true,
@@ -199,7 +197,6 @@ const getSPJCdv = async (request: Request, response: Response) => {
         },
         include: {
           cdv_detail: true,
-          employee: true,
           user: {
             select: {
               id: true,
@@ -244,7 +241,6 @@ const getSPJCdv = async (request: Request, response: Response) => {
         },
         include: {
           cdv_detail: true,
-          employee: true,
           user: {
             select: {
               id: true,
@@ -359,7 +355,6 @@ const createCdv = async (request: Request, response: Response) => {
       results = await prisma.cash_advance.create({
         data: {
           id_cash_advance: request.body.id_cash_advance,
-          employee: { connect: { id: request.body.employeeId } },
           job_no: request.body.job_no,
           user: { connect: { id: request.body.userId } },
           status_payment: request.body.status_payment,
@@ -377,7 +372,6 @@ const createCdv = async (request: Request, response: Response) => {
       results = await prisma.cash_advance.create({
         data: {
           id_cash_advance: request.body.id_cash_advance,
-          employee: { connect: { id: request.body.employeeId } },
           wor: { connect: { id: request.body.worId } },
           user: { connect: { id: request.body.userId } },
           status_payment: request.body.status_payment,

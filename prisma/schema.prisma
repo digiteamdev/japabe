@@ -64,7 +64,6 @@ model Employee {
   Certificate_Employee    Certificate_Employee[]    @relation("certificate")
   Employee_Child          Employee_Child[]          @relation("child")
   wor                     wor[]
-  cash_advance            cash_advance[]
   stock_outgoing_material stock_outgoing_material[]
   estimator               wor[]                     @relation("estimator")
   operator                operator[]
@@ -937,6 +936,7 @@ model coa {
   deleted                 DateTime?
   journal_cashier         journal_cashier[]
   stock_outgoing_material stock_outgoing_material[]
+  journal_general         journal_general[]
 
   @@index([id, coa_code, coa_name])
 }
@@ -1243,27 +1243,29 @@ model cashier {
 }
 
 model journal_cashier {
-  id                 String             @id @default(cuid())
-  cashier            cashier?           @relation(fields: [cashier_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  id                 String              @id @default(cuid())
+  cashier            cashier?            @relation(fields: [cashier_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   cashier_id         String?
-  coa                coa?               @relation(fields: [coa_id], references: [id])
+  coa                coa?                @relation(fields: [coa_id], references: [id])
   coa_id             String?
-  poandso            poandso?           @relation(fields: [poandsoId], references: [id])
+  poandso            poandso?            @relation(fields: [poandsoId], references: [id])
   poandsoId          String?
-  purchase           purchase?          @relation(fields: [purchaseID], references: [id])
+  purchase           purchase?           @relation(fields: [purchaseID], references: [id])
   purchaseID         String?
-  outgoing_material  outgoing_material? @relation(fields: [outgoingId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  outgoing_material  outgoing_material?  @relation(fields: [outgoingId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   outgoingId         String?
-  status_transaction status_transaction
-  wor                wor?               @relation(fields: [worId], references: [id])
+  status_transaction status_transaction?
+  wor                wor?                @relation(fields: [worId], references: [id])
   worId              String?
-  grandtotal         Float              @default(0)
-  status             Boolean            @default(false)
-  statusJournal      statusJournal      @default(satu)
-  id_receive         String?            @db.Text
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
+  grandtotal         Float               @default(0)
+  status             Boolean             @default(false)
+  statusJournal      statusJournal       @default(satu)
+  note               String?             @db.Text
+  id_receive         String?             @db.Text
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
   deleted            DateTime?
+  journal_general    journal_general[]
 
   @@index([id, cashier_id, coa_id])
 }
@@ -1287,8 +1289,6 @@ model cash_advance {
   id_cash_advance         String
   job_no                  String?                  @db.VarChar(200)
   id_spj                  String?
-  employee                Employee?                @relation(fields: [employeeId], references: [id])
-  employeeId              String?
   wor                     wor?                     @relation(fields: [worId], references: [id])
   worId                   String?
   user                    User?                    @relation(fields: [userId], references: [id])
@@ -1307,7 +1307,7 @@ model cash_advance {
   cdv_detail              cdv_detail[]
   kontrabon               kontrabon[]
 
-  @@index([id, employeeId, worId, userId, id_cash_advance])
+  @@index([id, worId, userId, id_cash_advance])
 }
 
 model cdv_detail {
@@ -1389,4 +1389,20 @@ model time_sheet_add {
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   deleted         DateTime?
+}
+
+model journal_general {
+  id                 String              @id @default(cuid())
+  journal_cashier    journal_cashier?    @relation(fields: [journalId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  journalId          String?
+  coa                coa?                @relation(fields: [coa_id], references: [id])
+  coa_id             String?
+  grandtotal         Float               @default(0)
+  status_transaction status_transaction?
+  note               String?             @db.Text
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  deleted            DateTime?
+
+  @@index([id, journalId, coa_id])
 }

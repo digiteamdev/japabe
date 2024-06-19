@@ -99,7 +99,6 @@ const getAllApprove = async (request: Request, response: Response) => {
       },
       include: {
         cdv_detail: true,
-        employee: true,
         user: {
           select: {
             id: true,
@@ -399,7 +398,6 @@ const getAllApprove = async (request: Request, response: Response) => {
       },
       include: {
         cdv_detail: true,
-        employee: true,
         user: {
           select: {
             id: true,
@@ -449,7 +447,6 @@ const getAllApprove = async (request: Request, response: Response) => {
       },
       include: {
         cdv_detail: true,
-        employee: true,
         user: {
           select: {
             id: true,
@@ -1072,7 +1069,6 @@ const getAllApproveCdv = async (request: Request, response: Response) => {
       },
       include: {
         cdv_detail: true,
-        employee: true,
         user: {
           select: {
             id: true,
@@ -1160,7 +1156,6 @@ const getAllApproveSpj = async (request: Request, response: Response) => {
       },
       include: {
         cdv_detail: true,
-        employee: true,
         user: {
           select: {
             id: true,
