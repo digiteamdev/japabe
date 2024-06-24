@@ -83,9 +83,7 @@ const htmlToPdf = async (request: Request) => {
       };
       csV.push(csvTimes);
     }
-  });
-  console.log(csV);
-  
+  });  
   const data: any = [
     {
       nomor: 112,

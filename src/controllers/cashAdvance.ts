@@ -480,11 +480,47 @@ const getWorCdv = async (request: Request, response: Response) => {
 const createCdv = async (request: Request, response: Response) => {
   try {
     const worNull = request.body.worId;
+    const d = new Date();
+    let month = d.getMonth() + 1;
+    let year = d.getFullYear();
+    const noMr = await prisma.cash_advance.findMany({
+      take: 1,
+      orderBy: [{ createdAt: "desc" }],
+    });
+    let genarate;
+    if (noMr.length === 0) {
+      genarate =
+        101 +
+        "/" +
+        "DMP" +
+        "/" +
+        "CDV" +
+        "/" +
+        month.toString() +
+        "/" +
+        year.toString();
+    } else {
+      const noMrLast: any = noMr[0].id_cash_advance?.split("/");
+      let numor = 101;
+      if (noMrLast[0]) {
+        numor = parseInt(noMrLast[0]) + 1;
+      }
+      genarate =
+        numor +
+        "/" +
+        "DMP" +
+        "/" +
+        "CDV" +
+        "/" +
+        month.toString() +
+        "/" +
+        year.toString();
+    }
     let results;
     if (worNull === null) {
       results = await prisma.cash_advance.create({
         data: {
-          id_cash_advance: request.body.id_cash_advance,
+          id_cash_advance: genarate,
           job_no: request.body.job_no,
           user: { connect: { id: request.body.userId } },
           status_payment: request.body.status_payment,
@@ -501,7 +537,7 @@ const createCdv = async (request: Request, response: Response) => {
     } else {
       results = await prisma.cash_advance.create({
         data: {
-          id_cash_advance: request.body.id_cash_advance,
+          id_cash_advance: genarate,
           wor: { connect: { id: request.body.worId } },
           user: { connect: { id: request.body.userId } },
           status_payment: request.body.status_payment,
