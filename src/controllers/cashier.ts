@@ -366,12 +366,14 @@ const getCashier = async (request: Request, response: Response) => {
           OR: [
             {
               idPurchase: {
-                startsWith: "DMR",
+                contains: "DMR",
+                mode: "insensitive",
               },
             },
             {
               idPurchase: {
-                startsWith: "DSR",
+                contains: "DSR",
+                mode: "insensitive",
               },
             },
           ],
@@ -2195,6 +2197,13 @@ const getPosting = async (request: Request, response: Response) => {
             statusJournal: status,
           },
         },
+        NOT: {
+          journal_cashier: {
+            every: {
+              purchaseID: null,
+            },
+          },
+        },
         status_receive: true,
         OR: [
           {
@@ -2210,6 +2219,11 @@ const getPosting = async (request: Request, response: Response) => {
         ],
       },
       include: {
+        journal_cashier: {
+          include: {
+            coa: true,
+          },
+        },
         supplier: {
           include: {
             SupplierBank: true,
@@ -2377,6 +2391,13 @@ const getPosting = async (request: Request, response: Response) => {
         journal_cashier: {
           every: {
             statusJournal: status,
+          },
+        },
+        NOT: {
+          journal_cashier: {
+            every: {
+              purchaseID: null,
+            },
           },
         },
         OR: [

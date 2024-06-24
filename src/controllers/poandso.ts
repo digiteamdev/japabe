@@ -4,7 +4,6 @@ import prisma from "../middleware/podandso";
 import pagging from "../utils/paggination";
 import url from "url";
 import { Prisma } from "@prisma/client";
-import fs from "fs";
 
 const getPo = async (request: Request, response: Response) => {
   try {
@@ -216,9 +215,45 @@ const getPo = async (request: Request, response: Response) => {
 //kontrabon
 const createPo = async (request: Request, response: Response) => {
   try {
+    const d = new Date();
+    let month = d.getMonth() + 1;
+    let year = d.getFullYear();
+    const noMr = await prisma.poandso.findMany({
+      take: 1,
+      orderBy: [{ createdAt: "desc" }],
+    });
+    let genarate;
+    if (noMr.length === 0) {
+      genarate =
+        101 +
+        "/" +
+        "DMP" +
+        "/" +
+        "PO" +
+        "/" +
+        month.toString() +
+        "/" +
+        year.toString();
+    } else {
+      const noMrLast: any = noMr[0].id_so?.split("/");
+      let numor = 101;
+      if (noMrLast[0]) {
+        numor = parseInt(noMrLast[0]) + 1;
+      }
+      genarate =
+        numor +
+        "/" +
+        "DMP" +
+        "/" +
+        "PO" +
+        "/" +
+        month.toString() +
+        "/" +
+        year.toString();
+    }
     const results = await prisma.poandso.create({
       data: {
-        id_so: request.body.id_so,
+        id_so: genarate,
         date_prepared: new Date(request.body.date_prepared),
         supplier: { connect: { id: request.body.supplierId } },
         your_reff: request.body.your_reff,
@@ -309,7 +344,8 @@ const getPoandSo = async (request: Request, response: Response) => {
       where: {
         deleted: null,
         id_so: {
-          startsWith: type,
+          contains: type,
+          mode: "insensitive",
         },
       },
     });
@@ -474,7 +510,8 @@ const getPoandSo = async (request: Request, response: Response) => {
           OR: [
             {
               idPurchase: {
-                startsWith: "DMR",
+                contains: "DMR",
+                mode: "insensitive",
               },
             },
             {
@@ -585,7 +622,8 @@ const getPoandSo = async (request: Request, response: Response) => {
           OR: [
             {
               id_so: {
-                startsWith: type,
+                contains: type,
+                mode: "insensitive",
               },
             },
           ],
@@ -1880,7 +1918,7 @@ const updatePoandSo = async (request: Request, response: Response) => {
                 });
                 const statusSr: any = await prisma.srDetail.findFirst({
                   where: {
-                    poandsoId: result.id,
+                    idPurchaseR: result.id,
                   },
                   include: {
                     sr: true,
@@ -1898,14 +1936,14 @@ const updatePoandSo = async (request: Request, response: Response) => {
                 }
               }
             } else {
-              result = await prisma.poandso.update({
-                where: {
-                  id: result.id,
-                },
-                data: {
-                  status_receive: false,
-                },
-              });
+              // result = await prisma.poandso.update({
+              //   where: {
+              //     id: result.id,
+              //   },
+              //   data: {
+              //     status_receive: false,
+              //   },
+              // });
             }
             // journal
             const getSO = await prisma.poandso.findFirst({

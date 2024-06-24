@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import prisma from "../middleware/timeSheet";
+import timesheet from "../utils/generateTimeSheet";
 import pagging from "../utils/paggination";
 import url from "url";
-
-var excel = require("node-excel-export");
 
 const getTimeSheet = async (request: any, response: Response) => {
   try {
@@ -557,217 +556,215 @@ const deletetime_sheet = async (request: Request, response: Response) => {
 
 const getTimeSheetCsv = async (request: any, response: Response) => {
   try {
-    const pencarian: any = request.query.search || "";
-    const type: any = request.query.type || "";
-    const employename: any = request.query.employename || "";
-    const dateStar: any = request.query.dateStar || new Date();
-    const dateEnd: any = request.query.dateEnd || new Date();
-    const hostname: any = request.headers.host;
-    const pathname = url.parse(request.url).pathname;
-    const page: any = request.query.page;
-    const perPage: any = request.query.perPage;
-    const pagination: any = new pagging(page, perPage, hostname, pathname);
-    let results: any;
-    results = await prisma.time_sheet.findMany({
-      where: {
-        user: {
-          employee: {
-            employee_name: employename,
-          },
-        },
-        OR: [
-          {
-            date: {
-              lte: new Date(dateStar),
-            },
-          },
-          {
-            date: {
-              gte: new Date(dateEnd),
-            },
-          },
-          {
-            user: {
-              employee: {
-                employee_name: {
-                  contains: pencarian,
-                  mode: "insensitive",
-                },
-              },
-            },
-          },
-        ],
-        type_timesheet: type,
-      },
-      include: {
-        time_sheet_add: true,
-        user: {
-          include: {
-            employee: {
-              include: {
-                sub_depart: {
-                  include: {
-                    departement: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-      orderBy: {
-        date: "asc",
-      },
-      take: parseInt(pagination.perPage),
-      skip: parseInt(pagination.page) * parseInt(pagination.perPage),
-    });
-    let csV: any = [];
-    results.map((e: any, i: number) => {
-      const arr: any = e.time_sheet_add;
-      for (let m = 0; m < arr.length; m++) {
-        const j = new Date(arr[m].actual_start);
-        const start = `${j.getHours()}. ${j.getMinutes()}. ${j.getSeconds()}`;
-        const csvTimes: any = {
-          No: m,
-          date: e.date,
-          job: arr[m].job,
-          part_name: arr[m].part_name,
-          job_description: arr[m].job_description,
-          start: start,
-          end: arr[m].actual_finish,
-          totaljam: arr[m].total_hours,
-          type: e.type,
-          departement: e.user.employee.sub_depart.name,
-          name: e.user.employee.employee_name,
-        };
-        csV.push(csvTimes);
-      }
-    });
-    var styles = {
-      headerDark: {
-        fill: {
-          fgColor: {
-            rgb: "FF000000",
-          },
-        },
-        font: {
-          color: {
-            rgb: "FFFFFFFF",
-          },
-          sz: "11",
-          bold: true,
-          vertAlign: true,
-          underline: false,
-        },
-      },
-      label: {
-        fill: {
-          fgColor: {
-            rgb: "b1a0c7",
-          },
-        },
-        font: {
-          color: {
-            rgb: "000000",
-          },
-          sz: "11",
-          bold: true,
-          vertAlign: true,
-          underline: false,
-          name: "Calibri",
-        },
-        alignment: {
-          horizontal: "center",
-          vertical: "center",
-          wrapText: false,
-        },
-      },
-      cellPink: {
-        alignment: {
-          horizontal: "center",
-        },
-        font: {
-          color: {
-            rgb: "000000",
-          },
-          sz: "11",
-          bold: true,
-          vertAlign: true,
-          underline: false,
-          name: "Calibri",
-        },
-      },
-    };
-    const heading = [
-      [
-        { value: "nama", style: styles.headerDark },
-        { value: "b1", style: styles.headerDark },
-        { value: "c1", style: styles.headerDark },
-      ],
-    ];
-    var specification = {
-      No: {
-        displayName: "NO",
-        headerStyle: styles.label,
-        width: 50,
-        cellStyle: styles.cellPink,
-      },
-      date: {
-        displayName: `date`,
-        headerStyle: styles.label,
-        width: 80,
-      },
-      job: {
-        displayName: "job",
-        headerStyle: styles.label,
-        width: 250,
-      },
-      job_description: {
-        displayName: "job description",
-        headerStyle: styles.label,
-        width: 320,
-      },
-      start: {
-        displayName: "start",
-        headerStyle: styles.label,
-        width: 100,
-        cellStyle: styles.cellPink,
-      },
-      end: {
-        displayName: "end",
-        headerStyle: styles.label,
-        width: 100,
-        cellStyle: styles.cellPink,
-      },
-      totaljam: {
-        displayName: "total jam",
-        headerStyle: styles.label,
-        width: 100,
-        cellStyle: styles.cellPink,
-      },
-      departement: {
-        displayName: "departement",
-        headerStyle: styles.label,
-        width: 100,
-        cellStyle: styles.cellPink,
-      },
-      name: {
-        displayName: "nama karyawan",
-        headerStyle: styles.label,
-        width: 200,
-      },
-    };
-    var report = excel.buildExport([
-      {
-        name: "quotation.xlsx",
-        specification: specification,
-        // heading: heading,
-        // merges: merges,
-        data: csV,
-      },
-    ]);
+    const pdf = await timesheet(request);
+    response.download(pdf.filename, "timesheet.pdf");
+    // const pencarian: any = request.query.search || "";
+    // const type: any = request.query.type || "";
+    // const userId: any = request.query.userId || "";
+    // const dateStar: any = request.query.dateStar || new Date();
+    // const dateEnd: any = request.query.dateEnd || new Date();
+    // const date = new Date(dateStar);
+    // const mountt = date.getMonth() + 1;
+    // const formattedDate = `${date.getFullYear()}-${
+    //   mountt < 10 ? "0" + mountt : mountt
+    // }-${date.getDate()} 00:00:00`;
+
+    // const dateS = new Date(dateEnd);
+    // const mount = dateS.getMonth() + 1;
+    // const formatS = `${dateS.getFullYear()}-${
+    //   mount < 10 ? "0" + mount : mount
+    // }-${dateS.getDate()} 23:59:59`;
+    // let results: any;
+    // results = await prisma.time_sheet.findMany({
+    //   where: {
+    //     deleted: null,
+    //     userId: {
+    //       contains: userId,
+    //     },
+    //     date: {
+    //       lte: new Date(formatS),
+    //       gte: new Date(formattedDate),
+    //     },
+    //   },
+    //   include: {
+    //     time_sheet_add: true,
+    //     user: {
+    //       include: {
+    //         employee: {
+    //           include: {
+    //             sub_depart: {
+    //               include: {
+    //                 departement: true,
+    //               },
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    //   orderBy: {
+    //     date: "asc",
+    //   },
+    // });
+    // let csV: any = [];
+    // results.map((e: any, i: number) => {
+    //   const arr: any = e.time_sheet_add;
+    //   for (let m = 0; m < arr.length; m++) {
+    //     const j = new Date(arr[m].actual_start);
+    //     const p = new Date(arr[m].actual_finish);
+    //     const start = `${j.getHours()}. ${j.getMinutes()}. ${j.getSeconds()}`;
+    //     const end = `${p.getHours()}. ${p.getMinutes()}. ${p.getSeconds()}`;
+    //     const csvTimes: any = {
+    //       No: m,
+    //       date: e.date,
+    //       job: arr[m].job,
+    //       part_name: arr[m].part_name,
+    //       job_description: arr[m].job_description,
+    //       start: start,
+    //       end: end,
+    //       totaljam: arr[m].total_hours,
+    //       type: e.type_timesheet,
+    //       departement: e.user.employee.sub_depart.name,
+    //       name: e.user.employee.employee_name,
+    //     };
+    //     csV.push(csvTimes);
+    //   }
+    // });
+    // var styles = {
+    //   headerDark: {
+    //     fill: {
+    //       fgColor: {
+    //         rgb: "FF000000",
+    //       },
+    //     },
+    //     font: {
+    //       color: {
+    //         rgb: "FFFFFFFF",
+    //       },
+    //       sz: "11",
+    //       bold: true,
+    //       vertAlign: true,
+    //       underline: false,
+    //     },
+    //   },
+    //   label: {
+    //     fill: {
+    //       fgColor: {
+    //         rgb: "ff0000",
+    //       },
+    //     },
+    //     font: {
+    //       color: {
+    //         rgb: "000000",
+    //       },
+    //       sz: "11",
+    //       bold: true,
+    //       vertAlign: true,
+    //       underline: false,
+    //       name: "Calibri",
+    //     },
+    //     alignment: {
+    //       horizontal: "center",
+    //       vertical: "center",
+    //       wrapText: false,
+    //     },
+    //   },
+    //   cellPink: {
+    //     alignment: {
+    //       horizontal: "center",
+    //     },
+    //     font: {
+    //       color: {
+    //         rgb: "000000",
+    //       },
+    //       sz: "11",
+    //       bold: true,
+    //       vertAlign: true,
+    //       underline: false,
+    //       name: "Calibri",
+    //     },
+    //   },
+    // };
+    // const heading = [
+    //   [
+    //     { value: "name", style: styles.cellPink },
+    //     { value: "name", style: styles.headerDark },
+    //     { value: "c1", style: styles.headerDark },
+    //   ],
+    // ];
+    // var specification: any = {
+    //   No: {
+    //     displayName: "NO",
+    //     headerStyle: styles.label,
+    //     width: 50,
+    //     cellStyle: styles.cellPink,
+    //   },
+    //   date: {
+    //     displayName: `date`,
+    //     headerStyle: styles.label,
+    //     width: 80,
+    //   },
+    //   job: {
+    //     displayName: "job",
+    //     headerStyle: styles.label,
+    //     width: 250,
+    //   },
+    //   part_name: {
+    //     displayName: "part name",
+    //     headerStyle: styles.label,
+    //     width: 250,
+    //   },
+    //   type: {
+    //     displayName: "type",
+    //     headerStyle: styles.label,
+    //     width: 250,
+    //   },
+    //   job_description: {
+    //     displayName: "job description",
+    //     headerStyle: styles.label,
+    //     width: 320,
+    //   },
+    //   start: {
+    //     displayName: "start",
+    //     headerStyle: styles.label,
+    //     width: 100,
+    //     cellStyle: styles.cellPink,
+    //   },
+    //   end: {
+    //     displayName: "end",
+    //     headerStyle: styles.label,
+    //     width: 100,
+    //     cellStyle: styles.cellPink,
+    //   },
+    //   totaljam: {
+    //     displayName: "total jam",
+    //     headerStyle: styles.label,
+    //     width: 100,
+    //     cellStyle: styles.cellPink,
+    //   },
+    //   departement: {
+    //     displayName: "departement",
+    //     headerStyle: styles.label,
+    //     width: 100,
+    //     cellStyle: styles.cellPink,
+    //   },
+    //   name: {
+    //     displayName: "nama karyawan",
+    //     headerStyle: styles.label,
+    //     width: 200,
+    //   },
+    // };
+    // var report = excel.buildExport([
+    //   {
+    //     name: "timesheet.xlsx",
+    //     specification: specification,
+    //     heading: heading,
+    //     // merges: merges,
+    //     data: csV,
+    //   },
+    // ]);
     // response.attachment("timesheet.xlsx");
-    response.send("report");
+    // response.send(report);
   } catch (error) {
     response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
   }

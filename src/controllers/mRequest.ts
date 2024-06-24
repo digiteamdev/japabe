@@ -514,6 +514,525 @@ const getMr = async (request: any, response: Response) => {
   }
 };
 
+const getMrByOne = async (request: any, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const pencarian: any = request.query.search || "";
+    const statusMr: any = request.query.statusMr || "";
+    const status: any = request.query.status || undefined;
+    const hostname: any = request.headers.host;
+    const pathname = url.parse(request.url).pathname;
+    const page: any = request.query.page;
+    const perPage: any = request.query.perPage;
+    const pagination: any = new pagging(page, perPage, hostname, pathname);
+    let results;
+    let mrCount: any;
+    if (request.query.page === undefined && status != undefined) {
+      results = await prisma.mr.findMany({
+        where: {
+          status_spv: status,
+          status_manager: status,
+        },
+      });
+    } else {
+      const userLogin = await prisma.user.findFirst({
+        where: {
+          username: request.session.userId,
+        },
+        include: {
+          employee: {
+            select: {
+              id: true,
+              employee_name: true,
+              position: true,
+              sub_depart: {
+                select: {
+                  id: true,
+                  name: true,
+                  departement: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+      const a: any = userLogin?.employeeId;
+      const emplo = await prisma.employee.findFirst({
+        where: {
+          id: a,
+        },
+      });
+      if (
+        emplo?.position === "Supervisor" ||
+        emplo?.position === "Manager" ||
+        emplo?.position === "Director"
+      ) {
+        if (
+          userLogin?.employee?.sub_depart?.id === "cli8fkhn4001orswmj0y479d7" ||
+          userLogin?.employee?.sub_depart?.id === "cli8fmb2g001urswmi5rhwmai" ||
+          userLogin?.employee?.sub_depart?.id === "cli8fa5050000rswmhh4qkn6w"
+        ) {
+          if (statusMr) {
+            results = await prisma.mr.findMany({
+              where: {
+                id: id,
+                deleted: null,
+                statusMr: statusMr,
+                no_mr: {
+                  contains: pencarian,
+                  mode: "insensitive",
+                },
+                job_no: {
+                  contains: pencarian,
+                  mode: "insensitive",
+                },
+                detailMr: {
+                  some: {
+                    Material_Master: {
+                      name: {
+                        contains: pencarian,
+                        mode: "insensitive",
+                      },
+                    },
+                  },
+                },
+              },
+              include: {
+                wor: true,
+                bom: {
+                  include: {
+                    bom_detail: {
+                      include: {
+                        Material_Master: true,
+                      },
+                    },
+                    srimg: {
+                      include: {
+                        srimgdetail: true,
+                        timeschedule: {
+                          include: {
+                            wor: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                detailMr: {
+                  include: {
+                    Material_Master: true,
+                    bom_detail: {
+                      include: {
+                        bom: {
+                          include: {
+                            srimg: {
+                              include: {
+                                srimgdetail: true,
+                                timeschedule: {
+                                  include: {
+                                    wor: true,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    employee: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                        position: true,
+                        sub_depart: {
+                          select: {
+                            id: true,
+                            name: true,
+                            departement: {
+                              select: {
+                                id: true,
+                                name: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              orderBy: {
+                createdAt: "desc",
+              },
+              take: parseInt(pagination.perPage),
+              skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+            });
+            mrCount = await prisma.mr.count({
+              where: {
+                id: id,
+                deleted: null,
+                statusMr: statusMr,
+              },
+            });
+          } else {
+            results = await prisma.mr.findMany({
+              where: {
+                id: id,
+                deleted: null,
+                no_mr: {
+                  contains: pencarian,
+                  mode: "insensitive",
+                },
+                job_no: {
+                  contains: pencarian,
+                  mode: "insensitive",
+                },
+                detailMr: {
+                  some: {
+                    Material_Master: {
+                      name: {
+                        contains: pencarian,
+                        mode: "insensitive",
+                      },
+                    },
+                  },
+                },
+              },
+              include: {
+                wor: true,
+                bom: {
+                  include: {
+                    bom_detail: {
+                      include: {
+                        Material_Master: true,
+                      },
+                    },
+                    srimg: {
+                      include: {
+                        srimgdetail: true,
+                        timeschedule: {
+                          include: {
+                            wor: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                detailMr: {
+                  include: {
+                    Material_Master: true,
+                    bom_detail: {
+                      include: {
+                        bom: {
+                          include: {
+                            srimg: {
+                              include: {
+                                srimgdetail: true,
+                                timeschedule: {
+                                  include: {
+                                    wor: true,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    employee: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                        position: true,
+                        sub_depart: {
+                          select: {
+                            id: true,
+                            name: true,
+                            departement: {
+                              select: {
+                                id: true,
+                                name: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              orderBy: {
+                createdAt: "desc",
+              },
+              take: parseInt(pagination.perPage),
+              skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+            });
+            mrCount = await prisma.mr.count({
+              where: {
+                id: id,
+                deleted: null,
+              },
+            });
+          }
+        } else {
+          results = await prisma.mr.findMany({
+            where: {
+              id: id,
+              deleted: null,
+              user: {
+                employee: {
+                  sub_depart: { id: userLogin?.employee?.sub_depart?.id },
+                },
+              },
+              no_mr: {
+                contains: pencarian,
+                mode: "insensitive",
+              },
+              job_no: {
+                contains: pencarian,
+                mode: "insensitive",
+              },
+              detailMr: {
+                some: {
+                  Material_Master: {
+                    name: {
+                      contains: pencarian,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            },
+            include: {
+              wor: true,
+              bom: {
+                include: {
+                  bom_detail: {
+                    include: {
+                      Material_Master: true,
+                    },
+                  },
+                  srimg: {
+                    include: {
+                      srimgdetail: true,
+                      timeschedule: {
+                        include: {
+                          wor: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              detailMr: {
+                include: {
+                  Material_Master: true,
+                  bom_detail: {
+                    include: {
+                      bom: {
+                        include: {
+                          srimg: {
+                            include: {
+                              srimgdetail: true,
+                              timeschedule: {
+                                include: {
+                                  wor: true,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                  employee: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                      position: true,
+                      sub_depart: {
+                        select: {
+                          id: true,
+                          name: true,
+                          departement: {
+                            select: {
+                              id: true,
+                              name: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: {
+              createdAt: "desc",
+            },
+            take: parseInt(pagination.perPage),
+            skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+          });
+          mrCount = await prisma.mr.count({
+            where: {
+              id: id,
+              user: {
+                employee: {
+                  sub_depart: { id: userLogin?.employee?.sub_depart?.id },
+                },
+              },
+              deleted: null,
+            },
+          });
+        }
+      } else {
+        results = await prisma.mr.findMany({
+          where: {
+            id: id,
+            user: {
+              username: request.session.userId,
+            },
+            no_mr: {
+              contains: pencarian,
+              mode: "insensitive",
+            },
+          },
+          include: {
+            wor: true,
+            bom: {
+              include: {
+                bom_detail: {
+                  include: {
+                    Material_Master: true,
+                  },
+                },
+                srimg: {
+                  include: {
+                    srimgdetail: true,
+                    timeschedule: {
+                      include: {
+                        wor: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            detailMr: {
+              include: {
+                Material_Master: true,
+                bom_detail: {
+                  include: {
+                    bom: {
+                      include: {
+                        srimg: {
+                          include: {
+                            srimgdetail: true,
+                            timeschedule: {
+                              include: {
+                                wor: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            user: {
+              select: {
+                id: true,
+                username: true,
+                employee: {
+                  select: {
+                    id: true,
+                    employee_name: true,
+                    position: true,
+                    sub_depart: {
+                      select: {
+                        id: true,
+                        name: true,
+                        departement: {
+                          select: {
+                            id: true,
+                            name: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: parseInt(pagination.perPage),
+          skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+        });
+        mrCount = await prisma.mr.count({
+          where: {
+            id: id,
+            user: {
+              username: request.session.userId,
+            },
+            deleted: null,
+          },
+        });
+      }
+    }
+    if (results.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All Material Request",
+        result: results,
+        page: pagination.page,
+        limit: pagination.perPage,
+        totalData: mrCount,
+        currentPage: pagination.currentPage,
+        nextPage: pagination.next(),
+        previouspage: pagination.prev(),
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const createMr = async (request: Request, response: Response) => {
   try {
     const d = new Date();
@@ -1354,11 +1873,47 @@ const updatePr = async (request: Request, response: Response) => {
   try {
     await prisma.$transaction(
       async (prisma) => {
+        const d = new Date();
+        let month = d.getMonth() + 1;
+        let year = d.getFullYear();
+        const noMr = await prisma.purchase.findMany({
+          take: 1,
+          orderBy: [{ createdAt: "desc" }],
+        });
+        let genarate;
+        if (noMr.length === 0) {
+          genarate =
+            101 +
+            "/" +
+            "DMP" +
+            "/" +
+            "DMR" +
+            "/" +
+            month.toString() +
+            "/" +
+            year.toString();
+        } else {
+          const noMrLast: any = noMr[0].idPurchase?.split("/");
+          let numor = 101;
+          if (noMrLast[0]) {
+            numor = parseInt(noMrLast[0]) + 1;
+          }
+          genarate =
+            numor +
+            "/" +
+            "DMP" +
+            "/" +
+            "DMR" +
+            "/" +
+            month.toString() +
+            "/" +
+            year.toString();
+        }
         let result: any = [];
         result = await prisma.purchase.create({
           data: {
             dateOfPurchase: request.body.dateOfPurchase,
-            idPurchase: request.body.idPurchase,
+            idPurchase: genarate,
             taxPsrDmr: request.body.taxPsrDmr,
             currency: request.body.currency,
           },
@@ -1945,7 +2500,8 @@ const getDirect = async (request: Request, response: Response) => {
           OR: [
             {
               idPurchase: {
-                startsWith: typeMR,
+                contains: typeMR,
+                mode: "insensitive",
               },
             },
           ],
@@ -2018,7 +2574,8 @@ const getDirect = async (request: Request, response: Response) => {
           OR: [
             {
               idPurchase: {
-                startsWith: typeMR,
+                contains: typeMR,
+                mode: "insensitive",
               },
             },
           ],
@@ -2094,6 +2651,7 @@ const getDirect = async (request: Request, response: Response) => {
 
 export default {
   getMr,
+  getMrByOne,
   getdetailMr,
   getDirect,
   getPrM,

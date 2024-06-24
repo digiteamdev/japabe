@@ -642,30 +642,64 @@ const getAllApproveMr = async (request: Request, response: Response) => {
       where: {
         deleted: null,
         status_manager_director: null,
+        OR: [
+          {
+            detailMr: {
+              some: {
+                Material_Master: {
+                  name: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+          },
+          {
+            no_mr: {
+              contains: pencarian,
+              mode: "insensitive",
+            },
+          },
+          {
+            job_no: {
+              contains: pencarian,
+              mode: "insensitive",
+            },
+          },
+        ],
       },
     });
     const results = await prisma.mr.findMany({
       where: {
         deleted: null,
         status_manager_director: null,
-        no_mr: {
-          contains: pencarian,
-          mode: "insensitive",
-        },
-        job_no: {
-          contains: pencarian,
-          mode: "insensitive",
-        },
-        detailMr: {
-          some: {
-            Material_Master: {
-              name: {
-                contains: pencarian,
-                mode: "insensitive",
+        OR: [
+          {
+            no_mr: {
+              contains: pencarian,
+              mode: "insensitive",
+            },
+          },
+          {
+            job_no: {
+              contains: pencarian,
+              mode: "insensitive",
+            },
+          },
+          {
+            detailMr: {
+              some: {
+                Material_Master: {
+                  name: {
+                    contains: pencarian,
+                    mode: "insensitive",
+                  },
+                },
               },
             },
           },
-        },
+        ],
       },
       include: {
         wor: true,

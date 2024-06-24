@@ -328,13 +328,29 @@ const getAllApproveRequest = async (request: Request, response: Response) => {
 
 const getOutgoingMaterial = async (request: Request, response: Response) => {
   try {
-    let results: any [];
-    let detailDmr: any [];
+    let results: any[];
+    let detailDmr: any[];
     results = await prisma.poandso.findMany({
       where: {
         status_receive: true,
+        detailMr: {
+          every: {
+            mr: {
+              stock_outgoing_material: {
+                every: {
+                  mrId: null,
+                },
+              },
+            },
+          },
+        },
       },
       include: {
+        stock_outgoing_material: {
+          where: {
+            poandsoId: null,
+          },
+        },
         term_of_pay_po_so: true,
         supplier: {
           include: {
@@ -414,6 +430,17 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
     detailDmr = await prisma.purchase.findMany({
       where: {
         status_receive: true,
+        detailMr: {
+          every: {
+            mr: {
+              stock_outgoing_material: {
+                every: {
+                  mrId: null,
+                },
+              },
+            },
+          },
+        },
         OR: [
           {
             idPurchase: {
@@ -445,6 +472,13 @@ const getOutgoingMaterial = async (request: Request, response: Response) => {
             Material_Master: true,
             mr: {
               include: {
+                stock_outgoing_material: {
+                  where: {
+                    NOT: {
+                      mrId: null,
+                    },
+                  },
+                },
                 wor: true,
                 bom: {
                   include: {

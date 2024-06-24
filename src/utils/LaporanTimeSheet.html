@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Laba Rugi PT Dwitama Mulya Persada</title>
+    <style>
+      .invoice-box {
+        max-width: 600px;
+        margin: auto;
+        padding: 60px;
+        font-size: 11px;
+        line-height: 4px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+          sans-serif;
+        color: #000000;
+      }
+      .center {
+        text-align: center;
+      }
+      table {
+        border-spacing: 0px;
+        border: 0.5px solid #000000;
+        border-collapse: collapse;
+      }
+      .tha {
+        font-size: 6px;
+        background-color: rgb(233, 208, 42);
+        border: 1px solid #000000;
+        padding: 4px;
+      }
+      td {
+        border-right: 1px solid rgb(0, 0, 0);
+        border-bottom: none;
+        font-size: 8px;
+      }
+    </style>
+  </head>
+  <body class="invoice-box">
+    <div class="center">
+      <p>PT DWITAMA MULYA PERSADA</p>
+      <p>LAPORAN LABA RUGI</p>
+      <p>periode 1 januari s/d 31 Desember 2024</p>
+    </div>
+    <div>
+      <table style="width: 100%">
+        <tr>
+          <th style="width: 200px"></th>
+          <th class="tha">KOMERSIAL</th>
+          <th class="tha">KOREKSI</th>
+          <th class="tha">FISIKAL</th>
+        </tr>
+        <tr>
+          <td style="font-weight: bold; padding-top: 5px; padding-left: 2px">
+            PENJUALAN
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">PENJUALAN</td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">TOTAL PENJUALAN</td>
+          <td style="text-decoration: underline">Rp.10.500.00</td>
+          <td></td>
+          <td style="text-decoration: underline">Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="font-weight: bold; padding-top: 5px; padding-left: 2px">
+            HARGA POKOK PENJUALAN
+          </td>
+          <td style="text-decoration: underline">Rp.10.500.00</td>
+          <td></td>
+          <td style="text-decoration: underline">Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            BIAYA PRODUKSI LANGSUNG
+          </td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          {{#each data}}
+          <td style="padding-left: 10px; padding-top: 5px">
+          </td>
+          <td>{{this.part_name}}</td>
+          <td></td>
+          <td>{{this.job}}</td>
+          {{/each}}
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">BIAYA IMPOR</td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            BIAYA POKOK PENJUALAN
+          </td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">LABA KOTOR</td>
+          <td style="text-decoration: underline">Rp.10.500.00</td>
+          <td></td>
+          <td style="text-decoration: underline">Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="font-weight: bold; padding-top: 5px; padding-left: 2px">
+            BIAYA ADMINISTRASI & UMUM
+          </td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">BIAYA GAJI</td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">BIAYA KANTOR</td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            BIAYA RUMAH TANGGA KANTOR
+          </td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            BIAYA ADMINISTRASI BANK
+          </td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">BIAYA KOMISI</td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            BIAYA PERALATAN KANTOR
+          </td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">BIAYA ASURANSI</td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">BIAYA LISTRIK</td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            BIAYA TELEPHONE & INTERNET
+          </td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            BIAYA KEAMANAN & KEBERSIHAN
+          </td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            BIAYA PEMELIHARAAN KENDARAAN
+          </td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            BIAYA PEMELIHARAAN BANGUNAN
+          </td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            BIAYA KONSULTAN/JASA PROFESIONAL
+          </td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            BIAYA PERJALANAN DINAS
+          </td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">BIAYA SUMBANGAN</td>
+          <td>Rp.10.500.00</td>
+          <td>Rp.12.500.00</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">BIAYA SEWA</td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">BIAYA PENGIRIMAN</td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">BIAYA PERIJINAN</td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">BIAYA PENGOBATAN</td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            BIAYA PAJAK BUMI & BANGUNAN
+          </td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">BIAYA PAJAK</td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">BIAYA MARKETING</td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">BIAYA ENTERTAINT</td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">BIAYA PROMOSI</td>
+          <td>Rp.10.500.00</td>
+          <td>Rp.12.500.00</td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">BIAYA PENYUSUTAN</td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">BIAYA PEMBULATAN</td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">BIAYA TRAINING</td>
+          <td>Rp.10.500.00</td>
+          <td>Rp.12.500.00</td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            BIAYA RENOVASI BANGUNAN
+          </td>
+          <td>Rp.10.500.00</td>
+          <td>Rp.12.500.00</td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            BIAYA DENDA KETERLAMBATAN PENGIRIMAN
+          </td>
+          <td>Rp.10.500.00</td>
+          <td>Rp.12.500.00</td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">BIAYA LAIN-LAIN</td>
+          <td style="text-decoration: underline">Rp.10.500.00</td>
+          <td style="text-decoration: underline">Rp.12.500.00</td>
+          <td style="text-decoration: underline">Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td
+            style="
+              font-weight: bold;
+              padding-top: 5px;
+              padding-left: 2px;
+              width: 40%;
+              white-space: nowrap;
+            "
+          >
+            TOTAL BIAYA ADMINISTRASI & UMUM LABA USAHA
+          </td>
+          <td>Rp.10.500.00</td>
+          <td>Rp.12.500.00</td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="font-weight: bold; padding-top: 5px; padding-left: 2px">
+            PENDAPATAN & BIAYA LAIN-LAIN
+          </td>
+          <td>Rp.10.500.00</td>
+          <td>Rp.12.500.00</td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            PENDAPATAN JASA GIRO
+          </td>
+          <td>Rp.10.500.00</td>
+          <td>Rp.12.500.00</td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">PAJAK BUNGA</td>
+          <td>Rp.10.500.00</td>
+          <td>Rp.12.500.00</td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            PENDAPATAN LAIN-LAIN
+          </td>
+          <td>Rp.10.500.00</td>
+          <td>Rp.12.500.00</td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td
+            style="
+              font-weight: bold;
+              padding-top: 5px;
+              padding-left: 2px;
+              width: 40%;
+            "
+          >
+            TOTAL PENDAPATAN & BIAYA LAIN-LAIN
+          </td>
+          <td>Rp.10.500.00</td>
+          <td>Rp.12.500.00</td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            LABA/RUGI SEBELUM PAJAK
+          </td>
+          <td>Rp.10.500.00</td>
+          <td>Rp.12.500.00</td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            PAJAK PENGHASILAN
+          </td>
+          <td>Rp.10.500.00</td>
+          <td>Rp.12.500.00</td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td
+            style="
+              padding-left: 10px;
+              padding-top: 5px;
+              padding-bottom: 5px;
+              font-weight: bold;
+              border-bottom: 1px solid #000000;
+            "
+          >
+            LABA SETELAH PAJAK
+          </td>
+          <td style="border-bottom: 1px solid #000000">Rp.10.500.00</td>
+          <td style="border-bottom: 1px solid #000000">Rp.12.500.00</td>
+          <td style="border-bottom: 1px solid #000000">Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-top: 10px; padding-left: 10px; width: 40%">
+            PEMBULATAN PENGHASILAN KENA PAJAK
+          </td>
+          <td></td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            PERHITUNGAN PPH TERHUTANG
+          </td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            LAPISAN PENGHASILAN MENDAPAT FASILITAS
+          </td>
+          <td>Rp.10.500.00</td>
+          <td>Rp.12.500.00</td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            LAPISAN PENGHASILAN TIDAK MENDAPAT FASILITAS
+          </td>
+          <td>Rp.10.500.00</td>
+          <td>Rp.12.500.00</td>
+          <td style="text-decoration: underline">Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">PPH TERHUTANG</td>
+          <td></td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            KREDIT PAJAK (PPH Ps.23) TH 2023
+          </td>
+          <td></td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            KREDIT PAJAK (PPH Ps.25) TH 2023
+          </td>
+          <td></td>
+          <td></td>
+          <td style="text-decoration: underline">Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            KURANG BAYAR PPH PPH Ps.29 TAHUN 2023
+          </td>
+          <td></td>
+          <td></td>
+          <td style="text-decoration: underline">Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            ANGSURAN PPH 25 TAHUN 2024
+          </td>
+          <td></td>
+          <td></td>
+          <td>Rp.12.500.00</td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">PPH TERUTANG</td>
+          <td>Rp.10.500.00</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td style="padding-left: 10px; padding-top: 5px">
+            KREDIT PAJAK (PPH Ps.23) TH 2023
+          </td>
+          <td style="text-decoration: underline">Rp.10.500.00</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td
+            style="padding-left: 10px; padding-top: 10px; padding-bottom: 5px"
+          >
+            1/12 X PPH TERUTANG
+          </td>
+          <td style="text-decoration: underline">Rp.10.500.00</td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

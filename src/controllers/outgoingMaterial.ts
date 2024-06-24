@@ -146,39 +146,106 @@ const createOutgoingMaterial = async (request: Request, response: Response) => {
         let results: any = [];
         if (request.body.pb === undefined) {
           const arra: any = request.body.mr;
-          for (let i = 0; i < arra.length; i++) {
-            const getStok: any = await prisma.poandso.findFirst({
-              where: {
-                id: request.body.mr[i].poandsoId,
+          let z: any = {};
+          request.body.mr.map((a: any) => {
+            Object.assign(z, a);
+          });
+          if (z.poandsoId === null) {
+            results = await prisma.outgoing_material.create({
+              data: {
+                id_outgoing_material: request.body.id_outgoing_material,
+                date_outgoing_material: new Date(
+                  request.body.date_outgoing_material
+                ),
+                stock_outgoing_material: {
+                  create: request.body.mr,
+                },
               },
               include: {
-                detailMr: {
-                  include: {
-                    Material_Master: true,
-                  },
-                },
+                stock_outgoing_material: true,
               },
             });
-            for (let index = 0; index < getStok.detailMr.length; index++) {
-              if (
-                getStok.detailMr[index].Material_Master.jumlah_Stock <= 0 ||
-                arra[i].qty_out >
-                  getStok.detailMr[index].Material_Master.jumlah_Stock
-              )
-                return response.status(400).json({
-                  msg: "stok abis",
-                });
-              await prisma.material_Master.update({
+            const getMrStatus = await prisma.detailMr.findFirst({
+              where: {
+                mrId: z.mrId,
+              },
+              include: {
+                mr: true,
+              },
+            });
+            await prisma.mr.update({
+              where: {
+                id: getMrStatus?.mr.id,
+              },
+              data: {
+                statusMr: "Finish",
+              },
+            });
+          } else {
+            for (let i = 0; i < arra.length; i++) {
+              const getStok: any = await prisma.poandso.findFirst({
                 where: {
-                  id: getStok.detailMr[index].Material_Master.id,
+                  id: request.body.mr[i].poandsoId,
                 },
-                data: {
-                  jumlah_Stock:
-                    getStok.detailMr[index].Material_Master.jumlah_Stock -
-                    arra[i].qty_out,
+                include: {
+                  detailMr: {
+                    include: {
+                      Material_Master: true,
+                    },
+                  },
                 },
               });
+              for (let index = 0; index < getStok.detailMr.length; index++) {
+                if (
+                  getStok.detailMr[index].Material_Master.jumlah_Stock <= 0 ||
+                  arra[i].qty_out >
+                    getStok.detailMr[index].Material_Master.jumlah_Stock
+                )
+                  return response.status(400).json({
+                    msg: "stok abis",
+                  });
+                await prisma.material_Master.update({
+                  where: {
+                    id: getStok.detailMr[index].Material_Master.id,
+                  },
+                  data: {
+                    jumlah_Stock:
+                      getStok.detailMr[index].Material_Master.jumlah_Stock -
+                      arra[i].qty_out,
+                  },
+                });
+              }
             }
+            results = await prisma.outgoing_material.create({
+              data: {
+                id_outgoing_material: request.body.id_outgoing_material,
+                date_outgoing_material: new Date(
+                  request.body.date_outgoing_material
+                ),
+                stock_outgoing_material: {
+                  create: request.body.mr,
+                },
+              },
+              include: {
+                stock_outgoing_material: true,
+              },
+            });
+            const getMrStatus = await prisma.detailMr.findFirst({
+              where: {
+                poandsoId: z.poandsoId,
+              },
+              include: {
+                mr: true,
+              },
+            });
+            await prisma.mr.update({
+              where: {
+                id: getMrStatus?.mr.id,
+              },
+              data: {
+                statusMr: "Finish",
+              },
+            });
           }
         } else {
           const pbb: any = request.body.pb;
@@ -204,39 +271,6 @@ const createOutgoingMaterial = async (request: Request, response: Response) => {
               },
             });
           }
-        }
-        if (request.body.mr) {
-          results = await prisma.outgoing_material.create({
-            data: {
-              id_outgoing_material: request.body.id_outgoing_material,
-              date_outgoing_material: new Date(
-                request.body.date_outgoing_material
-              ),
-              stock_outgoing_material: {
-                create: request.body.mr,
-              },
-            },
-            include: {
-              stock_outgoing_material: true,
-            },
-          });
-          const getMrStatus = await prisma.detailMr.findFirst({
-            where: {
-              poandsoId: request.body.mr.id,
-            },
-            include: {
-              mr: true,
-            },
-          });
-          await prisma.mr.update({
-            where: {
-              id: getMrStatus?.mr.id,
-            },
-            data: {
-              statusMr: "Finish",
-            },
-          });
-        } else {
           results = await prisma.outgoing_material.create({
             data: {
               id_outgoing_material: request.body.id_outgoing_material,
@@ -251,9 +285,7 @@ const createOutgoingMaterial = async (request: Request, response: Response) => {
               stock_outgoing_material: true,
             },
           });
-          console.log(results.stock_outgoing_material);
           const journalCa = results.stock_outgoing_material;
-          // results.stock_outgoing_material
           for (let index = 0; index < journalCa.length; index++) {
             await prisma.journal_cashier.createMany({
               data: [

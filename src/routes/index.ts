@@ -959,7 +959,7 @@ router.post(
 );
 
 router.put(
-  "/masterMaterial/:id",
+  "/materialMaster/:id",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
     marketingbumn: "MARKETING BUMN",
@@ -1633,6 +1633,24 @@ router.get(
 );
 
 router.get(
+  "/MR/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+    public: "public",
+  }),
+  MR.getMrByOne
+);
+
+router.get(
   "/mrDetail",
   jwt.authToken({
     administrator: "ADMINISTRATOR",
@@ -1827,6 +1845,24 @@ router.get(
     public: "public",
   }),
   SR.getSr
+);
+
+router.get(
+  "/SR/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+    public: "public",
+  }),
+  SR.getSrByOne
 );
 
 router.get(
@@ -2044,12 +2080,20 @@ router.post(
 );
 router.put(
   "/coa/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", utility: "Utility/ty" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    utility: "Utility/ty",
+    finance: "FINANCE & ACC",
+  }),
   coa.updateCoa
 );
 router.delete(
   "/coa/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR", utility: "Utility/ty" }),
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    utility: "Utility/ty",
+    finance: "FINANCE & ACC",
+  }),
   coa.deleteCoa
 );
 
@@ -2702,6 +2746,23 @@ router.get(
     utility: "Utility/ty",
   }),
   cashAdv.getCdv
+);
+
+router.get(
+  "/cashAdv/:id",
+  jwt.authToken({
+    administrator: "ADMINISTRATOR",
+    marketingbumn: "MARKETING BUMN",
+    marketingswasta: "MARKETING SWASTA",
+    HRandGA: "HR & GA",
+    finance: "FINANCE & ACC",
+    QAandEng: "QA & ENG",
+    purchasing: "PURCHASING",
+    drafter: "DRAFTER",
+    ppic: "Ppic",
+    utility: "Utility/ty",
+  }),
+  cashAdv.getCdvByOne
 );
 
 router.get(

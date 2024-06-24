@@ -386,6 +386,397 @@ const getSr = async (request: any, response: Response) => {
   }
 };
 
+const getSrByOne = async (request: any, response: Response) => {
+  try {
+    const id: string = request.params.id;
+    const pencarian: any = request.query.search || "";
+    const statusSr: any = request.query.statusSr || "";
+    const filter: any = request.query.filter || "desc";
+    const field: any = request.query.field || "id";
+    const status: any = request.query.status || undefined;
+    const hostname: any = request.headers.host;
+    const pathname = url.parse(request.url).pathname;
+    const page: any = request.query.page;
+    const perPage: any = request.query.perPage;
+    const pagination: any = new pagging(page, perPage, hostname, pathname);
+    let SrCount: any;
+    let results;
+    if (request.query.page === undefined && status != undefined) {
+      results = await prisma.sr.findMany({
+        where: {
+          status_spv: status,
+          status_manager: status,
+        },
+      });
+    } else {
+      const userLogin = await prisma.user.findFirst({
+        where: {
+          username: request.session.userId,
+        },
+        include: {
+          employee: {
+            select: {
+              id: true,
+              employee_name: true,
+              position: true,
+              sub_depart: {
+                select: {
+                  id: true,
+                  name: true,
+                  departement: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+      const a: any = userLogin?.employeeId;
+      const emplo = await prisma.employee.findFirst({
+        where: {
+          id: a,
+        },
+      });
+      if (
+        emplo?.position === "Supervisor" ||
+        emplo?.position === "Manager" ||
+        emplo?.position === "Director"
+      ) {
+        if (
+          userLogin?.employee?.sub_depart?.id === "cli8fkhn4001orswmj0y479d7" ||
+          userLogin?.employee?.sub_depart?.id === "cli8fmb2g001urswmi5rhwmai" ||
+          userLogin?.employee?.sub_depart?.id === "cli8fa5050000rswmhh4qkn6w"
+        ) {
+          if (statusSr) {
+            results = await prisma.sr.findMany({
+              where: {
+                id: id,
+                deleted: null,
+                statusSr: statusSr,
+                no_sr: {
+                  contains: pencarian,
+                  mode: "insensitive",
+                },
+              },
+              include: {
+                wor: {
+                  include: {
+                    customerPo: {
+                      include: {
+                        quotations: {
+                          include: {
+                            Customer: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    employee: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                        position: true,
+                        sub_depart: {
+                          select: {
+                            id: true,
+                            name: true,
+                            departement: {
+                              select: {
+                                id: true,
+                                name: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                SrDetail: true,
+              },
+              orderBy: [
+                {
+                  _relevance: {
+                    fields: [field],
+                    search: "",
+                    sort: filter,
+                  },
+                },
+                {
+                  createdAt: "desc",
+                },
+              ],
+              take: parseInt(pagination.perPage),
+              skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+            });
+            SrCount = await prisma.sr.count({
+              where: {
+                id: id,
+                deleted: null,
+                statusSr: statusSr,
+              },
+            });
+          } else {
+            results = await prisma.sr.findMany({
+              where: {
+                id: id,
+                deleted: null,
+                no_sr: {
+                  contains: pencarian,
+                  mode: "insensitive",
+                },
+              },
+              include: {
+                wor: {
+                  include: {
+                    customerPo: {
+                      include: {
+                        quotations: {
+                          include: {
+                            Customer: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    employee: {
+                      select: {
+                        id: true,
+                        employee_name: true,
+                        position: true,
+                        sub_depart: {
+                          select: {
+                            id: true,
+                            name: true,
+                            departement: {
+                              select: {
+                                id: true,
+                                name: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                SrDetail: true,
+              },
+              orderBy: [
+                {
+                  _relevance: {
+                    fields: [field],
+                    search: "",
+                    sort: filter,
+                  },
+                },
+                {
+                  createdAt: "desc",
+                },
+              ],
+              take: parseInt(pagination.perPage),
+              skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+            });
+            SrCount = await prisma.sr.count({
+              where: {
+                id: id,
+                deleted: null,
+              },
+            });
+          }
+        } else {
+          results = await prisma.sr.findMany({
+            where: {
+              id: id,
+              deleted: null,
+              user: {
+                employee: {
+                  sub_depart: { id: userLogin?.employee?.sub_depart?.id },
+                },
+              },
+              no_sr: {
+                contains: pencarian,
+                mode: "insensitive",
+              },
+            },
+            include: {
+              wor: {
+                include: {
+                  customerPo: {
+                    include: {
+                      quotations: {
+                        include: {
+                          Customer: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                  employee: {
+                    select: {
+                      id: true,
+                      employee_name: true,
+                      position: true,
+                      sub_depart: {
+                        select: {
+                          id: true,
+                          name: true,
+                          departement: {
+                            select: {
+                              id: true,
+                              name: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              SrDetail: true,
+            },
+            orderBy: [
+              {
+                _relevance: {
+                  fields: [field],
+                  search: "",
+                  sort: filter,
+                },
+              },
+              {
+                createdAt: "desc",
+              },
+            ],
+            take: parseInt(pagination.perPage),
+            skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+          });
+          SrCount = await prisma.sr.count({
+            where: {
+              id: id,
+              user: {
+                employee: {
+                  sub_depart: { id: userLogin?.employee?.sub_depart?.id },
+                },
+              },
+              deleted: null,
+            },
+          });
+        }
+      } else {
+        results = await prisma.sr.findMany({
+          where: {
+            id: id,
+            deleted: null,
+            user: {
+              username: request.session.userId,
+            },
+            no_sr: {
+              contains: pencarian,
+              mode: "insensitive",
+            },
+          },
+          include: {
+            wor: {
+              include: {
+                customerPo: {
+                  include: {
+                    quotations: {
+                      include: {
+                        Customer: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            user: {
+              select: {
+                id: true,
+                username: true,
+                employee: {
+                  select: {
+                    id: true,
+                    employee_name: true,
+                    position: true,
+                    sub_depart: {
+                      select: {
+                        id: true,
+                        name: true,
+                        departement: {
+                          select: {
+                            id: true,
+                            name: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            SrDetail: true,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: parseInt(pagination.perPage),
+          skip: parseInt(pagination.page) * parseInt(pagination.perPage),
+        });
+        SrCount = await prisma.sr.count({
+          where: {
+            id: id,
+            user: {
+              username: request.session.userId,
+            },
+            deleted: null,
+          },
+        });
+      }
+    }
+    if (results.length > 0) {
+      return response.status(200).json({
+        success: true,
+        massage: "Get All Service Request",
+        result: results,
+        page: pagination.page,
+        limit: pagination.perPage,
+        totalData: SrCount,
+        currentPage: pagination.currentPage,
+        nextPage: pagination.next(),
+        previouspage: pagination.prev(),
+      });
+    } else {
+      return response.status(200).json({
+        success: false,
+        massage: "No data",
+        totalData: 0,
+        result: [],
+      });
+    }
+  } catch (error) {
+    response.status(500).json({ massage: error.message, code: error }); // this will log any error that prisma throws + typesafety. both code and message are a string
+  }
+};
+
 const createSr = async (request: Request, response: Response) => {
   try {
     const d = new Date();
@@ -1554,6 +1945,7 @@ const updatePsrStatusM = async (request: any, response: Response) => {
 export default {
   getSr,
   getPsR,
+  getSrByOne,
   updatePsr,
   getdetailSr,
   createSr,
