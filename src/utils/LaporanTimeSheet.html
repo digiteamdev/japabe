@@ -1,19 +1,72 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family:"Calibri (Body)";
+      }
+      .column {
+        float: left;
+        width: 12%;
+        height: 55px; /* Should be removed. Only for demonstration */
+      }
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      td,
+      th {
+        border: 1px solid #a4a4a4;
+        text-align: justify;
+        padding: 4px;
+      }
+      /* First line CSS */ 
+      .color-line1{ 
+            color : red; 
+      }    
+      /* Second line CSS */ 
+      .color-line2{ 
+            color: green; 
+      } 
+    </style>
   </head>
   <body>
-    {{#each data}}
-    <div class="grid grid-cols-4 gap-4">
-      <div>{{this.departement}}</div>
-      <div>09</div>
-    </div>
-    {{/each}}
+    <p style="font-size: 12px; padding-top:10px;">Time Sheet Report</p>
+      <div class="column">
+        <p style="font-size: 10px;">Employee</p>
+        <p style="font-size: 10px;">Departement</p>
+      </div>
+      <div class="column" style="width: 60%;">
+        <p style="font-size: 10px">  : {{objData.name}}</p>
+        <p style="font-size: 10px">  : {{objData.departement}}</p>
+      </div>
+        <table>
+          <tr>
+            <th style="font-size: 8px; width: 5%; background-color: crimson;">Type</th>
+            <th style="font-size: 8px; width: 10%; background-color: crimson;">Date</th>
+            <th style="font-size: 8px; width: 8%; background-color: crimson;">Job</th>
+            <th style="font-size: 8px; width: 12%; background-color: crimson;">Part Name</th>
+            <th style="font-size: 8px; background-color: crimson;">Job Description</th>
+            <th style="font-size: 8px; background-color: crimson;">Start</th>
+            <th style="font-size: 8px; background-color: crimson;">Finish</th>
+            <th style="font-size: 8px; width: 7%;background-color: crimson;">Total</th>
+          </tr>
+          {{#each data}}
+          <tr>
+            <td style="font-size: 8px">{{this.type}}</td>
+            <td style="font-size: 8px">{{this.date}}</td>
+            <td style="font-size: 8px">{{this.job}}</td>
+            <td style="font-size: 8px">{{this.part_name}}</td>
+            <td style="font-size: 8px">{{this.job_description}}</td>
+            <td style="font-size: 8px">{{this.start}}</td>
+            <td style="font-size: 8px">{{this.end}}</td>
+            <td style="font-size: 8px">{{this.totaljam}}</td>
+          </tr>
+          {{/each}}
+        </table>
   </body>
 </html>

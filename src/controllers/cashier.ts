@@ -1458,6 +1458,42 @@ const createCashier = async (request: Request, response: Response) => {
   try {
     await prisma.$transaction(
       async (prisma) => {
+        const d = new Date();
+        let month = d.getMonth() + 1;
+        let year = d.getFullYear();
+        const noMr = await prisma.cashier.findMany({
+          take: 1,
+          orderBy: [{ createdAt: "desc" }],
+        });
+        let genarate;
+        if (noMr.length === 0) {
+          genarate =
+            101 +
+            "/" +
+            "DMP" +
+            "/" +
+            "CSR" +
+            "/" +
+            month.toString() +
+            "/" +
+            year.toString();
+        } else {
+          const noMrLast: any = noMr[0].id_cashier?.split("/");
+          let numor = 101;
+          if (noMrLast[0]) {
+            numor = parseInt(noMrLast[0]) + 1;
+          }
+          genarate =
+            numor +
+            "/" +
+            "DMP" +
+            "/" +
+            "CSR" +
+            "/" +
+            month.toString() +
+            "/" +
+            year.toString();
+        }
         const newArrEdu = [];
         if (request.body.journal_cashier) {
           const arr = request.body.journal_cashier;
@@ -1478,7 +1514,7 @@ const createCashier = async (request: Request, response: Response) => {
         ) {
           results = await prisma.cashier.create({
             data: {
-              id_cashier: request.body.id_cashier,
+              id_cashier: genarate,
               status_payment: request.body.status_payment,
               date_cashier: request.body.date_cashier,
               note: request.body.note,
@@ -1498,7 +1534,7 @@ const createCashier = async (request: Request, response: Response) => {
         } else if (request.body.cdvId !== null) {
           results = await prisma.cashier.create({
             data: {
-              id_cashier: request.body.id_cashier,
+              id_cashier: genarate,
               status_payment: request.body.status_payment,
               cash_advance: { connect: { id: request.body.cdvId } },
               date_cashier: request.body.date_cashier,
@@ -1516,7 +1552,7 @@ const createCashier = async (request: Request, response: Response) => {
         } else if (request.body.idPurchase !== null) {
           results = await prisma.cashier.create({
             data: {
-              id_cashier: request.body.id_cashier,
+              id_cashier: genarate,
               purchase: { connect: { id: request.body.idPurchase } },
               status_payment: request.body.status_payment,
               date_cashier: request.body.date_cashier,
@@ -1537,7 +1573,7 @@ const createCashier = async (request: Request, response: Response) => {
         } else {
           results = await prisma.cashier.create({
             data: {
-              id_cashier: request.body.id_cashier,
+              id_cashier: genarate,
               status_payment: request.body.status_payment,
               kontrabon: { connect: { id: request.body.kontrabonId } },
               date_cashier: request.body.date_cashier,

@@ -402,7 +402,7 @@ const getSrByOne = async (request: any, response: Response) => {
     let SrCount: any;
     let results;
     if (request.query.page === undefined && status != undefined) {
-      results = await prisma.sr.findMany({
+      results = await prisma.sr.findFirst({
         where: {
           status_spv: status,
           status_manager: status,
@@ -452,7 +452,7 @@ const getSrByOne = async (request: any, response: Response) => {
           userLogin?.employee?.sub_depart?.id === "cli8fa5050000rswmhh4qkn6w"
         ) {
           if (statusSr) {
-            results = await prisma.sr.findMany({
+            results = await prisma.sr.findFirst({
               where: {
                 id: id,
                 deleted: null,
@@ -526,7 +526,7 @@ const getSrByOne = async (request: any, response: Response) => {
               },
             });
           } else {
-            results = await prisma.sr.findMany({
+            results = await prisma.sr.findFirst({
               where: {
                 id: id,
                 deleted: null,
@@ -599,7 +599,7 @@ const getSrByOne = async (request: any, response: Response) => {
             });
           }
         } else {
-          results = await prisma.sr.findMany({
+          results = await prisma.sr.findFirst({
             where: {
               id: id,
               deleted: null,
@@ -682,7 +682,7 @@ const getSrByOne = async (request: any, response: Response) => {
           });
         }
       } else {
-        results = await prisma.sr.findMany({
+        results = await prisma.sr.findFirst({
           where: {
             id: id,
             deleted: null,
@@ -752,7 +752,7 @@ const getSrByOne = async (request: any, response: Response) => {
         });
       }
     }
-    if (results.length > 0) {
+    if (results) {
       return response.status(200).json({
         success: true,
         massage: "Get All Service Request",

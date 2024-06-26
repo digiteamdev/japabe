@@ -815,6 +815,21 @@ const getAllApproveSr = async (request: Request, response: Response) => {
     const SrCount = await prisma.sr.count({
       where: {
         deleted: null,
+        status_manager_director: null,
+        OR: [
+          {
+            no_sr: {
+              contains: pencarian,
+              mode: "insensitive",
+            },
+          },
+          {
+            job_no: {
+              contains: pencarian,
+              mode: "insensitive",
+            },
+          },
+        ],
       },
     });
     const results = await prisma.sr.findMany({

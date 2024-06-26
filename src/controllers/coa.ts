@@ -19,25 +19,6 @@ const getCoa = async (request: Request, response: Response) => {
     let results;
     if (request.query.page === undefined) {
       results = await prisma.coa.findMany({
-        where: {
-          OR: [
-            {
-              coa_code: {
-                startsWith: "5",
-              },
-            },
-            {
-              coa_code: {
-                startsWith: "4",
-              },
-            },
-            {
-              coa_code: {
-                startsWith: "2",
-              },
-            },
-          ],
-        },
         orderBy: {
           createdAt: "asc",
         },

@@ -578,7 +578,7 @@ const getMrByOne = async (request: any, response: Response) => {
           userLogin?.employee?.sub_depart?.id === "cli8fa5050000rswmhh4qkn6w"
         ) {
           if (statusMr) {
-            results = await prisma.mr.findMany({
+            results = await prisma.mr.findFirst({
               where: {
                 id: id,
                 deleted: null,
@@ -686,7 +686,7 @@ const getMrByOne = async (request: any, response: Response) => {
               },
             });
           } else {
-            results = await prisma.mr.findMany({
+            results = await prisma.mr.findFirst({
               where: {
                 id: id,
                 deleted: null,
@@ -793,7 +793,7 @@ const getMrByOne = async (request: any, response: Response) => {
             });
           }
         } else {
-          results = await prisma.mr.findMany({
+          results = await prisma.mr.findFirst({
             where: {
               id: id,
               deleted: null,
@@ -910,7 +910,7 @@ const getMrByOne = async (request: any, response: Response) => {
           });
         }
       } else {
-        results = await prisma.mr.findMany({
+        results = await prisma.mr.findFirst({
           where: {
             id: id,
             user: {
@@ -1008,7 +1008,7 @@ const getMrByOne = async (request: any, response: Response) => {
         });
       }
     }
-    if (results.length > 0) {
+    if (results) {
       return response.status(200).json({
         success: true,
         massage: "Get All Material Request",

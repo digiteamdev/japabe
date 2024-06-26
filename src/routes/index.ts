@@ -82,7 +82,7 @@ router.get(
 );
 router.put(
   "/user/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR", HRandGA: "HR & GA" }),
   user.updateUser
 );
 router.put("/userPhoto/:id", upload.single("photo", 1000), user.updatePhoto);
@@ -114,17 +114,17 @@ router.get(
 );
 router.post(
   "/role",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR",HRandGA: "HR & GA" }),
   role.createRole
 );
 router.put(
   "/role/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR",HRandGA: "HR & GA" }),
   role.updateRole
 );
 router.delete(
   "/role/:id",
-  jwt.authToken({ administrator: "ADMINISTRATOR" }),
+  jwt.authToken({ administrator: "ADMINISTRATOR",HRandGA: "HR & GA" }),
   role.deleteRole
 );
 
